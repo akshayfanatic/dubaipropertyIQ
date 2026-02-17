@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dubai Property IQ
+
+> A Next.js application for Dubai real estate intelligence and property analysis.
+
+## Overview
+
+Dubai Property IQ provides comprehensive real estate data, analytics, and insights for the Dubai property market. Built with modern web technologies for optimal performance and user experience.
+
+## Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Next.js** | 16.1.6 | React framework with App Router |
+| **React** | 19.2.3 | UI library |
+| **TypeScript** | 5 | Type-safe development |
+| **Tailwind CSS** | v4 | Styling and design system |
+| **next/font** | - | Optimized font loading (Geist Sans/Mono) |
+
+## Project Structure
+
+```
+dubaipropertyiq/
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx         # Root layout with fonts
+│   ├── page.tsx           # Home page
+│   └── globals.css        # Global styles
+├── docs/                  # Project documentation
+│   └── CODING_STANDARDS.md
+├── public/                # Static assets
+├── CHANGELOG.md           # Version history
+└── README.md              # This file
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Install dependencies
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Start development server
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-## Learn More
+### Build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Production build
+npm run build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Start production server
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Linting
 
-## Deploy on Vercel
+```bash
+# Run ESLint
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Type Checking
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# TypeScript type check (no emit)
+npx tsc --noEmit
+```
+
+## Documentation
+
+- [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
+- [docs/CODING_STANDARDS.md](./docs/CODING_STANDARDS.md) - Code style and comment standards
+
+## Development Workflow
+
+1. All code changes must include:
+   - Descriptive git commit messages
+   - Updated documentation where applicable
+   - Inline comments for complex logic
+
+2. Before committing:
+   ```bash
+   npx tsc --noEmit  # Type check
+   npm run lint      # ESLint check
+   ```
+
+## Contributing
+
+See [docs/CODING_STANDARDS.md](./docs/CODING_STANDARDS.md) for coding guidelines.
+
+## License
+
+[Your License Here]
+
+---
+
+Built with [Next.js](https://nextjs.org) | [Report Issues](../../issues)
