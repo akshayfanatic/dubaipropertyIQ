@@ -1,0 +1,2 @@
+npx husky
+npm run build
