@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.1.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.2...v0.1.3) (2026-02-26)
 
-
 ### Bug Fixes
 
-* **husky:** add Husky v9 shebang and pre-push build hook ([b80f058](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b80f058260b6eafc8e86abddb80374fa688eda2d))
+- **husky:** add Husky v9 shebang and pre-push build hook ([b80f058](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b80f058260b6eafc8e86abddb80374fa688eda2d))
 
 ### [0.1.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.1...v0.1.2) (2026-02-26)
 
