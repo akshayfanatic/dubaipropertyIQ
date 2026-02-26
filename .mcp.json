@@ -34,16 +34,13 @@
       "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse"],
       "transportType": "stdio"
     },
-    "ref-tools": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-reference"]
+    "Ref": {
+      "type": "http",
+      "url": "https://api.ref.tools/mcp?apiKey=ref-5397da092908f6d08127"
     },
     "exa": {
-      "command": "npx",
-      "args": ["-y", "@monadic-labs/mcp-server-exa"],
-      "env": {
-        "EXA_API_KEY": "YOUR_EXA_API_KEY_HERE"
-      }
+      "type": "http",
+      "url": "https://mcp.exa.ai/mcp?exaApiKey=3520389e-f549-43ed-bff9-590f53f087a6"
     }
   }
 }
