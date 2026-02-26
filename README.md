@@ -8,13 +8,13 @@ Dubai Property IQ provides comprehensive real estate data, analytics, and insigh
 
 ## Tech Stack
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Next.js** | 16.1.6 | React framework with App Router |
-| **React** | 19.2.3 | UI library |
-| **TypeScript** | 5 | Type-safe development |
-| **Tailwind CSS** | v4 | Styling and design system |
-| **next/font** | - | Optimized font loading (Geist Sans/Mono) |
+| Technology       | Version | Purpose                                  |
+| ---------------- | ------- | ---------------------------------------- |
+| **Next.js**      | 16.1.6  | React framework with App Router          |
+| **React**        | 19.2.3  | UI library                               |
+| **TypeScript**   | 5       | Type-safe development                    |
+| **Tailwind CSS** | v4      | Styling and design system                |
+| **next/font**    | -       | Optimized font loading (Geist Sans/Mono) |
 
 ## Project Structure
 
