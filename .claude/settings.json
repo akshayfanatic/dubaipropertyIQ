@@ -10,5 +10,8 @@
     "ENABLE_THINKING": "true",
     "ENABLE_STREAMING": "true",
     "ANTHROPIC_SAFE_MODE": "false"
+  },
+  "permissions": {
+    "defaultMode": "plan"
   }
 }
