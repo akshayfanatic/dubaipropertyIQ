@@ -1,5 +1,17 @@
 # Changelog
 
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### 0.1.1 (2026-02-26)
+
+
+### Features
+
+* **claude,setyp:** Setting Up Claude ([c40f22a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c40f22a54f0f9eeebd799b97db8562091a944ebe))
+* **ui:** initialize shadcn/ui with design tokens ([74e04df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/74e04df6d58b8f95b66c553613613102d3927c2b))
+
+# Changelog
+
 All notable changes to Dubai Property IQ will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
