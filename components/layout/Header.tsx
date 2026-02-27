@@ -45,7 +45,7 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
   const ctaLabel = ctaButton?.label ?? 'Schedule Viewing';
 
   return (
-    <header className={cn('w-full border-b border-slate-200 bg-white/90 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
+    <header className={cn('w-full border-b border-border bg-background/90 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
       <div className="container mx-auto flex h-20.25 items-center justify-between px-4 lg:px-8">
         {/* Logo - Left */}
         <Link href={logoHref} className="flex items-center gap-0.5">
@@ -53,8 +53,8 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
             <Image src={logoSrc} alt={logoAlt} width={120} height={32} className="h-8 w-auto" />
           ) : (
             <span className="text-base font-normal tracking-wide">
-              <span className="text-black">Dubai</span>
-              <span className="text-slate-400">PropertyIQ</span>
+              <span className="text-foreground">Dubai</span>
+              <span className="text-muted-foreground">PropertyIQ</span>
             </span>
           )}
         </Link>
@@ -62,7 +62,7 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
         {/* Navigation - Center (Desktop) */}
         <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className={cn('text-sm font-medium transition-colors hover:text-slate-900', pathname === item.href ? 'text-slate-900' : 'text-slate-500')}>
+            <Link key={item.href} href={item.href} className={cn('text-sm font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}>
               {item.label}
             </Link>
           ))}
@@ -71,11 +71,11 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
         {/* CTA Button - Right (Desktop) */}
         <div className="hidden md:block">
           {ctaButton?.href ? (
-            <Button className="h-13 rounded-lg bg-[#0077B6] px-8 py-4 text-sm font-semibold text-white hover:bg-[#0066A0]" asChild>
+            <Button className="h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
               <Link href={ctaButton.href}>{ctaLabel}</Link>
             </Button>
           ) : (
-            <Button className="h-13 rounded-lg bg-[#0077B6] px-8 py-4 text-sm font-semibold text-white hover:bg-[#0066A0]" onClick={ctaButton?.onClick}>
+            <Button className="h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" onClick={ctaButton?.onClick}>
               {ctaLabel}
             </Button>
           )}
@@ -93,17 +93,17 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
             <SheetContent side="right" className="w-75 sm:w-100">
               <nav className="flex flex-col gap-4 mt-8">
                 {navItems.map((item) => (
-                  <Link key={item.href} href={item.href} className={cn('text-lg font-medium transition-colors hover:text-slate-900', pathname === item.href ? 'text-slate-900' : 'text-slate-500')}>
+                  <Link key={item.href} href={item.href} className={cn('text-lg font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}>
                     {item.label}
                   </Link>
                 ))}
-                <div className="pt-4 border-t border-slate-200 mt-4">
+                <div className="pt-4 border-t border-border mt-4">
                   {ctaButton?.href ? (
-                    <Button className="w-full h-13 rounded-lg bg-[#0077B6] px-8 py-4 text-sm font-semibold text-white hover:bg-[#0066A0]" asChild>
+                    <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
                       <Link href={ctaButton.href}>{ctaLabel}</Link>
                     </Button>
                   ) : (
-                    <Button className="w-full h-13 rounded-lg bg-[#0077B6] px-8 py-4 text-sm font-semibold text-white hover:bg-[#0066A0]" onClick={ctaButton?.onClick}>
+                    <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" onClick={ctaButton?.onClick}>
                       {ctaLabel}
                     </Button>
                   )}
