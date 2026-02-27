@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.7...v0.1.8) (2026-02-27)
+
+### Features
+
+- **Error Feature:** Integrate Error Handling Feature For Better UI ([6a464d7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6a464d7ae546c3ad221a8c9d3cee5bf5a0e3f3fb))
+- **NotFound:** Added Not Found Page Component ([776f3ae](https://github.com/akshayfanatic/dubaipropertyIQ/commit/776f3aed09584db70c1818eb40aaf7200178acbd))
+
 ### [0.1.7](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.6...v0.1.7) (2026-02-27)
 
 ### Code Style Changes
