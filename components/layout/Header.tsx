@@ -93,7 +93,11 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
             <SheetContent side="right" className="w-75 sm:w-100">
               <nav className="flex flex-col gap-4 mt-8">
                 {navItems.map((item) => (
-                  <Link key={item.href} href={item.href} className={cn('text-lg font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn('text-lg font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}
+                  >
                     {item.label}
                   </Link>
                 ))}
