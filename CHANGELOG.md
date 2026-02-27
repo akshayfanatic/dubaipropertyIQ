@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.6...v0.1.7) (2026-02-27)
+
+### Code Style Changes
+
+- **Header:** Fix Issue Regarding Style In Header Following Consistent Design System ([b78edfa](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b78edfa34f4f5af6c7659ebf9a10ae35b71c9caa))
+
 ### [0.1.6](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.5...v0.1.6) (2026-02-27)
 
 ### [0.1.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.4...v0.1.5) (2026-02-26)
