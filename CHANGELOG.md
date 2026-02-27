@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.1.9](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.8...v0.1.9) (2026-02-27)
 
+### Features
+
+- **Footer Integration:** Implementing Footer of the App ([80d52db](https://github.com/akshayfanatic/dubaipropertyIQ/commit/80d52db73235f7ee6c40de764fc60325db0ad546))
+
 ### [0.1.8](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.7...v0.1.8) (2026-02-27)
 
 ### Features
