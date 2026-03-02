@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.10...v0.1.11) (2026-03-02)
+
+### Bug Fixes
+
+- **Dialog Issus:** Fix Issue Regarding WCAG and add SheetTitle and Visually Hide This ([ba7d69f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ba7d69f473504720a8b283844b1721d93500a8ae))
+- **responsive mobile header:** Fix Issue In Navgation Menu Mobile ([ede94fd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ede94fd5d6038a8c25479b86848bdf62fc70a801))
+
 ### [0.1.10](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.8...v0.1.10) (2026-03-02)
 
 ### Features
