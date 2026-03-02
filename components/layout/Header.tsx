@@ -7,7 +7,7 @@ import { Menu } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
 interface HeaderProps {
   logo?: {
@@ -91,17 +91,18 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-75 sm:w-100">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={cn('text-lg font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}
+                    className={cn('text-lg font-medium transition-colors hover:text-foreground px-4', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}
                   >
                     {item.label}
                   </Link>
                 ))}
-                <div className="pt-4 border-t border-border mt-4">
+                <div className="pt-4 border-t border-border mt-4 mx-4">
                   {ctaButton?.href ? (
                     <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
                       <Link href={ctaButton.href}>{ctaLabel}</Link>
