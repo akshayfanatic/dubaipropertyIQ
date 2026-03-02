@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.8...v0.1.10) (2026-03-02)
+
+### Features
+
+- **Footer:** Implementing Footer of the App ([80d52db](https://github.com/akshayfanatic/dubaipropertyIQ/commit/80d52db73235f7ee6c40de764fc60325db0ad546))
+- **refactor:** Refactor Configuration Of MCP JSON ([0a52fb7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0a52fb75687d59d34ebd5597a6fed4eb803d9e39))
+
 ### [0.1.9](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.8...v0.1.9) (2026-02-27)
 
 ### Features
