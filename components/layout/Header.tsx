@@ -97,12 +97,12 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={cn('text-lg font-medium transition-colors hover:text-foreground', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}
+                    className={cn('text-lg font-medium transition-colors hover:text-foreground px-4', pathname === item.href ? 'text-foreground' : 'text-muted-foreground')}
                   >
                     {item.label}
                   </Link>
                 ))}
-                <div className="pt-4 border-t border-border mt-4">
+                <div className="pt-4 border-t border-border mt-4 mx-4">
                   {ctaButton?.href ? (
                     <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
                       <Link href={ctaButton.href}>{ctaLabel}</Link>
