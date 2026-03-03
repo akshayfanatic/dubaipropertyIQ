@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.11...v0.1.12) (2026-03-03)
+
 ### [0.1.11](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.10...v0.1.11) (2026-03-02)
 
 ### Bug Fixes
