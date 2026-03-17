@@ -38,19 +38,14 @@
   --sidebar-border: oklch(0.87 0.01 261.81);
   --sidebar-ring: oklch(0.59 0.2 277.06);
 
-  /* Auth-specific tokens */
-  --auth-background: oklch(0.98 0 0);
-  --auth-card: oklch(1 0 0);
-  --auth-card-border: oklch(0.87 0.01 261.81);
-  --auth-gradient-start: oklch(0.59 0.2 277.06);
-  --auth-gradient-end: oklch(0.62 0.18 250);
-  --auth-link: oklch(0.59 0.2 277.06);
-  --auth-link-hover: oklch(0.52 0.22 277.06);
-  --auth-input-focus: oklch(0.59 0.2 277.06);
-  --auth-success: oklch(0.65 0.2 145);
-  --auth-error: oklch(0.64 0.21 25.39);
-  --auth-brand-bg: oklch(0.21 0.04 264.04);
-  --auth-brand-accent: oklch(0.68 0.16 276.93);
+  /* Dashboard-specific tokens */
+  --dashboard-nav-bg: oklch(0.98 0 0);
+  --dashboard-nav-border: oklch(0.87 0.01 261.81);
+  --dashboard-card-hover: oklch(0.96 0 0);
+  --dashboard-status-success: oklch(0.65 0.2 145);
+  --dashboard-status-warning: oklch(0.75 0.15 85);
+  --dashboard-status-error: oklch(0.64 0.21 25.39);
+  --dashboard-status-info: oklch(0.59 0.2 277.06);
 
   --font-sans: Inter, sans-serif;
   --font-serif: Merriweather, serif;
@@ -101,19 +96,14 @@
   --sidebar-border: oklch(0.45 0.03 257.68);
   --sidebar-ring: oklch(0.68 0.16 276.93);
 
-  /* Auth-specific tokens (dark mode) */
-  --auth-background: oklch(0.21 0.04 264.04);
-  --auth-card: oklch(0.28 0.04 260.33);
-  --auth-card-border: oklch(0.45 0.03 257.68);
-  --auth-gradient-start: oklch(0.68 0.16 276.93);
-  --auth-gradient-end: oklch(0.65 0.15 250);
-  --auth-link: oklch(0.68 0.16 276.93);
-  --auth-link-hover: oklch(0.75 0.14 276.93);
-  --auth-input-focus: oklch(0.68 0.16 276.93);
-  --auth-success: oklch(0.7 0.18 145);
-  --auth-error: oklch(0.64 0.21 25.39);
-  --auth-brand-bg: oklch(0.15 0.03 264.04);
-  --auth-brand-accent: oklch(0.59 0.2 277.06);
+  /* Dashboard-specific tokens (dark mode) */
+  --dashboard-nav-bg: oklch(0.21 0.04 264.04);
+  --dashboard-nav-border: oklch(0.45 0.03 257.68);
+  --dashboard-card-hover: oklch(0.28 0.04 260.33);
+  --dashboard-status-success: oklch(0.7 0.18 145);
+  --dashboard-status-warning: oklch(0.8 0.12 85);
+  --dashboard-status-error: oklch(0.64 0.21 25.39);
+  --dashboard-status-info: oklch(0.68 0.16 276.93);
 
   --shadow-2xs: 0 1px 3px 0px oklch(0 0 0 / 0.05);
   --shadow-xs: 0 1px 3px 0px oklch(0 0 0 / 0.05);
@@ -158,19 +148,14 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Auth color mappings */
-  --color-auth-background: var(--auth-background);
-  --color-auth-card: var(--auth-card);
-  --color-auth-card-border: var(--auth-card-border);
-  --color-auth-gradient-start: var(--auth-gradient-start);
-  --color-auth-gradient-end: var(--auth-gradient-end);
-  --color-auth-link: var(--auth-link);
-  --color-auth-link-hover: var(--auth-link-hover);
-  --color-auth-input-focus: var(--auth-input-focus);
-  --color-auth-success: var(--auth-success);
-  --color-auth-error: var(--auth-error);
-  --color-auth-brand-bg: var(--auth-brand-bg);
-  --color-auth-brand-accent: var(--auth-brand-accent);
+  /* Dashboard color mappings */
+  --color-dashboard-nav-bg: var(--dashboard-nav-bg);
+  --color-dashboard-nav-border: var(--dashboard-nav-border);
+  --color-dashboard-card-hover: var(--dashboard-card-hover);
+  --color-dashboard-status-success: var(--dashboard-status-success);
+  --color-dashboard-status-warning: var(--dashboard-status-warning);
+  --color-dashboard-status-error: var(--dashboard-status-error);
+  --color-dashboard-status-info: var(--dashboard-status-info);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -190,6 +175,7 @@
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
 }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -199,31 +185,41 @@
   }
 }
 
-/* Auth-specific elegant utilities */
+/* Dashboard-specific utilities */
 @layer components {
-  .auth-card-elegant {
-    @apply rounded-2xl border border-border/60 bg-card/95 backdrop-blur-sm shadow-lg shadow-black/5;
+  .dashboard-card {
+    @apply rounded-xl border border-border/60 bg-card/95 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow duration-200;
   }
 
-  .auth-link {
-    @apply relative inline-block text-primary transition-colors duration-200 hover:text-primary/80;
+  .dashboard-stat-card {
+    @apply rounded-lg border border-border/40 bg-card p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-md;
   }
 
-  .auth-link-underline {
-    @apply relative inline-block text-primary transition-colors duration-200 hover:text-primary/80;
-  }
-  .auth-link-underline::after {
-    @apply content-[''] absolute left-0 bottom-0 w-0 h-px bg-primary transition-all duration-200;
-  }
-  .auth-link-underline:hover::after {
-    @apply w-full;
+  .dashboard-nav-link {
+    @apply flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary;
   }
 
-  .auth-input {
-    @apply h-11 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background transition-all duration-200 placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  .dashboard-nav-link-active {
+    @apply text-primary;
   }
 
-  .auth-input-error {
-    @apply border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20;
+  .dashboard-status-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .dashboard-status-success {
+    @apply bg-dashboard-status-success/10 text-dashboard-status-success;
+  }
+
+  .dashboard-status-warning {
+    @apply bg-dashboard-status-warning/10 text-dashboard-status-warning;
+  }
+
+  .dashboard-status-error {
+    @apply bg-dashboard-status-error/10 text-dashboard-status-error;
+  }
+
+  .dashboard-status-info {
+    @apply bg-dashboard-status-info/10 text-dashboard-status-info;
   }
 }
