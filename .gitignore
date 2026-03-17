@@ -50,3 +50,6 @@ docs/
 
 # templates
 /templates
+
+# superpowers
+.superpowers/

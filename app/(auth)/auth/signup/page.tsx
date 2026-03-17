@@ -1,11 +1,11 @@
 import { AuthBrandingPanel } from '@/components/auth/AuthBrandingPanel';
-import { LoginForm } from '@/components/auth/LoginForm';
+import { SignupForm } from '@/components/auth/SignupForm';
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <>
       <AuthBrandingPanel />
-      <LoginForm />
+      <SignupForm />
     </>
   );
 }
