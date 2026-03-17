@@ -1,6 +1,8 @@
+import { requireAuth } from '@/lib/auth/guards';
 import React from 'react';
 
-const CustomerLayout = ({ children }: React.PropsWithChildren) => {
+const CustomerLayout = async ({ children }: React.PropsWithChildren) => {
+  await requireAuth();
   return <div>Layout :{children}</div>;
 };
 

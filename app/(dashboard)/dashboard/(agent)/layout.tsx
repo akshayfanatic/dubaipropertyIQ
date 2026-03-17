@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@/app/(frontend)/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { requireAuth } from '@/lib/auth/guards';
 
 export const metadata: Metadata = {
   title: 'Dubai Property IQ - Auth',
@@ -17,11 +18,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export default function AgentLayout({
+export default async function AgentLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await requireAuth();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>

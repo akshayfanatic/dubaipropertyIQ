@@ -3,6 +3,7 @@ import { serverClient } from '@/lib/supabase/server';
 import { DashboardNav } from '@/components/dashboard/DashboardNav';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '../globals.css';
+import { requireAuth } from '@/lib/auth/guards';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,16 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await serverClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Auth protection happens here in the layout (not in proxy)
-  // This follows Next.js 16 security best practices
-  if (!user) {
-    redirect('/auth/login');
-  }
+  await requireAuth();
 
   return (
     <html lang="en">
