@@ -25,9 +25,8 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // This call refreshes the session token - required for SSR
+  await supabase.auth.getUser();
 
   // IMPORTANT: The proxy is for token refresh only.
   // Route protection should happen in Layouts, NOT here.
