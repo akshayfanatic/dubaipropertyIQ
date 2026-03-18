@@ -10,10 +10,6 @@
       "args": ["chrome-devtools-mcp@latest"],
       "transportType": "stdio"
     },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
-    },
     "Ref": {
       "type": "http",
       "url": "https://api.ref.tools/mcp?apiKey=ref-5397da092908f6d08127"
