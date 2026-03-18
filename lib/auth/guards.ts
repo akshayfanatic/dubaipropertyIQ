@@ -14,6 +14,10 @@ export async function requireAuth() {
   return user;
 }
 
+/**
+ * Function For Returning Current User
+ * @returns {Promise<object |undefined>}
+ */
 export async function getAuthUser() {
   const supabase = await serverClient();
   const {

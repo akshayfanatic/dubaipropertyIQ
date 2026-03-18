@@ -1,8 +1,8 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/proxy';
+import { getAuthUser } from './lib/auth/guards';
 
 export async function proxy(request: NextRequest) {
-  // Update user's auth session (refreshes tokens)
   return await updateSession(request);
 }
 
