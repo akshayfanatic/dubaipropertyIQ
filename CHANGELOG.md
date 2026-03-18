@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.13...v0.2.0) (2026-03-18)
+
+### Features
+
+- **admin dashboard:** Setup admin dashboard using shadcn ui ([a0634b8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a0634b8ca0af1d78efa55fb2336e28a6ef9aea5c))
+- **admin property , notfound:** Created Properties page and admin notfound page ([3c97684](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3c976845832b8a4792ac62a0105d75c02dacb08b))
+- **auth callbacks:** Created Auth Callbacks and error ([4889d32](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4889d322e8894e3842c3d5f08b3becb44e6296b7))
+- **auth:** add callback, forgot-password, and reset-password pages ([de0f1b3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/de0f1b30c263ec88c4fcd5f12dbda621814e7e9e))
+- **auth:** add email confirmation and user API routes ([aadc58f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/aadc58f75a1de15cb719e2aebc02f951f18918e2))
+- **auth:** add middleware and auth utilities ([17a3670](https://github.com/akshayfanatic/dubaipropertyIQ/commit/17a3670bb3e93c9e99ffd6d59a68d92701a62182))
+- **auth:** add user roles RBAC with admin, agent, customer ([fccd918](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fccd9188f2dfb7ca177875ee8fd2da41e431e5d5))
+- **create middleware checks:** Created Middlware Checks and Preventing user to unauthorized access ([b93481c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b93481c2232c5bdc8c616120856cf04322a724b7))
+- **dashboard:** add protected dashboard with profile page ([8d95a81](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8d95a81fa93116bb9b1ce6ac24eab714d0e8c14d))
+- Integrate Authentication Flow ([1f48f60](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1f48f60ad24ad5e293269873607a0cb693bd0e93))
+- Prevent Routes From Unauthorized Access ([333f3fe](https://github.com/akshayfanatic/dubaipropertyIQ/commit/333f3fe7789ac9fc384230c596c24626d373902d))
+- Reorganize Folder Structure ([9c5f8c3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9c5f8c3794b47af10cf66b39c25dc411e29e649e))
+- **reorganize layout,auth:** reorganize public layout for auth and implenet diffrent layout for auth ([063c1ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/063c1ce95a974dd292a345cd08fdb44448a3bd60))
+
+### Bug Fixes
+
+- **auth:** get role from JWT custom claims ([88c86c0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/88c86c02052391830b46b6d5763c853257693418))
+- **auth:** remove unused variable in proxy ([2338218](https://github.com/akshayfanatic/dubaipropertyIQ/commit/233821814f92e29040e4bae91ffcd7cd69c85ab9))
+- **auth:** replace middleware.ts with proxy.ts for Next.js 16 ([d76cce3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d76cce3f4f8efe3b6db3b944f8f8addb7de24922))
+- Remove Mcp context7 from mcp ([d50e5e8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d50e5e83353b273b39af308a470555646cb21901))
+
+### Code Refactoring
+
+- **auth:** extract client component and add Suspense to forgot-password page ([d2f2cf8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d2f2cf87b42f2d7b009571dbcbc6aee9f39be528))
+- **refactor admin header:** created profile drowpdown component ensure follow srp ([520fc44](https://github.com/akshayfanatic/dubaipropertyIQ/commit/520fc44e8720ff583954568b0859bab7df57a510))
+
 ### [0.1.12](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.11...v0.1.12) (2026-03-03)
 
 ### Features
