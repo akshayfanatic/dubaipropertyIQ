@@ -6,15 +6,10 @@ import { logout } from '@/app/(auth)/auth/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { UserProfile } from '@/types/user';
 
 interface ProfileDropdownProps {
-  user?: {
-    email?: string;
-    user_metadata?: {
-      display_name?: string;
-      avatar_url?: string;
-    };
-  } | null;
+  user?: UserProfile | null;
 }
 
 export function ProfileDropdown({ user }: ProfileDropdownProps) {

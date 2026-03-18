@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Open_Sans } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import '../globals.css';
 import { requireAuth } from '@/lib/auth/guards';
 import { serverClient } from '@/lib/supabase/server';

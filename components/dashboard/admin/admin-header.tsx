@@ -4,15 +4,10 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminBreadcrumb } from './admin-breadcrumb';
 import { ProfileDropdown } from './profile-dropdown';
+import { UserProfile } from '@/types/user';
 
 interface AdminHeaderProps {
-  user?: {
-    email?: string;
-    user_metadata?: {
-      display_name?: string;
-      avatar_url?: string;
-    };
-  } | null;
+  user?: UserProfile | null;
 }
 
 export function AdminHeader({ user }: AdminHeaderProps) {
