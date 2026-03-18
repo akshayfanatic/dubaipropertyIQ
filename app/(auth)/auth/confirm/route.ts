@@ -45,7 +45,8 @@ export async function GET(request: NextRequest) {
   }
 
   // Return the user to an error page with some instructions
-  redirectTo.pathname = '/auth/login';
-  redirectTo.searchParams.set('error', 'Unable to verify email. The link may have expired.');
+  redirectTo.pathname = '/auth/error';
+  redirectTo.searchParams.delete('error');
+  redirectTo.searchParams.set('error', 'verification_failed');
   return NextResponse.redirect(redirectTo);
 }
