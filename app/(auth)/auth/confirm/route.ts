@@ -1,7 +1,6 @@
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { serverClient } from '@/lib/supabase/server';
 
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request: NextRequest) {
@@ -18,21 +17,7 @@ export async function GET(request: NextRequest) {
   redirectTo.searchParams.delete('next');
 
   if (token_hash && type) {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-          } catch {
-            // The `setAll` method was called from a Server Component.
-          }
-        },
-      },
-    });
+    const supabase = await serverClient();
 
     const { error } = await supabase.auth.verifyOtp({
       type,
