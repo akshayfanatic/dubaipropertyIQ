@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.0...v0.2.1) (2026-03-19)
+
+### Bug Fixes
+
+- **temporary session:** created temporary session for changin password ([7319c11](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7319c11f57cc19417b2cd87e34df53007d107434))
+
+### Code Refactoring
+
+- **duplicate client:** reuse single instance server client instead of creating every time ([e6334f5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e6334f5e039fc19bd09f9b73550ab72a5a552023))
+
 ## [0.2.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.1.13...v0.2.0) (2026-03-18)
 
 ### Features
