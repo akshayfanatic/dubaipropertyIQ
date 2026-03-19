@@ -1,16 +1,15 @@
 'use client';
 
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Building2, Loader2, CheckCircle2 } from 'lucide-react';
+import { Building2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { updatePassword } from '@/app/(auth)/auth/actions';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
+import { browserClient } from '@/lib/supabase/client';
 
 const resetPasswordSchema = z
   .object({
@@ -25,21 +24,49 @@ const resetPasswordSchema = z
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export function ResetPasswordClient() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSettingUpSession, setIsSettingUpSession] = useState(true);
   const [isValidSession, setIsValidSession] = useState(false);
 
   useEffect(() => {
-    // Check if we have valid tokens in URL (Supabase adds these)
-    const hasTokens = searchParams.get('access_token') || searchParams.get('type');
-    if (!hasTokens) {
-      setError('Invalid or expired reset link. Please request a new one.');
-    } else {
-      setIsValidSession(true);
-    }
-  }, [searchParams]);
+    const setupSession = async () => {
+      const accessToken = searchParams.get('access_token');
+      const refreshToken = searchParams.get('refresh_token');
+
+      // No token - redirect to login
+      if (!accessToken) {
+        router.replace('/auth/login');
+        return;
+      }
+
+      try {
+        const supabase = browserClient();
+
+        // Create temporary session using tokens from URL
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || '',
+        });
+
+        if (sessionError) {
+          setError('Invalid or expired reset link. Please request a new one.');
+          setIsValidSession(false);
+        } else {
+          setIsValidSession(true);
+        }
+      } catch {
+        setError('Failed to establish session. Please request a new reset link.');
+        setIsValidSession(false);
+      } finally {
+        setIsSettingUpSession(false);
+      }
+    };
+
+    setupSession();
+  }, [searchParams, router]);
 
   const {
     register,
@@ -52,38 +79,49 @@ export function ResetPasswordClient() {
 
   const passwordValue = watch('password', '');
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
-    setIsLoading(true);
-    setError(null);
+  const onSubmit = useCallback(
+    async (data: ResetPasswordFormData) => {
+      setIsLoading(true);
+      setError(null);
 
-    const formData = new FormData();
-    formData.append('password', data.password);
-    formData.append('confirmPassword', data.confirmPassword);
+      try {
+        const supabase = browserClient();
 
-    const result = await updatePassword(formData);
+        // Update password using the temporary session
+        const { error: updateError } = await supabase.auth.updateUser({
+          password: data.password,
+        });
 
-    if (result?.error) {
-      setError(result.error);
-      setIsLoading(false);
-    } else {
-      setSuccess(true);
-      setIsLoading(false);
-    }
-  };
+        if (updateError) {
+          setError(updateError.message);
+          setIsLoading(false);
+          return;
+        }
 
-  if (success) {
+        // Sign out the temporary session
+        await supabase.auth.signOut();
+
+        // Redirect to login
+        router.replace('/auth/login');
+      } catch {
+        setError('Failed to update password. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router],
+  );
+
+  // Loading state while setting up session
+  if (isSettingUpSession) {
     return (
       <div className="flex w-full items-center justify-center bg-auth-background px-6 py-12 md:w-1/2 md:px-8 lg:w-1/2 lg:px-12">
-        <div className="w-full max-w-md text-center">
+        <div className="w-full max-w-md">
           <div className="rounded-2xl border border-border/60 bg-card p-8 shadow-lg shadow-black/5">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25">
-              <CheckCircle2 className="h-8 w-8 text-primary-foreground" />
+            <div className="flex flex-col items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="mt-4 text-muted-foreground">Verifying reset link...</p>
             </div>
-            <h2 className="mb-3 text-2xl font-bold text-foreground">Password updated!</h2>
-            <p className="mb-8 text-muted-foreground">Your password has been successfully reset. You can now log in with your new password.</p>
-            <Link href="/auth/login">
-              <Button className="h-11 w-full cursor-pointer bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary/90">Continue to login</Button>
-            </Link>
           </div>
         </div>
       </div>
@@ -112,11 +150,9 @@ export function ResetPasswordClient() {
           {!isValidSession ? (
             <div className="text-center">
               <p className="mb-4 text-destructive">{error}</p>
-              <Link href="/auth/forgot-password">
-                <Button variant="outline" className="h-11 w-full cursor-pointer">
-                  Request new reset link
-                </Button>
-              </Link>
+              <Button variant="outline" className="h-11 w-full cursor-pointer" onClick={() => router.push('/auth/forgot-password')}>
+                Request new reset link
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

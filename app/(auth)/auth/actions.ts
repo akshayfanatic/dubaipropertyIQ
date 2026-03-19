@@ -57,6 +57,7 @@ export async function resetPassword(email: string): Promise<AuthResult> {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/reset-password`,
   });
 
+  console.log(error);
   if (error) {
     return { error: error.message };
   }
