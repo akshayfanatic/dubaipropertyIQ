@@ -18,9 +18,7 @@ export async function login(formData: FormData): Promise<AuthResult | void> {
   if (error) {
     return { error: error.message };
   }
-
-  revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  // redirect('/dashboard');
 }
 
 export async function signup(formData: FormData): Promise<AuthResult> {

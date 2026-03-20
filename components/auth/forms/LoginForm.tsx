@@ -12,6 +12,7 @@ import { EmailInput } from '../inputs/EmailInput';
 import { FormField } from '../ui/FormField';
 import { AuthCard } from '../layout/AuthCard';
 import { AuthFooter } from '../layout/AuthFooter';
+import { useRouter } from 'next/navigation';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -21,6 +22,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const router = useRouter(); // intialize roter
   const {
     register,
     handleSubmit,
@@ -37,10 +39,14 @@ export function LoginForm() {
 
     try {
       const result = await login(formData);
+
+      if (!result?.error) {
+        router.push('/dashboard'); // mover user to dashboard
+      }
       if (result?.error) {
         setFormError('root', { message: result.error });
       }
-    } catch {
+    } catch (error) {
       setFormError('root', { message: 'An unexpected error occurred. Please try again.' });
     }
   };
