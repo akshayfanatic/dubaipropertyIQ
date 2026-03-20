@@ -7,10 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PasswordInput } from '@/components/auth/PasswordInput';
-import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
-import { FormField } from '@/components/auth/FormField';
-import { AuthCard } from '@/components/auth/AuthCard';
+import { PasswordInput, PasswordStrengthMeter, FormField, AuthCard } from '@/components/auth';
 import { browserClient } from '@/lib/supabase/client';
 
 const resetPasswordSchema = z

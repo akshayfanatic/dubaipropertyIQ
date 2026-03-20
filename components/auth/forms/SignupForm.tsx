@@ -8,12 +8,12 @@ import { z } from 'zod';
 import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signup } from '@/app/(auth)/auth/actions';
-import { PasswordInput } from './PasswordInput';
-import { EmailInput } from './EmailInput';
-import { FormField } from './FormField';
-import { PasswordStrengthMeter } from './PasswordStrengthMeter';
-import { AuthCard } from './AuthCard';
-import { AuthFooter } from './AuthFooter';
+import { PasswordInput } from '../inputs/PasswordInput';
+import { EmailInput } from '../inputs/EmailInput';
+import { FormField } from '../ui/FormField';
+import { PasswordStrengthMeter } from '../ui/PasswordStrengthMeter';
+import { AuthCard } from '../layout/AuthCard';
+import { AuthFooter } from '../layout/AuthFooter';
 
 const signupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

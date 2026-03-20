@@ -8,9 +8,7 @@ import { z } from 'zod';
 import { Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { resetPassword } from '@/app/(auth)/auth/actions';
-import { AuthCard } from '@/components/auth/AuthCard';
-import { EmailInput } from '@/components/auth/EmailInput';
-import { FormField } from '@/components/auth/FormField';
+import { AuthCard, EmailInput, FormField } from '@/components/auth';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

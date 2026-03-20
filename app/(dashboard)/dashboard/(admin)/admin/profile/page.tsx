@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { User, Lock, Trash2, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PasswordInput } from '@/components/auth/PasswordInput';
+import { PasswordInput } from '@/components/auth';
 import { updateProfile, updatePassword, deleteAccount } from '@/app/(auth)/auth/actions';
 
 // Profile schema

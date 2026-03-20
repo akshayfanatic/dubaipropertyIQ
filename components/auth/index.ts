@@ -1,11 +1,12 @@
-export { AuthCard } from './AuthCard';
-export { AuthFooter } from './AuthFooter';
-export { AuthBrandingPanel } from './AuthBrandingPanel';
-export { LoginForm } from './LoginForm';
-export { SignupForm } from './SignupForm';
-export { PasswordInput } from './PasswordInput';
-export { EmailInput } from './EmailInput';
-export { FormField } from './FormField';
-export { PasswordStrengthMeter } from './PasswordStrengthMeter';
-export { SocialLoginButtons } from './SocialLoginButtons';
-export { AuthErrorCard } from './AuthErrorCard';
+// Forms
+export { LoginForm, SignupForm } from './forms';
+
+// Inputs
+export { EmailInput, PasswordInput } from './inputs';
+export type { EmailInputProps } from './inputs';
+
+// Layout
+export { AuthCard, AuthBrandingPanel, AuthFooter } from './layout';
+
+// UI
+export { FormField, PasswordStrengthMeter, SocialLoginButtons, AuthErrorCard } from './ui';

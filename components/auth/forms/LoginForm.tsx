@@ -7,11 +7,11 @@ import { z } from 'zod';
 import { Loader2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { login } from '@/app/(auth)/auth/actions';
-import { PasswordInput } from './PasswordInput';
-import { EmailInput } from './EmailInput';
-import { FormField } from './FormField';
-import { AuthCard } from './AuthCard';
-import { AuthFooter } from './AuthFooter';
+import { PasswordInput } from '../inputs/PasswordInput';
+import { EmailInput } from '../inputs/EmailInput';
+import { FormField } from '../ui/FormField';
+import { AuthCard } from '../layout/AuthCard';
+import { AuthFooter } from '../layout/AuthFooter';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
