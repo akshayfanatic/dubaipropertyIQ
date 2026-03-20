@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Building2, LogOut } from 'lucide-react';
+import { Building2, Sparkles, LogOut } from 'lucide-react';
 import { logout } from '@/app/(auth)/auth/actions';
 import {
   Sidebar,
@@ -16,8 +16,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  SidebarMenuBadge,
 } from '@/components/ui/sidebar';
-import { adminNavGroups, adminSecondaryNav } from '@/lib/admin-navigation';
+import { adminRoutes } from '@/config/routes';
+import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function AdminSidebar() {
   const pathname = usePathname();
@@ -52,7 +55,7 @@ export function AdminSidebar() {
 
       {/* Main Navigation */}
       <SidebarContent>
-        {adminNavGroups.map((group, groupIndex) => (
+        {adminRoutes.map((group, groupIndex) => (
           <div key={group.title}>
             <SidebarGroup>
               <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
@@ -63,40 +66,37 @@ export function AdminSidebar() {
                     const active = isActive(item.href);
                     return (
                       <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-                          <Link href={item.href}>
+                        <SidebarMenuButton asChild isActive={active} tooltip={item.title} className={cn(item.isComingSoon && 'cursor-not-allowed opacity-60')}>
+                          <Link href={item.isComingSoon ? '#' : item.href} onClick={item.isComingSoon ? (e) => e.preventDefault() : undefined}>
                             <Icon />
                             <span>{item.title}</span>
                           </Link>
                         </SidebarMenuButton>
+                        {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
+                        {item.isComingSoon && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="mr-1 flex items-center text-xs text-muted-foreground">
+                                <Sparkles className="size-3" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">Coming Soon</TooltipContent>
+                          </Tooltip>
+                        )}
                       </SidebarMenuItem>
                     );
                   })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-            {groupIndex < adminNavGroups.length - 1 && <SidebarSeparator />}
+            {groupIndex < adminRoutes.length - 1 && <SidebarSeparator />}
           </div>
         ))}
       </SidebarContent>
 
-      {/* Footer with Profile and Logout */}
+      {/* Footer with Logout */}
       <SidebarFooter>
         <SidebarMenu>
-          {adminSecondaryNav.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            return (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-                  <Link href={item.href}>
-                    <Icon />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
           <SidebarMenuItem>
             <form action={logout}>
               <SidebarMenuButton tooltip="Logout" className="w-full cursor-pointer">

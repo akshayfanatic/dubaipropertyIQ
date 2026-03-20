@@ -1,115 +1,83 @@
 import type { LucideIcon } from 'lucide-react';
-import { Home, User, Lock, Mail, LayoutDashboard, Settings, Users, Building2, FileText, BarChart3 } from 'lucide-react';
+import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, BarChart3, FileStack, MapPin, Briefcase } from 'lucide-react';
 
-/**
- * Route configuration
- */
-export interface RouteConfig {
+// ============================================
+// Types
+// ============================================
+
+export type BadgeVariant = 'default' | 'success' | 'warning' | 'destructive' | 'outline' | 'secondary';
+
+export interface RouteItem {
+  title: string;
   href: string;
-  label: string;
-  icon?: LucideIcon;
-  children?: RouteConfig[];
+  icon: LucideIcon;
+  badge?: string | number;
+  badgeVariant?: BadgeVariant;
+  isComingSoon?: boolean;
+  children?: RouteItem[];
 }
 
-/**
- * Public routes
- */
-export const publicRoutes: RouteConfig[] = [
-  {
-    href: '/',
-    label: 'Home',
-    icon: Home,
-  },
+export interface RouteGroup {
+  title: string;
+  items: RouteItem[];
+}
+
+// ============================================
+// Public Routes
+// ============================================
+
+export const publicRoutes: RouteItem[] = [
+  { title: 'Home', href: '/', icon: Home },
+  { title: 'Login', href: '/auth/login', icon: Lock },
+  { title: 'Sign Up', href: '/auth/signup', icon: User },
 ];
 
-/**
- * Auth routes
- */
-export const authRoutes: RouteConfig[] = [
-  {
-    href: '/auth/login',
-    label: 'Login',
-    icon: Lock,
-  },
-  {
-    href: '/auth/signup',
-    label: 'Sign Up',
-    icon: User,
-  },
-  {
-    href: '/auth/forgot-password',
-    label: 'Forgot Password',
-    icon: Mail,
-  },
-  {
-    href: '/auth/reset-password',
-    label: 'Reset Password',
-  },
-  {
-    href: '/auth/callback',
-    label: 'Auth Callback',
-  },
-  {
-    href: '/auth/confirm',
-    label: 'Confirm Email',
-  },
-];
+// ============================================
+// Admin Dashboard Routes
+// ============================================
 
-/**
- * Dashboard routes
- */
-export const dashboardRoutes: RouteConfig[] = [
+export const adminRoutes: RouteGroup[] = [
   {
-    href: '/dashboard',
-    label: 'Dashboard',
-    icon: LayoutDashboard,
+    title: 'Overview',
+    items: [{ title: 'Dashboard', href: '/dashboard/admin', icon: LayoutDashboard }],
   },
   {
-    href: '/dashboard/profile',
-    label: 'Profile',
-    icon: User,
+    title: 'Management',
+    items: [
+      { title: 'Properties', href: '/dashboard/admin/properties', icon: Building2 },
+      { title: 'Users', href: '/dashboard/admin/users', icon: Users, isComingSoon: true },
+      { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack, isComingSoon: true, badge: '12' },
+      { title: 'Areas', href: '/dashboard/admin/areas', icon: MapPin, isComingSoon: true },
+      { title: 'Developers', href: '/dashboard/admin/developers', icon: Briefcase, isComingSoon: true },
+    ],
   },
-];
-
-/**
- * Admin routes
- */
-export const adminRoutes: RouteConfig[] = [
   {
-    href: '/admin',
-    label: 'Admin',
-    icon: Settings,
-    children: [
-      {
-        href: '/admin',
-        label: 'Overview',
-        icon: BarChart3,
-      },
-      {
-        href: '/admin/profile',
-        label: 'Profile',
-        icon: User,
-      },
-      {
-        href: '/admin/users',
-        label: 'Users',
-        icon: Users,
-      },
-      {
-        href: '/admin/properties',
-        label: 'Properties',
-        icon: Building2,
-      },
-      {
-        href: '/admin/reports',
-        label: 'Reports',
-        icon: FileText,
-      },
+    title: 'Analytics',
+    items: [{ title: 'Reports', href: '/dashboard/admin/analytics', icon: BarChart3, isComingSoon: true }],
+  },
+  {
+    title: 'System',
+    items: [
+      { title: 'Settings', href: '/dashboard/admin/settings', icon: Settings, isComingSoon: true },
+      { title: 'Profile', href: '/dashboard/admin/profile', icon: User },
     ],
   },
 ];
 
-/**
- * All routes
- */
-export const allRoutes: RouteConfig[] = [...publicRoutes, ...authRoutes, ...dashboardRoutes, ...adminRoutes];
+// ============================================
+// Agent Dashboard Routes
+// ============================================
+
+export const agentRoutes: RouteGroup[] = [
+  {
+    title: 'Overview',
+    items: [{ title: 'Dashboard', href: '/dashboard/agent', icon: LayoutDashboard, isComingSoon: true }],
+  },
+  {
+    title: 'Listings',
+    items: [
+      { title: 'My Properties', href: '/dashboard/agent/properties', icon: Building2, isComingSoon: true },
+      { title: 'Profile', href: '/dashboard/agent/profile', icon: User, isComingSoon: true },
+    ],
+  },
+];
