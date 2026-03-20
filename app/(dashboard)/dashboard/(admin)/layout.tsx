@@ -5,6 +5,7 @@ import { serverClient } from '@/lib/supabase/server';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/dashboard/admin/admin-sidebar';
 import { AdminHeader } from '@/components/dashboard/admin/admin-header';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,13 +28,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-        <SidebarProvider>
-          <AdminSidebar />
-          <SidebarInset>
-            <AdminHeader user={user} />
-            <main className="flex-1 p-6">{children}</main>
-          </SidebarInset>
-        </SidebarProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <SidebarProvider>
+            <AdminSidebar />
+            <SidebarInset>
+              <AdminHeader user={user} />
+              <main className="flex-1 p-6">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
