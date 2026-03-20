@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -28,10 +28,21 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export function ResetPasswordClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [sessionError, setSessionError] = useState<string | null>(null);
   const [isSettingUpSession, setIsSettingUpSession] = useState(true);
   const [isValidSession, setIsValidSession] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError: setFormError,
+    formState: { errors, isSubmitting },
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const passwordValue = watch('password', '');
 
   useEffect(() => {
     setupSession();
@@ -41,7 +52,6 @@ export function ResetPasswordClient() {
     const tokenHash = searchParams.get('token_hash');
     const type = searchParams.get('type') as 'recovery' | null;
 
-    // No valid token - redirect to login
     if (!tokenHash || type !== 'recovery') {
       router.replace('/auth/login');
       return;
@@ -49,72 +59,44 @@ export function ResetPasswordClient() {
 
     try {
       const supabase = browserClient();
-
-      // Verify OTP token to establish session
-      const { error: sessionError } = await supabase.auth.verifyOtp({
+      const { error } = await supabase.auth.verifyOtp({
         type: 'recovery',
         token_hash: tokenHash,
       });
 
-      if (sessionError) {
-        setError('Invalid or expired reset link. Please request a new one.');
+      if (error) {
+        setSessionError('Invalid or expired reset link. Please request a new one.');
         setIsValidSession(false);
       } else {
         setIsValidSession(true);
       }
     } catch {
-      setError('Failed to establish session. Please request a new reset link.');
+      setSessionError('Failed to establish session. Please request a new reset link.');
       setIsValidSession(false);
     } finally {
       setIsSettingUpSession(false);
     }
   };
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<ResetPasswordFormData>({
-    resolver: zodResolver(resetPasswordSchema),
-  });
+  const onSubmit = async (data: ResetPasswordFormData) => {
+    try {
+      const supabase = browserClient();
+      const { error } = await supabase.auth.updateUser({
+        password: data.password,
+      });
 
-  const passwordValue = watch('password', '');
-
-  const onSubmit = useCallback(
-    async (data: ResetPasswordFormData) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const supabase = browserClient();
-
-        // Update password using the temporary session
-        const { error: updateError } = await supabase.auth.updateUser({
-          password: data.password,
-        });
-
-        if (updateError) {
-          setError(updateError.message);
-          setIsLoading(false);
-          return;
-        }
-
-        // Sign out the temporary session
-        await supabase.auth.signOut();
-
-        // Redirect to login
-        router.replace('/auth/login');
-      } catch {
-        setError('Failed to update password. Please try again.');
-      } finally {
-        setIsLoading(false);
+      if (error) {
+        setFormError('root', { message: error.message });
+        return;
       }
-    },
-    [router],
-  );
 
-  // Loading state while setting up session
+      await supabase.auth.signOut();
+      router.replace('/auth/login');
+    } catch {
+      setFormError('root', { message: 'Failed to update password. Please try again.' });
+    }
+  };
+
   if (isSettingUpSession) {
     return (
       <AuthCard title="Verifying..." subtitle="Please wait while we verify your reset link">
@@ -130,14 +112,16 @@ export function ResetPasswordClient() {
     <AuthCard title="Set new password" subtitle="Your new password must be different from previous passwords.">
       {!isValidSession ? (
         <div className="text-center">
-          <p className="mb-4 text-destructive">{error}</p>
+          <p className="mb-4 text-destructive">{sessionError}</p>
           <Button variant="outline" className="h-11 w-full cursor-pointer" onClick={() => router.push('/auth/forgot-password')}>
             Request new reset link
           </Button>
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+          {errors.root?.message && (
+            <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{errors.root.message}</div>
+          )}
 
           <FormField label="New password" htmlFor="password" error={errors.password?.message}>
             <div className="space-y-2">
@@ -152,10 +136,10 @@ export function ResetPasswordClient() {
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isSubmitting}
             className="h-11 w-full cursor-pointer bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
           >
-            {isLoading ? (
+            {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Updating...

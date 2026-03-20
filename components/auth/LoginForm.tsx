@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -23,41 +21,34 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    setError: setFormError,
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
-    setError(null);
-
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
 
-    const result = await login(formData);
-
-    if (result?.error) {
-      setError(result.error);
-      setIsLoading(false);
-    } else {
-      router.push('/');
-      router.refresh();
+    try {
+      const result = await login(formData);
+      if (result?.error) {
+        setFormError('root', { message: result.error });
+      }
+    } catch {
+      setFormError('root', { message: 'An unexpected error occurred. Please try again.' });
     }
   };
 
   return (
     <AuthCard title="Welcome back" subtitle="Sign in to access your dashboard" footer={<AuthFooter prefix="By signing in, you agree to our" />}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+        {errors.root?.message && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{errors.root.message}</div>}
 
         <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
           <EmailInput id="email" placeholder="you@example.com" {...register('email')} />
@@ -89,10 +80,10 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="h-11 w-full cursor-pointer bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
               Signing in...

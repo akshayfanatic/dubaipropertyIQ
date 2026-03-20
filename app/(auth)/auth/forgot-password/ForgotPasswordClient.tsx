@@ -19,30 +19,27 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordClient() {
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    setError: setFormError,
+    formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    setIsLoading(true);
-    setError(null);
-
-    const result = await resetPassword(data.email);
-
-    if (result?.error) {
-      setError(result.error);
-      setIsLoading(false);
-    } else {
-      setSuccess(true);
-      setIsLoading(false);
+    try {
+      const result = await resetPassword(data.email);
+      if (result?.error) {
+        setFormError('root', { message: result.error });
+      } else {
+        setSuccess(true);
+      }
+    } catch {
+      setFormError('root', { message: 'An unexpected error occurred. Please try again.' });
     }
   };
 
@@ -68,7 +65,7 @@ export function ForgotPasswordClient() {
   return (
     <AuthCard title="Forgot password?" subtitle="No worries, we'll send you reset instructions.">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+        {errors.root?.message && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{errors.root.message}</div>}
 
         <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
           <EmailInput id="email" placeholder="you@example.com" {...register('email')} />
@@ -76,10 +73,10 @@ export function ForgotPasswordClient() {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="h-11 w-full cursor-pointer bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
               Sending...
