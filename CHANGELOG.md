@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.1...v0.2.2) (2026-03-20)
+
+### Bug Fixes
+
+- **reset password token:** checking token instead of access token checking token hash ([0f6d612](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0f6d61248b9097b997135a612f3dd3607693d17c))
+
+### Code Refactoring
+
+- **auth folder structure:** Reorganize Folder Structure For Public Auth ([d6d441c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d6d441ce56260457fdc1cf10e8e41a2f87af0bc0))
+- **auth:** extract reusable EmailInput and FormField components ([031d4bc](https://github.com/akshayfanatic/dubaipropertyIQ/commit/031d4bcc5e4a2a2ae9c261cb9431334ed67b6690))
+- **auth:** reuse AuthCard component across all auth forms ([b11376b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b11376b2edb25164212b165a07aac7aa8e445561))
+- **routing configuration:** fix routing configuraion issue and refactor routes.ts and make it clean ([ef73fbe](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ef73fbea0cd1a7cec27984615bad59860ba10cb2))
+
 ### [0.2.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.0...v0.2.1) (2026-03-19)
 
 ### Bug Fixes
