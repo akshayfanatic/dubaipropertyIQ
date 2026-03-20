@@ -32,41 +32,41 @@ export function ResetPasswordClient() {
   const [isValidSession, setIsValidSession] = useState(false);
 
   useEffect(() => {
-    const setupSession = async () => {
-      const accessToken = searchParams.get('access_token');
-      const refreshToken = searchParams.get('refresh_token');
-
-      // No token - redirect to login
-      if (!accessToken) {
-        router.replace('/auth/login');
-        return;
-      }
-
-      try {
-        const supabase = browserClient();
-
-        // Create temporary session using tokens from URL
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken || '',
-        });
-
-        if (sessionError) {
-          setError('Invalid or expired reset link. Please request a new one.');
-          setIsValidSession(false);
-        } else {
-          setIsValidSession(true);
-        }
-      } catch {
-        setError('Failed to establish session. Please request a new reset link.');
-        setIsValidSession(false);
-      } finally {
-        setIsSettingUpSession(false);
-      }
-    };
-
     setupSession();
   }, [searchParams, router]);
+
+  const setupSession = async () => {
+    const tokenHash = searchParams.get('token_hash');
+    const type = searchParams.get('type') as 'recovery' | null;
+
+    // No valid token - redirect to login
+    if (!tokenHash || type !== 'recovery') {
+      router.replace('/auth/login');
+      return;
+    }
+
+    try {
+      const supabase = browserClient();
+
+      // Verify OTP token to establish session
+      const { error: sessionError } = await supabase.auth.verifyOtp({
+        type: 'recovery',
+        token_hash: tokenHash,
+      });
+
+      if (sessionError) {
+        setError('Invalid or expired reset link. Please request a new one.');
+        setIsValidSession(false);
+      } else {
+        setIsValidSession(true);
+      }
+    } catch {
+      setError('Failed to establish session. Please request a new reset link.');
+      setIsValidSession(false);
+    } finally {
+      setIsSettingUpSession(false);
+    }
+  };
 
   const {
     register,

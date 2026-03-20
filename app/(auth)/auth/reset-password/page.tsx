@@ -17,7 +17,7 @@ function ResetPasswordFallback() {
   );
 }
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
   return (
     <>
       <AuthBrandingPanel />
