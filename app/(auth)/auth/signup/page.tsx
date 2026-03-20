@@ -1,5 +1,4 @@
-import { AuthBrandingPanel } from '@/components/auth/AuthBrandingPanel';
-import { SignupForm } from '@/components/auth/SignupForm';
+import { AuthBrandingPanel, SignupForm } from '@/components/auth';
 
 export default function SignupPage() {
   return (

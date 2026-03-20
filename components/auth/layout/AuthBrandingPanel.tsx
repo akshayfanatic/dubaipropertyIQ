@@ -1,7 +1,7 @@
 'use client';
 
 import { BarChart3, Home, TrendingUp } from 'lucide-react';
-import SiteLogo from '../ui/SiteLogo';
+import SiteLogo from '@/components/ui/SiteLogo';
 
 const features = [
   {

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AuthBrandingPanel } from '@/components/auth/AuthBrandingPanel';
+import { AuthBrandingPanel } from '@/components/auth';
 import { ForgotPasswordClient } from './ForgotPasswordClient';
 
 function ResetPasswordFallback() {

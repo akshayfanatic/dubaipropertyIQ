@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
-import { AuthBrandingPanel } from '@/components/auth/AuthBrandingPanel';
-import { AuthErrorCard } from '@/components/auth/AuthErrorCard';
+import { AuthBrandingPanel, AuthErrorCard } from '@/components/auth';
 
 export default function AuthErrorPage() {
   return (

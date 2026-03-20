@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AuthBrandingPanel } from '@/components/auth/AuthBrandingPanel';
+import { AuthBrandingPanel } from '@/components/auth';
 import { ResetPasswordClient } from './ResetPasswordClient';
 
 function ResetPasswordFallback() {
@@ -17,7 +17,7 @@ function ResetPasswordFallback() {
   );
 }
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
   return (
     <>
       <AuthBrandingPanel />
