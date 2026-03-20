@@ -4,6 +4,8 @@ export { AuthBrandingPanel } from './AuthBrandingPanel';
 export { LoginForm } from './LoginForm';
 export { SignupForm } from './SignupForm';
 export { PasswordInput } from './PasswordInput';
+export { EmailInput } from './EmailInput';
+export { FormField } from './FormField';
 export { PasswordStrengthMeter } from './PasswordStrengthMeter';
 export { SocialLoginButtons } from './SocialLoginButtons';
 export { AuthErrorCard } from './AuthErrorCard';

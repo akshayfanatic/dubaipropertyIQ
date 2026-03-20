@@ -5,10 +5,12 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signup } from '@/app/(auth)/auth/actions';
 import { PasswordInput } from './PasswordInput';
+import { EmailInput } from './EmailInput';
+import { FormField } from './FormField';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { AuthCard } from './AuthCard';
 import { AuthFooter } from './AuthFooter';
@@ -78,40 +80,16 @@ export function SignupForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-foreground">
-            Email address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              {...register('email')}
-              className={`flex h-11 w-full rounded-lg border border-input bg-background px-3 py-2 pl-10 text-sm text-foreground ring-offset-background transition-all duration-200 placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                errors.email ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
-              }`}
-            />
-          </div>
-          {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-        </div>
+        <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
+          <EmailInput id="email" placeholder="you@example.com" {...register('email')} />
+        </FormField>
 
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium text-foreground">
-            Password
-          </label>
-          <PasswordInput
-            id="password"
-            placeholder="Create a strong password"
-            {...register('password')}
-            className={`h-11 rounded-lg border-input transition-all duration-200 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 ${
-              errors.password ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
-            }`}
-          />
-          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-          <PasswordStrengthMeter password={passwordValue} className="mt-2" />
-        </div>
+        <FormField label="Password" htmlFor="password" error={errors.password?.message}>
+          <div className="space-y-2">
+            <PasswordInput id="password" placeholder="Create a strong password" {...register('password')} />
+            <PasswordStrengthMeter password={passwordValue} />
+          </div>
+        </FormField>
 
         <div className="flex items-start gap-2">
           <input

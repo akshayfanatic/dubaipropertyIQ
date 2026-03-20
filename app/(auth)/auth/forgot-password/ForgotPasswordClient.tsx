@@ -5,10 +5,12 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { resetPassword } from '@/app/(auth)/auth/actions';
 import { AuthCard } from '@/components/auth/AuthCard';
+import { EmailInput } from '@/components/auth/EmailInput';
+import { FormField } from '@/components/auth/FormField';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -68,24 +70,9 @@ export function ForgotPasswordClient() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-foreground">
-            Email address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              {...register('email')}
-              className={`flex h-11 w-full rounded-lg border border-input bg-background px-3 py-2 pl-10 text-sm text-foreground ring-offset-background transition-all duration-200 placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                errors.email ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
-              }`}
-            />
-          </div>
-          {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-        </div>
+        <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
+          <EmailInput id="email" placeholder="you@example.com" {...register('email')} />
+        </FormField>
 
         <Button
           type="submit"

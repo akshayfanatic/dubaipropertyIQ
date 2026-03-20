@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
+import { FormField } from '@/components/auth/FormField';
 import { AuthCard } from '@/components/auth/AuthCard';
 import { browserClient } from '@/lib/supabase/client';
 
@@ -138,36 +139,16 @@ export function ResetPasswordClient() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {error && <div className="animate-shake animate-duration-300 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
 
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-foreground">
-              New password
-            </label>
-            <PasswordInput
-              id="password"
-              placeholder="Enter new password"
-              {...register('password')}
-              className={`h-11 rounded-lg border-input transition-all duration-200 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 ${
-                errors.password ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
-              }`}
-            />
-            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-            <PasswordStrengthMeter password={passwordValue} className="mt-2" />
-          </div>
+          <FormField label="New password" htmlFor="password" error={errors.password?.message}>
+            <div className="space-y-2">
+              <PasswordInput id="password" placeholder="Enter new password" {...register('password')} />
+              <PasswordStrengthMeter password={passwordValue} />
+            </div>
+          </FormField>
 
-          <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
-              Confirm password
-            </label>
-            <PasswordInput
-              id="confirmPassword"
-              placeholder="Confirm new password"
-              {...register('confirmPassword')}
-              className={`h-11 rounded-lg border-input transition-all duration-200 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 ${
-                errors.confirmPassword ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
-              }`}
-            />
-            {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
-          </div>
+          <FormField label="Confirm password" htmlFor="confirmPassword" error={errors.confirmPassword?.message}>
+            <PasswordInput id="confirmPassword" placeholder="Confirm new password" {...register('confirmPassword')} />
+          </FormField>
 
           <Button
             type="submit"
