@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.2...v0.2.3) (2026-03-21)
+
+### Features
+
+- **404:** implement 404 global level and group level ([a6bdcc5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a6bdcc571bed8082eac63df4b8b840d667edda21))
+- **dark mode:** Implement dark mode for admin dashboard ([c3205c9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c3205c9bbab6a67ad77759490c513fad85230a60))
+
 ### [0.2.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.1...v0.2.2) (2026-03-20)
 
 ### Bug Fixes
