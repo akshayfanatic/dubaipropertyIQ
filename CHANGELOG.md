@@ -20,6 +20,24 @@ All notable changes to this project will be documented in this file. See [standa
 - **layout:** modularize Header and Footer into dedicated folders ([52babda](https://github.com/akshayfanatic/dubaipropertyIQ/commit/52babda222881fccd49ee66c0aaae6e8e3bb92d3))
 - **user:** deleted use-role.hook no usecase ([c323def](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c323def1859bcec0356cb0c358c4be032665e69e))
 
+### [0.2.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.3...v0.2.4) (2026-03-21)
+
+### Features
+
+- **login button:** Created Login Button and remove CTA button fully ([f55f79b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f55f79be85caa903b3651e87f2536e8649cd20aa))
+- **profile popover:** created profile popover in header menu ([fede5ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fede5cea111c54b861333a55d15ae545ef39df3c))
+
+### Bug Fixes
+
+- **bump issue:** bumping version shift form main to develop ([1a5c404](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1a5c404622e3b2a3a5d6be9096d18cb9d198346f))
+- **hydration issue:** fix issue regarding hydration in toggle and create a client hook ([bf80d0c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/bf80d0c032884dbc25b9f1fa94a439533c5d0759))
+
+### Code Refactoring
+
+- **admin nav profile dropdown:** displaying singular component both in public facing frontend side and dashboard ([ce806f0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ce806f0cd57e7423e9e7a1a1f1ffc878d3f7728d))
+- **layout:** modularize Header and Footer into dedicated folders ([52babda](https://github.com/akshayfanatic/dubaipropertyIQ/commit/52babda222881fccd49ee66c0aaae6e8e3bb92d3))
+- **user:** deleted use-role.hook no usecase ([c323def](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c323def1859bcec0356cb0c358c4be032665e69e))
+
 ### [0.2.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.2...v0.2.3) (2026-03-21)
 
 ### Features
