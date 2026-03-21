@@ -1,18 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { User, LogOut, Settings } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, Home } from 'lucide-react';
 import { logout } from '@/app/(auth)/auth/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/types/user';
+import { usePathname } from 'next/navigation';
 
 interface ProfileDropdownProps {
   user?: UserProfile | null;
 }
 
 export function ProfileDropdown({ user }: ProfileDropdownProps) {
+  const pathname = usePathname();
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Admin';
   const initials = displayName
     .split(' ')
@@ -24,39 +26,53 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar size="sm">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/50">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/20 transition-all hover:ring-primary/40">
             <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
-            <AvatarFallback>{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+      <DropdownMenuContent align="end" className="w-52 rounded-xl border-border/60 bg-popover/95 backdrop-blur-sm shadow-lg">
+        <DropdownMenuLabel className="font-normal px-3 py-2.5">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{displayName}</p>
-            <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium tracking-tight">{displayName}</p>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium uppercase tracking-wide">Admin</span>
+            </div>
+            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard/admin/profile" className="cursor-pointer">
-            <User />
-            Profile
+        <DropdownMenuSeparator className="bg-border/60" />
+        <DropdownMenuItem asChild className="px-3 py-2 rounded-lg mx-1 focus:bg-primary/10">
+          <Link href="/dashboard/admin">
+            <LayoutDashboard className="mr-2.5 h-4 w-4 text-primary" />
+            <span className="text-sm">Dashboard</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard/admin/settings" className="cursor-pointer">
-            <Settings />
-            Settings
+        <DropdownMenuItem asChild className="px-3 py-2 rounded-lg mx-1 focus:bg-primary/10">
+          <Link href="/dashboard/admin/profile">
+            <User className="mr-2.5 h-4 w-4 text-primary" />
+            <span className="text-sm">Profile</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
+
+        {/* Not Displaying Link if m in dashboard */}
+        {typeof pathname == 'string' && pathname.includes('/dashboard/admin') ? (
+          <DropdownMenuItem asChild className="px-3 py-2 rounded-lg mx-1 focus:bg-primary/10">
+            <Link href="/">
+              <Home className="mr-2.5 h-4 w-4 text-primary" />
+              <span className="text-sm">Back to Home</span>
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+
+        <DropdownMenuSeparator className="bg-border/60" />
         <form action={logout}>
-          <DropdownMenuItem asChild>
-            <button type="submit" className="w-full cursor-pointer text-destructive focus:text-destructive">
-              <LogOut />
-              Log out
+          <DropdownMenuItem asChild className="px-3 py-2 rounded-lg mx-1 focus:bg-destructive/10">
+            <button type="submit" className="w-full flex items-center">
+              <LogOut className="mr-2.5 h-4 w-4 text-destructive" />
+              <span className="text-sm text-destructive">Sign out</span>
             </button>
           </DropdownMenuItem>
         </form>
