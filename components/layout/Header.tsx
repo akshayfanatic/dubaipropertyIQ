@@ -19,7 +19,7 @@ interface HeaderProps {
     label: string;
     href: string;
   }>;
-  ctaButton?: {
+  loginLink?: {
     label?: string;
     href?: string;
     onClick?: () => void;
@@ -35,14 +35,15 @@ const defaultNavItems = [
   { label: 'Contact', href: '/contact' },
 ];
 
-export default function Header({ logo, navItems = defaultNavItems, ctaButton, sticky = true }: HeaderProps) {
+export default function Header({ logo, navItems = defaultNavItems, loginLink, sticky = true }: HeaderProps) {
   const pathname = usePathname();
 
   const logoSrc = logo?.src;
   const logoAlt = logo?.alt ?? 'Dubai Property IQ';
   const logoHref = logo?.href ?? '/';
 
-  const ctaLabel = ctaButton?.label ?? 'Schedule Viewing';
+  const loginLabel = loginLink?.label ?? 'Log in';
+  const loginHref = loginLink?.href ?? '/auth/login';
 
   return (
     <header className={cn('w-full border-b border-border bg-background/90 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
@@ -68,15 +69,17 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
           ))}
         </nav>
 
-        {/* CTA Button - Right (Desktop) */}
+        {/* Login Button - Right (Desktop) */}
         <div className="hidden md:block">
-          {ctaButton?.href ? (
-            <Button className="h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href={ctaButton.href}>{ctaLabel}</Link>
+          {loginLink?.href ? (
+            <Button variant="link" className="h-10 px-6 rounded-lg border-2" asChild>
+              <Link href={loginLink.href}>{loginLabel}</Link>
             </Button>
           ) : (
-            <Button className="h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" onClick={ctaButton?.onClick}>
-              {ctaLabel}
+            <Button variant="outline" className="h-10 px-6 rounded-lg border-2" asChild>
+              <Link href={loginHref} onClick={loginLink?.onClick}>
+                {loginLabel}
+              </Link>
             </Button>
           )}
         </div>
@@ -103,13 +106,15 @@ export default function Header({ logo, navItems = defaultNavItems, ctaButton, st
                   </Link>
                 ))}
                 <div className="pt-4 border-t border-border mt-4 mx-4">
-                  {ctaButton?.href ? (
-                    <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" asChild>
-                      <Link href={ctaButton.href}>{ctaLabel}</Link>
+                  {loginLink?.href ? (
+                    <Button variant="outline" className="w-full h-10 rounded-lg border-2" asChild>
+                      <Link href={loginLink.href}>{loginLabel}</Link>
                     </Button>
                   ) : (
-                    <Button className="w-full h-13 rounded-lg bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90" onClick={ctaButton?.onClick}>
-                      {ctaLabel}
+                    <Button variant="outline" className="w-full h-10 rounded-lg border-2" asChild>
+                      <Link href={loginHref} onClick={loginLink?.onClick}>
+                        {loginLabel}
+                      </Link>
                     </Button>
                   )}
                 </div>
