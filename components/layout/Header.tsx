@@ -8,6 +8,7 @@ import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { AuthSection } from '../modals/auth/auth-section';
 
 interface HeaderProps {
   logo?: {
@@ -19,11 +20,6 @@ interface HeaderProps {
     label: string;
     href: string;
   }>;
-  loginLink?: {
-    label?: string;
-    href?: string;
-    onClick?: () => void;
-  };
   sticky?: boolean;
 }
 
@@ -35,15 +31,12 @@ const defaultNavItems = [
   { label: 'Contact', href: '/contact' },
 ];
 
-export default function Header({ logo, navItems = defaultNavItems, loginLink, sticky = true }: HeaderProps) {
+export default function Header({ logo, navItems = defaultNavItems, sticky = true }: HeaderProps) {
   const pathname = usePathname();
 
   const logoSrc = logo?.src;
   const logoAlt = logo?.alt ?? 'Dubai Property IQ';
   const logoHref = logo?.href ?? '/';
-
-  const loginLabel = loginLink?.label ?? 'Log in';
-  const loginHref = loginLink?.href ?? '/auth/login';
 
   return (
     <header className={cn('w-full border-b border-border bg-background/90 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
@@ -69,19 +62,9 @@ export default function Header({ logo, navItems = defaultNavItems, loginLink, st
           ))}
         </nav>
 
-        {/* Login Button - Right (Desktop) */}
+        {/* Auth Section - Right (Desktop) */}
         <div className="hidden md:block">
-          {loginLink?.href ? (
-            <Button variant="link" className="h-10 px-6 rounded-lg border-2" asChild>
-              <Link href={loginLink.href}>{loginLabel}</Link>
-            </Button>
-          ) : (
-            <Button variant="outline" className="h-10 px-6 rounded-lg border-2" asChild>
-              <Link href={loginHref} onClick={loginLink?.onClick}>
-                {loginLabel}
-              </Link>
-            </Button>
-          )}
+          <AuthSection />
         </div>
 
         {/* Mobile Menu */}
@@ -106,17 +89,7 @@ export default function Header({ logo, navItems = defaultNavItems, loginLink, st
                   </Link>
                 ))}
                 <div className="pt-4 border-t border-border mt-4 mx-4">
-                  {loginLink?.href ? (
-                    <Button variant="outline" className="w-full h-10 rounded-lg border-2" asChild>
-                      <Link href={loginLink.href}>{loginLabel}</Link>
-                    </Button>
-                  ) : (
-                    <Button variant="outline" className="w-full h-10 rounded-lg border-2" asChild>
-                      <Link href={loginHref} onClick={loginLink?.onClick}>
-                        {loginLabel}
-                      </Link>
-                    </Button>
-                  )}
+                  <AuthSection />
                 </div>
               </nav>
             </SheetContent>
