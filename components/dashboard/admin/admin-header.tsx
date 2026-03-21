@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminBreadcrumb } from './admin-breadcrumb';
 import { ProfileDropdown } from './profile-dropdown';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { UserProfile } from '@/types/user';
 
 interface AdminHeaderProps {
@@ -17,6 +18,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
       <Separator orientation="vertical" className="mr-2 h-4" />
       <AdminBreadcrumb />
       <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle />
         <ProfileDropdown user={user} />
       </div>
     </header>
