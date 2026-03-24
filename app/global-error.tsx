@@ -5,7 +5,7 @@ import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 export default function GlobalError({ error, unstable_retry }: { error: Error & { digest?: string }; unstable_retry: () => void }) {
   const isConfig = isConfigError(error);
-
+  console.error(error);
   return (
     <html lang="en">
       <body className="bg-background text-foreground">
