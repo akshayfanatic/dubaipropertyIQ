@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file. See [standa
 - **client configuration:** implement client configuration in project ([55706d6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/55706d672ec06a4ef36271abba45c095d2f1962b))
 - **error:** implement global error handling for better ux ([c89db00](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c89db00a1ea083b3e246f186c9fa672c8d3e3619))
 
+### Bug Fixes
+
+- **env validation:** fix env issue -- display error in browser ([983a503](https://github.com/akshayfanatic/dubaipropertyIQ/commit/983a503))
+
 ### [0.2.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.3...v0.2.4) (2026-03-21)
 
 ### Features
@@ -150,52 +154,3 @@ All notable changes to this project will be documented in this file. See [standa
 
 - **claude,setyp:** Setting Up Claude ([c40f22a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c40f22a54f0f9eeebd799b97db8562091a944ebe))
 - **ui:** initialize shadcn/ui with design tokens ([74e04df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/74e04df6d58b8f95b66c553613613102d3927c2b))
-
-# Changelog
-
-All notable changes to Dubai Property IQ will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-
-- Documentation structure (CHANGELOG.md, docs/ folder, CODING_STANDARDS.md)
-- Updated README.md with project-specific information
-- Git workflow guidelines for commits and documentation
-
-### Changed
-
-- Replaced generic Next.js README with Dubai Property IQ specific documentation
-
----
-
-## Version Format
-
-## [X.Y.Z] - YYYY-MM-DD
-
-### Added
-
-- New features
-
-### Changed
-
-- Changes to existing functionality
-
-### Deprecated
-
-- Soon-to-be removed features
-
-### Removed
-
-- Removed features
-
-### Fixed
-
-- Bug fixes
-
-### Security
-
-- Security vulnerability fixes
