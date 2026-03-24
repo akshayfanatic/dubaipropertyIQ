@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Role } from '@/lib/auth/roles';
+import { getSupabaseEnv } from '@/lib/env';
 
 const ROLE_DASHBOARDS: Record<Role, string> = {
   admin: '/dashboard/admin',
@@ -9,11 +10,21 @@ const ROLE_DASHBOARDS: Record<Role, string> = {
 };
 
 export async function updateSession(request: NextRequest) {
+  // Early return if Supabase is not configured - allow public routes to work
+  let supabaseUrl: string;
+  let supabaseKey: string;
+
+  try {
+    ({ url: supabaseUrl, key: supabaseKey } = getSupabaseEnv());
+  } catch {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

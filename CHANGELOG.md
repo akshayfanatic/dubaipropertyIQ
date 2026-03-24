@@ -2,23 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.2.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.3...v0.2.4) (2026-03-21)
+### [0.2.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.4...v0.2.5) (2026-03-24)
 
 ### Features
 
-- **login button:** Created Login Button and remove CTA button fully ([f55f79b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f55f79be85caa903b3651e87f2536e8649cd20aa))
-- **profile popover:** created profile popover in header menu ([fede5ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fede5cea111c54b861333a55d15ae545ef39df3c))
+- **client configuration:** implement client configuration in project ([55706d6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/55706d672ec06a4ef36271abba45c095d2f1962b))
+- **error:** implement global error handling for better ux ([c89db00](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c89db00a1ea083b3e246f186c9fa672c8d3e3619))
 
 ### Bug Fixes
 
-- **bump issue:** bumping version shift form main to develop ([1a5c404](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1a5c404622e3b2a3a5d6be9096d18cb9d198346f))
-- **hydration issue:** fix issue regarding hydration in toggle and create a client hook ([bf80d0c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/bf80d0c032884dbc25b9f1fa94a439533c5d0759))
-
-### Code Refactoring
-
-- **admin nav profile dropdown:** displaying singular component both in public facing frontend side and dashboard ([ce806f0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ce806f0cd57e7423e9e7a1a1f1ffc878d3f7728d))
-- **layout:** modularize Header and Footer into dedicated folders ([52babda](https://github.com/akshayfanatic/dubaipropertyIQ/commit/52babda222881fccd49ee66c0aaae6e8e3bb92d3))
-- **user:** deleted use-role.hook no usecase ([c323def](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c323def1859bcec0356cb0c358c4be032665e69e))
+- **env validation:** fix env issue -- display error in browser ([983a503](https://github.com/akshayfanatic/dubaipropertyIQ/commit/983a503))
 
 ### [0.2.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.3...v0.2.4) (2026-03-21)
 
@@ -161,52 +154,3 @@ All notable changes to this project will be documented in this file. See [standa
 
 - **claude,setyp:** Setting Up Claude ([c40f22a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c40f22a54f0f9eeebd799b97db8562091a944ebe))
 - **ui:** initialize shadcn/ui with design tokens ([74e04df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/74e04df6d58b8f95b66c553613613102d3927c2b))
-
-# Changelog
-
-All notable changes to Dubai Property IQ will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-
-- Documentation structure (CHANGELOG.md, docs/ folder, CODING_STANDARDS.md)
-- Updated README.md with project-specific information
-- Git workflow guidelines for commits and documentation
-
-### Changed
-
-- Replaced generic Next.js README with Dubai Property IQ specific documentation
-
----
-
-## Version Format
-
-## [X.Y.Z] - YYYY-MM-DD
-
-### Added
-
-- New features
-
-### Changed
-
-- Changes to existing functionality
-
-### Deprecated
-
-- Soon-to-be removed features
-
-### Removed
-
-- Removed features
-
-### Fixed
-
-- Bug fixes
-
-### Security
-
-- Security vulnerability fixes
