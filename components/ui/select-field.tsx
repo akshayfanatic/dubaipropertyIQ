@@ -29,10 +29,10 @@ export interface SelectFieldProps {
 const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(({ options = [], placeholder = 'Select...', value, defaultValue, onValueChange, disabled, className }, ref) => {
   return (
     <Select value={value} defaultValue={defaultValue} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger ref={ref} className={cn('w-full', className)}>
+      <SelectTrigger ref={ref} className={cn('w-full min-w-0', className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper" className="max-h-60">
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

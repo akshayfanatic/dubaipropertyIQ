@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "seed": "npx tsx scripts/seed-properties.ts",
+    "seed:clean": "npx tsx scripts/seed-properties.ts --clean",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
@@ -29,6 +31,7 @@
     "react-hook-form": "^7.71.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animated": "^2.0.0",
+    "use-debounce": "^10.1.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
