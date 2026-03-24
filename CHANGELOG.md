@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.4...v0.2.5) (2026-03-24)
+
+### Features
+
+- **client configuration:** implement client configuration in project ([55706d6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/55706d672ec06a4ef36271abba45c095d2f1962b))
+- **error:** implement global error handling for better ux ([c89db00](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c89db00a1ea083b3e246f186c9fa672c8d3e3619))
+
 ### [0.2.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.3...v0.2.4) (2026-03-21)
 
 ### Features
