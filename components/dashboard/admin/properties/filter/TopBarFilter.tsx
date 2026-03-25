@@ -4,9 +4,9 @@ import { useEffect, useRef } from 'react';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import { FilterBar, type FilterFormValues } from '../_ui';
+import { FilterBar } from './FilterBar';
 
-const getValuesFromParams = (searchParams: URLSearchParams): FilterFormValues => ({
+const getValuesFromParams = (searchParams: URLSearchParams) => ({
   search: searchParams.get('search') || '',
   property_type: searchParams.get('property_type') || '',
   status: searchParams.get('status') || '',
@@ -26,14 +26,14 @@ export const TopBarFilter = () => {
   const isSyncingRef = useRef(false);
   const lastSyncedRef = useRef<string>('');
 
-  const methods = useForm<FilterFormValues>({
+  const methods = useForm({
     defaultValues: getValuesFromParams(searchParams),
   });
 
   const { control, reset } = methods;
   const watchedValues = useWatch({ control });
 
-  const syncToUrl = useDebouncedCallback((values: FilterFormValues) => {
+  const syncToUrl = useDebouncedCallback((values) => {
     if (isSyncingRef.current) return;
 
     const params = new URLSearchParams();
@@ -53,7 +53,7 @@ export const TopBarFilter = () => {
   useEffect(() => {
     const valuesString = JSON.stringify(watchedValues);
     if (valuesString !== lastSyncedRef.current) {
-      syncToUrl(watchedValues as FilterFormValues);
+      syncToUrl(watchedValues);
     }
   }, [watchedValues, syncToUrl]);
 

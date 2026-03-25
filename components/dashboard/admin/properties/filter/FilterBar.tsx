@@ -9,18 +9,6 @@ import { SelectField } from '@/components/ui/select-field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 
-export type FilterFormValues = {
-  search: string;
-  property_type: string;
-  status: string;
-  bedrooms: number | '';
-  min_price: number | '';
-  max_price: number | '';
-  min_size: number | '';
-  max_size: number | '';
-  golden_visa_eligible: boolean;
-};
-
 const propertyTypeOptions = [
   { value: 'all', label: 'All Types' },
   { value: 'apartment', label: 'Apartment' },
@@ -39,22 +27,8 @@ const statusOptions = [
 ];
 
 export function FilterBar() {
-  const { control, reset } = useFormContext<FilterFormValues>();
+  const { control, reset } = useFormContext();
   const [popoverOpen, setPopoverOpen] = useState(false);
-
-  const handleClearFilters = () => {
-    reset({
-      search: '',
-      property_type: '',
-      status: '',
-      bedrooms: '',
-      min_price: '',
-      max_price: '',
-      min_size: '',
-      max_size: '',
-      golden_visa_eligible: false,
-    });
-  };
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
@@ -92,7 +66,7 @@ export function FilterBar() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-medium leading-none">Additional Filters</h4>
-              <Button variant="ghost" size="sm" type="button" className="h-8 cursor-pointer text-muted-foreground hover:text-foreground" onClick={handleClearFilters}>
+              <Button variant="ghost" size="sm" type="button" className="h-8 cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => reset()}>
                 <RotateCcw className="mr-1 h-3 w-3" />
                 Reset
               </Button>
@@ -155,7 +129,7 @@ export function FilterBar() {
         </PopoverContent>
       </Popover>
 
-      <Button variant="ghost" type="button" className="cursor-pointer" onClick={handleClearFilters}>
+      <Button variant="ghost" type="button" className="cursor-pointer" onClick={() => reset()}>
         <RotateCcw className="mr-2 h-4 w-4" />
         Reset
       </Button>

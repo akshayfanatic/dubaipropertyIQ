@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { PropertiesList } from './_components/PropertiesList';
+import { PropertiesList } from '@/components/dashboard/admin/properties/filter/PropertiesList';
 import { TableSkeleton } from '@/components/ui/table-skeleton';
 import { PropertyFilters } from '@/types';
 
