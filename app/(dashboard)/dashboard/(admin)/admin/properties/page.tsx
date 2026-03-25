@@ -14,6 +14,8 @@ interface PageProps {
     min_size?: string;
     max_size?: string;
     golden_visa_eligible?: string;
+    sortBy?: string;
+    sortOrder?: string;
   }>;
 }
 
@@ -28,6 +30,8 @@ function buildFilters(params: Awaited<PageProps['searchParams']>): PropertyFilte
     min_size: params.min_size ? Number(params.min_size) : undefined,
     max_size: params.max_size ? Number(params.max_size) : undefined,
     golden_visa_eligible: params.golden_visa_eligible === 'true',
+    sortBy: params.sortBy || undefined,
+    sortOrder: (params.sortOrder as PropertyFilters['sortOrder']) || undefined,
   };
 }
 

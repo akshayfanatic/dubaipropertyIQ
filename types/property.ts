@@ -29,6 +29,8 @@ export type PropertyInsert = Omit<Property, 'id' | 'created_at' | 'updated_at'>;
 
 export type PropertyUpdate = Partial<PropertyInsert>;
 
+export type SortOrder = 'asc' | 'desc';
+
 export interface PropertyFilters {
   search?: string;
   property_type?: PropertyType;
@@ -39,4 +41,6 @@ export interface PropertyFilters {
   min_size?: number;
   max_size?: number;
   golden_visa_eligible?: boolean;
+  sortBy?: string;
+  sortOrder?: SortOrder;
 }

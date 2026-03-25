@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { getPropertiesAdmin } from '@/lib/db/properties/queries';
 import { Property, PropertyFilters } from '@/types';
 import { delay } from '@/lib/utils';
+import { DataTable } from '@/components/ui/data-table';
+import { columns } from './columns';
 
 interface PropertiesListProps {
   filters: PropertyFilters;
@@ -38,13 +40,5 @@ export async function PropertiesList({ filters }: PropertiesListProps) {
     );
   }
 
-  return (
-    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {properties.map((property: Property) => (
-        <div key={property.id} className="rounded-xl border border-border/60 bg-card p-6">
-          {JSON.stringify(property)}
-        </div>
-      ))}
-    </div>
-  );
+  return <DataTable columns={columns} data={properties} />;
 }

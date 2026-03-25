@@ -1,0 +1,123 @@
+'use client';
+
+import { ColumnDef } from '@tanstack/react-table';
+import { Property } from '@/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  available: 'default',
+  sold: 'destructive',
+  reserved: 'secondary',
+  off_plan: 'outline',
+};
+
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat('en-AE', {
+    style: 'currency',
+    currency: 'AED',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+}
+
+function formatSize(size: number): string {
+  return new Intl.NumberFormat('en-US').format(size);
+}
+
+export const columns: ColumnDef<Property>[] = [
+  {
+    accessorKey: 'title',
+    header: 'Title',
+    cell: ({ row }) => <span className="font-medium">{row.getValue('title')}</span>,
+  },
+  {
+    accessorKey: 'property_type',
+    header: 'Type',
+    cell: ({ row }) => <span className="capitalize">{row.getValue('property_type')}</span>,
+  },
+  {
+    accessorKey: 'bedrooms',
+    header: 'Beds',
+  },
+  {
+    accessorKey: 'price_aed',
+    header: 'Price',
+    cell: ({ row }) => <span className="tabular-nums">{formatPrice(row.getValue('price_aed'))}</span>,
+  },
+  {
+    accessorKey: 'size_sqft',
+    header: 'Size (sqft)',
+    cell: ({ row }) => <span className="tabular-nums">{formatSize(row.getValue('size_sqft'))}</span>,
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.getValue('status') as string;
+      return <Badge variant={statusVariant[status] || 'default'}>{status.replace('_', ' ')}</Badge>;
+    },
+  },
+  {
+    accessorKey: 'golden_visa_eligible',
+    header: 'Golden Visa',
+    cell: ({ row }) => <span className={row.getValue('golden_visa_eligible') ? 'text-green-600' : 'text-muted-foreground'}>{row.getValue('golden_visa_eligible') ? 'Yes' : 'No'}</span>,
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      const property = row.original;
+      return <RowActions property={property} />;
+    },
+  },
+];
+
+function RowActions({ property }: { property: Property }) {
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleEdit = () => {
+    router.push(`/dashboard/admin/properties/${property.id}`);
+  };
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this property?')) return;
+
+    setIsDeleting(true);
+    try {
+      // TODO: Implement delete mutation
+      console.log('Delete property:', property.id);
+      router.refresh();
+    } catch (error) {
+      console.error('Failed to delete:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

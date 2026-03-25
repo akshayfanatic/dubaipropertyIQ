@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext, Controller } from 'react-hook-form';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SelectField } from '@/components/ui/select-field';
@@ -55,7 +55,7 @@ export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
       max_price: '',
       min_size: '',
       max_size: '',
-      golden_visa_eligible: true,
+      golden_visa_eligible: false,
     });
   };
 
@@ -67,7 +67,7 @@ export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
         render={({ field }) => (
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input {...field} placeholder="Search properties..." className="pl-10" />
+            <Input {...field} value={field.value ?? ''} placeholder="Search properties..." className="pl-10" />
           </div>
         )}
       />
@@ -93,7 +93,13 @@ export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
         </PopoverTrigger>
         <PopoverContent className="w-80" align="end">
           <div className="space-y-4">
-            <h4 className="font-medium leading-none">Additional Filters</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="font-medium leading-none">Additional Filters</h4>
+              <Button variant="ghost" size="sm" type="button" className="h-8 cursor-pointer text-muted-foreground hover:text-foreground" onClick={handleClearFilters}>
+                <RotateCcw className="mr-1 h-3 w-3" />
+                Reset
+              </Button>
+            </div>
 
             <Controller
               name="bedrooms"
@@ -148,13 +154,14 @@ export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
                 </label>
               )}
             />
-
-            <Button variant="outline" type="button" className="w-full cursor-pointer" onClick={handleClearFilters}>
-              Clear Filters
-            </Button>
           </div>
         </PopoverContent>
       </Popover>
+
+      <Button variant="ghost" type="button" className="cursor-pointer" onClick={handleClearFilters}>
+        <RotateCcw className="mr-2 h-4 w-4" />
+        Reset
+      </Button>
     </div>
   );
 }

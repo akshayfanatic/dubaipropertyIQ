@@ -48,10 +48,14 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       }
     }
 
-    query = query.order('created_at', { ascending: false });
+    // Apply sorting
+    const sortBy = filters?.sortBy || 'created_at';
+    const sortOrder = filters?.sortOrder === 'desc';
+    query = query.order(sortBy, { ascending: !sortOrder });
 
     const { data, error } = await query;
 
+    console.log(data);
     if (error) {
       return ApiResponse({
         success: false,
