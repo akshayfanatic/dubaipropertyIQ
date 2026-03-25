@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Search, Filter, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -37,13 +38,9 @@ const statusOptions = [
   { value: 'off_plan', label: 'Off Plan' },
 ];
 
-interface FilterBarProps {
-  popoverOpen: boolean;
-  onPopoverChange: (open: boolean) => void;
-}
-
-export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
+export function FilterBar() {
   const { control, reset } = useFormContext<FilterFormValues>();
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const handleClearFilters = () => {
     reset({
@@ -84,7 +81,7 @@ export function FilterBar({ popoverOpen, onPopoverChange }: FilterBarProps) {
         render={({ field }) => <SelectField options={statusOptions} placeholder="Status" value={field.value} onValueChange={field.onChange} className="w-full sm:w-40" />}
       />
 
-      <Popover open={popoverOpen} onOpenChange={onPopoverChange}>
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" type="button" className="cursor-pointer">
             <Filter className="mr-2 h-4 w-4" />
