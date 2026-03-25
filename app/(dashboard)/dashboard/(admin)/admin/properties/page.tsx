@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PropertiesList } from './_components/PropertiesList';
-import { PropertiesListSkeleton } from './_components/PropertiesListSkeleton';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 import { PropertyFilters } from '@/types';
 
 interface PageProps {
@@ -16,6 +16,8 @@ interface PageProps {
     golden_visa_eligible?: string;
     sortBy?: string;
     sortOrder?: string;
+    page?: string;
+    pageSize?: string;
   }>;
 }
 
@@ -32,6 +34,8 @@ function buildFilters(params: Awaited<PageProps['searchParams']>): PropertyFilte
     golden_visa_eligible: params.golden_visa_eligible === 'true',
     sortBy: params.sortBy || undefined,
     sortOrder: (params.sortOrder as PropertyFilters['sortOrder']) || undefined,
+    page: params.page ? Number(params.page) : 1,
+    pageSize: params.pageSize ? Number(params.pageSize) : 10,
   };
 }
 
@@ -43,7 +47,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const filterKey = JSON.stringify(filters);
 
   return (
-    <Suspense key={filterKey} fallback={<PropertiesListSkeleton />}>
+    <Suspense key={filterKey} fallback={<TableSkeleton columns={8} rows={10} />}>
       <PropertiesList filters={filters} />
     </Suspense>
   );

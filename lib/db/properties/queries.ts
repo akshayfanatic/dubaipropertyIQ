@@ -6,19 +6,24 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import type { Property, PropertyFilters } from '@/types/property';
+import type { Property, PropertyFilters, PaginatedResult } from '@/types/property';
 
 /**
- * Get all properties with optional filters
+ * Get all properties with optional filters and pagination
  */
 export async function getPropertiesAdmin(filters?: PropertyFilters) {
   try {
     const supabase = adminClient();
-    let query = supabase.from('properties').select('*');
+    const page = filters?.page || 1;
+    const pageSize = filters?.pageSize || 10;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    // Query for data with pagination
+    let query = supabase.from('properties').select('*', { count: 'exact' });
 
     // Apply filters
     if (filters) {
-      // Text search on title and description
       if (filters.search) {
         query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
       }
@@ -53,9 +58,11 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     const sortOrder = filters?.sortOrder === 'desc';
     query = query.order(sortBy, { ascending: !sortOrder });
 
-    const { data, error } = await query;
+    // Apply pagination
+    query = query.range(from, to);
 
-    console.log(data);
+    const { data, error, count } = await query;
+
     if (error) {
       return ApiResponse({
         success: false,
@@ -65,11 +72,19 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       });
     }
 
+    const result: PaginatedResult<Property> = {
+      data: data as Property[],
+      total: count || 0,
+      page,
+      pageSize,
+      totalPages: Math.ceil((count || 0) / pageSize),
+    };
+
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
       message: 'Properties fetched successfully',
-      data: data as Property[],
+      data: result,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch properties';

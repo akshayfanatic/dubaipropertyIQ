@@ -43,4 +43,14 @@ export interface PropertyFilters {
   golden_visa_eligible?: boolean;
   sortBy?: string;
   sortOrder?: SortOrder;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }

@@ -2,9 +2,10 @@ import { notFound } from 'next/navigation';
 import { Building2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getPropertiesAdmin } from '@/lib/db/properties/queries';
-import { Property, PropertyFilters } from '@/types';
+import { Property, PropertyFilters, PaginatedResult } from '@/types';
 import { delay } from '@/lib/utils';
 import { DataTable } from '@/components/ui/data-table';
+import { Pagination } from '@/components/ui/pagination';
 import { columns } from './columns';
 
 interface PropertiesListProps {
@@ -12,19 +13,18 @@ interface PropertiesListProps {
 }
 
 export async function PropertiesList({ filters }: PropertiesListProps) {
-  // Simulate loading delay (remove in production)
   await delay();
 
-  const { success, data: properties = [] } = (await getPropertiesAdmin(filters)) as {
+  const { success, data } = (await getPropertiesAdmin(filters)) as {
     success: boolean;
-    data?: Property[];
+    data?: PaginatedResult<Property>;
   };
 
-  if (!success) {
+  if (!success || !data) {
     notFound();
   }
 
-  if (properties.length === 0) {
+  if (data.data.length === 0) {
     return (
       <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-border/60 bg-card p-8 text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
@@ -40,5 +40,10 @@ export async function PropertiesList({ filters }: PropertiesListProps) {
     );
   }
 
-  return <DataTable columns={columns} data={properties} />;
+  return (
+    <div className="space-y-4">
+      <DataTable columns={columns} data={data.data} />
+      <Pagination total={data.total} page={data.page} pageSize={data.pageSize} />
+    </div>
+  );
 }
