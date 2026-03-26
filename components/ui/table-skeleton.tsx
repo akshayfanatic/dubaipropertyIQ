@@ -6,7 +6,7 @@ interface TableSkeletonProps {
   rows?: number;
 }
 
-export function TableSkeleton({ columns = 8, rows = 5 }: TableSkeletonProps) {
+export function TableSkeleton({ columns = 8, rows = 10 }: TableSkeletonProps) {
   return (
     <div className="rounded-lg border bg-card">
       <Table>
