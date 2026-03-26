@@ -8,6 +8,17 @@ export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | '
 
 export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
+// export interface Category {
+//   id: string;
+//   name: string;
+//   slug: string;
+//   description?: string;
+//   icon?: string;
+//   sort_order: number;
+//   is_active: boolean;
+//   created_at: string;
+// }
+
 export interface Category {
   id: string;
   name: string;
@@ -18,7 +29,6 @@ export interface Category {
   is_active: boolean;
   created_at: string;
 }
-
 export interface Property {
   id: string;
   title: string;
@@ -74,3 +84,23 @@ export interface PaginatedResult<T> {
 
 // Helper type for category with joined data
 export type PropertyWithCategory = Property & { category: Category };
+
+// Type for list view with partial category (from joins)
+// Supabase joins return category as an array
+export interface PropertyListItem {
+  id: string;
+  title: string;
+  description: string;
+  category?: { id: string; name: string }[];
+  bedrooms: number;
+  bathrooms: number;
+  size_sqft: number;
+  price_aed: number;
+  status: PropertyStatus;
+  golden_visa_eligible: boolean;
+  photos: string[];
+  features: string[];
+  floor_plan: string | null;
+  created_at: string;
+  updated_at: string;
+}
