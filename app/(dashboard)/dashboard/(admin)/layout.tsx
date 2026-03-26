@@ -6,6 +6,7 @@ import { SidebarInset } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/dashboard/admin/admin-sidebar';
 import { AdminHeader } from '@/components/dashboard/admin/admin-header';
 import { AdminProvider } from '@/components/providers/admin-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,6 +34,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <SidebarInset>
             <AdminHeader user={user} />
             <main className="flex-1 p-6">{children}</main>
+            <Toaster />
           </SidebarInset>
         </AdminProvider>
       </body>
