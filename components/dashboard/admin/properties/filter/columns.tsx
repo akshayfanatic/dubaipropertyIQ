@@ -8,6 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { deleteProperty } from '@/lib/db/properties/actions';
+import { toast } from 'sonner';
 
 const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
   available: 'default',
@@ -86,15 +88,21 @@ function RowActions({ property }: { property: Property }) {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this property?')) return;
+    if (!confirm('Are you sure you want to delete this property? This action cannot be undone.')) return;
 
     setIsDeleting(true);
     try {
-      // TODO: Implement delete mutation
-      console.log('Delete property:', property.id);
+      const result = await deleteProperty(property.id);
+
+      if (!result?.success) {
+        toast.error(result?.message || 'Failed to delete property');
+        return;
+      }
+
+      toast.success('Property deleted successfully');
       router.refresh();
     } catch (error) {
-      console.error('Failed to delete:', error);
+      toast.error('An unexpected error occurred');
     } finally {
       setIsDeleting(false);
     }
