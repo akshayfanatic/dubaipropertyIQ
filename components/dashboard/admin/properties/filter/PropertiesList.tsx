@@ -26,6 +26,7 @@ export async function PropertiesList({ filters }: PropertiesListProps) {
     notFound();
   }
 
+  console.log(data);
   if (data.data.length === 0) {
     return (
       <EmptyState

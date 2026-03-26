@@ -6,7 +6,7 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import type { Property, PropertyFilters, PaginatedResult } from '@/types/property';
+import type { Property, PropertyFilters, PaginatedResult, PropertyListItem } from '@/types/property';
 
 /**
  * Get all properties with optional filters and pagination
@@ -20,7 +20,29 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     const to = from + pageSize - 1;
 
     // Query for data with pagination
-    let query = supabase.from('properties').select('*', { count: 'exact' });
+    let query = supabase.from('properties').select(
+      `
+    id,
+    title,
+    description,
+    bedrooms,
+    bathrooms,
+    size_sqft,
+    price_aed,
+    status,
+    golden_visa_eligible,
+    photos,
+    features,
+    floor_plan,
+    created_at,
+    updated_at,
+    category:categories (
+      id,
+      name
+    )
+  `,
+      { count: 'exact' },
+    );
 
     // Apply filters
     if (filters) {
@@ -72,8 +94,8 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       });
     }
 
-    const result: PaginatedResult<Property> = {
-      data: data as Property[],
+    const result: PaginatedResult<PropertyListItem> = {
+      data: data as PropertyListItem[],
       total: count || 0,
       page,
       pageSize,

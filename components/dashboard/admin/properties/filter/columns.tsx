@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Property } from '@/types';
+import { Category, Property } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -38,9 +38,9 @@ export const columns: ColumnDef<Property>[] = [
     cell: ({ row }) => <span className="font-medium">{row.getValue('title')}</span>,
   },
   {
-    accessorKey: 'property_type',
+    accessorKey: 'category',
     header: 'Type',
-    cell: ({ row }) => <span className="capitalize">{row.getValue('property_type')}</span>,
+    cell: ({ row }) => <span>{(row.getValue('category') as Category)?.name}</span>,
   },
   {
     accessorKey: 'bedrooms',
