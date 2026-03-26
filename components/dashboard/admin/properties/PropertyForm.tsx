@@ -95,15 +95,12 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
     }
   };
 
-  const categoryOptions = [
-    { value: '', label: 'Select a category' },
-    ...categories
-      .filter((c) => c.is_active)
-      .map((c) => ({
-        value: c.id,
-        label: c.name,
-      })),
-  ];
+  const categoryOptions = categories
+    .filter((c) => c.is_active)
+    .map((c) => ({
+      value: c.id,
+      label: c.name,
+    }));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -128,23 +125,15 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
       </div>
 
       {/* Category */}
-      {/* <div className="space-y-2">
+      <div className="space-y-2">
         <Label htmlFor="category_id">Category *</Label>
         <Controller
           name="category_id"
           control={control}
-          render={({ field }) => (
-            <SelectField
-              options={categoryOptions}
-              placeholder="Select a category"
-              value={field.value}
-              onValueChange={field.onChange}
-              className="w-full"
-            />
-          )}
+          render={({ field }) => <SelectField options={categoryOptions} placeholder="Select a category" value={field.value} onValueChange={field.onChange} className="w-full" />}
         />
         {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
-      </div> */}
+      </div>
 
       {/* Bedrooms & Bathrooms */}
       <div className="grid grid-cols-2 gap-4">
