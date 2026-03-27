@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Category, Property } from '@/types';
+import { PropertyListItem } from '@/types/property';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -31,7 +31,7 @@ function formatSize(size: number): string {
   return new Intl.NumberFormat('en-US').format(size);
 }
 
-export const columns: ColumnDef<Property>[] = [
+export const columns: ColumnDef<PropertyListItem>[] = [
   {
     accessorKey: 'title',
     header: 'Title',
@@ -40,7 +40,10 @@ export const columns: ColumnDef<Property>[] = [
   {
     accessorKey: 'category',
     header: 'Type',
-    cell: ({ row }) => <span>{(row.getValue('category') as Category)?.name}</span>,
+    cell: ({ row }) => {
+      const category = row.getValue('category') as { id: string; name: string }[] | undefined;
+      return <span>{category?.[0]?.name ?? '-'}</span>;
+    },
   },
   {
     accessorKey: 'bedrooms',
@@ -79,7 +82,7 @@ export const columns: ColumnDef<Property>[] = [
   },
 ];
 
-function RowActions({ property }: { property: Property }) {
+function RowActions({ property }: { property: PropertyListItem }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 

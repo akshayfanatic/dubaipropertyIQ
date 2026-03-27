@@ -1,10 +1,9 @@
-import { notFound } from 'next/navigation';
 import { Building2, Plus } from 'lucide-react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/no-item-found';
 import { getPropertiesAdmin } from '@/lib/db/properties/queries';
-import { Property, PropertyFilters, PaginatedResult } from '@/types';
-import { cn, delay } from '@/lib/utils';
+import { PropertyListItem, PropertyFilters, PaginatedResult } from '@/types/property';
+import { delay } from '@/lib/utils';
 import { DataTable } from '@/components/ui/data-table';
 import { Pagination } from '@/components/ui/pagination';
 import { columns } from './columns';
@@ -17,16 +16,16 @@ interface PropertiesListProps {
 export async function PropertiesList({ filters }: PropertiesListProps) {
   await delay();
 
-  const { success, data } = (await getPropertiesAdmin(filters)) as {
+  const { success, data, error } = (await getPropertiesAdmin(filters)) as {
     success: boolean;
-    data?: PaginatedResult<Property>;
+    data?: PaginatedResult<PropertyListItem>;
+    error?: string;
   };
 
   if (!success || !data) {
-    notFound();
+    throw new Error(error || 'Failed to fetch properties');
   }
 
-  console.log(data);
   if (data.data.length === 0) {
     return (
       <EmptyState

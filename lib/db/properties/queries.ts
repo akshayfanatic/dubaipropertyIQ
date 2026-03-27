@@ -109,6 +109,7 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       data: result,
     });
   } catch (error) {
+    console.error('[getPropertiesAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch properties';
     return ApiResponse({
       success: false,
@@ -152,6 +153,7 @@ export async function getPropertyByIdAdmin(id: string) {
       data: data as Property,
     });
   } catch (error) {
+    console.error('[getPropertyByIdAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch property';
     return ApiResponse({
       success: false,
@@ -187,6 +189,7 @@ export async function getFeaturedPropertiesAdmin(limit: number = 6) {
       data: data as Property[],
     });
   } catch (error) {
+    console.error('[getFeaturedPropertiesAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch featured properties';
     return ApiResponse({
       success: false,
@@ -238,6 +241,7 @@ export async function searchPropertiesAdmin(searchTerm: string, limit: number = 
       data: data as Property[],
     });
   } catch (error) {
+    console.error('[searchPropertiesAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to search properties';
     return ApiResponse({
       success: false,
@@ -287,6 +291,7 @@ export async function getPropertyStatsAdmin() {
       data: stats,
     });
   } catch (error) {
+    console.error('[getPropertyStatsAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch property stats';
     return ApiResponse({
       success: false,
