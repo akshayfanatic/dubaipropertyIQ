@@ -14,6 +14,7 @@ import { updateProperty } from '@/lib/db/properties/actions';
 import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
+import { ImageUploader } from '@/components/ui/image-uploader';
 
 interface PropertyFormProps {
   property?: Property; // For edit mode
@@ -232,6 +233,16 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
             </>
           )}
         />
+      </div>
+
+      {/* Photos */}
+      <div className="space-y-2">
+        <Controller
+          name="photos"
+          control={control}
+          render={({ field }) => <ImageUploader bucket="property-photos" value={field.value} onChange={field.onChange} maxImages={10} label="Photos" folder={property?.id || 'temp'} />}
+        />
+        {errors.photos && <p className="text-sm text-destructive">{errors.photos.message}</p>}
       </div>
 
       {/* Floor Plan URL */}
