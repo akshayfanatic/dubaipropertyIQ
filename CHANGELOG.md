@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.5...v0.2.6) (2026-03-27)
+
+### Features
+
+- **admin categories crud:** created crud methods for handling category data ([42be056](https://github.com/akshayfanatic/dubaipropertyIQ/commit/42be056ccec0894b437265b2133ef3b7606722d9))
+- **admin properties form:** implement feature for creating form for creation edit , create properties by admin ([3726c29](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3726c298ff0ecaed009df4fdfd5409046970270a))
+- **properites:** implement pagination in properties data-table and pagination ([82f3129](https://github.com/akshayfanatic/dubaipropertyIQ/commit/82f3129376d84883e097cb8eb3e43e78ee05a101))
+- **properties:** add photo upload feature to PropertyForm ([313d59e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/313d59e86bb9dfdff9276d8f4c0558fd22e1a291))
+- **properties:** added properties feature to admin dashboard ([dfa150f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/dfa150fd6e10d1cc39086dba893a76f1ce1eac07))
+- **properties:** implement properties data table ([770ce10](https://github.com/akshayfanatic/dubaipropertyIQ/commit/770ce1005ac4a29b7545aa808cc8994e88118e6e))
+- **sooner:** implement toast feature in admin dashboard ([175b69e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/175b69e0ac03f613b09244ab6cde82b772d66905))
+- **supabase:** upgraded supabase package to latest version ([f5d940d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f5d940d48a16c973f2f43a8f6c360362b8687ff2))
+- **table:** created a animated table skelton and remove singular skelton and make it reusabble ([978a421](https://github.com/akshayfanatic/dubaipropertyIQ/commit/978a4215d8f6c0af5ed5dc6f4279f35140303e76))
+
+### Bug Fixes
+
+- **error handling:** fix issue regarding error handling and created a nested level error fallback ([d3e43c0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d3e43c012efc29bc2791dcc224019fe866a33f63))
+- **loading properties:** reapply same loading skelton in layout which was previous ([26c7b9a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/26c7b9a45a4f19ade6efe001e54683af3af84dfd))
+- **migrations:** fix db migrations issue and pull latest migration from db ([c312466](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c312466c30de85367368e47af920b5e12c1f28e2))
+- **properties:** change key in queries and columns ([3790248](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3790248afe5a03120425f6b7be7824109460aa0a))
+- **properties:** fix properties loading issue ([84603df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/84603df35319591620fe03461c38b84001105401))
+- **properties:** remove unused usestate from components ([6d68951](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6d68951e3c20d547b3930cd7b01b01546dfed0da))
+- **property form:** fix issue regarding form ([1404ad1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1404ad179b6d552dd8444a279d02152cf0fcea43))
+- **server action:** increase server action body size ([6052b43](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6052b4323e4fab579200a16a0f4513a6611a2b9b))
+- **types:** fix issue regarding types in property and categories ([8d0516f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8d0516f7992aae903b58d203265dac383422b9da))
+
+### Code Refactoring
+
+- **db table properties:** change property_status data type to enum and created new enum property_status_enum ([1e3bfc8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1e3bfc825107d078bf6507fb94b204d7849b0fbb))
+- **properties:** Reorganize Folder Structure and seperate resuable component ([836b5ba](https://github.com/akshayfanatic/dubaipropertyIQ/commit/836b5ba61977067ef386392ab8162d04fdd9eb48))
+- **reorganize folder structure:** implement new folder structure for not displaying parent layout to property/new page ([eda17ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/eda17ceacb8ef977a9ea47aad0e5e8ee4f2f237d))
+
 ### [0.2.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.4...v0.2.5) (2026-03-24)
 
 ### Features
