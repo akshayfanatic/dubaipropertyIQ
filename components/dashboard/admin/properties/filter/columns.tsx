@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { PropertyListItem } from '@/types/property';
+import { Category, PropertyListItem } from '@/types/property';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -40,10 +40,7 @@ export const columns: ColumnDef<PropertyListItem>[] = [
   {
     accessorKey: 'category',
     header: 'Type',
-    cell: ({ row }) => {
-      const category = row.getValue('category') as { id: string; name: string }[] | undefined;
-      return <span>{category?.[0]?.name ?? '-'}</span>;
-    },
+    cell: ({ row }) => <span>{(row.getValue('category') as Category)?.name}</span>,
   },
   {
     accessorKey: 'bedrooms',

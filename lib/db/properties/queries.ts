@@ -36,9 +36,10 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     floor_plan,
     created_at,
     updated_at,
-    category:categories (
+    category:categories!inner (
       id,
-      name
+      name,
+      slug
     )
   `,
       { count: 'exact' },
@@ -49,8 +50,9 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       if (filters.search) {
         query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
       }
+
       if (filters.property_type) {
-        query = query.eq('property_type', filters.property_type);
+        query = query.eq('categories.slug', filters.property_type); // Filter by category slug (property_type in URL maps to category.slug)
       }
       if (filters.status) {
         query = query.eq('status', filters.status);
