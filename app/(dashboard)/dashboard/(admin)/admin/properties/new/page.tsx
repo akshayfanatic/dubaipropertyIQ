@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
-import { getActiveCategories } from '@/lib/db/categories/queries';
+import { getAllCategories } from '@/lib/db/categories/queries';
 import { PageHeader } from '@/components/shared/page-header';
 import type { Category } from '@/types/category';
 
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function NewPropertyPage() {
-  // Fetch active categories for the form
-  const categoriesResult = await getActiveCategories();
+  // Fetch categories for the form
+  const categoriesResult = await getAllCategories();
   const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data : [];
 
   return (

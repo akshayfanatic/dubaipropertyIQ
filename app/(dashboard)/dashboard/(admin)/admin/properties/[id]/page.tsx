@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
-import { getActiveCategories } from '@/lib/db/categories/queries';
+import { getAllCategories } from '@/lib/db/categories/queries';
 import { getPropertyByIdAdmin } from '@/lib/db/properties/queries';
 import { PageHeader } from '@/components/shared/page-header';
 import { Category } from '@/types/category';
@@ -20,7 +20,7 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
   const { id } = await params;
 
   // Fetch property and categories in parallel
-  const [propertyResult, categoriesResult] = await Promise.all([getPropertyByIdAdmin(id), getActiveCategories()]);
+  const [propertyResult, categoriesResult] = await Promise.all([getPropertyByIdAdmin(id), getAllCategories()]);
 
   // Handle property not found
   if (!propertyResult.success || !propertyResult.data) {
