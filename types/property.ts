@@ -3,21 +3,13 @@
  * Types for property listings in DubaiPropertyIQ
  */
 
+import { Category } from './category';
+
 // Keep for backward compatibility with existing code
 export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | 'land';
 
 export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  icon?: string;
-  sort_order: number;
-  is_active: boolean;
-  created_at: string;
-}
 export interface Property {
   id: string;
   title: string;

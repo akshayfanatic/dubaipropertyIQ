@@ -4,7 +4,8 @@ import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyFo
 import { getActiveCategories } from '@/lib/db/categories/queries';
 import { getPropertyByIdAdmin } from '@/lib/db/properties/queries';
 import { PageHeader } from '@/components/shared/page-header';
-import type { Category, Property } from '@/types/property';
+import { Category } from '@/types/category';
+import { Property } from '@/types';
 
 interface EditPropertyPageProps {
   params: Promise<{ id: string }>;

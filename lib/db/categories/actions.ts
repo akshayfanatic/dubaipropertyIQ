@@ -6,7 +6,8 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import type { Category } from '@/types/property';
+import { Category } from '@/types/category';
+
 import { revalidatePath } from 'next/cache';
 
 /**

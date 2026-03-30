@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
 import { getActiveCategories } from '@/lib/db/categories/queries';
 import { PageHeader } from '@/components/shared/page-header';
-import type { Category } from '@/types/property';
+import type { Category } from '@/types/category';
 
 export const metadata: Metadata = {
   title: 'Add New Property | Admin Dashboard',
