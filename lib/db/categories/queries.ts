@@ -7,51 +7,16 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Category } from '@/types/category';
-import { PaginatedResult } from '@/types/property';
 
 /**
- * Get all active categories (for public dropdowns)
+ * Get all categories
+ * Used for both public dropdowns and admin management
  */
-export async function getActiveCategories(): Promise<ApiResponse<Category[]>> {
+export async function getAllCategories(): Promise<ApiResponse<Category[]>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('categories').select('*').eq('is_active', true).order('sort_order', { ascending: true });
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Categories fetched successfully',
-      data: data as Category[],
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to fetch categories';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Get all categories (admin - includes inactive)
- */
-export async function getAllCategoriesAdmin() {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('categories').select('*').order('sort_order', { ascending: true });
+    const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -82,7 +47,7 @@ export async function getAllCategoriesAdmin() {
 /**
  * Get a single category by ID
  */
-export async function getCategoryById(id: string) {
+export async function getCategoryById(id: string): Promise<ApiResponse<Category | null>> {
   try {
     const supabase = adminClient();
 
@@ -125,11 +90,11 @@ export async function getCategoryById(id: string) {
 /**
  * Get a category by slug
  */
-export async function getCategoryBySlug(slug: string) {
+export async function getCategoryBySlug(slug: string): Promise<ApiResponse<Category | null>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('categories').select('*').eq('slug', slug).eq('is_active', true).single();
+    const { data, error } = await supabase.from('categories').select('*').eq('slug', slug).single();
 
     if (error) {
       if (error.code === 'PGRST116') {

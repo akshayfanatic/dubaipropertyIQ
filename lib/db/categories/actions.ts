@@ -6,7 +6,7 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { Category } from '@/types/category';
+import { Category, UNCATEGORIZED_CATEGORY_ID } from '@/types/category';
 
 import { revalidatePath } from 'next/cache';
 
@@ -17,9 +17,6 @@ export interface CategoryInsert {
   name: string;
   slug: string;
   description?: string;
-  icon?: string;
-  sort_order?: number;
-  is_active?: boolean;
 }
 
 /**
@@ -71,6 +68,16 @@ export async function createCategory(category: CategoryInsert) {
  * Update an existing category
  */
 export async function updateCategory(id: string, updates: CategoryUpdate) {
+  // Prevent editing of Uncategorized category
+  if (id === UNCATEGORIZED_CATEGORY_ID) {
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.FORBIDDEN,
+      message: 'Cannot edit the Uncategorized category',
+      error: { code: 'FORBIDDEN' },
+    });
+  }
+
   try {
     const supabase = adminClient();
 
@@ -116,23 +123,23 @@ export async function updateCategory(id: string, updates: CategoryUpdate) {
 
 /**
  * Delete a category
+ * Properties assigned to this category will be reassigned to "Uncategorized"
  */
 export async function deleteCategory(id: string) {
+  // Prevent deletion of Uncategorized category
+  if (id === UNCATEGORIZED_CATEGORY_ID) {
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.FORBIDDEN,
+      message: 'Cannot delete the Uncategorized category',
+      error: { code: 'FORBIDDEN' },
+    });
+  }
+
   try {
     const supabase = adminClient();
 
-    // Check if category has properties assigned
-    const { data: propertiesWithCategory } = await supabase.from('properties').select('id').eq('category_id', id).limit(1);
-
-    if (propertiesWithCategory && propertiesWithCategory.length > 0) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Cannot delete category with assigned properties',
-        error: { code: 'CATEGORY_IN_USE' },
-      });
-    }
-
+    // Delete category - properties will be reassigned to "Uncategorized" via DB constraint
     const { error } = await supabase.from('categories').delete().eq('id', id);
 
     if (error) {
