@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.6...v0.2.7) (2026-03-31)
+
+### Features
+
+- **categories:** add category types and validation schemas ([2984e80](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2984e80c73786ac041d72e1aa41a4f37f80c71ff))
+- **categories:** implement categories search filter ([f09f753](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f09f75311c7867756e6253d7ae264614c966b77f))
+- **categories:** implement category CRUD with uncategorized protection ([9aadb61](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9aadb61761be1508d1314da20fd0885f33783e9a))
+- **category:** enable feature publicly available ([f0842f6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f0842f68b1c446bb64813297fa68d4e0c79a93d6))
+- **db:** add uncategorized category migration ([b3c9e72](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b3c9e72cd4b11b8d546ef385d142ce9ad000122a))
+- **loading:** implement suspense boundary on page level and created a reusable skelton ([cde8cd8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/cde8cd8dd287e45b727236323dab9999d02c7e38))
+- **pages:** add category admin pages and update property pages ([e75cbb4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e75cbb4535544b5798967a1eb50bf0917e139b4d))
+- **ui:** add category admin components ([11a1477](https://github.com/akshayfanatic/dubaipropertyIQ/commit/11a14770b25c510df5e770e6b2715c1308fcfb5d))
+- **utils:** add FORBIDDEN (403) to HttpStatus ([8ab5f77](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8ab5f77dcb98f51d152a1898500e261964776007))
+
+### Code Refactoring
+
+- **categories:** use swr for displaying category options client side ([7cfea1a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7cfea1a8dd3faaa79adb3bb92f035983f013d60b))
+- **types:** reorganzied types based on their responsiblity ([db130a4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/db130a4eb09218387917d87ea146752073929ddc))
+- **types:** reorganzied types based on their responsiblity ([9f42bde](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9f42bdef764f6aacb51bd55377a79d0d721992e1))
+
 ### [0.2.6](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.5...v0.2.6) (2026-03-27)
 
 ### Features
