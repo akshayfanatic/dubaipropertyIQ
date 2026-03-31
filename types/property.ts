@@ -3,21 +3,17 @@
  * Types for property listings in DubaiPropertyIQ
  */
 
+import { Category } from './category';
+import type { PaginatedResult } from './shared';
+
+// Re-export for convenience
+export type { PaginatedResult };
+
 // Keep for backward compatibility with existing code
 export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | 'land';
 
 export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  icon?: string;
-  sort_order: number;
-  is_active: boolean;
-  created_at: string;
-}
 export interface Property {
   id: string;
   title: string;
@@ -61,14 +57,6 @@ export interface PropertyFilters {
   sortOrder?: SortOrder;
   page?: number;
   pageSize?: number;
-}
-
-export interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
 }
 
 // Helper type for category with joined data

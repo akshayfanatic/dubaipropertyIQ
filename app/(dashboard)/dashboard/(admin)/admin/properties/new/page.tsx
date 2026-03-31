@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
-import { getActiveCategories } from '@/lib/db/categories/queries';
+import { getCategoriesAdmin } from '@/lib/db/categories/queries';
 import { PageHeader } from '@/components/shared/page-header';
-import type { Category } from '@/types/property';
+import type { Category } from '@/types/category';
 
 export const metadata: Metadata = {
   title: 'Add New Property | Admin Dashboard',
@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default async function NewPropertyPage() {
-  // Fetch active categories for the form
-  const categoriesResult = await getActiveCategories();
-  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data : [];
+  // Fetch categories for the form
+  const categoriesResult = await getCategoriesAdmin();
+  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data.data : [];
 
   return (
     <div className="space-y-6">

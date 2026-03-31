@@ -3,20 +3,14 @@
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Search, Filter, RotateCcw } from 'lucide-react';
+import useSWR from 'swr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SelectField } from '@/components/ui/select-field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
-
-const propertyTypeOptions = [
-  { value: 'all', label: 'All Types' },
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'villa', label: 'Villa' },
-  { value: 'townhouse', label: 'Townhouse' },
-  { value: 'penthouse', label: 'Penthouse' },
-  { value: 'land', label: 'Land' },
-];
+import { CategoryOption } from '@/types/category';
+import { fetcher } from '@/lib/utils';
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
@@ -29,6 +23,8 @@ const statusOptions = [
 export function FilterBar() {
   const { control, reset } = useFormContext();
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const { data: categoryOptions, isLoading } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
@@ -46,7 +42,16 @@ export function FilterBar() {
       <Controller
         name="property_type"
         control={control}
-        render={({ field }) => <SelectField options={propertyTypeOptions} placeholder="Type" value={field.value} onValueChange={field.onChange} className="w-full sm:w-40" />}
+        render={({ field }) => (
+          <SelectField
+            options={categoryOptions ?? []}
+            placeholder={isLoading ? 'Loading...' : 'Type'}
+            value={field.value}
+            onValueChange={field.onChange}
+            className="w-full sm:w-40"
+            disabled={isLoading}
+          />
+        )}
       />
 
       <Controller

@@ -8,13 +8,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SelectField } from '@/components/ui/select-field';
 import { PropertyFormData, propertyFormSchema } from '@/lib/validations/property';
-import { Category } from '@/types/property';
+
 import { createProperty } from '@/lib/db/properties/actions';
 import { updateProperty } from '@/lib/db/properties/actions';
 import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import { Category } from '@/types/category';
 
 interface PropertyFormProps {
   property?: Property; // For edit mode
@@ -96,12 +97,10 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
     }
   };
 
-  const categoryOptions = categories
-    .filter((c) => c.is_active)
-    .map((c) => ({
-      value: c.id,
-      label: c.name,
-    }));
+  const categoryOptions = categories.map((c) => ({
+    value: c.id,
+    label: c.name,
+  }));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

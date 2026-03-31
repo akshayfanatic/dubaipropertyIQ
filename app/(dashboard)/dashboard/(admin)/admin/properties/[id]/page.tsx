@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
-import { getActiveCategories } from '@/lib/db/categories/queries';
+import { getCategoriesAdmin } from '@/lib/db/categories/queries';
 import { getPropertyByIdAdmin } from '@/lib/db/properties/queries';
 import { PageHeader } from '@/components/shared/page-header';
-import type { Category, Property } from '@/types/property';
+import { Category } from '@/types/category';
+import { Property } from '@/types';
 
 interface EditPropertyPageProps {
   params: Promise<{ id: string }>;
@@ -19,7 +20,7 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
   const { id } = await params;
 
   // Fetch property and categories in parallel
-  const [propertyResult, categoriesResult] = await Promise.all([getPropertyByIdAdmin(id), getActiveCategories()]);
+  const [propertyResult, categoriesResult] = await Promise.all([getPropertyByIdAdmin(id), getCategoriesAdmin()]);
 
   // Handle property not found
   if (!propertyResult.success || !propertyResult.data) {
@@ -27,7 +28,7 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
   }
 
   const property = propertyResult.data as Property;
-  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data : [];
+  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data.data : [];
 
   return (
     <div className="space-y-6">

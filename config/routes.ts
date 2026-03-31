@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, BarChart3, FileStack, MapPin, Briefcase } from 'lucide-react';
+import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, BarChart3, FileStack, MapPin, Briefcase, Layers } from 'lucide-react';
 
 // ============================================
 // Types
@@ -45,6 +45,7 @@ export const adminRoutes: RouteGroup[] = [
     title: 'Management',
     items: [
       { title: 'Properties', href: '/dashboard/admin/properties', icon: Building2 },
+      { title: 'Categories', href: '/dashboard/admin/categories', icon: Layers },
       { title: 'Users', href: '/dashboard/admin/users', icon: Users, isComingSoon: true },
       { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack, isComingSoon: true },
       { title: 'Areas', href: '/dashboard/admin/areas', icon: MapPin, isComingSoon: true },

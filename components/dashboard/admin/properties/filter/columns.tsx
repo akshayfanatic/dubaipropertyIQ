@@ -1,7 +1,8 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Category, PropertyListItem } from '@/types/property';
+import { PropertyListItem } from '@/types/property';
+import { Category } from '@/types/category';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
