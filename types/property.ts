@@ -4,6 +4,10 @@
  */
 
 import { Category } from './category';
+import type { PaginatedResult } from './shared';
+
+// Re-export for convenience
+export type { PaginatedResult };
 
 // Keep for backward compatibility with existing code
 export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | 'land';
@@ -53,14 +57,6 @@ export interface PropertyFilters {
   sortOrder?: SortOrder;
   page?: number;
   pageSize?: number;
-}
-
-export interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
 }
 
 // Helper type for category with joined data
