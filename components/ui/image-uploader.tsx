@@ -117,9 +117,9 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
       {value.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {value.map((url, index) => (
-            <div key={url} className="group relative aspect-square overflow-hidden rounded-lg border bg-muted">
+            <div key={url} className="group relative overflow-hidden rounded-lg border bg-muted">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={`Photo ${index + 1}`} className="h-full w-full object-cover" />
+              <img src={url} alt={`Photo ${index + 1}`} className="h-full w-full object-contain" />
               <button
                 type="button"
                 onClick={() => handleRemove(index)}
