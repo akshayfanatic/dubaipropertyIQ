@@ -3,6 +3,8 @@
  * Types for property categories in DubaiPropertyIQ
  */
 
+import type { PaginationFilters, SearchFilters } from './shared';
+
 export interface Category {
   id: string;
   name: string;
@@ -21,6 +23,12 @@ export type CategoryOption = {
   label: string;
   value: string;
 };
+
+/**
+ * Category filters for admin list page
+ * Extends shared pagination and search filters
+ */
+export interface CategoryFilters extends PaginationFilters, SearchFilters {}
 
 /**
  * Fixed ID for the default "Uncategorized" category
