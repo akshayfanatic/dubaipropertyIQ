@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { PropertyForm } from '@/components/dashboard/admin/properties/PropertyForm';
-import { getAllCategories } from '@/lib/db/categories/queries';
+import { getCategoriesAdmin } from '@/lib/db/categories/queries';
 import { PageHeader } from '@/components/shared/page-header';
 import type { Category } from '@/types/category';
 
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default async function NewPropertyPage() {
   // Fetch categories for the form
-  const categoriesResult = await getAllCategories();
-  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data : [];
+  const categoriesResult = await getCategoriesAdmin();
+  const categories: Category[] = categoriesResult.success && categoriesResult.data ? categoriesResult.data.data : [];
 
   return (
     <div className="space-y-6">

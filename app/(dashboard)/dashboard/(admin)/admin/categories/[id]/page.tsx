@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   title: 'Edit Category | Admin Dashboard',
   description: 'Edit an existing property category',
 };
-
 export default async function EditCategoryPage({ params }: EditCategoryPageProps) {
   const { id } = await params;
   const { success, data: category } = await getCategoryById(id);

@@ -24,7 +24,7 @@ export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: 'description',
     header: 'Description',
-    cell: ({ row }) => <span className="text-muted-foreground line-clamp-2 max-w-[300px]">{(row.getValue('description') as string | undefined) || '-'}</span>,
+    cell: ({ row }) => <span className="text-muted-foreground line-clamp-2 max-w-75">{(row.getValue('description') as string | undefined) || '-'}</span>,
   },
   {
     id: 'actions',

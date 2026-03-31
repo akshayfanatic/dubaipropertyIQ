@@ -1,25 +1,32 @@
 import { Suspense } from 'react';
 import { CategoriesList } from '@/components/dashboard/admin/categories/CategoriesList';
 import { TableSkeleton } from '@/components/ui/table-skeleton';
-import { PageHeader } from '@/components/shared/page-header';
-import { buttonVariants } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
+import type { CategoryFilters } from '@/types/category';
 
-export default function CategoriesPage() {
+interface PageProps {
+  searchParams: Promise<{
+    search?: string;
+    page?: string;
+    pageSize?: string;
+  }>;
+}
+
+function buildFilters(params: Awaited<PageProps['searchParams']>): CategoryFilters {
+  return {
+    search: params.search || undefined,
+    page: params.page ? Number(params.page) : 1,
+    pageSize: params.pageSize ? Number(params.pageSize) : 10,
+  };
+}
+
+export default async function CategoriesPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const filters = buildFilters(params);
+  const filterKey = JSON.stringify(filters);
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <PageHeader title="Categories" description="Manage property categories" />
-        <Link href="/dashboard/admin/categories/new" className={buttonVariants({ variant: 'default' })}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Category
-        </Link>
-      </div>
-
-      <Suspense fallback={<TableSkeleton columns={4} rows={5} />}>
-        <CategoriesList />
-      </Suspense>
-    </div>
+    <Suspense key={filterKey} fallback={<TableSkeleton columns={4} rows={10} />}>
+      <CategoriesList filters={filters} />
+    </Suspense>
   );
 }

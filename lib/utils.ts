@@ -5,7 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Simulate network delay for loading state testing (remove in production)
+/**
+ * Function For Delaying async execution
+ * @param ms Default 1000ms
+ */
 export const delay = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
