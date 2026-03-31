@@ -15,6 +15,14 @@ export type CategoryInsert = Omit<Category, 'id' | 'created_at'>;
 export type CategoryUpdate = Partial<CategoryInsert>;
 
 /**
+ * Category option for select dropdowns
+ */
+export type CategoryOption = {
+  label: string;
+  value: string;
+};
+
+/**
  * Fixed ID for the default "Uncategorized" category
  * This category cannot be edited or deleted
  */
