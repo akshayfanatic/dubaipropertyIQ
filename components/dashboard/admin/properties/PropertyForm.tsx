@@ -15,8 +15,10 @@ import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import { SelectOption } from '@/components/ui/select-field';
 import { Category } from '@/types/category';
 import { DeveloperOption } from '@/types';
+import { getImageUrl } from '@/lib/utils';
 
 interface PropertyFormProps {
   property?: Property; // For edit mode
@@ -108,6 +110,13 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
     label: c.name,
   }));
 
+  // Map DeveloperOption to SelectOption, extracting URL from ImageObject
+  const developerSelectOptions: SelectOption[] = developerList.map((dev) => ({
+    value: dev.value,
+    label: dev.label,
+    logo_url: getImageUrl(dev.logo_url),
+  }));
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Title */}
@@ -148,7 +157,7 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
           name="developer_id"
           control={control}
           render={({ field }) => (
-            <SelectField options={developerList} placeholder="Select a developer (optional)" value={field.value ?? ''} onValueChange={(v) => field.onChange(v || null)} className="w-full" />
+            <SelectField options={developerSelectOptions} placeholder="Select a developer (optional)" value={field.value ?? ''} onValueChange={(v) => field.onChange(v || null)} className="w-full" />
           )}
         />
         {errors.developer_id && <p className="text-sm text-destructive">{errors.developer_id.message}</p>}
