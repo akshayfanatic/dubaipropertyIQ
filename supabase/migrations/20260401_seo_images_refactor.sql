@@ -11,7 +11,7 @@ DECLARE
   property_record RECORD;
   new_photos JSONB;
   photo_url TEXT;
-  photo_object JSON;
+  photo_object JSONB;
 BEGIN
   FOR property_record IN SELECT id, photos FROM properties WHERE photos IS NOT NULL AND photos != '{}' LOOP
     new_photos := '[]'::JSONB;
