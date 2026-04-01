@@ -109,10 +109,11 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
               }}
               maxImages={1}
               label="Logo"
+              accept="image/*,.svg"
             />
           )}
         />
-        <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG or WebP, max 5MB)</p>
+        <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG, WebP or SVG, max 5MB)</p>
       </div>
 
       {/* Description */}

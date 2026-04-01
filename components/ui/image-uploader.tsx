@@ -11,7 +11,7 @@ import type { ImageUploaderProps } from '@/types/storage';
 import type { ImageObject } from '@/types/images';
 import { toast } from 'sonner';
 
-export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept = 'image/jpeg,image/png,image/webp', label = 'Photos', required = false, folder }: ImageUploaderProps) {
+export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept = 'image/*', label = 'Photos', required = false, folder }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
