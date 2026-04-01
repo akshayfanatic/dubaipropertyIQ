@@ -4,16 +4,19 @@
  */
 
 import type { PaginationFilters, SearchFilters } from './shared';
+import type { ImageObject } from './images';
 
 export interface Category {
   id: string;
   name: string;
   slug: string;
   description?: string;
+  logo_url: ImageObject | null;
   created_at: string;
+  updated_at: string;
 }
 
-export type CategoryInsert = Omit<Category, 'id' | 'created_at'>;
+export type CategoryInsert = Omit<Category, 'id' | 'created_at' | 'updated_at'>;
 export type CategoryUpdate = Partial<CategoryInsert>;
 
 /**
@@ -22,6 +25,7 @@ export type CategoryUpdate = Partial<CategoryInsert>;
 export type CategoryOption = {
   label: string;
   value: string;
+  logo_url?: ImageObject | null;
 };
 
 /**

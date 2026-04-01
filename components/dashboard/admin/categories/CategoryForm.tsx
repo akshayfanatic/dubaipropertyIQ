@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Category } from '@/types/category';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { generateSlug } from '@/lib/utils';
+import { ImageUploader } from '@/components/ui/image-uploader';
 
 interface CategoryFormProps {
   category?: Category;
@@ -27,6 +28,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -35,11 +37,13 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
           name: category.name,
           slug: category.slug,
           description: category.description || '',
+          logo_url: category.logo_url || null,
         }
       : {
           name: '',
           slug: '',
           description: '',
+          logo_url: null,
         },
   });
 
@@ -85,6 +89,30 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
         <Input id="slug" placeholder="e.g., apartment" {...register('slug')} className={errors.slug ? 'border-destructive' : ''} />
         {errors.slug && <p className="text-sm text-destructive">{errors.slug.message}</p>}
         <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
+      </div>
+
+      {/* Logo */}
+      <div className="space-y-2">
+        <Label>Category Logo</Label>
+        <Controller
+          name="logo_url"
+          control={control}
+          render={({ field }) => (
+            <ImageUploader
+              bucket="category-logos"
+              folder="logos"
+              value={field.value ? [field.value] : []}
+              onChange={(urls) => {
+                const logoUrl = urls[0] || null;
+                field.onChange(logoUrl);
+                setValue('logo_url', logoUrl, { shouldDirty: true, shouldTouch: true });
+              }}
+              maxImages={1}
+              label="Logo"
+            />
+          )}
+        />
+        <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG or WebP, max 5MB)</p>
       </div>
 
       {/* Description */}

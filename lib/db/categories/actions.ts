@@ -7,22 +7,19 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Category, UNCATEGORIZED_CATEGORY_ID } from '@/types/category';
+import { CategoryInsertData, CategoryUpdateData } from '@/lib/validations/category';
 
 import { revalidatePath } from 'next/cache';
 
 /**
  * Category insert type (for creating new categories)
  */
-export interface CategoryInsert {
-  name: string;
-  slug: string;
-  description?: string;
-}
+export type CategoryInsert = CategoryInsertData;
 
 /**
  * Category update type (for partial updates)
  */
-export type CategoryUpdate = Partial<CategoryInsert>;
+export type CategoryUpdate = CategoryUpdateData;
 
 /**
  * Create a new category

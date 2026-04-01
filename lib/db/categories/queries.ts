@@ -194,7 +194,7 @@ export async function getCategoryOptionsAdmin(): Promise<ApiResponse<CategoryOpt
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('categories').select('name, slug').order('name', { ascending: true });
+    const { data, error } = await supabase.from('categories').select('name, slug, logo_url').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -206,7 +206,7 @@ export async function getCategoryOptionsAdmin(): Promise<ApiResponse<CategoryOpt
     }
 
     // Format for select dropdown: All Categories + actual categories
-    const options: CategoryOption[] = [{ label: 'All Categories', value: 'all' }, ...data.map((cat) => ({ label: cat.name, value: cat.slug }))];
+    const options: CategoryOption[] = [{ label: 'All Categories', value: 'all' }, ...data.map((cat) => ({ label: cat.name, value: cat.slug, logo_url: cat.logo_url }))];
 
     return ApiResponse({
       success: true,
