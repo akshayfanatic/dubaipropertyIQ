@@ -5,7 +5,10 @@
 -- PROPERTIES TABLE: photos TEXT[] -> JSONB
 -- ============================================
 
--- First, migrate existing data to new format
+-- Step 1: Add new column with JSONB type
+ALTER TABLE properties ADD COLUMN IF NOT EXISTS photos_new JSONB DEFAULT '[]'::JSONB;
+
+-- Step 2: Migrate existing data to new format
 DO $$
 DECLARE
   property_record RECORD;
@@ -32,20 +35,24 @@ BEGIN
       new_photos := new_photos || photo_object;
     END LOOP;
 
-    UPDATE properties SET photos = new_photos WHERE id = property_record.id;
+    UPDATE properties SET photos_new = new_photos WHERE id = property_record.id;
   END LOOP;
 END $$;
 
--- Alter column type from TEXT[] to JSONB
-ALTER TABLE properties ALTER COLUMN photos DROP DEFAULT;
-ALTER TABLE properties ALTER COLUMN photos TYPE JSONB USING photos::JSONB;
+-- Step 3: Drop old column and rename new one
+ALTER TABLE properties DROP COLUMN photos;
+ALTER TABLE properties RENAME COLUMN photos_new TO photos;
+
 ALTER TABLE properties ALTER COLUMN photos SET DEFAULT '[]'::JSONB;
 
 -- ============================================
 -- DEVELOPERS TABLE: logo_url TEXT -> JSONB
 -- ============================================
 
--- First, migrate existing data
+-- Step 1: Add new column with JSONB type
+ALTER TABLE developers ADD COLUMN IF NOT EXISTS logo_url_new JSONB;
+
+-- Step 2: Migrate existing data
 DO $$
 DECLARE
   developer_record RECORD;
@@ -63,13 +70,14 @@ BEGIN
     END;
 
     UPDATE developers
-    SET logo_url = jsonb_build_object('url', developer_record.logo_url, 'alt_tag', alt_tag)
+    SET logo_url_new = jsonb_build_object('url', developer_record.logo_url, 'alt_tag', alt_tag)
     WHERE id = developer_record.id;
   END LOOP;
 END $$;
 
--- Alter column type from TEXT to JSONB
-ALTER TABLE developers ALTER COLUMN logo_url TYPE JSONB USING logo_url::JSONB;
+-- Step 3: Drop old column and rename new one
+ALTER TABLE developers DROP COLUMN logo_url;
+ALTER TABLE developers RENAME COLUMN logo_url_new TO logo_url;
 
 -- ============================================
 -- ADD INDEXES FOR JSONB QUERIES
