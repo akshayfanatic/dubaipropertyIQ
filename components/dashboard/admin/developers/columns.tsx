@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { deleteDeveloper } from '@/lib/db/developers/actions';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { Building2 } from 'lucide-react';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 
 export const columns: ColumnDef<Developer>[] = [
   {
@@ -25,14 +25,9 @@ export const columns: ColumnDef<Developer>[] = [
 
       return (
         <div className="flex items-center gap-3">
-          {logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={altTag} className="h-10 w-10 rounded-lg object-contain border" />
-          ) : (
-            <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center border">
-              <Building2 className="h-5 w-5 text-muted-foreground" />
-            </div>
-          )}
+          <div className="size-10">
+            <ImageWithFallback src={logoUrl} alt={altTag} width={40} height={40} className="rounded-lg object-contain border" fallbackClassName="rounded-lg border" useInitials={true} />
+          </div>
           <div>
             <span className="font-medium">{developer.name}</span>
             <p className="text-xs text-muted-foreground">{developer.years_active} years active</p>

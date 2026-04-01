@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 
 export interface SelectOption {
   label: string;
@@ -50,10 +51,12 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(({ opt
       <SelectContent position="popper" className="max-h-60">
         {options.map((option) => {
           const logoSrc = getLogoUrl(option.logo_url);
-          const logoAlt = getLogoAlt(option.logo_url);
+          const logoAlt = getLogoAlt(option.logo_url) || option.label;
           return (
             <SelectItem key={option.value} value={option.value} className="flex items-center gap-2">
-              {logoSrc && <img src={logoSrc} alt={logoAlt} className="h-4 w-4 rounded-sm object-cover shrink-0" />}
+              <div className="h-4 w-4 shrink-0">
+                <ImageWithFallback src={logoSrc} alt={logoAlt} width={16} height={16} className="rounded-sm object-cover" fallbackClassName="rounded-sm bg-muted" useInitials={true} />
+              </div>
               <span>{option.label}</span>
             </SelectItem>
           );

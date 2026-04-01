@@ -9,8 +9,30 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { deleteCategory } from '@/lib/db/categories/actions';
 import { toast } from 'sonner';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 
 export const columns: ColumnDef<Category>[] = [
+  {
+    accessorKey: 'logo_url',
+    header: 'Logo',
+    cell: ({ row }) => {
+      const logoUrl = row.getValue('logo_url') as { url: string; alt_tag: string } | null;
+      const categoryName = row.getValue('name') as string;
+      return (
+        <div className="size-10">
+          <ImageWithFallback
+            src={logoUrl?.url}
+            alt={logoUrl?.alt_tag || categoryName || 'Category'}
+            width={32}
+            height={32}
+            className="rounded-sm object-cover"
+            fallbackClassName="rounded-sm"
+            useInitials={!logoUrl?.url}
+          />
+        </div>
+      );
+    },
+  },
   {
     accessorKey: 'name',
     header: 'Name',
