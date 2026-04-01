@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { Developer } from '@/types/developer';
+import type { ImageObject } from '@/types/images';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,4 +59,57 @@ export function generateSlug(text: string): string {
     .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
     .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
     .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
+// ============ IMAGE HELPER FUNCTIONS ============
+
+/**
+ * Helper to extract alt tag from filename
+ * Removes file extension and converts dashes/underscores to spaces
+ */
+export function extractAltTag(filename: string): string {
+  // Remove file extension
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, '');
+
+  // Replace dashes, underscores, and multiple spaces with single space
+  const cleaned = nameWithoutExt.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+  // Capitalize first letter of each word
+  return cleaned
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+/**
+ * Create an ImageObject from a URL and filename
+ */
+export function createImageObject(url: string, filename: string): ImageObject {
+  return {
+    url,
+    alt_tag: extractAltTag(filename),
+  };
+}
+
+/**
+ * Fallback alt tag for images
+ */
+export const DEFAULT_ALT_TAG = 'Image';
+
+/**
+ * Get alt tag from ImageObject with fallback
+ */
+export function getAltTag(image: ImageObject | string | null | undefined): string {
+  if (!image) return DEFAULT_ALT_TAG;
+  if (typeof image === 'string') return DEFAULT_ALT_TAG;
+  return image.alt_tag || DEFAULT_ALT_TAG;
+}
+
+/**
+ * Get URL from ImageObject or string
+ */
+export function getImageUrl(image: ImageObject | string | null | undefined): string | null {
+  if (!image) return null;
+  if (typeof image === 'string') return image;
+  return image.url;
 }
