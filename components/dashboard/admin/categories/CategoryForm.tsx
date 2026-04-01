@@ -11,6 +11,7 @@ import { createCategory, updateCategory } from '@/lib/db/categories/actions';
 import { Category } from '@/types/category';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { generateSlug } from '@/lib/utils';
 
 interface CategoryFormProps {
   category?: Category;
@@ -25,6 +26,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -64,7 +66,16 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       {/* Name */}
       <div className="space-y-2">
         <Label htmlFor="name">Name *</Label>
-        <Input id="name" placeholder="e.g., Apartment" {...register('name')} className={errors.name ? 'border-destructive' : ''} />
+        <Input
+          id="name"
+          placeholder="e.g., Apartment"
+          {...register('name', {
+            onBlur: (e) => {
+              setValue('slug', generateSlug(e.target.value));
+            },
+          })}
+          className={errors.name ? 'border-destructive' : ''}
+        />
         {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
       </div>
 

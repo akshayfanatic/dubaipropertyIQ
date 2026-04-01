@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { developerSchema, DeveloperFormData } from '@/lib/validations/developer';
 import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
-import { calculateTrustScore, getTrustScoreLabel } from '@/lib/utils';
+import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -29,6 +29,7 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
     register,
     handleSubmit,
     watch,
+    setValue,
     control,
     formState: { errors, isSubmitting },
   } = useForm<DeveloperFormData>({
@@ -111,7 +112,16 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="name">Name *</Label>
-            <Input id="name" placeholder="e.g., Emaar Properties" {...register('name')} className={errors.name ? 'border-destructive' : ''} />
+            <Input
+              id="name"
+              placeholder="e.g., Emaar Properties"
+              {...register('name', {
+                onBlur: (e) => {
+                  setValue('slug', generateSlug(e.target.value));
+                },
+              })}
+              className={errors.name ? 'border-destructive' : ''}
+            />
             {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
           </div>
 

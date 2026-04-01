@@ -43,3 +43,19 @@ export function getTrustScoreLabel(score: number): { label: string; variant: 'de
   if (score >= 40) return { label: 'Average', variant: 'outline' };
   return { label: 'Poor', variant: 'destructive' };
 }
+
+/**
+ * Generate URL-friendly slug from text
+ * Converts text to lowercase, replaces spaces with hyphens, removes special characters
+ * @param text - The text to convert to slug
+ * @returns URL-friendly slug string
+ */
+export function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
