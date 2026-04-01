@@ -139,7 +139,18 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
             name="logo_url"
             control={control}
             render={({ field }) => (
-              <ImageUploader bucket="developer-logos" folder="logos" value={field.value ? [field.value] : []} onChange={(urls) => field.onChange(urls[0] || null)} maxImages={1} label="Logo" />
+              <ImageUploader
+                bucket="developer-logos"
+                folder="logos"
+                value={field.value ? [field.value] : []}
+                onChange={(urls) => {
+                  const logoUrl = urls[0] || null;
+                  field.onChange(logoUrl);
+                  setValue('logo_url', logoUrl, { shouldDirty: true, shouldTouch: true });
+                }}
+                maxImages={1}
+                label="Logo"
+              />
             )}
           />
           <p className="text-xs text-muted-foreground">Upload developer logo (JPG, PNG or WebP, max 5MB)</p>

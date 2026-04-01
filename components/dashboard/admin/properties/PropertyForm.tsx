@@ -41,6 +41,7 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -257,7 +258,19 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
         <Controller
           name="photos"
           control={control}
-          render={({ field }) => <ImageUploader bucket="property-photos" value={field.value} onChange={field.onChange} maxImages={10} label="Photos" folder={property?.id || 'temp'} />}
+          render={({ field }) => (
+            <ImageUploader
+              bucket="property-photos"
+              value={field.value}
+              onChange={(urls) => {
+                field.onChange(urls);
+                setValue('photos', urls, { shouldDirty: true, shouldTouch: true });
+              }}
+              maxImages={10}
+              label="Photos"
+              folder={property?.id || 'temp'}
+            />
+          )}
         />
         {errors.photos && <p className="text-sm text-destructive">{errors.photos.message}</p>}
       </div>
