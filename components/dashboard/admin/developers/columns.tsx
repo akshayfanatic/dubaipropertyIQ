@@ -19,11 +19,15 @@ export const columns: ColumnDef<Developer>[] = [
     header: 'Developer',
     cell: ({ row }) => {
       const developer = row.original;
+      // Handle both ImageObject and legacy string URL
+      const logoUrl = developer.logo_url ? (typeof developer.logo_url === 'string' ? developer.logo_url : developer.logo_url.url) : null;
+      const altTag = developer.logo_url && typeof developer.logo_url !== 'string' ? developer.logo_url.alt_tag : developer.name;
+
       return (
         <div className="flex items-center gap-3">
-          {developer.logo_url ? (
+          {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={developer.logo_url} alt={developer.name} className="h-10 w-10 rounded-lg object-contain border" />
+            <img src={logoUrl} alt={altTag} className="h-10 w-10 rounded-lg object-contain border" />
           ) : (
             <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center border">
               <Building2 className="h-5 w-5 text-muted-foreground" />
