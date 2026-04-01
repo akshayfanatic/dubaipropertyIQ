@@ -8,6 +8,7 @@ import { uploadImage, deleteImage } from '@/lib/storage/actions';
 import { extractPathFromUrl } from '@/lib/storage/utils';
 import { validateFiles } from '@/lib/validations/storage';
 import type { ImageUploaderProps } from '@/types/storage';
+import type { ImageObject } from '@/types/images';
 import { toast } from 'sonner';
 
 export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept = 'image/jpeg,image/png,image/webp', label = 'Photos', required = false, folder }: ImageUploaderProps) {
@@ -42,7 +43,7 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
       }
 
       setUploading(true);
-      const newUrls: string[] = [];
+      const newImages: ImageObject[] = [];
 
       try {
         for (let i = 0; i < filesToUpload.length; i++) {
@@ -51,8 +52,11 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
 
           const result = await uploadImage(file, bucket, folder);
 
-          if (result.success && result.url) {
-            newUrls.push(result.url);
+          if (result.success && result.url && result.alt_tag) {
+            newImages.push({
+              url: result.url,
+              alt_tag: result.alt_tag,
+            });
           } else {
             toast.error(result.error || `Failed to upload ${file.name}`);
           }
@@ -65,9 +69,9 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
         setUploadingIndex(null);
       }
 
-      if (newUrls.length > 0) {
-        onChange([...value, ...newUrls]);
-        toast.success(`${newUrls.length} photo(s) uploaded`);
+      if (newImages.length > 0) {
+        onChange([...value, ...newImages]);
+        toast.success(`${newImages.length} photo(s) uploaded`);
       }
 
       // Reset input
@@ -78,7 +82,8 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
 
   const handleRemove = useCallback(
     async (index: number) => {
-      const url = value[index];
+      const image = value[index];
+      const url = typeof image === 'string' ? image : image.url;
 
       // Extract path from URL for Supabase deletion
       const path = extractPathFromUrl(url, bucket);
@@ -102,8 +107,8 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
         }
 
         // Remove from local state
-        const newUrls = value.filter((_, i) => i !== index);
-        onChange(newUrls);
+        const newImages = value.filter((_, i) => i !== index);
+        onChange(newImages);
         toast.success('Photo removed');
       } catch (error) {
         toast.error('An unexpected error occurred while deleting the photo');
@@ -149,21 +154,26 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
       {/* Preview Grid */}
       {value.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {value.map((url, index) => (
-            <div key={url} className="group relative overflow-hidden rounded-lg border bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={`Photo ${index + 1}`} className="h-full w-full object-contain" />
-              <button
-                type="button"
-                onClick={() => handleRemove(index)}
-                disabled={deletingIndex === index}
-                className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Remove photo"
-              >
-                {deletingIndex === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
-              </button>
-            </div>
-          ))}
+          {value.map((image, index) => {
+            const url = typeof image === 'string' ? image : image.url;
+            const alt = typeof image === 'string' ? `Photo ${index + 1}` : image.alt_tag || `Photo ${index + 1}`;
+
+            return (
+              <div key={url} className="group relative overflow-hidden rounded-lg border bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt={alt} className="h-full w-full object-contain" />
+                <button
+                  type="button"
+                  onClick={() => handleRemove(index)}
+                  disabled={deletingIndex === index}
+                  className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Remove photo"
+                >
+                  {deletingIndex === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+                </button>
+              </div>
+            );
+          })}
 
           {/* Uploading placeholder */}
           {uploading && uploadingIndex !== null && (
