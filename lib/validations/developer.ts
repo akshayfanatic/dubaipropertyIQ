@@ -5,6 +5,12 @@
 
 import { z } from 'zod';
 
+// Image object schema for logo
+const imageObjectSchema = z.object({
+  url: z.string().url('Must be a valid URL'),
+  alt_tag: z.string().min(1, 'Alt tag is required'),
+});
+
 // Developer form validation schema
 export const developerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -13,7 +19,7 @@ export const developerSchema = z.object({
     .min(2, 'Slug must be at least 2 characters')
     .max(50, 'Slug must be less than 50 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
-  logo_url: z.string().url('Must be a valid URL').nullable().or(z.literal('')),
+  logo_url: imageObjectSchema.nullable().optional(),
   description: z.string().max(2000, 'Description must be less than 2000 characters').nullable().or(z.literal('')),
   website_url: z.string().url('Must be a valid URL').nullable().or(z.literal('')),
 
