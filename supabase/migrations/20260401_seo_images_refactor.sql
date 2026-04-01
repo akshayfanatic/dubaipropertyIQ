@@ -59,7 +59,7 @@ DECLARE
   filename TEXT;
   alt_tag TEXT;
 BEGIN
-  FOR developer_record IN SELECT id, logo_url FROM developers WHERE logo_url IS NOT NULL LOOP
+  FOR developer_record IN SELECT id, logo_url, name FROM developers WHERE logo_url IS NOT NULL LOOP
     -- Extract filename from URL
     filename := regexp_replace(developer_record.logo_url, '.*\/', '');
 
