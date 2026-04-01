@@ -11,6 +11,7 @@ import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
 import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import type { ImageObject } from '@/types/images';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +39,7 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
       ? {
           name: developer.name,
           slug: developer.slug,
-          logo_url: developer.logo_url || '',
+          logo_url: developer.logo_url || null,
           description: developer.description || '',
           website_url: developer.website_url || '',
           delivery_timeliness_score: developer.delivery_timeliness_score,
@@ -53,7 +54,7 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
       : {
           name: '',
           slug: '',
-          logo_url: '',
+          logo_url: null,
           description: '',
           website_url: '',
           delivery_timeliness_score: 1,

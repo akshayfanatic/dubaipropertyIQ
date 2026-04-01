@@ -6,32 +6,8 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { Developer } from '@/types/developer';
+import { Developer, DeveloperInsert, DeveloperUpdate } from '@/types/developer';
 import { revalidatePath } from 'next/cache';
-
-/**
- * Developer insert type
- */
-export interface DeveloperInsert {
-  name: string;
-  slug: string;
-  logo_url?: string | null;
-  description?: string | null;
-  website_url?: string | null;
-  delivery_timeliness_score?: number;
-  service_charge_score?: number;
-  build_quality_score?: number;
-  after_sales_score?: number;
-  total_projects?: number;
-  completed_projects?: number;
-  ongoing_projects?: number;
-  years_active?: number;
-}
-
-/**
- * Developer update type
- */
-export type DeveloperUpdate = Partial<DeveloperInsert>;
 
 /**
  * Create a new developer
