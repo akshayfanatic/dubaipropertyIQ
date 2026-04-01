@@ -4,12 +4,13 @@
  */
 
 import type { PaginationFilters, SearchFilters } from './shared';
+import type { ImageObject } from './images';
 
 export interface Developer {
   id: string;
   name: string;
   slug: string;
-  logo_url: string | null;
+  logo_url: ImageObject | null; // Changed from string | null
   description: string | null;
   website_url: string | null;
 
@@ -43,7 +44,7 @@ export type DeveloperUpdate = Partial<DeveloperInsert>;
 export type DeveloperOption = {
   label: string;
   value: string;
-  logo_url: string;
+  logo_url: ImageObject | null; // Changed from string
 };
 
 /**

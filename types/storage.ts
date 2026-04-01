@@ -3,9 +3,12 @@
  * Type definitions for file upload operations
  */
 
+import type { ImageObject } from './images';
+
 export interface UploadResponse {
   success: boolean;
   url?: string;
+  alt_tag?: string; // New: include alt tag in response
   error?: string;
 }
 
@@ -17,10 +20,10 @@ export interface FileValidationOptions {
 export interface ImageUploaderProps {
   /** Supabase storage bucket name */
   bucket: string;
-  /** Current image URLs */
-  value: string[];
+  /** Current image objects (was URLs, now ImageObjects) */
+  value: ImageObject[];
   /** Callback when images change */
-  onChange: (urls: string[]) => void;
+  onChange: (images: ImageObject[]) => void;
   /** Maximum number of images allowed */
   maxImages?: number;
   /** Accepted MIME types */
@@ -32,3 +35,9 @@ export interface ImageUploaderProps {
   /** Folder path within bucket */
   folder?: string;
 }
+
+/** Legacy type for backward compatibility during migration */
+export type LegacyImageUploaderProps = Omit<ImageUploaderProps, 'value' | 'onChange'> & {
+  value: string[];
+  onChange: (urls: string[]) => void;
+};
