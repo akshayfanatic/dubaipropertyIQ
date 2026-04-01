@@ -4,7 +4,8 @@ import { useCallback, useRef, useState } from 'react';
 import { ImagePlus, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { uploadImage } from '@/lib/storage/actions';
+import { uploadImage, deleteImage } from '@/lib/storage/actions';
+import { extractPathFromUrl } from '@/lib/storage/utils';
 import { validateFiles } from '@/lib/validations/storage';
 import type { ImageUploaderProps } from '@/types/storage';
 import { toast } from 'sonner';
@@ -13,6 +14,7 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
   const handleButtonClick = useCallback(() => {
     fileInputRef.current?.click();
@@ -75,11 +77,42 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
   );
 
   const handleRemove = useCallback(
-    (index: number) => {
-      const newUrls = value.filter((_, i) => i !== index);
-      onChange(newUrls);
+    async (index: number) => {
+      const url = value[index];
+
+      // Extract path from URL for Supabase deletion
+      const path = extractPathFromUrl(url, bucket);
+
+      setDeletingIndex(index);
+
+      try {
+        // Attempt to delete from Supabase if we have a valid path
+        if (path) {
+          const result = await deleteImage(bucket, path);
+
+          if (!result.success) {
+            toast.error(result.error || 'Failed to delete image from storage');
+            // Don't proceed with local removal if remote deletion failed
+            return;
+          }
+        } else {
+          // URL is not from our Supabase bucket (might be external)
+          // Allow local removal but log a warning
+          console.warn('Image URL does not match Supabase bucket, removing locally only:', url);
+        }
+
+        // Remove from local state
+        const newUrls = value.filter((_, i) => i !== index);
+        onChange(newUrls);
+        toast.success('Photo removed');
+      } catch (error) {
+        toast.error('An unexpected error occurred while deleting the photo');
+        console.error('Delete error:', error);
+      } finally {
+        setDeletingIndex(null);
+      }
     },
-    [onChange, value],
+    [bucket, onChange, value],
   );
 
   const remainingSlots = maxImages - value.length;
@@ -123,10 +156,11 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
               <button
                 type="button"
                 onClick={() => handleRemove(index)}
-                className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80 cursor-pointer"
+                disabled={deletingIndex === index}
+                className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Remove photo"
               >
-                <X className="h-4 w-4" />
+                {deletingIndex === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
               </button>
             </div>
           ))}
