@@ -20,6 +20,8 @@ export interface Property {
   description: string;
   category_id: string;
   category?: Category; // for joins
+  developer_id: string | null;
+  developer?: { id: string; name: string; logo_url: string | null }; // for joins
   bedrooms: number;
   bathrooms: number;
   size_sqft: number;

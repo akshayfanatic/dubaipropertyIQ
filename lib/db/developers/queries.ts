@@ -163,7 +163,7 @@ export async function getDeveloperOptionsAdmin(): Promise<ApiResponse<DeveloperO
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('developers').select('id, name').order('name', { ascending: true });
+    const { data, error } = await supabase.from('developers').select('id, name,logo_url').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -174,7 +174,7 @@ export async function getDeveloperOptionsAdmin(): Promise<ApiResponse<DeveloperO
       });
     }
 
-    const options: DeveloperOption[] = [{ label: 'All Developers', value: 'all' }, ...data.map((dev) => ({ label: dev.name, value: dev.id }))];
+    const options: DeveloperOption[] = [...data.map((dev) => ({ label: dev.name, value: dev.id, logo_url: dev.logo_url }))];
 
     return ApiResponse({
       success: true,

@@ -17,6 +17,7 @@ export const propertyFormSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title must be less than 200 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   category_id: z.string().uuid('Please select a valid category'),
+  developer_id: z.string().uuid('Please select a valid developer').nullable().optional(),
   bedrooms: z.number().int().min(0, 'Bedrooms cannot be negative'),
   bathrooms: z.number().int().min(0, 'Bathrooms cannot be negative'),
   size_sqft: z.number().int().positive('Size must be a positive number'),

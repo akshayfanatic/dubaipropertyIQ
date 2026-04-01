@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 export interface SelectOption {
   label: string;
   value: string;
+  logo_url?: string | null;
 }
 
 export interface SelectFieldProps {
@@ -34,8 +35,9 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(({ opt
       </SelectTrigger>
       <SelectContent position="popper" className="max-h-60">
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
+          <SelectItem key={option.value} value={option.value} className="flex items-center gap-2">
+            {option.logo_url && <img src={option.logo_url} alt="" className="h-4 w-4 rounded-sm object-cover shrink-0" />}
+            <span>{option.label}</span>
           </SelectItem>
         ))}
       </SelectContent>

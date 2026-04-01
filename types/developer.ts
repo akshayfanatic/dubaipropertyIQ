@@ -43,6 +43,7 @@ export type DeveloperUpdate = Partial<DeveloperInsert>;
 export type DeveloperOption = {
   label: string;
   value: string;
+  logo_url: string;
 };
 
 /**

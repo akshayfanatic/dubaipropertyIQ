@@ -16,10 +16,12 @@ import { Property } from '@/types/property';
 import { toast } from 'sonner';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { Category } from '@/types/category';
+import { DeveloperOption } from '@/types';
 
 interface PropertyFormProps {
   property?: Property; // For edit mode
   categories: Category[];
+  developerList: DeveloperOption[];
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -31,7 +33,7 @@ const statusOptions = [
   { value: 'off_plan', label: 'Off Plan' },
 ];
 
-export function PropertyForm({ property, categories, onSuccess, onCancel }: PropertyFormProps) {
+export function PropertyForm({ property, categories, developerList, onSuccess, onCancel }: PropertyFormProps) {
   const router = useRouter();
   const isEditMode = !!property;
 
@@ -47,6 +49,7 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           title: property.title,
           description: property.description,
           category_id: property.category_id,
+          developer_id: property.developer_id ?? undefined,
           bedrooms: property.bedrooms ?? 0,
           bathrooms: property.bathrooms ?? 1,
           size_sqft: property.size_sqft ?? 0,
@@ -61,6 +64,7 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           title: '',
           description: '',
           category_id: '',
+          developer_id: undefined,
           bedrooms: 0,
           bathrooms: 0,
           size_sqft: 0,
@@ -75,10 +79,11 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
-      // Convert undefined floor_plan to null for consistency with database
+      // Convert undefined floor_plan and developer_id to null for consistency with database
       const propertyData = {
         ...data,
         floor_plan: data.floor_plan ?? null,
+        developer_id: data.developer_id ?? null,
       };
 
       const result = isEditMode ? await updateProperty(property!.id, propertyData) : await createProperty(propertyData);
@@ -133,6 +138,19 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           render={({ field }) => <SelectField options={categoryOptions} placeholder="Select a category" value={field.value} onValueChange={field.onChange} className="w-full" />}
         />
         {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
+      </div>
+
+      {/* Developer */}
+      <div className="space-y-2">
+        <Label htmlFor="developer_id">Developer</Label>
+        <Controller
+          name="developer_id"
+          control={control}
+          render={({ field }) => (
+            <SelectField options={developerList} placeholder="Select a developer (optional)" value={field.value ?? ''} onValueChange={(v) => field.onChange(v || null)} className="w-full" />
+          )}
+        />
+        {errors.developer_id && <p className="text-sm text-destructive">{errors.developer_id.message}</p>}
       </div>
 
       {/* Bedrooms & Bathrooms */}
