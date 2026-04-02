@@ -4,12 +4,7 @@
  */
 
 import { z } from 'zod';
-
-// Image object schema for logo
-const imageObjectSchema = z.object({
-  url: z.string().url('Must be a valid URL'),
-  alt_tag: z.string().min(1, 'Alt tag is required'),
-});
+import { imageObjectSchema } from './shared';
 
 // Category form validation schema
 export const categorySchema = z.object({

@@ -5,12 +5,7 @@
 
 import { z } from 'zod';
 import { PropertyType, PropertyStatus } from '@/types/property';
-
-// Image object schema for reuse
-const imageObjectSchema = z.object({
-  url: z.string().url('Invalid photo URL'),
-  alt_tag: z.string().min(1, 'Alt tag is required'),
-});
+import { imageObjectSchema } from './shared';
 
 // Property Type enum validation (for backward compatibility)
 export const propertyTypeSchema = z.enum(['apartment', 'villa', 'townhouse', 'penthouse', 'land']);
