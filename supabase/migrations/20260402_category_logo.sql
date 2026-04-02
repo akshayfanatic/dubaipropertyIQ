@@ -23,6 +23,12 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('category-logos', 'category-logos', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Drop existing storage policies if they exist (from previous runs)
+DROP POLICY IF EXISTS "Public read access for category logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload category logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update category logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete category logos" ON storage.objects;
+
 -- Storage policy: Public read access for category logos
 CREATE POLICY "Public read access for category logos"
   ON storage.objects FOR SELECT
