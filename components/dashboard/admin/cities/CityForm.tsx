@@ -65,7 +65,7 @@ export function CityForm({ city, onSuccess, onCancel }: CityFormProps) {
       onSuccess?.();
       router.push('/dashboard/admin/cities');
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     }
   };

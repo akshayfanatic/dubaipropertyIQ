@@ -42,38 +42,38 @@ export function ResetPasswordClient() {
   const passwordValue = watch('password', '');
 
   useEffect(() => {
+    const setupSession = async () => {
+      const tokenHash = searchParams.get('token_hash');
+      const type = searchParams.get('type') as 'recovery' | null;
+
+      if (!tokenHash || type !== 'recovery') {
+        router.replace('/auth/login');
+        return;
+      }
+
+      try {
+        const supabase = browserClient();
+        const { error } = await supabase.auth.verifyOtp({
+          type: 'recovery',
+          token_hash: tokenHash,
+        });
+
+        if (error) {
+          setSessionError('Invalid or expired reset link. Please request a new one.');
+          setIsValidSession(false);
+        } else {
+          setIsValidSession(true);
+        }
+      } catch {
+        setSessionError('Failed to establish session. Please request a new reset link.');
+        setIsValidSession(false);
+      } finally {
+        setIsSettingUpSession(false);
+      }
+    };
+
     setupSession();
   }, [searchParams, router]);
-
-  const setupSession = async () => {
-    const tokenHash = searchParams.get('token_hash');
-    const type = searchParams.get('type') as 'recovery' | null;
-
-    if (!tokenHash || type !== 'recovery') {
-      router.replace('/auth/login');
-      return;
-    }
-
-    try {
-      const supabase = browserClient();
-      const { error } = await supabase.auth.verifyOtp({
-        type: 'recovery',
-        token_hash: tokenHash,
-      });
-
-      if (error) {
-        setSessionError('Invalid or expired reset link. Please request a new one.');
-        setIsValidSession(false);
-      } else {
-        setIsValidSession(true);
-      }
-    } catch {
-      setSessionError('Failed to establish session. Please request a new reset link.');
-      setIsValidSession(false);
-    } finally {
-      setIsSettingUpSession(false);
-    }
-  };
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {

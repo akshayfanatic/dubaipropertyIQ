@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,6 @@ import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
 import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
-import type { ImageObject } from '@/types/images';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +28,6 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     control,
     formState: { errors, isSubmitting },
@@ -69,12 +67,15 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
   });
 
   // Watch trust score values for live preview
-  const trustScores = watch(['delivery_timeliness_score', 'service_charge_score', 'build_quality_score', 'after_sales_score']);
+  const deliveryTimelinessScore = useWatch({ control, name: 'delivery_timeliness_score' });
+  const serviceChargeScore = useWatch({ control, name: 'service_charge_score' });
+  const buildQualityScore = useWatch({ control, name: 'build_quality_score' });
+  const afterSalesScore = useWatch({ control, name: 'after_sales_score' });
   const computedTrustScore = calculateTrustScore({
-    delivery_timeliness_score: trustScores[0] || 1,
-    service_charge_score: trustScores[1] || 1,
-    build_quality_score: trustScores[2] || 1,
-    after_sales_score: trustScores[3] || 1,
+    delivery_timeliness_score: deliveryTimelinessScore ?? 1,
+    service_charge_score: serviceChargeScore ?? 1,
+    build_quality_score: buildQualityScore ?? 1,
+    after_sales_score: afterSalesScore ?? 1,
   });
   const { label: trustLabel, variant: trustVariant } = getTrustScoreLabel(computedTrustScore);
 
@@ -100,6 +101,7 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
       router.push('/dashboard/admin/developers');
       router.refresh();
     } catch (error) {
+      console.error(error);
       toast.error('An unexpected error occurred');
     }
   };

@@ -50,7 +50,7 @@ const strengthConfig: Record<StrengthLevel, { label: string; color: string; segm
 };
 
 export function PasswordStrengthMeter({ password, className }: PasswordStrengthMeterProps) {
-  const { level, score } = React.useMemo(() => calculateStrength(password), [password]);
+  const { level } = React.useMemo(() => calculateStrength(password), [password]);
 
   if (!password) return null;
 

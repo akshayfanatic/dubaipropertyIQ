@@ -100,7 +100,7 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
       onSuccess?.();
       router.push('/dashboard/admin/properties');
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     }
   };

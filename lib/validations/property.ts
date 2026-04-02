@@ -4,7 +4,6 @@
  */
 
 import { z } from 'zod';
-import { PropertyType, PropertyStatus } from '@/types/property';
 import { imageObjectSchema } from './shared';
 
 // Property Type enum validation (for backward compatibility)

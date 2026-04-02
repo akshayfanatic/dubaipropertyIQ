@@ -60,7 +60,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       onSuccess?.();
       router.push('/dashboard/admin/categories');
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     }
   };

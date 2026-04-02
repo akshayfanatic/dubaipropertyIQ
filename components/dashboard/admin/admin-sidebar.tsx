@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Building2, LogOut, Clock } from 'lucide-react';
+import { Building2, LogOut } from 'lucide-react';
 import { logout } from '@/app/(auth)/auth/actions';
 import {
   Sidebar,
