@@ -1,0 +1,50 @@
+/**
+ * Area Validation Schemas
+ * Zod schemas for area form validation
+ */
+
+import { z } from 'zod';
+
+// Area form validation schema
+export const areaSchema = z.object({
+  city_id: z.string().uuid('Invalid city ID'),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  slug: z
+    .string()
+    .min(2, 'Slug must be at least 2 characters')
+    .max(50, 'Slug must be less than 50 characters')
+    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  description: z.string().optional(),
+  photos: z.array(z.string()),
+});
+
+export type AreaFormData = z.infer<typeof areaSchema>;
+
+// Area insert schema (for creating new areas)
+export const areaInsertSchema = areaSchema;
+
+export type AreaInsertData = z.infer<typeof areaInsertSchema>;
+
+// Area update schema (for partial updates)
+export const areaUpdateSchema = areaSchema.partial();
+
+export type AreaUpdateData = z.infer<typeof areaUpdateSchema>;
+
+// Area FAQ schema
+export const areaFAQSchema = z.object({
+  question: z.string().min(5, 'Question must be at least 5 characters'),
+  answer: z.string().min(10, 'Answer must be at least 10 characters'),
+});
+
+export type AreaFAQData = z.infer<typeof areaFAQSchema>;
+
+export const areaFAQInsertSchema = areaFAQSchema.extend({
+  area_id: z.string().uuid('Invalid area ID'),
+});
+
+export type AreaFAQInsertData = z.infer<typeof areaFAQInsertSchema>;
+
+// Area Amenities FAQ schema (same structure)
+export const areaAmenityFAQInsertSchema = areaFAQInsertSchema;
+
+export type AreaAmenityFAQInsertData = z.infer<typeof areaAmenityFAQInsertSchema>;
