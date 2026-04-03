@@ -3,7 +3,7 @@
  * Types for UAE cities in DubaiPropertyIQ
  */
 
-import type { PaginationFilters, SearchFilters } from './shared';
+import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
 import type { ImageObject } from './images';
 
 export interface City {
@@ -22,9 +22,8 @@ export type CityUpdate = Partial<CityInsert>;
 /**
  * City option for select dropdowns
  */
-export type CityOption = {
-  label: string;
-  value: string;
+export type CityOption = SelectOption & {
+  slug: string; // City slug for reference
   logo_url?: ImageObject | null;
 };
 

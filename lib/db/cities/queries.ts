@@ -204,7 +204,7 @@ export async function getCityOptionsAdmin(): Promise<ApiResponse<CityOption[]>> 
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('cities').select('name, slug, logo_url').order('name', { ascending: true });
+    const { data, error } = await supabase.from('cities').select('id, name, slug, logo_url').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -216,7 +216,7 @@ export async function getCityOptionsAdmin(): Promise<ApiResponse<CityOption[]>> 
     }
 
     // Format for select dropdown: All Cities + actual cities
-    const options: CityOption[] = [{ label: 'All Cities', value: 'all' }, ...data.map((city) => ({ label: city.name, value: city.slug, logo_url: city.logo_url }))];
+    const options: CityOption[] = [{ label: 'All Cities', value: 'all', slug: '' }, ...data.map((city) => ({ label: city.name, value: city.id, slug: city.slug, logo_url: city.logo_url }))];
 
     return ApiResponse({
       success: true,
