@@ -3,7 +3,7 @@
  * Types for property categories in DubaiPropertyIQ
  */
 
-import type { PaginationFilters, SearchFilters } from './shared';
+import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
 import type { ImageObject } from './images';
 
 export interface Category {
@@ -22,9 +22,7 @@ export type CategoryUpdate = Partial<CategoryInsert>;
 /**
  * Category option for select dropdowns
  */
-export type CategoryOption = {
-  label: string;
-  value: string;
+export type CategoryOption = SelectOption & {
   logo_url?: ImageObject | null;
 };
 
