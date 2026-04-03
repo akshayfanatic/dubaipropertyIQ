@@ -49,7 +49,7 @@ export function Pagination({ total, page, pageSize }: PaginationProps) {
         <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateParams({ page: page - 1 })} disabled={page === 1}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <span className="text-sm tabular-nums min-w-[100px] text-center">
+        <span className="text-sm tabular-nums min-w-25 text-center">
           Page {page} of {totalPages || 1}
         </span>
         <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateParams({ page: page + 1 })} disabled={page >= totalPages}>
