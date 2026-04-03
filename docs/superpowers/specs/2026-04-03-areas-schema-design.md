@@ -198,13 +198,9 @@ interface AreaFAQ {
   created_at: string;
 }
 
-interface AreaAmenityFAQ {
-  id: string;
-  area_id: string;
-  question: string;
-  answer: string;
-  created_at: string;
-}
+// Amenities FAQ has the same shape as general Area FAQ
+// Reusing the same type for both (DRY principle)
+type AreaAmenityFAQ = AreaFAQ;
 ```
 
 **`types/amenities.ts`** (imports `ImageObject` from `types/images`):
