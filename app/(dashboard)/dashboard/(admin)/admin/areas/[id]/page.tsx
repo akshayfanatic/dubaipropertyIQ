@@ -22,24 +22,12 @@ export default async function EditAreaPage({ params }: EditAreaPageProps) {
     notFound();
   }
 
-  // Convert AreaWithCity to Area for the form, handling null -> undefined conversion
-  const areaForForm: Area = {
-    id: area.id,
-    city_id: area.city_id,
-    name: area.name,
-    slug: area.slug,
-    description: area.description || undefined,
-    photos: area.photos,
-    created_at: area.created_at,
-    updated_at: area.updated_at,
-  };
-
   return (
     <div className="space-y-6">
       <PageHeader title="Edit Area" description={`Editing: ${area.name}`} showBackButton />
 
       <div className="rounded-lg border bg-card p-6">
-        <AreaForm area={areaForForm} />
+        <AreaForm area={area} />
       </div>
     </div>
   );

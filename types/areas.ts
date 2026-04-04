@@ -10,8 +10,8 @@ export interface Area {
   city_id: string;
   name: string;
   slug: string;
-  description?: string;
-  photos: string[];
+  description: string | null; // Matches database (can be null)
+  photos: string[] | null; // Matches database (can be null)
   created_at: string;
   updated_at: string;
 }

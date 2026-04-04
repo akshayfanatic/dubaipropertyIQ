@@ -18,7 +18,7 @@ import { CityOption } from '@/types/city';
 import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface AreaFormProps {
-  area?: Area & { cities?: { name: string } };
+  area?: Area & { cities?: { name: string } | null };
 }
 
 export function AreaForm({ area }: AreaFormProps) {
