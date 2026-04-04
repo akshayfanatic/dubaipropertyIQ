@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { deleteCategory } from '@/lib/db/categories/actions';
 import { toast } from 'sonner';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 
 export const columns: ColumnDef<Category>[] = [
   {
@@ -61,6 +62,7 @@ export const columns: ColumnDef<Category>[] = [
 function RowActions({ category }: { category: Category }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Don't show actions for Uncategorized category
   const isUncategorized = category.id === UNCATEGORIZED_CATEGORY_ID;
@@ -73,8 +75,6 @@ function RowActions({ category }: { category: Category }) {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this category? Properties assigned to this category will be moved to "Uncategorized".')) return;
-
     setIsDeleting(true);
     try {
       const result = await deleteCategory(category.id);
@@ -85,6 +85,7 @@ function RowActions({ category }: { category: Category }) {
       }
 
       toast.success('Category deleted successfully');
+      setDeleteDialogOpen(false);
       router.refresh();
     } catch {
       toast.error('An unexpected error occurred');
@@ -94,23 +95,38 @@ function RowActions({ category }: { category: Category }) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
-          <Pencil className="mr-2 h-4 w-4" />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+        title="Delete Category"
+        itemName={category.name}
+        description={
+          <>
+            Properties will be moved to <strong>Uncategorized</strong>. This action cannot be undone.
+          </>
+        }
+        isDeleting={isDeleting}
+      />
+    </>
   );
 }

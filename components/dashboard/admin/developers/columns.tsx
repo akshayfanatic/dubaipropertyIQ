@@ -12,6 +12,7 @@ import { deleteDeveloper } from '@/lib/db/developers/actions';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 
 export const columns: ColumnDef<Developer>[] = [
   {
@@ -83,14 +84,13 @@ export const columns: ColumnDef<Developer>[] = [
 function RowActions({ developer }: { developer: Developer }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEdit = () => {
     router.push(`/dashboard/admin/developers/${developer.id}`);
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete "${developer.name}"? Properties linked to this developer will be unassigned.`)) return;
-
     setIsDeleting(true);
     try {
       const result = await deleteDeveloper(developer.id);
@@ -101,6 +101,7 @@ function RowActions({ developer }: { developer: Developer }) {
       }
 
       toast.success('Developer deleted successfully');
+      setDeleteDialogOpen(false);
       router.refresh();
     } catch {
       toast.error('An unexpected error occurred');
@@ -110,23 +111,38 @@ function RowActions({ developer }: { developer: Developer }) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
-          <Pencil className="mr-2 h-4 w-4" />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+        title="Delete Developer"
+        itemName={developer.name}
+        description={
+          <>
+            Properties linked to <strong>&ldquo;{developer.name}&rdquo;</strong> will be unassigned. This action cannot be undone.
+          </>
+        }
+        isDeleting={isDeleting}
+      />
+    </>
   );
 }

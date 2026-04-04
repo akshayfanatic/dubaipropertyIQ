@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { deleteAmenity } from '@/lib/db/amenities/actions';
 import { toast } from 'sonner';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 
 export const columns: ColumnDef<Amenity>[] = [
   {
@@ -61,14 +62,13 @@ export const columns: ColumnDef<Amenity>[] = [
 function RowActions({ amenity }: { amenity: Amenity }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEdit = () => {
     router.push(`/dashboard/admin/amenities/${amenity.id}`);
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this amenity?')) return;
-
     setIsDeleting(true);
     try {
       const result = await deleteAmenity(amenity.id);
@@ -79,6 +79,7 @@ function RowActions({ amenity }: { amenity: Amenity }) {
       }
 
       toast.success('Amenity deleted successfully');
+      setDeleteDialogOpen(false);
       router.refresh();
     } catch {
       toast.error('An unexpected error occurred');
@@ -88,23 +89,26 @@ function RowActions({ amenity }: { amenity: Amenity }) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
-          <Pencil className="mr-2 h-4 w-4" />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} onConfirm={handleDelete} title="Delete Amenity" itemName={amenity.name} isDeleting={isDeleting} />
+    </>
   );
 }

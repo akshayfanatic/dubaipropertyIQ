@@ -40,6 +40,7 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
