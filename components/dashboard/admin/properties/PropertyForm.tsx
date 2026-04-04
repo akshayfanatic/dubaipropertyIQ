@@ -2,8 +2,6 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SelectField } from '@/components/shared/select-field';
@@ -18,13 +16,12 @@ import { SelectOption } from '@/components/shared/select-field';
 import { Category } from '@/types/category';
 import { DeveloperOption } from '@/types';
 import { getImageUrl } from '@/lib/utils';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface PropertyFormProps {
-  property?: Property; // For edit mode
+  property?: Property;
   categories: Category[];
   developerList: DeveloperOption[];
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
 const statusOptions = [
@@ -34,7 +31,7 @@ const statusOptions = [
   { value: 'off_plan', label: 'Off Plan' },
 ];
 
-export function PropertyForm({ property, categories, developerList, onSuccess, onCancel }: PropertyFormProps) {
+export function PropertyForm({ property, categories, developerList }: PropertyFormProps) {
   const router = useRouter();
   const isEditMode = !!property;
 
@@ -81,7 +78,6 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
-      // Convert undefined floor_plan and developer_id to null for consistency with database
       const propertyData = {
         ...data,
         floor_plan: data.floor_plan ?? null,
@@ -96,7 +92,6 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
       }
 
       toast.success(isEditMode ? 'Property updated successfully' : 'Property created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/properties');
       router.refresh();
     } catch {
@@ -109,7 +104,6 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
     label: c.name,
   }));
 
-  // Map DeveloperOption to SelectOption, extracting URL from ImageObject
   const developerSelectOptions: SelectOption[] = developerList.map((dev) => ({
     value: dev.value,
     label: dev.label,
@@ -304,26 +298,7 @@ export function PropertyForm({ property, categories, developerList, onSuccess, o
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Property' : 'Create Property'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Property" />
     </form>
   );
 }

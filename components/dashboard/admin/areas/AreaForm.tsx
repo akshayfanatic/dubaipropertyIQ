@@ -2,8 +2,6 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { areaSchema, AreaFormData } from '@/lib/validations/area';
@@ -17,14 +15,13 @@ import { SelectField } from '@/components/shared/select-field';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import { CityOption } from '@/types/city';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface AreaFormProps {
   area?: Area & { cities?: { name: string } };
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
-export function AreaForm({ area, onSuccess, onCancel }: AreaFormProps) {
+export function AreaForm({ area }: AreaFormProps) {
   const router = useRouter();
   const isEditMode = !!area;
 
@@ -57,7 +54,6 @@ export function AreaForm({ area, onSuccess, onCancel }: AreaFormProps) {
       }
 
       toast.success(isEditMode ? 'Area updated successfully' : 'Area created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/areas');
       router.refresh();
     } catch {
@@ -150,26 +146,7 @@ export function AreaForm({ area, onSuccess, onCancel }: AreaFormProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Area' : 'Create Area'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Area" />
     </form>
   );
 }

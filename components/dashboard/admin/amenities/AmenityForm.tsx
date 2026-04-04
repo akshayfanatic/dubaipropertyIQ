@@ -2,8 +2,6 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { amenitySchema, AmenityFormData } from '@/lib/validations/amenity';
@@ -13,14 +11,13 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface AmenityFormProps {
   amenity?: Amenity;
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
-export function AmenityForm({ amenity, onSuccess, onCancel }: AmenityFormProps) {
+export function AmenityForm({ amenity }: AmenityFormProps) {
   const router = useRouter();
   const isEditMode = !!amenity;
 
@@ -57,7 +54,6 @@ export function AmenityForm({ amenity, onSuccess, onCancel }: AmenityFormProps) 
       }
 
       toast.success(isEditMode ? 'Amenity updated successfully' : 'Amenity created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/amenities');
       router.refresh();
     } catch {
@@ -130,26 +126,7 @@ export function AmenityForm({ amenity, onSuccess, onCancel }: AmenityFormProps) 
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Amenity' : 'Create Amenity'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Amenity" />
     </form>
   );
 }

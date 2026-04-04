@@ -2,8 +2,6 @@
 
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { developerSchema, DeveloperFormData } from '@/lib/validations/developer';
@@ -14,14 +12,13 @@ import { ImageUploader } from '@/components/ui/image-uploader';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface DeveloperFormProps {
   developer?: Developer;
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
-export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormProps) {
+export function DeveloperForm({ developer }: DeveloperFormProps) {
   const router = useRouter();
   const isEditMode = !!developer;
 
@@ -97,7 +94,6 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
       }
 
       toast.success(isEditMode ? 'Developer updated successfully' : 'Developer created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/developers');
       router.refresh();
     } catch (error) {
@@ -274,26 +270,7 @@ export function DeveloperForm({ developer, onSuccess, onCancel }: DeveloperFormP
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6 border-t">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Developer' : 'Create Developer'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Developer" />
     </form>
   );
 }

@@ -2,8 +2,6 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { categorySchema, CategoryFormData } from '@/lib/validations/category';
@@ -13,14 +11,13 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface CategoryFormProps {
   category?: Category;
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
-export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProps) {
+export function CategoryForm({ category }: CategoryFormProps) {
   const router = useRouter();
   const isEditMode = !!category;
 
@@ -57,7 +54,6 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       }
 
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/categories');
       router.refresh();
     } catch {
@@ -130,26 +126,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Category' : 'Create Category'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Category" />
     </form>
   );
 }
