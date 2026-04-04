@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/no-item-found';
 import { getCategoriesAdmin } from '@/lib/db/categories/queries';
 import { DataTable } from '@/components/ui/data-table';
-import { Pagination } from '@/components/ui/pagination';
+import { Pagination } from '@/components/shared/pagination';
 import { columns } from './columns';
 import Link from 'next/link';
 import type { CategoryFilters, Category } from '@/types/category';

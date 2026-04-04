@@ -6,7 +6,7 @@ import { Search, Filter, RotateCcw } from 'lucide-react';
 import useSWR from 'swr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SelectField } from '@/components/ui/select-field';
+import { SelectField } from '@/components/shared/select-field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { CategoryOption } from '@/types/category';

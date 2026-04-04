@@ -20,6 +20,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { adminRoutes } from '@/config/routes';
 import { cn } from '@/lib/utils';
@@ -34,6 +35,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const isClient = useClient();
+  const { state } = useSidebar();
 
   const isActive = (href: string) => {
     if (href === '/dashboard/admin') {
@@ -99,28 +101,51 @@ export function AdminSidebar() {
                           {hasChildren ? (
                             // Accordion item with children
                             <>
-                              <div
-                                className={cn(
-                                  'flex items-center justify-between w-full px-2 py-1.5 rounded-md transition-all duration-200 ease-out cursor-pointer hover:bg-accent overflow-hidden',
-                                  'group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8!',
-                                  (active || hasActiveChild) && 'bg-accent',
-                                  (active || hasActiveChild) &&
-                                    'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full relative',
-                                )}
-                                onClick={() => toggleExpanded(item.href)}
-                              >
-                                <Icon className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                                <span className="ml-2 text-sm font-medium truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                <span className="ml-auto flex items-center group-data-[collapsible=icon]:hidden">
-                                  {isClient &&
-                                    (expanded ? (
-                                      <ChevronDown className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
-                                    ) : (
-                                      <ChevronRight className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
-                                    ))}
-                                  {!isClient && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
-                                </span>
-                              </div>
+                              {state === 'collapsed' ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Link
+                                      href={item.href}
+                                      className={cn(
+                                        'flex items-center justify-center w-full px-2 py-1.5 rounded-md transition-all duration-200 ease-out hover:bg-accent overflow-hidden',
+                                        'group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8!',
+                                        (active || hasActiveChild) && 'bg-accent',
+                                        (active || hasActiveChild) &&
+                                          'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full relative',
+                                      )}
+                                    >
+                                      <Icon className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                                    </Link>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right" align="center">
+                                    {item.title}
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : (
+                                <>
+                                  <div
+                                    className={cn(
+                                      'flex items-center justify-between w-full px-2 py-1.5 rounded-md transition-all duration-200 ease-out cursor-pointer hover:bg-accent overflow-hidden',
+                                      (active || hasActiveChild) && 'bg-accent',
+                                      (active || hasActiveChild) &&
+                                        'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full relative',
+                                    )}
+                                    onClick={() => toggleExpanded(item.href)}
+                                  >
+                                    <Icon className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                                    <span className="ml-2 text-sm font-medium truncate">{item.title}</span>
+                                    <span className="ml-auto flex items-center">
+                                      {isClient &&
+                                        (expanded ? (
+                                          <ChevronDown className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
+                                        ) : (
+                                          <ChevronRight className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
+                                        ))}
+                                      {!isClient && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                                    </span>
+                                  </div>
+                                </>
+                              )}
                               {expanded && item.children && (
                                 <SidebarMenuSub>
                                   {item.children.map((child) => {

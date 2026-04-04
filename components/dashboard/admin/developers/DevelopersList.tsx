@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/no-item-found';
 import { getDevelopersAdmin } from '@/lib/db/developers/queries';
 import { DataTable } from '@/components/ui/data-table';
-import { Pagination } from '@/components/ui/pagination';
+import { Pagination } from '@/components/shared/pagination';
 import { columns } from './columns';
 import Link from 'next/link';
 import type { DeveloperFilters, Developer } from '@/types/developer';
