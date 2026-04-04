@@ -2,6 +2,76 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.7...v0.3.0) (2026-04-04)
+
+### Features
+
+- ** city form :** added city form functionality ([4006cff](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4006cfff634ba1e3c9474d8b8254831a49f2608e))
+- ** filter page:** added filter page with search functionality ([ff7c6a5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ff7c6a5204330d5a948fcd58864553920946cf52))
+- **admin crud methods:** created crud methods for handling crud data regarding AMENITIES,AREAS ([51df2b8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/51df2b8df436fd06d99f3556dfc45fa2aabd1def))
+- **amenity:** created amenity page with list and suspense boundary ([dfc6736](https://github.com/akshayfanatic/dubaipropertyIQ/commit/dfc6736b23fbc334fa221db776970a92ab2fb839))
+- **amenity:** implement create and edit amenity page ([ddfeda8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ddfeda850cfa5b020512bd7212c3cf084960f5e2))
+- **areas:** created area page with list and suspense boundary ([1bb1be2](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1bb1be213851c7d9b6b9c5a58b7cfedacd23d101))
+- **areas:** implement create and edit area page ([6a0cf3c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6a0cf3c7e9b3eeb5f67277a6a4e35f2130c3c5f9))
+- **categories:** add logo_url with ImageObject type for SEO ([905a681](https://github.com/akshayfanatic/dubaipropertyIQ/commit/905a681206c7eb4fd8048bc545788b6708f6d5df))
+- **ci:** add develop branch CI workflow with lint, typecheck, and build ([91c69f0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/91c69f09b0b755f134be681db901c0264f4c9a37))
+- **city types:** added city types ([e8c23fd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e8c23fd577be2a176c2ebdc2f7aaf491d1c20f8c))
+- **city:** added city to navigation routes ([d364c81](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d364c81add864d04d2ba314431aa4bc3361c1fc0))
+- **confirm dialog action:** created a confirm dialog action and implement it in all table /admin ([01e1645](https://github.com/akshayfanatic/dubaipropertyIQ/commit/01e164532043e5c03b9732b041c1108ae73c5e57))
+- **CRUD:** implement crud for cities ([c6e2a41](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c6e2a414e9b79e91221009e7c03405bf58809fbb))
+- **db:** migrate image storage to JSONB with alt tags ([b194326](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b194326c9de873f1d5472bd076f7282a6a926920))
+- **developer:** implement developer relation with properties ([7d715ef](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7d715efddce73d0fb2bec337c712758e6a2d6949))
+- **developers CRUD:** implement full crud implementation for developers ([612a540](https://github.com/akshayfanatic/dubaipropertyIQ/commit/612a540cd17e855bf327560efc21cb7c0904ae7c))
+- **dialog:** created a reusable component for confirmation dialog ([37d815b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/37d815bc837af8f6addeaa5a862004d8ddf11650))
+- **fallback image:** implement image in row list there in there ([bcdef81](https://github.com/akshayfanatic/dubaipropertyIQ/commit/bcdef81ddf3b4b0c0b530b4a37a81b8e854d1773))
+- **image-uploader:** delete from Supabase when removing images ([ad6854f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ad6854fba0d5f16b3fc5119786357c2f3d575b40))
+- **images:** add SEO-friendly image object type and helper functions ([dd8fdf1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/dd8fdf15edeaa289ba5cdfa08859ffe190e5dceb))
+- **list options:** created proxy apis for options for client side fetching ([ec66148](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ec661481108f7bd79b76d3fd955653878edc6bb0))
+- **migration:** create new table table developers ([5ae492f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5ae492fcf14ecc5e9a0c3dabbf444849265992c6))
+- **migration:** created new table in db areas and amenity ([7c2d8f2](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7c2d8f2d971a486a945147353387651b8f9cde5a))
+- **migrations:** add new table cities in db ([08ed2d5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/08ed2d5e02b0420340dbe230d0ca3b31f12c2285))
+- **price formatter:** created a utility function for formatting price ([4643d34](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4643d34111004d9547dbe74121af1426c57ed59a))
+- **routes navigation:** added navigation routes for accessing areas and amenities ([9ed123f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9ed123f45d40d7e34c6cb494aad73a7b58d4e514))
+- **schema validation:** created schema validation for AMENITY,AREAS ([2cb8296](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2cb82966d2b1797c21890dad5a727676db300dfd))
+- **storage:** add utility to extract path from Supabase URLs ([21b12b1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/21b12b1129002d8e2b5da8b024e430d0c4a49935))
+- **storage:** extract alt tag from filename during upload ([c99dd45](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c99dd45c3146460acd9e040e653d2f14a2dd2b68))
+- **types:** Createad new Types for amenity and areas ([9340af5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9340af5e248eaaed881d613feb198db756ec7094))
+- **types:** created developer contracts ([a543aa0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a543aa0f1a2eaf6fa2a3a5d14381b315be2d3cfc))
+- **types:** using supabse autogenerated types for matching with my contracts ([7f5a7c3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7f5a7c3ee5b61b78a7bcfd4d65a2a64998e9ca91))
+
+### Bug Fixes
+
+- **areas:** fix issue regarding shape in areas ([db695ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/db695cee70b663ee778aa0b70dadac4b7ba62d03))
+- **devices-columns:** use alt_tag from ImageObject for logo alt text ([e0ae78e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e0ae78e5a527b76b947a25d78de93928b889239a))
+- **dynamic slug:** fix issue regarding slug ([0126872](https://github.com/akshayfanatic/dubaipropertyIQ/commit/01268728bb995e2ddc611f31f263ac936e853cb8))
+- **forms:** sync ImageUploader changes with React Hook Form state ([83905f1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/83905f1e2ed9fe2a3c8aed69905a4ff1b353342d))
+- **lint:** fix unused type issue on lint ([9d808bf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9d808bf6bf471c6f2c8241b288ecf07663c8ed31))
+- **linting:** fix linting issue ([e326ce3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e326ce338420a15a6d665e80813eaad54be93fd3))
+- **migration:** add name column to developers SELECT statement ([5d1d83a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5d1d83a112ab938fec23989d2c2b6466b0ae7a9c))
+- **migration:** change photo_object from JSON to JSONB ([d3c3282](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d3c32826173ccbea50a13b76075c2c8d16e2d25f))
+- **type,import:** fix type and import issue regarding these files ([a864a80](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a864a80e82490f069a7ddd1765d3418427b145ec))
+
+### Code Refactoring
+
+- ** action button:** created resuable action button and use it in all forms ([aa217a6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/aa217a6457778acfc10a870d83f54c6fe8b9f132))
+- ** imageObjectSchema :** implement object schema separated reuse it in validations ([812e5bd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/812e5bdf1225e703b6ce59d6e94d3095cb87ac86))
+- **cities:** change shape of city option data ([c4d1c76](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c4d1c76fd9ae884649f8d19b269571fd42ed8314))
+- **developer-form:** use ImageObject for logo ([1175205](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1175205389ed56b475d12e15e61b302991214c18))
+- **folder structure:** reorganize folder structure ([ab3895f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ab3895f806a3a3bf0a73e26579289371eed5a7db))
+- **image gallery:** image gallery instead of object to contain ([de937a7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/de937a7d40a4d6c2e6f8e2c08a1e5ffd04747bd9))
+- **image-uploader:** handle ImageObject with alt_tag ([8c18e65](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8c18e65681231174219b48beaf89b0fb89c05104))
+- **property-form:** use ImageObject for photos ([524fcf8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/524fcf82c6a229a429f8aa701c65911d74136ac6))
+- **reset-button filter:** created resuable reset button and implement it in all filters ([0060628](https://github.com/akshayfanatic/dubaipropertyIQ/commit/006062866c56574d5d22dec9d99cfa0a158afd99))
+- **search input,filter fieldset filter:** created dumb resuable (search input,field set) component and implement it in all filters ([3cc05c1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3cc05c10e5b63fd267bde9f8656d018d5a51e3df))
+- **svg extension:** allowed svg file extension for upload ([6164de9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6164de9ab4fcc00f91953f228c81055e6058d78a))
+- **types:** update image types to use ImageObject with alt tags ([428f473](https://github.com/akshayfanatic/dubaipropertyIQ/commit/428f47336760bd1ac5782e7b12dc3b5af04cb893))
+- **validations:** update schemas for ImageObject with alt tags ([4d35e40](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4d35e405d98cfc321523231ee8236913e735d83b))
+
+### Documentation
+
+- add areas schema design spec ([a62d435](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a62d435cba66177c3c47d8e2214a9a03cd1c6076))
+- **skills:** add shadcn official skill ([9c745fa](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9c745faf0ed2a822e4dc304ec9312489b2bb55ab))
+
 ### [0.2.7](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.6...v0.2.7) (2026-03-31)
 
 ### Features
