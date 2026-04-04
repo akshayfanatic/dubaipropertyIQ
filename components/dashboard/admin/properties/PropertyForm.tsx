@@ -6,16 +6,15 @@ import { Loader2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SelectField } from '@/components/ui/select-field';
+import { SelectField } from '@/components/shared/select-field';
 import { PropertyFormData, propertyFormSchema } from '@/lib/validations/property';
-
 import { createProperty } from '@/lib/db/properties/actions';
 import { updateProperty } from '@/lib/db/properties/actions';
 import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
 import { ImageUploader } from '@/components/ui/image-uploader';
-import { SelectOption } from '@/components/ui/select-field';
+import { SelectOption } from '@/components/shared/select-field';
 import { Category } from '@/types/category';
 import { DeveloperOption } from '@/types';
 import { getImageUrl } from '@/lib/utils';
