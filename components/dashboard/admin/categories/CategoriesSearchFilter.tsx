@@ -4,9 +4,9 @@ import { useEffect, useRef } from 'react';
 import { useForm, FormProvider, useWatch, Controller } from 'react-hook-form';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { SearchInput } from '@/components/shared/forms/search-input';
 import { ResetButton } from '@/components/shared/forms/reset-button';
+import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 
 interface CategoriesSearchForm {
   search: string;
@@ -71,21 +71,12 @@ export function CategoriesSearchFilter() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Controller
-            name="search"
-            control={control}
-            render={({ field }) => (
-              <>
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input type="search" {...field} value={field.value ?? ''} placeholder="Search categories..." className="pl-10" />
-              </>
-            )}
-          />
-        </div>
+      <FilterFieldSet>
+        {/* Search field - filters categories by name */}
+        <Controller name="search" control={control} render={({ field }) => <SearchInput value={field.value} onChange={field.onChange} placeholder="Search categories..." className="max-w-sm" />} />
+
         <ResetButton onReset={() => reset()} />
-      </div>
+      </FilterFieldSet>
     </FormProvider>
   );
 }
