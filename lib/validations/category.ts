@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import { imageObjectSchema } from './shared';
 
 // Category form validation schema
 export const categorySchema = z.object({
@@ -14,6 +15,7 @@ export const categorySchema = z.object({
     .max(50, 'Slug must be less than 50 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
+  logo_url: imageObjectSchema.nullable().optional(),
 });
 
 export type CategoryFormData = z.infer<typeof categorySchema>;

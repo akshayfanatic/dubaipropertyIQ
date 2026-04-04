@@ -1,9 +1,7 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { categorySchema, CategoryFormData } from '@/lib/validations/category';
@@ -11,20 +9,23 @@ import { createCategory, updateCategory } from '@/lib/db/categories/actions';
 import { Category } from '@/types/category';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { generateSlug } from '@/lib/utils';
+import { ImageUploader } from '@/components/ui/image-uploader';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface CategoryFormProps {
   category?: Category;
-  onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
-export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProps) {
+export function CategoryForm({ category }: CategoryFormProps) {
   const router = useRouter();
   const isEditMode = !!category;
 
   const {
     register,
     handleSubmit,
+    setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -33,11 +34,13 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
           name: category.name,
           slug: category.slug,
           description: category.description || '',
+          logo_url: category.logo_url || null,
         }
       : {
           name: '',
           slug: '',
           description: '',
+          logo_url: null,
         },
   });
 
@@ -51,10 +54,9 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       }
 
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/categories');
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     }
   };
@@ -64,7 +66,16 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       {/* Name */}
       <div className="space-y-2">
         <Label htmlFor="name">Name *</Label>
-        <Input id="name" placeholder="e.g., Apartment" {...register('name')} className={errors.name ? 'border-destructive' : ''} />
+        <Input
+          id="name"
+          placeholder="e.g., Apartment"
+          {...register('name', {
+            onBlur: (e) => {
+              setValue('slug', generateSlug(e.target.value));
+            },
+          })}
+          className={errors.name ? 'border-destructive' : ''}
+        />
         {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
       </div>
 
@@ -74,6 +85,31 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
         <Input id="slug" placeholder="e.g., apartment" {...register('slug')} className={errors.slug ? 'border-destructive' : ''} />
         {errors.slug && <p className="text-sm text-destructive">{errors.slug.message}</p>}
         <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
+      </div>
+
+      {/* Logo */}
+      <div className="space-y-2">
+        <Label>Category Logo</Label>
+        <Controller
+          name="logo_url"
+          control={control}
+          render={({ field }) => (
+            <ImageUploader
+              bucket="category-logos"
+              folder="logos"
+              value={field.value ? [field.value] : []}
+              onChange={(urls) => {
+                const logoUrl = urls[0] || null;
+                field.onChange(logoUrl);
+                setValue('logo_url', logoUrl, { shouldDirty: true, shouldTouch: true });
+              }}
+              maxImages={1}
+              label="Logo"
+              accept="image/*,.svg"
+            />
+          )}
+        />
+        <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG, WebP or SVG, max 5MB)</p>
       </div>
 
       {/* Description */}
@@ -90,26 +126,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Category' : 'Create Category'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Category" />
     </form>
   );
 }

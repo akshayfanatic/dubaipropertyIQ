@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutDashboard, User, LogOut, Home } from 'lucide-react';
+import { LayoutDashboard, User, LogOut } from 'lucide-react';
 import { logout } from '@/app/(auth)/auth/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/types/user';

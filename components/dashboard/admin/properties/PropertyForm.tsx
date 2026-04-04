@@ -2,26 +2,26 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Save } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SelectField } from '@/components/ui/select-field';
+import { SelectField } from '@/components/shared/select-field';
 import { PropertyFormData, propertyFormSchema } from '@/lib/validations/property';
-
 import { createProperty } from '@/lib/db/properties/actions';
 import { updateProperty } from '@/lib/db/properties/actions';
 import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import { SelectOption } from '@/components/shared/select-field';
 import { Category } from '@/types/category';
+import { DeveloperOption } from '@/types';
+import { getImageUrl } from '@/lib/utils';
+import { FormActions } from '@/components/shared/forms/FormActions';
 
 interface PropertyFormProps {
-  property?: Property; // For edit mode
+  property?: Property;
   categories: Category[];
-  onSuccess?: () => void;
-  onCancel?: () => void;
+  developerList: DeveloperOption[];
 }
 
 const statusOptions = [
@@ -31,7 +31,7 @@ const statusOptions = [
   { value: 'off_plan', label: 'Off Plan' },
 ];
 
-export function PropertyForm({ property, categories, onSuccess, onCancel }: PropertyFormProps) {
+export function PropertyForm({ property, categories, developerList }: PropertyFormProps) {
   const router = useRouter();
   const isEditMode = !!property;
 
@@ -39,6 +39,8 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -47,6 +49,7 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           title: property.title,
           description: property.description,
           category_id: property.category_id,
+          developer_id: property.developer_id ?? undefined,
           bedrooms: property.bedrooms ?? 0,
           bathrooms: property.bathrooms ?? 1,
           size_sqft: property.size_sqft ?? 0,
@@ -61,6 +64,7 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           title: '',
           description: '',
           category_id: '',
+          developer_id: undefined,
           bedrooms: 0,
           bathrooms: 0,
           size_sqft: 0,
@@ -75,10 +79,10 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
-      // Convert undefined floor_plan to null for consistency with database
       const propertyData = {
         ...data,
         floor_plan: data.floor_plan ?? null,
+        developer_id: data.developer_id ?? null,
       };
 
       const result = isEditMode ? await updateProperty(property!.id, propertyData) : await createProperty(propertyData);
@@ -89,10 +93,9 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
       }
 
       toast.success(isEditMode ? 'Property updated successfully' : 'Property created successfully');
-      onSuccess?.();
       router.push('/dashboard/admin/properties');
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     }
   };
@@ -100,6 +103,12 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
   const categoryOptions = categories.map((c) => ({
     value: c.id,
     label: c.name,
+  }));
+
+  const developerSelectOptions: SelectOption[] = developerList.map((dev) => ({
+    value: dev.value,
+    label: dev.label,
+    logo_url: getImageUrl(dev.logo_url),
   }));
 
   return (
@@ -133,6 +142,19 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
           render={({ field }) => <SelectField options={categoryOptions} placeholder="Select a category" value={field.value} onValueChange={field.onChange} className="w-full" />}
         />
         {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
+      </div>
+
+      {/* Developer */}
+      <div className="space-y-2">
+        <Label htmlFor="developer_id">Developer</Label>
+        <Controller
+          name="developer_id"
+          control={control}
+          render={({ field }) => (
+            <SelectField options={developerSelectOptions} placeholder="Select a developer (optional)" value={field.value ?? ''} onValueChange={(v) => field.onChange(v || null)} className="w-full" />
+          )}
+        />
+        {errors.developer_id && <p className="text-sm text-destructive">{errors.developer_id.message}</p>}
       </div>
 
       {/* Bedrooms & Bathrooms */}
@@ -239,7 +261,19 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
         <Controller
           name="photos"
           control={control}
-          render={({ field }) => <ImageUploader bucket="property-photos" value={field.value} onChange={field.onChange} maxImages={10} label="Photos" folder={property?.id || 'temp'} />}
+          render={({ field }) => (
+            <ImageUploader
+              bucket="property-photos"
+              value={field.value}
+              onChange={(urls) => {
+                field.onChange(urls);
+                setValue('photos', urls, { shouldDirty: true, shouldTouch: true });
+              }}
+              maxImages={10}
+              label="Photos"
+              folder={property?.id || 'temp'}
+            />
+          )}
         />
         {errors.photos && <p className="text-sm text-destructive">{errors.photos.message}</p>}
       </div>
@@ -265,26 +299,7 @@ export function PropertyForm({ property, categories, onSuccess, onCancel }: Prop
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-6">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isEditMode ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              {isEditMode ? 'Update Property' : 'Create Property'}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Property" />
     </form>
   );
 }

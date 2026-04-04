@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -28,14 +28,17 @@ export function SignupForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setError: setFormError,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });
 
-  const passwordValue = watch('password', '');
+  const passwordValue = useWatch({
+    control,
+    name: 'password',
+  });
 
   const onSubmit = async (data: SignupFormData) => {
     const formData = new FormData();

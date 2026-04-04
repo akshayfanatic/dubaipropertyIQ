@@ -5,6 +5,7 @@
 
 import { Category } from './category';
 import type { PaginatedResult } from './shared';
+import type { ImageObject } from './images';
 
 // Re-export for convenience
 export type { PaginatedResult };
@@ -20,13 +21,15 @@ export interface Property {
   description: string;
   category_id: string;
   category?: Category; // for joins
+  developer_id: string | null;
+  developer?: { id: string; name: string; logo_url: ImageObject | null }; // for joins - updated type
   bedrooms: number;
   bathrooms: number;
   size_sqft: number;
   price_aed: number;
   status: PropertyStatus;
   golden_visa_eligible: boolean;
-  photos: string[];
+  photos: ImageObject[]; // Changed from string[] to ImageObject[]
   features: string[];
   floor_plan: string | null;
   created_at: string;
@@ -75,7 +78,7 @@ export interface PropertyListItem {
   price_aed: number;
   status: PropertyStatus;
   golden_visa_eligible: boolean;
-  photos: string[];
+  photos: ImageObject[]; // Changed from string[]
   features: string[];
   floor_plan: string | null;
   created_at: string;

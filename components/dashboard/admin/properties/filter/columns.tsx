@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { deleteProperty } from '@/lib/db/properties/actions';
 import { toast } from 'sonner';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
+import { formatPrice, formatSize } from '@/lib/utils/price';
 
 const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
   available: 'default',
@@ -18,19 +20,6 @@ const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'o
   reserved: 'secondary',
   off_plan: 'outline',
 };
-
-function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-AE', {
-    style: 'currency',
-    currency: 'AED',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
-function formatSize(size: number): string {
-  return new Intl.NumberFormat('en-US').format(size);
-}
 
 export const columns: ColumnDef<PropertyListItem>[] = [
   {
@@ -83,14 +72,13 @@ export const columns: ColumnDef<PropertyListItem>[] = [
 function RowActions({ property }: { property: PropertyListItem }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEdit = () => {
     router.push(`/dashboard/admin/properties/${property.id}`);
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this property? This action cannot be undone.')) return;
-
     setIsDeleting(true);
     try {
       const result = await deleteProperty(property.id);
@@ -101,8 +89,9 @@ function RowActions({ property }: { property: PropertyListItem }) {
       }
 
       toast.success('Property deleted successfully');
+      setDeleteDialogOpen(false);
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred');
     } finally {
       setIsDeleting(false);
@@ -110,23 +99,26 @@ function RowActions({ property }: { property: PropertyListItem }) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
-          <Pencil className="mr-2 h-4 w-4" />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} onConfirm={handleDelete} title="Delete Property ?" itemName={property.title} isDeleting={isDeleting} />
+    </>
   );
 }

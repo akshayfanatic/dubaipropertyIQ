@@ -1,0 +1,126 @@
+'use client';
+
+import { ColumnDef } from '@tanstack/react-table';
+import { City } from '@/types/city';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { deleteCity } from '@/lib/db/cities/actions';
+import { toast } from 'sonner';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
+
+export const columns: ColumnDef<City>[] = [
+  {
+    accessorKey: 'logo_url',
+    header: 'Image',
+    cell: ({ row }) => {
+      const logoUrl = row.getValue('logo_url') as { url: string; alt_tag: string } | null;
+      const cityName = row.getValue('name') as string;
+      return (
+        <div className="size-10">
+          <ImageWithFallback
+            src={logoUrl?.url}
+            alt={logoUrl?.alt_tag || cityName || 'City'}
+            width={32}
+            height={32}
+            className="rounded-sm object-cover"
+            fallbackClassName="rounded-sm"
+            useInitials={!logoUrl?.url}
+          />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ row }) => <span className="font-medium">{row.getValue('name')}</span>,
+  },
+  {
+    accessorKey: 'slug',
+    header: 'Slug',
+    cell: ({ row }) => <code className="rounded bg-muted px-2 py-1 text-xs">{row.getValue('slug')}</code>,
+  },
+  {
+    accessorKey: 'description',
+    header: 'Description',
+    cell: ({ row }) => <span className="text-muted-foreground line-clamp-2 max-w-75">{(row.getValue('description') as string | undefined) || '-'}</span>,
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      const city = row.original;
+      return <RowActions city={city} />;
+    },
+  },
+];
+
+function RowActions({ city }: { city: City }) {
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleEdit = () => {
+    router.push(`/dashboard/admin/cities/${city.id}`);
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deleteCity(city.id);
+
+      if (!result?.success) {
+        toast.error(result?.message || 'Failed to delete city');
+        return;
+      }
+
+      toast.success('City deleted successfully');
+      setDeleteDialogOpen(false);
+      router.refresh();
+    } catch {
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleEdit} className="cursor-pointer">
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+        title="Confirmation ?"
+        description={
+          <span className=" font-extrabold">
+            <b>All the areas related to city will be removed</b>
+          </span>
+        }
+        itemName={city.name}
+        isDeleting={isDeleting}
+      />
+    </>
+  );
+}

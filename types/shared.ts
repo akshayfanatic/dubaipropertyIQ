@@ -28,3 +28,12 @@ export interface PaginationFilters {
 export interface SearchFilters {
   search?: string;
 }
+
+/**
+ * Generic select option for dropdowns
+ * Can be extended by entity-specific options (e.g., CitySelectOption, CategorySelectOption)
+ */
+export interface SelectOption {
+  label: string;
+  value: string;
+}

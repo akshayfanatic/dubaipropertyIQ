@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Search, Filter, RotateCcw } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import useSWR from 'swr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SelectField } from '@/components/ui/select-field';
+import { SelectField } from '@/components/shared/select-field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
+import { SearchInput } from '@/components/shared/forms/search-input';
+import { ResetButton } from '@/components/shared/forms/reset-button';
+import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
 import { fetcher } from '@/lib/utils';
 
@@ -27,18 +30,15 @@ export function FilterBar() {
   const { data: categoryOptions, isLoading } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <FilterFieldSet>
+      {/* Search field - filters properties by title/description */}
       <Controller
         name="search"
         control={control}
-        render={({ field }) => (
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input {...field} value={field.value ?? ''} placeholder="Search properties..." className="pl-10" />
-          </div>
-        )}
+        render={({ field }) => <SearchInput value={field.value} onChange={field.onChange} placeholder="Search properties..." className="flex-1 max-w-7xl" />}
       />
 
+      {/* Property type field - filters by property category */}
       <Controller
         name="property_type"
         control={control}
@@ -54,6 +54,7 @@ export function FilterBar() {
         )}
       />
 
+      {/* Status field - filters by property availability status */}
       <Controller
         name="status"
         control={control}
@@ -71,12 +72,10 @@ export function FilterBar() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-medium leading-none">Additional Filters</h4>
-              <Button variant="ghost" size="sm" type="button" className="h-8 cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => reset()}>
-                <RotateCcw className="mr-1 h-3 w-3" />
-                Reset
-              </Button>
+              <ResetButton onReset={() => reset()} label="Reset All" />
             </div>
 
+            {/* Bedrooms field - filters by minimum number of bedrooms */}
             <Controller
               name="bedrooms"
               control={control}
@@ -91,11 +90,14 @@ export function FilterBar() {
             <div className="space-y-2">
               <Label>Price Range (AED)</Label>
               <div className="grid grid-cols-2 gap-2">
+                {/* Min price field - filters by minimum price */}
                 <Controller
                   name="min_price"
                   control={control}
                   render={({ field }) => <Input type="number" min={0} placeholder="Min" value={field.value || ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')} />}
                 />
+
+                {/* Max price field - filters by maximum price */}
                 <Controller
                   name="max_price"
                   control={control}
@@ -107,11 +109,14 @@ export function FilterBar() {
             <div className="space-y-2">
               <Label>Size Range (sqft)</Label>
               <div className="grid grid-cols-2 gap-2">
+                {/* Min size field - filters by minimum property size */}
                 <Controller
                   name="min_size"
                   control={control}
                   render={({ field }) => <Input type="number" min={0} placeholder="Min" value={field.value || ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')} />}
                 />
+
+                {/* Max size field - filters by maximum property size */}
                 <Controller
                   name="max_size"
                   control={control}
@@ -120,6 +125,7 @@ export function FilterBar() {
               </div>
             </div>
 
+            {/* Golden visa field - filters for golden visa eligible properties only */}
             <Controller
               name="golden_visa_eligible"
               control={control}
@@ -134,10 +140,7 @@ export function FilterBar() {
         </PopoverContent>
       </Popover>
 
-      <Button variant="ghost" type="button" className="cursor-pointer" onClick={() => reset()}>
-        <RotateCcw className="mr-2 h-4 w-4" />
-        Reset
-      </Button>
-    </div>
+      <ResetButton onReset={() => reset()} />
+    </FilterFieldSet>
   );
 }

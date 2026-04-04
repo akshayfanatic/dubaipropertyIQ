@@ -9,7 +9,7 @@ import { FileValidationOptions } from '@/types/storage';
 // Default validation options for images
 export const DEFAULT_IMAGE_VALIDATION: FileValidationOptions = {
   maxSizeBytes: 5 * 1024 * 1024, // 5MB
-  allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+  allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'],
 };
 
 // File validation schema

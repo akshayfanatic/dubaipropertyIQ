@@ -8,9 +8,11 @@ import { adminClient } from '@/lib/supabase/admin';
 import { UploadResponse } from '@/types/storage';
 import { validateFile, DEFAULT_IMAGE_VALIDATION } from '@/lib/validations/storage';
 import { randomUUID } from 'crypto';
+import { extractAltTag } from '@/lib/utils';
 
 /**
  * Upload an image to Supabase Storage
+ * Returns URL and alt_tag extracted from filename
  */
 export async function uploadImage(file: File, bucket: string, folder?: string): Promise<UploadResponse> {
   try {
@@ -35,6 +37,9 @@ export async function uploadImage(file: File, bucket: string, folder?: string): 
     const fileExtension = file.name.split('.').pop() || 'jpg';
     const fileName = `${randomUUID()}.${fileExtension}`;
     const filePath = folder ? `${folder}/${fileName}` : fileName;
+
+    // Extract alt tag from original filename
+    const altTag = extractAltTag(file.name);
 
     // Convert File to ArrayBuffer for Supabase
     const arrayBuffer = await file.arrayBuffer();
@@ -63,6 +68,7 @@ export async function uploadImage(file: File, bucket: string, folder?: string): 
     return {
       success: true,
       url: publicUrl,
+      alt_tag: altTag,
     };
   } catch (error) {
     console.error('Upload exception:', error);

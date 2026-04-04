@@ -46,7 +46,7 @@ export function LoginForm() {
       if (result?.error) {
         setFormError('root', { message: result.error });
       }
-    } catch (error) {
+    } catch {
       setFormError('root', { message: 'An unexpected error occurred. Please try again.' });
     }
   };

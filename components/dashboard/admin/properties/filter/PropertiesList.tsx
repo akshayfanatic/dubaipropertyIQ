@@ -5,7 +5,7 @@ import { getPropertiesAdmin } from '@/lib/db/properties/queries';
 import { PropertyListItem, PropertyFilters, PaginatedResult } from '@/types/property';
 import { delay } from '@/lib/utils';
 import { DataTable } from '@/components/ui/data-table';
-import { Pagination } from '@/components/ui/pagination';
+import { Pagination } from '@/components/shared/pagination';
 import { columns } from './columns';
 import Link from 'next/link';
 
