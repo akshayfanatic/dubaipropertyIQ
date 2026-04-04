@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Search, Filter, RotateCcw } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import useSWR from 'swr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SelectField } from '@/components/shared/select-field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
+import { ResetButton } from '@/components/shared/forms/reset-button';
 import { CategoryOption } from '@/types/category';
 import { fetcher } from '@/lib/utils';
 
@@ -71,10 +72,7 @@ export function FilterBar() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-medium leading-none">Additional Filters</h4>
-              <Button variant="ghost" size="sm" type="button" className="h-8 cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => reset()}>
-                <RotateCcw className="mr-1 h-3 w-3" />
-                Reset
-              </Button>
+              <ResetButton onReset={() => reset()} label="Reset All" />
             </div>
 
             <Controller
@@ -134,10 +132,7 @@ export function FilterBar() {
         </PopoverContent>
       </Popover>
 
-      <Button variant="ghost" type="button" className="cursor-pointer" onClick={() => reset()}>
-        <RotateCcw className="mr-2 h-4 w-4" />
-        Reset
-      </Button>
+      <ResetButton onReset={() => reset()} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { ResetButton } from '@/components/shared/forms/reset-button';
 
 interface AmenitiesSearchForm {
   search: string;
@@ -70,17 +71,20 @@ export function AmenitiesSearchFilter() {
 
   return (
     <FormProvider {...methods}>
-      <div className="relative flex-1 max-w-sm">
-        <Controller
-          name="search"
-          control={control}
-          render={({ field }) => (
-            <>
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input type="search" {...field} value={field.value ?? ''} placeholder="Search amenities..." className="pl-10" />
-            </>
-          )}
-        />
+      <div className="flex gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Controller
+            name="search"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input type="search" {...field} value={field.value ?? ''} placeholder="Search amenities..." className="pl-10" />
+              </>
+            )}
+          />
+        </div>
+        <ResetButton onReset={() => reset()} />
       </div>
     </FormProvider>
   );

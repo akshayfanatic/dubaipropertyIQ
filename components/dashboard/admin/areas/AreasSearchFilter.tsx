@@ -7,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { Input } from '@/components/ui/input';
 import { SelectField } from '@/components/shared/select-field';
 import { Search } from 'lucide-react';
+import { ResetButton } from '@/components/shared/forms/reset-button';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import { CityOption } from '@/types/city';
@@ -81,7 +82,7 @@ export function AreasSearchFilter() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         <div className="relative flex-1 max-w-sm">
           <Controller
             name="search"
@@ -108,6 +109,7 @@ export function AreasSearchFilter() {
             />
           )}
         />
+        <ResetButton onReset={() => reset()} />
       </div>
     </FormProvider>
   );
