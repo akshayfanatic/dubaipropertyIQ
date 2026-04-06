@@ -14,6 +14,7 @@ import { ResetButton } from '@/components/shared/forms/reset-button';
 import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
 import { fetcher } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
@@ -25,6 +26,7 @@ const statusOptions = [
 
 export function FilterBar() {
   const { control, reset } = useFormContext();
+  const isMobile = useIsMobile();
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const { data: categoryOptions, isLoading } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
@@ -68,7 +70,7 @@ export function FilterBar() {
             Filters
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80" align="end">
+        <PopoverContent className="w-80" align={isMobile ? 'start' : 'end'}>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-medium leading-none">Additional Filters</h4>
