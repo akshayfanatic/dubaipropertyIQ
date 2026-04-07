@@ -16,6 +16,24 @@ export const areaSchema = z.object({
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
   photos: z.array(z.string()),
+  amenity_ids: z.array(z.string().uuid()).optional(),
+  property_ids: z.array(z.string().uuid()).optional(),
+  faqs: z
+    .array(
+      z.object({
+        question: z.string().min(5, 'Question must be at least 5 characters'),
+        answer: z.string().min(10, 'Answer must be at least 10 characters'),
+      }),
+    )
+    .optional(),
+  amenities_faqs: z
+    .array(
+      z.object({
+        question: z.string().min(5, 'Question must be at least 5 characters'),
+        answer: z.string().min(10, 'Answer must be at least 10 characters'),
+      }),
+    )
+    .optional(),
 });
 
 export type AreaFormData = z.infer<typeof areaSchema>;
