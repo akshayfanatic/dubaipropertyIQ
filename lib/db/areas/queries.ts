@@ -25,6 +25,22 @@ export interface AreaWithCity {
     name: string;
     slug: string;
   } | null;
+  areas_amenities?: Array<{
+    amenity_id: string;
+  }>;
+  areas_properties?: Array<{
+    property_id: string;
+  }>;
+  areas_faqs?: Array<{
+    id: string;
+    question: string;
+    answer: string;
+  }>;
+  areas_amenities_faqs?: Array<{
+    id: string;
+    question: string;
+    answer: string;
+  }>;
 }
 
 /**
@@ -171,11 +187,15 @@ export async function getAreasWithCityAdmin(filters?: AreaFilters): Promise<ApiR
 /**
  * Get a single area by ID with related data
  */
-export async function getAreaById(id: string): Promise<ApiResponse<AreaWithCity | null>> {
+export async function getAreaByIdAdmin(id: string): Promise<ApiResponse<AreaWithCity | null>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('areas').select('*, cities(name, slug)').eq('id', id).single();
+    const { data, error } = await supabase
+      .from('areas')
+      .select('*, cities(name, slug), areas_amenities(amenity_id), areas_properties(property_id), areas_faqs(id, question, answer), areas_amenities_faqs(id, question, answer)')
+      .eq('id', id)
+      .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -300,7 +320,7 @@ export async function getAreaOptionsAdmin(): Promise<ApiResponse<AreaOption[]>> 
 /**
  * Get area FAQs
  */
-export async function getAreaFAQs(areaId: string): Promise<ApiResponse<AreaFAQ[]>> {
+export async function getAreaFAQsAdmin(areaId: string): Promise<ApiResponse<AreaFAQ[]>> {
   try {
     const supabase = adminClient();
 
