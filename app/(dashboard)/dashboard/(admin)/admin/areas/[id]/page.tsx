@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AreaForm } from '@/components/dashboard/admin/areas/AreaForm';
-import { getAreaById } from '@/lib/db/areas/queries';
+import { getAreaByIdAdmin } from '@/lib/db/areas/queries';
 import { PageHeader } from '@/components/shared/page-header';
-import { Area } from '@/types/areas';
 
 interface EditAreaPageProps {
   params: Promise<{ id: string }>;
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function EditAreaPage({ params }: EditAreaPageProps) {
   const { id } = await params;
-  const { success, data: area } = await getAreaById(id);
+  const { success, data: area } = await getAreaByIdAdmin(id);
 
   if (!success || !area) {
     notFound();
