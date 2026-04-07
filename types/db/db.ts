@@ -71,6 +71,13 @@ export interface AreaProperty {
   property_id: string;
 }
 
+export interface PropertyAmenity {
+  id: string;
+  property_id: string;
+  amenity_id: string;
+  created_at: string | null;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -331,6 +338,17 @@ export interface Database {
           updated_at?: string | null;
         };
         Update: Partial<Property>;
+        Relationships: [Relationship, Relationship];
+      };
+      properties_amenities: {
+        Row: PropertyAmenity;
+        Insert: {
+          amenity_id: string;
+          created_at?: string | null;
+          id?: string;
+          property_id: string;
+        };
+        Update: Partial<PropertyAmenity>;
         Relationships: [Relationship, Relationship];
       };
       user_roles: {

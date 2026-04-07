@@ -426,6 +426,42 @@ export type Database = {
           },
         ];
       };
+      properties_amenities: {
+        Row: {
+          amenity_id: string;
+          created_at: string | null;
+          id: string;
+          property_id: string;
+        };
+        Insert: {
+          amenity_id: string;
+          created_at?: string | null;
+          id?: string;
+          property_id: string;
+        };
+        Update: {
+          amenity_id?: string;
+          created_at?: string | null;
+          id?: string;
+          property_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'properties_amenities_amenity_id_fkey';
+            columns: ['amenity_id'];
+            isOneToOne: false;
+            referencedRelation: 'amenities';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'properties_amenities_property_id_fkey';
+            columns: ['property_id'];
+            isOneToOne: false;
+            referencedRelation: 'properties';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       user_roles: {
         Row: {
           created_at: string | null;

@@ -15,6 +15,17 @@ export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | '
 
 export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
+/**
+ * PropertyAmenity - Junction table row linking property to amenity
+ * Matches db.ts structure exactly
+ */
+export interface PropertyAmenity {
+  id: string;
+  property_id: string;
+  amenity_id: string;
+  created_at: string | null;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -35,6 +46,9 @@ export interface Property {
   floor_plan: string | null;
   created_at: string;
   updated_at: string;
+  // Amenities - from junction table (actual amenity data)
+  amenities?: PropertyAmenity[];
+  amenity_ids?: string[]; // For form input (array of amenity IDs)
 }
 
 // Keep for backward compatibility with existing code
