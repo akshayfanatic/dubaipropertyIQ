@@ -94,8 +94,14 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
       }
 
       toast.success(isEditMode ? 'Developer updated successfully' : 'Developer created successfully');
-      router.push('/dashboard/admin/developers');
-      router.refresh();
+
+      const developerId = isEditMode ? developer!.id : (result.data as Developer)?.id;
+      if (!isEditMode && developerId) {
+        router.replace(`/dashboard/admin/developers/${developerId}`);
+      } else {
+        router.push('/dashboard/admin/developers');
+        router.refresh();
+      }
     } catch (error) {
       console.error(error);
       toast.error('An unexpected error occurred');

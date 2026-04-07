@@ -90,8 +90,12 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
       }
 
       toast.success(isEditMode ? 'Area updated successfully' : 'Area created successfully');
-      router.push('/dashboard/admin/areas');
-      router.refresh();
+
+      if (!isEditMode && areaId) {
+        router.replace(`/dashboard/admin/areas/${areaId}`);
+      } else {
+        router.refresh();
+      }
     } catch {
       toast.error('An unexpected error occurred');
     }

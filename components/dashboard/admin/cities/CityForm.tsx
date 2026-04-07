@@ -59,8 +59,14 @@ export function CityForm({ city }: CityFormProps) {
       }
 
       toast.success(isEditMode ? 'City updated successfully' : 'City created successfully');
-      router.push('/dashboard/admin/cities');
-      router.refresh();
+
+      const cityId = isEditMode ? city!.id : (result.data as City)?.id;
+      if (!isEditMode && cityId) {
+        router.replace(`/dashboard/admin/cities/${cityId}`);
+      } else {
+        router.push('/dashboard/admin/cities');
+        router.refresh();
+      }
     } catch {
       toast.error('An unexpected error occurred');
     }

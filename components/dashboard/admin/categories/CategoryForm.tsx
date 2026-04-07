@@ -54,8 +54,14 @@ export function CategoryForm({ category }: CategoryFormProps) {
       }
 
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
-      router.push('/dashboard/admin/categories');
-      router.refresh();
+
+      const categoryId = isEditMode ? category!.id : (result.data as Category)?.id;
+      if (!isEditMode && categoryId) {
+        router.replace(`/dashboard/admin/categories/${categoryId}`);
+      } else {
+        router.push('/dashboard/admin/categories');
+        router.refresh();
+      }
     } catch {
       toast.error('An unexpected error occurred');
     }

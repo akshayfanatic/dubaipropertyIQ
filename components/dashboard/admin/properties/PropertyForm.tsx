@@ -95,8 +95,14 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
       }
 
       toast.success(isEditMode ? 'Property updated successfully' : 'Property created successfully');
-      router.push('/dashboard/admin/properties');
-      router.refresh();
+
+      const propertyId = isEditMode ? property!.id : (result.data as Property)?.id;
+      if (!isEditMode && propertyId) {
+        router.replace(`/dashboard/admin/properties/${propertyId}`);
+      } else {
+        router.push('/dashboard/admin/properties');
+        router.refresh();
+      }
     } catch (error) {
       console.error('Submit error:', error);
       toast.error('An unexpected error occurred');
