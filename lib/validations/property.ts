@@ -12,8 +12,17 @@ export const propertyTypeSchema = z.enum(['apartment', 'villa', 'townhouse', 'pe
 // Property Status enum validation
 export const propertyStatusSchema = z.enum(['available', 'sold', 'reserved', 'off_plan']);
 
+// Slug validation schema
+export const propertySlugSchema = z
+  .string()
+  .min(3, 'Slug must be at least 3 characters')
+  .max(200, 'Slug must be less than 200 characters')
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+  .transform((val) => val.toLowerCase().trim());
+
 // Property form validation schema
 export const propertyFormSchema = z.object({
+  slug: propertySlugSchema, // Auto-generated if not provided
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title must be less than 200 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   category_id: z.string(),

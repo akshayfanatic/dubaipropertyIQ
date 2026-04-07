@@ -16,7 +16,7 @@ import { ImageUploader } from '@/components/ui/image-uploader';
 import { SelectOption } from '@/components/shared/select-field';
 import { Category } from '@/types/category';
 import { DeveloperOption } from '@/types';
-import { getImageUrl } from '@/lib/utils';
+import { getImageUrl, generateSlug } from '@/lib/utils';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { Input } from '@/components/ui/input';
 
@@ -47,6 +47,7 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
     defaultValues: property
       ? {
           title: property.title,
+          slug: property.slug,
           description: property.description,
           category_id: property.category_id,
           developer_id: property.developer_id ?? undefined,
@@ -62,6 +63,7 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
         }
       : {
           title: '',
+          slug: '',
           description: '',
           category_id: '',
           developer_id: undefined,
@@ -95,7 +97,8 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
       toast.success(isEditMode ? 'Property updated successfully' : 'Property created successfully');
       router.push('/dashboard/admin/properties');
       router.refresh();
-    } catch {
+    } catch (error) {
+      console.error('Submit error:', error);
       toast.error('An unexpected error occurred');
     }
   };
@@ -117,7 +120,28 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
       <Controller
         name="title"
         control={control}
-        render={({ field }) => <TextInput id="title" label="Title" required placeholder="e.g., Luxury 2BR Apartment in Downtown Dubai" error={errors.title?.message} {...field} />}
+        render={({ field }) => (
+          <TextInput
+            id="title"
+            label="Title"
+            required
+            placeholder="e.g., Luxury 2BR Apartment in Downtown Dubai"
+            error={errors.title?.message}
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={(e) => {
+              field.onBlur();
+              setValue('slug', generateSlug(e.target.value));
+            }}
+          />
+        )}
+      />
+
+      {/* Slug */}
+      <Controller
+        name="slug"
+        control={control}
+        render={({ field }) => <TextInput id="slug" label="Slug" placeholder="e.g., luxury-2br-apartment-downtown-dubai" error={errors.slug?.message} {...field} />}
       />
 
       {/* Description */}

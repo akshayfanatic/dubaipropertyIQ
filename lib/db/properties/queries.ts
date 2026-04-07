@@ -6,7 +6,7 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import type { Property, PropertyFilters, PaginatedResult, PropertyListItem } from '@/types/property';
+import type { Property, PropertyFilters, PaginatedResult, PropertyListItem, PropertyOption } from '@/types/property';
 
 /**
  * Get all properties with optional filters and pagination
@@ -23,6 +23,7 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     let query = supabase.from('properties').select(
       `
     id,
+    slug,
     title,
     description,
     bedrooms,
@@ -295,6 +296,48 @@ export async function getPropertyStatsAdmin() {
   } catch (error) {
     console.error('[getPropertyStatsAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch property stats';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get property options for admin dropdowns
+ * Returns properties formatted for select components
+ */
+export async function getPropertyOptionsAdmin(): Promise<ApiResponse<PropertyOption[]>> {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.from('properties').select('id, title').order('title', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    // Format for select dropdown
+    const options: PropertyOption[] = data.map((property) => ({
+      label: property.title,
+      value: property.id,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Property options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch property options';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
