@@ -170,7 +170,7 @@ export async function getAmenityOptionsAdmin(): Promise<ApiResponse<AmenityOptio
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('amenities').select('name, slug, logo_url').order('name', { ascending: true });
+    const { data, error } = await supabase.from('amenities').select('name, id, logo_url').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -184,7 +184,7 @@ export async function getAmenityOptionsAdmin(): Promise<ApiResponse<AmenityOptio
     // Format for select dropdown
     const options: AmenityOption[] = data.map((amenity) => ({
       label: amenity.name,
-      value: amenity.slug,
+      value: amenity.id,
       logo_url: amenity.logo_url,
     }));
 
