@@ -2,18 +2,6 @@
 -- Neighborhoods/communities within cities with associated amenities and FAQs
 
 -- ============================================
--- Auto-update updated_at timestamp function
--- (Already exists in previous migrations, keeping for reference)
--- ============================================
--- CREATE OR REPLACE FUNCTION update_updated_at_column()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   NEW.updated_at = NOW();
---   RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- ============================================
 -- 1. Amenities Table
 -- ============================================
 CREATE TABLE IF NOT EXISTS amenities (
