@@ -6,6 +6,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '14.4';
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       amenities: {
@@ -83,14 +108,17 @@ export type Database = {
         Row: {
           amenity_id: string;
           area_id: string;
+          id: string;
         };
         Insert: {
           amenity_id: string;
           area_id: string;
+          id?: string;
         };
         Update: {
           amenity_id?: string;
           area_id?: string;
+          id?: string;
         };
         Relationships: [
           {
@@ -176,14 +204,17 @@ export type Database = {
       areas_properties: {
         Row: {
           area_id: string;
+          id: string;
           property_id: string;
         };
         Insert: {
           area_id: string;
+          id?: string;
           property_id: string;
         };
         Update: {
           area_id?: string;
+          id?: string;
           property_id?: string;
         };
         Relationships: [
@@ -335,6 +366,7 @@ export type Database = {
           photos: Json | null;
           price_aed: number;
           size_sqft: number;
+          slug: string;
           status: Database['public']['Enums']['property_status_enum'];
           title: string;
           updated_at: string | null;
@@ -353,6 +385,7 @@ export type Database = {
           photos?: Json | null;
           price_aed: number;
           size_sqft: number;
+          slug: string;
           status?: Database['public']['Enums']['property_status_enum'];
           title: string;
           updated_at?: string | null;
@@ -371,6 +404,7 @@ export type Database = {
           photos?: Json | null;
           price_aed?: number;
           size_sqft?: number;
+          slug?: string;
           status?: Database['public']['Enums']['property_status_enum'];
           title?: string;
           updated_at?: string | null;
@@ -419,6 +453,7 @@ export type Database = {
     };
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
+      generate_slug: { Args: { text_param: string }; Returns: string };
       has_role: {
         Args: { required_role: Database['public']['Enums']['app_role'] };
         Returns: boolean;
@@ -538,6 +573,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       app_role: ['admin', 'agent', 'customer'],
