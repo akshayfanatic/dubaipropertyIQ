@@ -7,6 +7,12 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import type { Property, PropertyFilters, PaginatedResult, PropertyListItem, PropertyOption } from '@/types/property';
+import type { Amenity } from '@/types/amenities';
+
+// Type for Supabase join result: properties_amenities → amenities
+interface PropertyAmenityWithAmenity {
+  amenity: Pick<Amenity, 'id'>;
+}
 
 /**
  * Get all properties with optional filters and pagination
@@ -123,14 +129,28 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
   }
 }
 
+// type PropertyAmenity=Pick<Property,"amenities">
 /**
- * Get a single property by ID
+ * Get a single property by ID with amenities
  */
-export async function getPropertyByIdAdmin(id: string) {
+export async function getPropertyByIdAdmin(id: string): Promise<ApiResponse<Property | null>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('properties').select('*').eq('id', id).single();
+    const { data, error } = await supabase
+      .from('properties')
+      .select(
+        `
+        *,
+        category:categories!inner (id, name, slug),
+        developer:developers (id, name, logo_url),
+ amenities:properties_amenities (
+      amenity:amenities (id)
+    )
+      `,
+      )
+      .eq('id', id)
+      .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -149,51 +169,21 @@ export async function getPropertyByIdAdmin(id: string) {
       });
     }
 
+    // Transform amenities array to extract amenity data from nested join
+    const property = {
+      ...data,
+      amenities: data?.amenities?.map((pa: PropertyAmenityWithAmenity) => pa.amenity).filter(Boolean) || [],
+    };
+
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
       message: 'Property fetched successfully',
-      data: data as Property,
+      data: property as Property,
     });
   } catch (error) {
     console.error('[getPropertyByIdAdmin] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch property';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Get featured properties (latest available)
- */
-export async function getFeaturedPropertiesAdmin(limit: number = 6) {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('properties').select('*').eq('status', 'available').order('created_at', { ascending: false }).limit(limit);
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Featured properties fetched successfully',
-      data: data as Property[],
-    });
-  } catch (error) {
-    console.error('[getFeaturedPropertiesAdmin] Error:', error);
-    const message = error instanceof Error ? error.message : 'Failed to fetch featured properties';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
@@ -211,98 +201,6 @@ export async function getGoldenVisaPropertiesAdmin() {
     status: 'available',
     golden_visa_eligible: true,
   });
-}
-
-/**
- * Search properties by text
- */
-export async function searchPropertiesAdmin(searchTerm: string, limit: number = 20) {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase
-      .from('properties')
-      .select('*')
-      .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
-      .eq('status', 'available')
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Search results fetched successfully',
-      data: data as Property[],
-    });
-  } catch (error) {
-    console.error('[searchPropertiesAdmin] Error:', error);
-    const message = error instanceof Error ? error.message : 'Failed to search properties';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Get property count by status
- */
-export async function getPropertyStatsAdmin() {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('properties').select('status');
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    const stats = {
-      total: data.length,
-      available: 0,
-      sold: 0,
-      reserved: 0,
-      off_plan: 0,
-    };
-
-    data.forEach((item) => {
-      if (item.status in stats) {
-        stats[item.status as keyof typeof stats]++;
-      }
-    });
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Property stats fetched successfully',
-      data: stats,
-    });
-  } catch (error) {
-    console.error('[getPropertyStatsAdmin] Error:', error);
-    const message = error instanceof Error ? error.message : 'Failed to fetch property stats';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
 }
 
 /**
