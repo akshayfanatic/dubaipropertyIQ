@@ -7,8 +7,7 @@ import { SelectField } from '@/components/shared/select-field';
 import { TextInput } from '@/components/shared/forms/text-input';
 import { TextArea } from '@/components/shared/forms/text-area';
 import { PropertyFormData, propertyFormSchema } from '@/lib/validations/property';
-import { createProperty } from '@/lib/db/properties/actions';
-import { updateProperty } from '@/lib/db/properties/actions';
+import { createProperty, updateProperty, updatePropertyAmenities } from '@/lib/db/properties/actions';
 import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { toast } from 'sonner';
@@ -19,6 +18,11 @@ import { DeveloperOption } from '@/types';
 import { getImageUrl, generateSlug } from '@/lib/utils';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { Input } from '@/components/ui/input';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { fetcher } from '@/lib/utils';
+import useSWR from 'swr';
+import { useMemo } from 'react';
+import { AmenityOption } from '@/types/amenities';
 
 interface PropertyFormProps {
   property?: Property;
@@ -36,6 +40,15 @@ const statusOptions = [
 export function PropertyForm({ property, categories, developerList }: PropertyFormProps) {
   const router = useRouter();
   const isEditMode = !!property;
+
+  // Fetch amenity options
+  const { data: amenityResponse, isLoading: isLoadingAmenities } = useSWR<{ success: boolean; data: AmenityOption[] }>('/api/admin/amenities/options', fetcher);
+  const amenityOptions = amenityResponse?.data || [];
+
+  // Extract amenity IDs from property data
+  const propertyAmenityIds = useMemo(() => {
+    return property?.amenities?.map((a) => a.id) || [];
+  }, [property?.amenities]);
 
   const {
     handleSubmit,
@@ -60,6 +73,7 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
           photos: property.photos || [],
           features: property.features || [],
           floor_plan: property.floor_plan ?? undefined,
+          amenity_ids: propertyAmenityIds,
         }
       : {
           title: '',
@@ -76,27 +90,37 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
           photos: [],
           features: [],
           floor_plan: undefined,
+          amenity_ids: [],
         },
   });
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
-      const propertyData = {
-        ...data,
-        floor_plan: data.floor_plan ?? null,
-        developer_id: data.developer_id ?? null,
+      const { amenity_ids, ...propertyData } = data;
+      const finalPropertyData = {
+        ...propertyData,
+        floor_plan: propertyData.floor_plan ?? null,
+        developer_id: propertyData.developer_id ?? null,
       };
 
-      const result = isEditMode ? await updateProperty(property!.id, propertyData) : await createProperty(propertyData);
+      const result = isEditMode ? await updateProperty(property!.id, finalPropertyData) : await createProperty(finalPropertyData);
 
       if (!result?.success) {
         toast.error(result?.message || 'Failed to save property');
         return;
       }
 
+      // Handle amenities separately after property is created/updated
+      const propertyId = isEditMode ? property!.id : (result.data as Property)?.id;
+      if (propertyId && amenity_ids) {
+        const amenitiesResult = await updatePropertyAmenities(propertyId, amenity_ids);
+        if (!amenitiesResult?.success) {
+          toast.error('Property saved but failed to update amenities');
+        }
+      }
+
       toast.success(isEditMode ? 'Property updated successfully' : 'Property created successfully');
 
-      const propertyId = isEditMode ? property!.id : (result.data as Property)?.id;
       if (!isEditMode && propertyId) {
         router.replace(`/dashboard/admin/properties/${propertyId}`);
       } else {
@@ -286,6 +310,25 @@ export function PropertyForm({ property, categories, developerList }: PropertyFo
           )}
         />
       </div>
+
+      {/* Amenities */}
+      <Controller
+        name="amenity_ids"
+        control={control}
+        render={({ field }) => (
+          <MultiSelect
+            name="amenity_ids"
+            label="Nearby Amenities"
+            placeholder={isLoadingAmenities ? 'Loading amenities...' : 'Select amenities...'}
+            options={amenityOptions}
+            value={field.value || []}
+            onChange={field.onChange}
+            error={errors.amenity_ids?.message as string}
+            disabled={isLoadingAmenities}
+            isLoading={isLoadingAmenities}
+          />
+        )}
+      />
 
       {/* Photos */}
       <Controller
