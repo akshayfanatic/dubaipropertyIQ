@@ -36,6 +36,7 @@ export const propertyFormSchema = z.object({
   photos: z.array(imageObjectSchema).min(1, 'At least one photo is required'), // one photo required
   features: z.array(z.string()),
   floor_plan: z.string().url('Invalid floor plan URL').nullable().optional(),
+  amenity_ids: z.array(z.string().uuid()).optional(), // Array of amenity IDs from junction table
 });
 
 export type PropertyFormData = z.infer<typeof propertyFormSchema>;
