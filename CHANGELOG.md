@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.0...v0.3.1) (2026-04-09)
+
+### Features
+
+- **areas:** add location jsonb column to areas table ([f583d9b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f583d9bfe51333b5506a813203cf15858cdeaf91))
+- **db migration:** created migration for areas_amenities and areas_properties ([5e1d5f9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5e1d5f94eb287ffe6b06392fd8479cfb652ee621))
+- **db:** added new table properties_amenities which store multiple amenities related to properties ([f840220](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f840220681bdae0d244762db77663294d6339304))
+- **db:** implement new migration for adding location column in area ([ba0b4cf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ba0b4cf5d70771904ef19bf54b97408692108380))
+- **migration:** fix db migration related issue ([b1c7930](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b1c79302727c9f2ba15db353be8a34c29a0f3e21))
+- **package:** add new package for managing multiple value with select options ([8ecfbda](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8ecfbdaf7f2c8acf13f952ccc9398080a34233e4))
+- **package:** added new package for creating map locations ([c645c6c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c645c6c440aed5ce177bf72ad2f9195e6d52cecc))
+- **project architecture:** added project architecture do project ([d429308](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d42930895daa21fed0b4d49298cdfa240a98a41e))
+- **properties:** added new server function for updating properties amenitie ([d2918c7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d2918c73f9797ced3e508f9b7213bdb83a285f8b))
+- **properties:** added selecting amenities feature in properties ([49e621b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/49e621b30204e34c9c354a40cd0f8c844a3043ee))
+- **properties:** sending properties amenities relational data into property ([00dcec2](https://github.com/akshayfanatic/dubaipropertyIQ/commit/00dcec2fc560d805d1f962f8a63e39594ad95370))
+- **types:** added amenity_ids in schema validation ([d892b90](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d892b90f79906f276989d4ba33e92186b9d5442d))
+- **types:** genereated new types after migrations related to properties_amenity ([9d76db5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9d76db587bf3cd3a4e108926d7630e2faa742c03))
+
+### Bug Fixes
+
+- **responsive:** fix responsive issue regarding popover content in properties filter ([c408f59](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c408f590ce3a87cbb6d16f70766e29397abebb44))
+- **toast:** add new classes for toaster using shadcn primitve and custom color ([724cd85](https://github.com/akshayfanatic/dubaipropertyIQ/commit/724cd85ebdc0f43c8e523ba5a97a5b73ddb05ba6))
+
+### Code Refactoring
+
+- **amenity options:** value by value from 'slug -> id' ([62032d9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/62032d90465f4b778781f0e650f86a463c011dfa))
+- **amenity:** created resuable dumb component and using in amenity form ([8c1d25c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8c1d25ccfa2cfd1c8a2cb6548bc654d83184dfbb))
+- **areas:** created resuable dumb component and using in area form ([a3055fe](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a3055fee6654e2936bac1a966489fff795b7a911))
+- **category:** created resuable dumb component and using in category form ([786f9e9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/786f9e92e76b142bf25a3f54558f93958dc3d5d4))
+- **city form:** created resuable dumb component and using in city form ([3f6a17e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3f6a17ebbeff604de05eb93403209fb352a98995))
+- **developer:** created resuable dumb component and using in developer form ([f9c3c07](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f9c3c07ce2dcde8d7d263e6445c9fddf80bea701))
+- **forms:** created resuable fields which we use accross our dashboard for consistency ([eef4982](https://github.com/akshayfanatic/dubaipropertyIQ/commit/eef498277e07927bb80983c2d9c904e67f19ddf6))
+- **property form:** created resuable dumb component and using in property form ([8ed92d5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8ed92d5098925097da0b257802e4f87b8e1ec106))
+- **property schema :** add slug column to property table ([83c6f86](https://github.com/akshayfanatic/dubaipropertyIQ/commit/83c6f86bd3e2ba026effbc5353517ac3799ae471))
+- **router:** implement redirection on all after use successfully created to edit page ([89cc14c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/89cc14ceb5eeaaf6ffe60663bcacd7bf9b690f4c))
+- **schema:** modify schema validation for area ([612b9d4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/612b9d49ff006e06166d8bb09654f53ea4f340ed))
+- **types:** updating types for managing project ([d87c982](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d87c982eec3f0200f97565387fce4b046d68e245))
+
 ## [0.3.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.2.7...v0.3.0) (2026-04-04)
 
 ### Features
