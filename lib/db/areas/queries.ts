@@ -7,7 +7,7 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Area, AreaOption, AreaFilters, AreaFAQ, AreaAmenityFAQ } from '@/types/areas';
-import type { PaginatedResult } from '@/types/shared';
+import type { PaginatedResult, Location } from '@/types/shared';
 
 /**
  * Area with city information
@@ -17,6 +17,7 @@ export interface AreaWithCity {
   name: string;
   slug: string;
   description: string | null;
+  location: Location | null;
   photos: string[];
   city_id: string;
   created_at: string;

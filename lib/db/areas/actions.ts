@@ -12,6 +12,14 @@ import { AreaInsertData, AreaUpdateData } from '@/lib/validations/area';
 import { revalidatePath } from 'next/cache';
 
 /**
+ * Location coordinates type (matches areas.location jsonb schema)
+ */
+export type AreaLocationCoords = {
+  lat: number;
+  lng: number;
+};
+
+/**
  * Area insert type (for creating new areas)
  */
 export type AreaInsert = AreaInsertData;
@@ -374,6 +382,53 @@ export async function saveAreaAmenitiesFAQs(areaId: string, faqs: Array<{ questi
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to save area amenities FAQs';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Update area location
+ * Updates the location jsonb column for an area
+ */
+export async function updateAreaLocation(areaId: string, location: AreaLocationCoords) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.from('areas').update({ location }).eq('id', areaId).select().single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Area not found',
+          error: { code: 'NOT_FOUND' },
+        });
+      }
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPDATE_ERROR' },
+      });
+    }
+
+    // Revalidate cache
+    revalidatePath('/dashboard/admin/areas');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Area location updated successfully',
+      data: data as Area,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to update area location';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
