@@ -1,12 +1,22 @@
 drop index if exists "public"."idx_categories_sort_order";
 
-alter table "public"."categories" drop column "icon";
+alter table "public"."categories" drop column if exists "icon";
 
-alter table "public"."categories" drop column "is_active";
+alter table "public"."categories" drop column if exists "is_active";
 
-alter table "public"."categories" drop column "sort_order";
+alter table "public"."categories" drop column if exists "sort_order";
 
-alter table "public"."categories" enable row level security;
+do $$
+begin
+  if not exists (
+    select 1 from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relname = 'categories'
+    and c.relrowsecurity = true
+  ) then
+    alter table "public"."categories" enable row level security;
+  end if;
+end $$;
 
 set check_function_bodies = off;
 

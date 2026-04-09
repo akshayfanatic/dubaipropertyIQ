@@ -23,13 +23,30 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 -- Create unique index on slug
-CREATE UNIQUE INDEX IF not exists idx_categories_slug ON categories(slug);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);
 
--- Create index on sort order
-CREATE INDEX IF not exists idx_categories_sort_order on categories(sort_order);
+-- Create index on sort order (only if column exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='categories' AND column_name='sort_order') THEN
+    CREATE INDEX IF NOT EXISTS idx_categories_sort_order ON categories(sort_order);
+  END IF;
+END $$;
 
 -- Comments for documentation
-COMMENT ON table categories IS 'Property categories for admin management';
-comment on column categories.name is 'Category name (e.g., Apartment, Villa)';
-comment on column categories.slug is 'URL-friendly slug for routing';
-comment on column categories.icon is 'Lucide icon name for UI display';
+COMMENT ON TABLE categories IS 'Property categories for admin management';
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='categories' AND column_name='name') THEN
+    COMMENT ON COLUMN categories.name IS 'Category name (e.g., Apartment, Villa)';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='categories' AND column_name='slug') THEN
+    COMMENT ON COLUMN categories.slug IS 'URL-friendly slug for routing';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='categories' AND column_name='icon') THEN
+    COMMENT ON COLUMN categories.icon IS 'Lucide icon name for UI display';
+  END IF;
+END $$;

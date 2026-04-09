@@ -37,3 +37,28 @@ export interface SelectOption {
   label: string;
   value: string;
 }
+
+/**
+ * Generic Location type with coordinates
+ * Used across different entities (Area, Property, etc.)
+ */
+export type Location = {
+  lng: number;
+  lat: number;
+};
+
+/**
+ * Generic FAQ type
+ * Used across different entities (Area, Property, etc.)
+ */
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  created_at?: string;
+}
+
+/**
+ * Generic FAQ insert type (without id and created_at)
+ */
+export type FAQInsert = Omit<FAQ, 'id' | 'created_at'>;

@@ -18,9 +18,17 @@ ALTER TABLE areas_amenities
   ADD PRIMARY KEY (id);
 
 -- Add unique constraint to prevent duplicate relationships
-ALTER TABLE areas_amenities
-  ADD CONSTRAINT areas_amenities_area_id_amenity_id_key
-  UNIQUE (area_id, amenity_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'areas_amenities_area_id_amenity_id_key'
+  ) THEN
+    ALTER TABLE areas_amenities
+      ADD CONSTRAINT areas_amenities_area_id_amenity_id_key
+      UNIQUE (area_id, amenity_id);
+  END IF;
+END $$;
 
 -- ============================================
 -- 2. areas_properties table
@@ -39,9 +47,17 @@ ALTER TABLE areas_properties
   ADD PRIMARY KEY (id);
 
 -- Add unique constraint to prevent duplicate relationships
-ALTER TABLE areas_properties
-  ADD CONSTRAINT areas_properties_area_id_property_id_key
-  UNIQUE (area_id, property_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'areas_properties_area_id_property_id_key'
+  ) THEN
+    ALTER TABLE areas_properties
+      ADD CONSTRAINT areas_properties_area_id_property_id_key
+      UNIQUE (area_id, property_id);
+  END IF;
+END $$;
 
 -- ============================================
 -- Comments

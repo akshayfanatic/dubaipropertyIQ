@@ -22,8 +22,18 @@ create table if not exists public.user_roles (
 
 comment on table public.user_roles is 'Application roles for each user.';
 
--- 3. Enable RLS
-alter table public.user_roles enable row level security;
+-- 3. Enable RLS (skip if already enabled)
+do $$
+begin
+  if not exists (
+    select 1 from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relname = 'user_roles'
+    and c.relrowsecurity = true
+  ) then
+    alter table public.user_roles enable row level security;
+  end if;
+end $$;
 
 -- 4. Create trigger function to auto-assign roles
 create or replace function public.handle_new_user_role()
@@ -103,7 +113,8 @@ revoke all
   on table public.user_roles
   from authenticated, anon, public;
 
--- 8. Policy for auth admin to read user roles
+-- 8. Policy for auth admin to read user roles (drop if exists first)
+drop policy if exists "Auth admin can read user roles" on public.user_roles;
 create policy "Auth admin can read user roles"
   on public.user_roles
   as permissive for select

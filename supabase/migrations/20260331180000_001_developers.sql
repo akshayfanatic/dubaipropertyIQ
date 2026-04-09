@@ -1,5 +1,5 @@
--- Create developers table
-CREATE TABLE developers (
+-- Create developers table (only if not exists)
+CREATE TABLE IF NOT EXISTS developers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
@@ -27,10 +27,15 @@ CREATE TABLE developers (
 ALTER TABLE properties ADD COLUMN IF NOT EXISTS developer_id UUID REFERENCES developers(id) ON DELETE SET NULL;
 
 -- Create index for slug lookups
-CREATE INDEX idx_developers_slug ON developers(slug);
+CREATE INDEX IF NOT EXISTS idx_developers_slug ON developers(slug);
 
--- Create index for properties developer lookup
-CREATE INDEX idx_properties_developer_id ON properties(developer_id);
+-- Create index for properties developer lookup (only if column exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='properties' AND column_name='developer_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_properties_developer_id ON properties(developer_id);
+  END IF;
+END $$;
 
 -- Create updated_at trigger function (if not exists)
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -52,6 +57,12 @@ CREATE TRIGGER update_developers_updated_at
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('developer-logos', 'developer-logos', true)
 ON CONFLICT (id) DO NOTHING;
+
+-- Drop existing storage policies if they exist (from previous runs)
+DROP POLICY IF EXISTS "Public read access for developer logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload developer logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update developer logos" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete developer logos" ON storage.objects;
 
 -- Storage policy for developer logos (public read)
 CREATE POLICY "Public read access for developer logos"

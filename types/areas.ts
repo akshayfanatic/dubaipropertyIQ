@@ -3,7 +3,7 @@
  * Types for neighborhoods/communities within cities in DubaiPropertyIQ
  */
 
-import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
+import type { PaginationFilters, SearchFilters, SelectOption, FAQ, Location } from './shared';
 
 export interface Area {
   id: string;
@@ -11,6 +11,7 @@ export interface Area {
   name: string;
   slug: string;
   description: string | null; // Matches database (can be null)
+  location?: Location | null; // Generic Location type from shared
   photos: string[] | null; // Matches database (can be null)
   created_at: string;
   updated_at: string;
@@ -36,13 +37,10 @@ export type AreaOption = SelectOption & {
 
 /**
  * Area FAQ (general and amenities-specific)
+ * Extends generic FAQ with area_id
  */
-export interface AreaFAQ {
-  id: string;
+export interface AreaFAQ extends FAQ {
   area_id: string;
-  question: string;
-  answer: string;
-  created_at: string;
 }
 
 // Amenities FAQ has the same shape as general Area FAQ
@@ -51,3 +49,13 @@ export type AreaAmenityFAQ = AreaFAQ;
 
 export type AreaFAQInsert = Omit<AreaFAQ, 'id' | 'created_at'>;
 export type AreaAmenityFAQInsert = Omit<AreaAmenityFAQ, 'id' | 'created_at'>;
+
+export interface AreaFormProps {
+  area?: Area & {
+    cities?: { name: string } | null;
+    areas_amenities?: Array<{ amenity_id: string }>;
+    areas_properties?: Array<{ property_id: string }>;
+    areas_faqs?: Array<{ id: string; question: string; answer: string }>;
+    areas_amenities_faqs?: Array<{ id: string; question: string; answer: string }>;
+  };
+}
