@@ -2,7 +2,6 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { categorySchema, CategoryFormData } from '@/lib/validations/category';
 import { createCategory, updateCategory } from '@/lib/db/categories/actions';
@@ -12,6 +11,8 @@ import { toast } from 'sonner';
 import { generateSlug } from '@/lib/utils';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { FormActions } from '@/components/shared/forms/FormActions';
+import { TextInput } from '@/components/shared/forms/text-input';
+import { TextArea } from '@/components/shared/forms/text-area';
 
 interface CategoryFormProps {
   category?: Category;
@@ -22,7 +23,6 @@ export function CategoryForm({ category }: CategoryFormProps) {
   const isEditMode = !!category;
 
   const {
-    register,
     handleSubmit,
     setValue,
     control,
@@ -54,8 +54,14 @@ export function CategoryForm({ category }: CategoryFormProps) {
       }
 
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
-      router.push('/dashboard/admin/categories');
-      router.refresh();
+
+      const categoryId = isEditMode ? category!.id : (result.data as Category)?.id;
+      if (!isEditMode && categoryId) {
+        router.replace(`/dashboard/admin/categories/${categoryId}`);
+      } else {
+        router.push('/dashboard/admin/categories');
+        router.refresh();
+      }
     } catch {
       toast.error('An unexpected error occurred');
     }
@@ -64,36 +70,45 @@ export function CategoryForm({ category }: CategoryFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Name */}
-      <div className="space-y-2">
-        <Label htmlFor="name">Name *</Label>
-        <Input
-          id="name"
-          placeholder="e.g., Apartment"
-          {...register('name', {
-            onBlur: (e) => {
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <TextInput
+            id="name"
+            label="Name"
+            required
+            placeholder="e.g., Apartment"
+            error={errors.name?.message}
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={(e) => {
+              field.onBlur();
               setValue('slug', generateSlug(e.target.value));
-            },
-          })}
-          className={errors.name ? 'border-destructive' : ''}
-        />
-        {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
-      </div>
+            }}
+          />
+        )}
+      />
 
       {/* Slug */}
-      <div className="space-y-2">
-        <Label htmlFor="slug">Slug *</Label>
-        <Input id="slug" placeholder="e.g., apartment" {...register('slug')} className={errors.slug ? 'border-destructive' : ''} />
-        {errors.slug && <p className="text-sm text-destructive">{errors.slug.message}</p>}
-        <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
-      </div>
+      <Controller
+        name="slug"
+        control={control}
+        render={({ field }) => (
+          <div className="grid gap-2">
+            <TextInput id="slug" label="Slug" required placeholder="e.g., apartment" error={errors.slug?.message} {...field} />
+            <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
+          </div>
+        )}
+      />
 
       {/* Logo */}
-      <div className="space-y-2">
-        <Label>Category Logo</Label>
-        <Controller
-          name="logo_url"
-          control={control}
-          render={({ field }) => (
+      <Controller
+        name="logo_url"
+        control={control}
+        render={({ field }) => (
+          <div className="grid gap-2">
+            <Label>Category Logo</Label>
             <ImageUploader
               bucket="category-logos"
               folder="logos"
@@ -107,23 +122,17 @@ export function CategoryForm({ category }: CategoryFormProps) {
               label="Logo"
               accept="image/*,.svg"
             />
-          )}
-        />
-        <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG, WebP or SVG, max 5MB)</p>
-      </div>
+            <p className="text-xs text-muted-foreground">Upload category logo (JPG, PNG, WebP or SVG, max 5MB)</p>
+          </div>
+        )}
+      />
 
       {/* Description */}
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <textarea
-          id="description"
-          placeholder="Optional description..."
-          rows={3}
-          {...register('description')}
-          className={`w-full rounded-md border bg-transparent px-3 py-2 text-sm ${errors.description ? 'border-destructive' : 'border-input'}`}
-        />
-        {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
-      </div>
+      <Controller
+        name="description"
+        control={control}
+        render={({ field }) => <TextArea id="description" label="Description" placeholder="Optional description..." error={errors.description?.message} rows={3} {...field} />}
+      />
 
       {/* Actions */}
       <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Category" />

@@ -7,9 +7,17 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Area } from '@/types/areas';
-import { AreaInsertData, AreaUpdateData, AreaFAQInsertData, AreaAmenityFAQInsertData } from '@/lib/validations/area';
+import { AreaInsertData, AreaUpdateData } from '@/lib/validations/area';
 
 import { revalidatePath } from 'next/cache';
+
+/**
+ * Location coordinates type (matches areas.location jsonb schema)
+ */
+export type AreaLocationCoords = {
+  lat: number;
+  lng: number;
+};
 
 /**
  * Area insert type (for creating new areas)
@@ -264,21 +272,43 @@ export async function updateAreaProperties(areaId: string, propertyIds: string[]
 }
 
 /**
- * Create area FAQ
+ * Save area FAQs (replace all)
+ * Deletes all existing FAQs for the area and inserts the new ones
  */
-export async function createAreaFAQ(faq: AreaFAQInsertData) {
+export async function saveAreaFAQs(areaId: string, faqs: Array<{ question: string; answer: string }>) {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('areas_faqs').insert(faq).select().single();
+    // Delete all existing FAQs for this area
+    const { error: deleteError } = await supabase.from('areas_faqs').delete().eq('area_id', areaId);
 
-    if (error) {
+    if (deleteError) {
       return ApiResponse({
         success: false,
         status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'CREATE_ERROR' },
+        message: deleteError.message,
+        error: { code: deleteError.code || 'DELETE_ERROR' },
       });
+    }
+
+    // Insert new FAQs
+    if (faqs.length > 0) {
+      const faqsWithAreaId = faqs.map((faq) => ({
+        area_id: areaId,
+        question: faq.question,
+        answer: faq.answer,
+      }));
+
+      const { error: insertError } = await supabase.from('areas_faqs').insert(faqsWithAreaId);
+
+      if (insertError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: insertError.message,
+          error: { code: insertError.code || 'INSERT_ERROR' },
+        });
+      }
     }
 
     // Revalidate cache
@@ -286,12 +316,12 @@ export async function createAreaFAQ(faq: AreaFAQInsertData) {
 
     return ApiResponse({
       success: true,
-      status: HttpStatus.CREATED,
-      message: 'Area FAQ created successfully',
-      data,
+      status: HttpStatus.OK,
+      message: `${faqs.length} FAQ(s) saved successfully`,
+      data: null,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to create area FAQ';
+    const message = error instanceof Error ? error.message : 'Failed to save area FAQs';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
@@ -302,20 +332,81 @@ export async function createAreaFAQ(faq: AreaFAQInsertData) {
 }
 
 /**
- * Update area FAQ
+ * Save area amenities FAQs (replace all)
+ * Deletes all existing amenities FAQs for the area and inserts the new ones
  */
-export async function updateAreaFAQ(id: string, updates: Partial<AreaFAQInsertData>) {
+export async function saveAreaAmenitiesFAQs(areaId: string, faqs: Array<{ question: string; answer: string }>) {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('areas_faqs').update(updates).eq('id', id).select().single();
+    // Delete all existing amenities FAQs for this area
+    const { error: deleteError } = await supabase.from('areas_amenities_faqs').delete().eq('area_id', areaId);
+
+    if (deleteError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: deleteError.message,
+        error: { code: deleteError.code || 'DELETE_ERROR' },
+      });
+    }
+
+    // Insert new FAQs
+    if (faqs.length > 0) {
+      const faqsWithAreaId = faqs.map((faq) => ({
+        area_id: areaId,
+        question: faq.question,
+        answer: faq.answer,
+      }));
+
+      const { error: insertError } = await supabase.from('areas_amenities_faqs').insert(faqsWithAreaId);
+
+      if (insertError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: insertError.message,
+          error: { code: insertError.code || 'INSERT_ERROR' },
+        });
+      }
+    }
+
+    // Revalidate cache
+    revalidatePath('/dashboard/admin/areas');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: `${faqs.length} Amenities FAQ(s) saved successfully`,
+      data: null,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save area amenities FAQs';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Update area location
+ * Updates the location jsonb column for an area
+ */
+export async function updateAreaLocation(areaId: string, location: AreaLocationCoords) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.from('areas').update({ location }).eq('id', areaId).select().single();
 
     if (error) {
       if (error.code === 'PGRST116') {
         return ApiResponse({
           success: false,
           status: HttpStatus.NOT_FOUND,
-          message: 'Area FAQ not found',
+          message: 'Area not found',
           error: { code: 'NOT_FOUND' },
         });
       }
@@ -333,171 +424,11 @@ export async function updateAreaFAQ(id: string, updates: Partial<AreaFAQInsertDa
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
-      message: 'Area FAQ updated successfully',
-      data,
+      message: 'Area location updated successfully',
+      data: data as Area,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to update area FAQ';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Delete area FAQ
- */
-export async function deleteAreaFAQ(id: string) {
-  try {
-    const supabase = adminClient();
-
-    const { error } = await supabase.from('areas_faqs').delete().eq('id', id);
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'DELETE_ERROR' },
-      });
-    }
-
-    // Revalidate cache
-    revalidatePath('/dashboard/admin/areas');
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Area FAQ deleted successfully',
-      data: null,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to delete area FAQ';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Create area amenities FAQ
- */
-export async function createAreaAmenitiesFAQ(faq: AreaAmenityFAQInsertData) {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('areas_amenities_faqs').insert(faq).select().single();
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'CREATE_ERROR' },
-      });
-    }
-
-    // Revalidate cache
-    revalidatePath('/dashboard/admin/areas');
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.CREATED,
-      message: 'Area amenities FAQ created successfully',
-      data,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to create area amenities FAQ';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Update area amenities FAQ
- */
-export async function updateAreaAmenitiesFAQ(id: string, updates: Partial<AreaAmenityFAQInsertData>) {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('areas_amenities_faqs').update(updates).eq('id', id).select().single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return ApiResponse({
-          success: false,
-          status: HttpStatus.NOT_FOUND,
-          message: 'Area amenities FAQ not found',
-          error: { code: 'NOT_FOUND' },
-        });
-      }
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'UPDATE_ERROR' },
-      });
-    }
-
-    // Revalidate cache
-    revalidatePath('/dashboard/admin/areas');
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Area amenities FAQ updated successfully',
-      data,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to update area amenities FAQ';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Delete area amenities FAQ
- */
-export async function deleteAreaAmenitiesFAQ(id: string) {
-  try {
-    const supabase = adminClient();
-
-    const { error } = await supabase.from('areas_amenities_faqs').delete().eq('id', id);
-
-    if (error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'DELETE_ERROR' },
-      });
-    }
-
-    // Revalidate cache
-    revalidatePath('/dashboard/admin/areas');
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Area amenities FAQ deleted successfully',
-      data: null,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to delete area amenities FAQ';
+    const message = error instanceof Error ? error.message : 'Failed to update area location';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

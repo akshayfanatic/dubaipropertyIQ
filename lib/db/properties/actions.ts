@@ -6,12 +6,13 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import type { Property, PropertyInsert, PropertyUpdate } from '@/types/property';
+import { PropertyInsertData } from '@/lib/validations/property';
+import type { Property, PropertyUpdate } from '@/types/property';
 
 /**
  * Create a new property
  */
-export async function createProperty(property: PropertyInsert) {
+export async function createProperty(property: PropertyInsertData) {
   try {
     const supabase = adminClient();
 
@@ -122,31 +123,52 @@ export async function deleteProperty(id: string) {
 }
 
 /**
- * Bulk update property status
+ * Update property amenities (junction table)
+ * Deletes existing relationships and inserts new ones
  */
-export async function bulkUpdateStatus(ids: string[], status: Property['status']) {
+export async function updatePropertyAmenities(propertyId: string, amenityIds: string[]) {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('properties').update({ status }).in('id', ids).select();
+    // Delete existing relationships
+    const { error: deleteError } = await supabase.from('properties_amenities').delete().eq('property_id', propertyId);
 
-    if (error) {
+    if (deleteError) {
       return ApiResponse({
         success: false,
         status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'UPDATE_ERROR' },
+        message: deleteError.message,
+        error: { code: deleteError.code || 'DELETE_ERROR' },
       });
+    }
+
+    // Insert new relationships
+    if (amenityIds.length > 0) {
+      const relationships = amenityIds.map((amenityId) => ({
+        property_id: propertyId,
+        amenity_id: amenityId,
+      }));
+
+      const { error: insertError } = await supabase.from('properties_amenities').insert(relationships);
+
+      if (insertError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: insertError.message,
+          error: { code: insertError.code || 'INSERT_ERROR' },
+        });
+      }
     }
 
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
-      message: `${data.length} properties updated successfully`,
-      data: { updated: data.length },
+      message: 'Property amenities updated successfully',
+      data: null,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to update properties';
+    const message = error instanceof Error ? error.message : 'Failed to update property amenities';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
@@ -154,11 +176,4 @@ export async function bulkUpdateStatus(ids: string[], status: Property['status']
       error: { code: 'INTERNAL_ERROR' },
     });
   }
-}
-
-/**
- * Toggle Golden Visa eligibility
- */
-export async function toggleGoldenVisa(id: string, eligible: boolean) {
-  return updateProperty(id, { golden_visa_eligible: eligible });
 }

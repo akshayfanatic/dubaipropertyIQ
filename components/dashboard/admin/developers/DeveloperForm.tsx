@@ -2,7 +2,6 @@
 
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { developerSchema, DeveloperFormData } from '@/lib/validations/developer';
 import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
@@ -13,6 +12,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { FormActions } from '@/components/shared/forms/FormActions';
+import { TextInput } from '@/components/shared/forms/text-input';
+import { TextArea } from '@/components/shared/forms/text-area';
 
 interface DeveloperFormProps {
   developer?: Developer;
@@ -23,7 +24,6 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
   const isEditMode = !!developer;
 
   const {
-    register,
     handleSubmit,
     setValue,
     control,
@@ -94,8 +94,14 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
       }
 
       toast.success(isEditMode ? 'Developer updated successfully' : 'Developer created successfully');
-      router.push('/dashboard/admin/developers');
-      router.refresh();
+
+      const developerId = isEditMode ? developer!.id : (result.data as Developer)?.id;
+      if (!isEditMode && developerId) {
+        router.replace(`/dashboard/admin/developers/${developerId}`);
+      } else {
+        router.push('/dashboard/admin/developers');
+        router.refresh();
+      }
     } catch (error) {
       console.error(error);
       toast.error('An unexpected error occurred');
@@ -109,35 +115,44 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
         <h3 className="text-lg font-medium">Basic Information</h3>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
-            <Input
-              id="name"
-              placeholder="e.g., Emaar Properties"
-              {...register('name', {
-                onBlur: (e) => {
-                  setValue('slug', generateSlug(e.target.value));
-                },
-              })}
-              className={errors.name ? 'border-destructive' : ''}
-            />
-            {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="slug">Slug *</Label>
-            <Input id="slug" placeholder="e.g., emaar-properties" {...register('slug')} className={errors.slug ? 'border-destructive' : ''} />
-            {errors.slug && <p className="text-sm text-destructive">{errors.slug.message}</p>}
-            <p className="text-xs text-muted-foreground">URL-friendly identifier</p>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Developer Logo</Label>
           <Controller
-            name="logo_url"
+            name="name"
             control={control}
             render={({ field }) => (
+              <TextInput
+                id="name"
+                label="Name"
+                required
+                placeholder="e.g., Emaar Properties"
+                error={errors.name?.message}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={(e) => {
+                  field.onBlur();
+                  setValue('slug', generateSlug(e.target.value));
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            name="slug"
+            control={control}
+            render={({ field }) => (
+              <div className="grid gap-2">
+                <TextInput id="slug" label="Slug" required placeholder="e.g., emaar-properties" error={errors.slug?.message} {...field} />
+                <p className="text-xs text-muted-foreground">URL-friendly identifier</p>
+              </div>
+            )}
+          />
+        </div>
+
+        <Controller
+          name="logo_url"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label>Developer Logo</Label>
               <ImageUploader
                 bucket="developer-logos"
                 folder="logos"
@@ -150,28 +165,26 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
                 maxImages={1}
                 label="Logo"
               />
-            )}
-          />
-          <p className="text-xs text-muted-foreground">Upload developer logo (JPG, PNG or WebP, max 5MB)</p>
-        </div>
+              <p className="text-xs text-muted-foreground">Upload developer logo (JPG, PNG or WebP, max 5MB)</p>
+            </div>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="website_url">Website URL</Label>
-          <Input id="website_url" type="url" placeholder="https://..." {...register('website_url')} className={errors.website_url ? 'border-destructive' : ''} />
-          {errors.website_url && <p className="text-sm text-destructive">{errors.website_url.message}</p>}
-        </div>
+        <Controller
+          name="website_url"
+          control={control}
+          render={({ field }) => (
+            <TextInput id="website_url" label="Website URL" type="url" placeholder="https://..." error={errors.website_url?.message} value={field.value || ''} onChange={field.onChange} />
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <textarea
-            id="description"
-            placeholder="Developer overview..."
-            rows={4}
-            {...register('description')}
-            className={`w-full rounded-md border bg-transparent px-3 py-2 text-sm ${errors.description ? 'border-destructive' : 'border-input'}`}
-          />
-          {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
-        </div>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <TextArea id="description" label="Description" placeholder="Developer overview..." error={errors.description?.message} rows={4} value={field.value || ''} onChange={field.onChange} />
+          )}
+        />
       </div>
 
       {/* Trust Score Components */}
@@ -188,41 +201,53 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
         <p className="text-sm text-muted-foreground">Each component is scored from 1-5. The overall Trust Score is converted to 0-100 scale for display.</p>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="delivery_timeliness_score">Delivery Timeliness Score (1-5)</Label>
-            <Controller
-              name="delivery_timeliness_score"
-              control={control}
-              render={({ field }) => <Input id="delivery_timeliness_score" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />}
-            />
-          </div>
+          <Controller
+            name="delivery_timeliness_score"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="delivery_timeliness_score"
+                label="Delivery Timeliness Score (1-5)"
+                type="number"
+                min={1}
+                max={5}
+                value={field.value}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+              />
+            )}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="service_charge_score">Service Charge Rating (1-5)</Label>
-            <Controller
-              name="service_charge_score"
-              control={control}
-              render={({ field }) => <Input id="service_charge_score" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />}
-            />
-          </div>
+          <Controller
+            name="service_charge_score"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="service_charge_score"
+                label="Service Charge Rating (1-5)"
+                type="number"
+                min={1}
+                max={5}
+                value={field.value}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+              />
+            )}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="build_quality_score">Build Quality Score (1-5)</Label>
-            <Controller
-              name="build_quality_score"
-              control={control}
-              render={({ field }) => <Input id="build_quality_score" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />}
-            />
-          </div>
+          <Controller
+            name="build_quality_score"
+            control={control}
+            render={({ field }) => (
+              <TextInput id="build_quality_score" label="Build Quality Score (1-5)" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />
+            )}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="after_sales_score">After-Sales Support (1-5)</Label>
-            <Controller
-              name="after_sales_score"
-              control={control}
-              render={({ field }) => <Input id="after_sales_score" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />}
-            />
-          </div>
+          <Controller
+            name="after_sales_score"
+            control={control}
+            render={({ field }) => (
+              <TextInput id="after_sales_score" label="After-Sales Support (1-5)" type="number" min={1} max={5} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 1)} />
+            )}
+          />
         </div>
       </div>
 
@@ -231,41 +256,33 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
         <h3 className="text-lg font-medium">Statistics</h3>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-2">
-            <Label htmlFor="total_projects">Total Projects</Label>
-            <Controller
-              name="total_projects"
-              control={control}
-              render={({ field }) => <Input id="total_projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
-            />
-          </div>
+          <Controller
+            name="total_projects"
+            control={control}
+            render={({ field }) => <TextInput id="total_projects" label="Total Projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="completed_projects">Completed Projects</Label>
-            <Controller
-              name="completed_projects"
-              control={control}
-              render={({ field }) => <Input id="completed_projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
-            />
-          </div>
+          <Controller
+            name="completed_projects"
+            control={control}
+            render={({ field }) => (
+              <TextInput id="completed_projects" label="Completed Projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
+            )}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="ongoing_projects">Ongoing Projects</Label>
-            <Controller
-              name="ongoing_projects"
-              control={control}
-              render={({ field }) => <Input id="ongoing_projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
-            />
-          </div>
+          <Controller
+            name="ongoing_projects"
+            control={control}
+            render={({ field }) => (
+              <TextInput id="ongoing_projects" label="Ongoing Projects" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
+            )}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="years_active">Years Active</Label>
-            <Controller
-              name="years_active"
-              control={control}
-              render={({ field }) => <Input id="years_active" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
-            />
-          </div>
+          <Controller
+            name="years_active"
+            control={control}
+            render={({ field }) => <TextInput id="years_active" label="Years Active" type="number" min={0} value={field.value} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />}
+          />
         </div>
       </div>
 

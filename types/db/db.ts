@@ -4,25 +4,25 @@
  * Supabase Database Types Reference
  * Generated from Supabase schema - use for quick lookup only
  *
- * For actual types, use the contracts in /types/
+ * For actual types, import from 'types/db/supabase-generated'
  *
  */
 
 // JSON type for nested objects
-type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 // ============================================================================
 // ENUMS
 // ============================================================================
 
-type AppRole = 'admin' | 'agent' | 'customer';
-type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
+export type AppRole = 'admin' | 'agent' | 'customer';
+export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
 // ============================================================================
 // TABLE TYPES (Row)
 // ============================================================================
 
-interface Amenity {
+export interface Amenity {
   id: string;
   name: string;
   slug: string;
@@ -32,7 +32,7 @@ interface Amenity {
   updated_at: string | null;
 }
 
-interface Area {
+export interface Area {
   id: string;
   city_id: string;
   name: string;
@@ -43,12 +43,13 @@ interface Area {
   updated_at: string | null;
 }
 
-interface AreaAmenity {
+export interface AreaAmenity {
+  id: string;
+  area_id: string;
   amenity_id: string;
-  area_id: string;
 }
 
-interface AreaFAQ {
+export interface AreaFAQ {
   id: string;
   area_id: string;
   question: string;
@@ -56,7 +57,7 @@ interface AreaFAQ {
   created_at: string | null;
 }
 
-interface AreaAmenityFAQ {
+export interface AreaAmenityFAQ {
   id: string;
   area_id: string;
   question: string;
@@ -64,12 +65,20 @@ interface AreaAmenityFAQ {
   created_at: string | null;
 }
 
-interface AreaProperty {
+export interface AreaProperty {
+  id: string;
   area_id: string;
   property_id: string;
 }
 
-interface Category {
+export interface PropertyAmenity {
+  id: string;
+  property_id: string;
+  amenity_id: string;
+  created_at: string | null;
+}
+
+export interface Category {
   id: string;
   name: string;
   slug: string;
@@ -79,7 +88,7 @@ interface Category {
   updated_at: string | null;
 }
 
-interface City {
+export interface City {
   id: string;
   name: string;
   slug: string;
@@ -89,7 +98,7 @@ interface City {
   updated_at: string | null;
 }
 
-interface Developer {
+export interface Developer {
   id: string;
   name: string;
   slug: string;
@@ -108,8 +117,9 @@ interface Developer {
   updated_at: string | null;
 }
 
-interface Property {
+export interface Property {
   id: string;
+  slug: string;
   title: string;
   description: string;
   price_aed: number;
@@ -122,124 +132,233 @@ interface Property {
   floor_plan: string | null;
   features: string[] | null;
   golden_visa_eligible: boolean | null;
-  status: PropertyStatus;
+  status: Database['public']['Enums']['property_status_enum'];
   created_at: string | null;
   updated_at: string | null;
 }
 
-interface UserRole {
+export interface UserRole {
   id: number;
   user_id: string;
-  role: AppRole;
+  role: Database['public']['Enums']['app_role'];
   created_at: string | null;
+}
+
+// ============================================================================
+// RELATIONSHIP TYPES
+// ============================================================================
+
+export interface Relationship {
+  foreignKeyName: string;
+  columns: string[];
+  isOneToOne: boolean;
+  referencedRelation: string;
+  referencedColumns: string[];
 }
 
 // ============================================================================
 // FULL DATABASE TYPE (for Supabase client)
 // ============================================================================
 
-interface Database {
+export interface Database {
+  // Allows to automatically instantiate createClient with right options
+  __InternalSupabase: {
+    PostgrestVersion: '14.4';
+  };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       amenities: {
         Row: Amenity;
-        Insert: Omit<Amenity, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Amenity, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          logo_url?: Json | null;
+          name: string;
+          slug: string;
+          updated_at?: string | null;
+        };
         Update: Partial<Amenity>;
         Relationships: [];
       };
       areas: {
         Row: Area;
-        Insert: Omit<Area, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Area, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          city_id: string;
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          name: string;
+          photos?: string[] | null;
+          slug: string;
+          updated_at?: string | null;
+        };
         Update: Partial<Area>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship];
       };
       areas_amenities: {
         Row: AreaAmenity;
-        Insert: AreaAmenity;
+        Insert: {
+          amenity_id: string;
+          area_id: string;
+          id?: string;
+        };
         Update: Partial<AreaAmenity>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship, Relationship];
       };
       areas_amenities_faqs: {
         Row: AreaAmenityFAQ;
-        Insert: Omit<AreaAmenityFAQ, 'id' | 'created_at'> & Partial<Pick<AreaAmenityFAQ, 'id' | 'created_at'>>;
+        Insert: {
+          answer: string;
+          area_id: string;
+          created_at?: string | null;
+          id?: string;
+          question: string;
+        };
         Update: Partial<AreaAmenityFAQ>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship];
       };
       areas_faqs: {
         Row: AreaFAQ;
-        Insert: Omit<AreaFAQ, 'id' | 'created_at'> & Partial<Pick<AreaFAQ, 'id' | 'created_at'>>;
+        Insert: {
+          answer: string;
+          area_id: string;
+          created_at?: string | null;
+          id?: string;
+          question: string;
+        };
         Update: Partial<AreaFAQ>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship];
       };
       areas_properties: {
         Row: AreaProperty;
-        Insert: AreaProperty;
+        Insert: {
+          area_id: string;
+          id?: string;
+          property_id: string;
+        };
         Update: Partial<AreaProperty>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship, Relationship];
       };
       categories: {
         Row: Category;
-        Insert: Omit<Category, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Category, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          logo_url?: Json | null;
+          name: string;
+          slug: string;
+          updated_at?: string | null;
+        };
         Update: Partial<Category>;
         Relationships: [];
       };
       cities: {
         Row: City;
-        Insert: Omit<City, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<City, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          logo_url?: Json | null;
+          name: string;
+          slug: string;
+          updated_at?: string | null;
+        };
         Update: Partial<City>;
         Relationships: [];
       };
       developers: {
         Row: Developer;
-        Insert: Omit<Developer, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Developer, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          after_sales_score?: number | null;
+          build_quality_score?: number | null;
+          completed_projects?: number | null;
+          created_at?: string | null;
+          delivery_timeliness_score?: number | null;
+          description?: string | null;
+          id?: string;
+          logo_url?: Json | null;
+          name: string;
+          ongoing_projects?: number | null;
+          service_charge_score?: number | null;
+          slug: string;
+          total_projects?: number | null;
+          updated_at?: string | null;
+          website_url?: string | null;
+          years_active?: number | null;
+        };
         Update: Partial<Developer>;
         Relationships: [];
       };
       properties: {
         Row: Property;
-        Insert: Omit<Property, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Property, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: {
+          bathrooms?: number;
+          bedrooms?: number;
+          category_id?: string | null;
+          created_at?: string | null;
+          description?: string;
+          developer_id?: string | null;
+          features?: string[] | null;
+          floor_plan?: string | null;
+          golden_visa_eligible?: boolean | null;
+          id?: string;
+          photos?: Json | null;
+          price_aed: number;
+          size_sqft: number;
+          slug: string;
+          status?: Database['public']['Enums']['property_status_enum'];
+          title: string;
+          updated_at?: string | null;
+        };
         Update: Partial<Property>;
-        Relationships: Array<{
-          foreignKeyName: string;
-          columns: string[];
-          isOneToOne: boolean;
-          referencedRelation: string;
-          referencedColumns: string[];
-        }>;
+        Relationships: [Relationship, Relationship];
+      };
+      properties_amenities: {
+        Row: PropertyAmenity;
+        Insert: {
+          amenity_id: string;
+          created_at?: string | null;
+          id?: string;
+          property_id: string;
+        };
+        Update: Partial<PropertyAmenity>;
+        Relationships: [Relationship, Relationship];
       };
       user_roles: {
         Row: UserRole;
-        Insert: Omit<UserRole, 'id' | 'created_at'> & Partial<Pick<UserRole, 'id' | 'created_at'>>;
+        Insert: {
+          created_at?: string | null;
+          id?: number;
+          role?: Database['public']['Enums']['app_role'];
+          user_id: string;
+        };
         Update: Partial<UserRole>;
         Relationships: [];
       };
@@ -249,7 +368,11 @@ interface Database {
     };
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
-      has_role: { Args: { required_role: AppRole }; Returns: boolean };
+      generate_slug: { Args: { text_param: string }; Returns: string };
+      has_role: {
+        Args: { required_role: Database['public']['Enums']['app_role'] };
+        Returns: boolean;
+      };
     };
     Enums: {
       app_role: AppRole;
@@ -260,3 +383,80 @@ interface Database {
     };
   };
 }
+
+// ============================================================================
+// UTILITY TYPES (Exported for type inference)
+// ============================================================================
+
+export type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
+
+export type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>];
+
+export type Tables<
+  T extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views']) | { schema: keyof DatabaseWithoutInternals },
+  TableName extends T extends { schema: keyof DatabaseWithoutInternals } ? keyof (DatabaseWithoutInternals[T['schema']]['Tables'] & DatabaseWithoutInternals[T['schema']]['Views']) : never = never,
+> = T extends { schema: keyof DatabaseWithoutInternals }
+  ? (DatabaseWithoutInternals[T['schema']]['Tables'] & DatabaseWithoutInternals[T['schema']]['Views'])[TableName] extends { Row: infer R }
+    ? R
+    : never
+  : T extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[T] extends { Row: infer R }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  T extends keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends T extends { schema: keyof DatabaseWithoutInternals } ? keyof DatabaseWithoutInternals[T['schema']]['Tables'] : never = never,
+> = T extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[T['schema']]['Tables'][TableName] extends { Insert: infer I }
+    ? I
+    : never
+  : T extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][T] extends { Insert: infer I }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  T extends keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends T extends { schema: keyof DatabaseWithoutInternals } ? keyof DatabaseWithoutInternals[T['schema']]['Tables'] : never = never,
+> = T extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[T['schema']]['Tables'][TableName] extends { Update: infer U }
+    ? U
+    : never
+  : T extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][T] extends { Update: infer U }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  T extends keyof DefaultSchema['Enums'] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends T extends { schema: keyof DatabaseWithoutInternals } ? keyof DatabaseWithoutInternals[T['schema']]['Enums'] : never = never,
+> = T extends { schema: keyof DatabaseWithoutInternals } ? DatabaseWithoutInternals[T['schema']]['Enums'][EnumName] : T extends keyof DefaultSchema['Enums'] ? DefaultSchema['Enums'][T] : never;
+
+export type CompositeTypes<
+  T extends keyof DefaultSchema['CompositeTypes'] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends T extends { schema: keyof DatabaseWithoutInternals } ? keyof DatabaseWithoutInternals[T['schema']]['CompositeTypes'] : never = never,
+> = T extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[T['schema']]['CompositeTypes'][CompositeTypeName]
+  : T extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][T]
+    : never;
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
+export const Constants = {
+  graphql_public: {
+    Enums: {} as const,
+  },
+  public: {
+    Enums: {
+      app_role: ['admin', 'agent', 'customer'] as const,
+      property_status_enum: ['available', 'sold', 'reserved', 'off_plan'] as const,
+    },
+  },
+} as const;
