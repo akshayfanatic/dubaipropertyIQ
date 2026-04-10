@@ -25,7 +25,7 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
       <PageHeader title="Edit Category" description={`Editing: ${category.name}`} showBackButton />
 
       <div className="rounded-lg border bg-card p-6">
-        <CategoryForm category={category} />
+        <CategoryForm id={id} category={category} />
       </div>
     </div>
   );

@@ -56,11 +56,9 @@ export function AmenityForm({ amenity }: AmenityFormProps) {
       toast.success(isEditMode ? 'Amenity updated successfully' : 'Amenity created successfully');
 
       const amenityId = isEditMode ? amenity!.id : (result.data as Amenity)?.id;
+
       if (!isEditMode && amenityId) {
         router.replace(`/dashboard/admin/amenities/${amenityId}`);
-      } else {
-        router.push('/dashboard/admin/amenities');
-        router.refresh();
       }
     } catch {
       toast.error('An unexpected error occurred');
