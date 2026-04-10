@@ -57,13 +57,9 @@ export const adminRoutes: RouteGroup[] = [
       },
       { title: 'Cities', href: '/dashboard/admin/cities', icon: Building2 },
       { title: 'Developers', href: '/dashboard/admin/developers', icon: Briefcase },
-      { title: 'Users', href: '/dashboard/admin/users', icon: Users, isComingSoon: true },
+      { title: 'Users', href: '/dashboard/admin/users', icon: Users },
       { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack, isComingSoon: true },
     ],
-  },
-  {
-    title: 'Analytics',
-    items: [{ title: 'Reports', href: '/dashboard/admin/analytics', icon: BarChart3, isComingSoon: true }],
   },
   {
     title: 'System',

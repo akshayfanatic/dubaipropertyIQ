@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.1...v0.3.2) (2026-04-09)
+
+### Features
+
+- **CRUD:** implements crud for users/admin ([412395f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/412395fa929cdf7937bb4729f7d72e60d4a24012))
+- **routes:** enable users route for access in dashboard/admin ([7ba686c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7ba686cd4ae3e13768c09ca23817444f12fe82ad))
+- **types:** implement types for admin ([10f5c29](https://github.com/akshayfanatic/dubaipropertyIQ/commit/10f5c2935cf2f76062de9a36c9f5a774660f6e2c))
+- **ui:** added shadcn card ([65e8987](https://github.com/akshayfanatic/dubaipropertyIQ/commit/65e8987e76ddefa4d28e73c2125656d7f0552a8f))
+- **user form:** added single user page data with ([0e1a6a0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0e1a6a01685c2d0065c243f53e7614b5750d0c15))
+- **users:** added feature to display list of users ([9b3e540](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9b3e5401434c29a786edb051d1b16180c831a3da))
+
 ### [0.3.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.0...v0.3.1) (2026-04-09)
 
 ### Features
