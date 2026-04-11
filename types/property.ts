@@ -132,4 +132,6 @@ export interface PropertyListItem {
 /**
  * Property option for select dropdowns
  */
-export type PropertyOption = SelectOption;
+export type PropertyOption = SelectOption & {
+  logo_url?: ImageObject | null;
+};

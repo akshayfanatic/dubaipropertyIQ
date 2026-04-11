@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useActionState, startTransition } from 'react';
 import { deleteCategory } from '@/lib/db/categories/actions';
 import { toast } from 'sonner';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
@@ -59,10 +59,31 @@ export const columns: ColumnDef<Category>[] = [
   },
 ];
 
+type DeleteState = {
+  success: boolean;
+  error: string | null;
+} | null;
+
+const initialState: DeleteState = null;
+
 function RowActions({ category }: { category: Category }) {
   const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const [, dispatchDelete, isPending] = useActionState(async () => {
+    const result = await deleteCategory(category.id);
+
+    if (!result?.success) {
+      toast.error(result?.message || 'Failed to delete category');
+      return { success: false, error: result?.message || 'Failed' };
+    }
+
+    toast.success('Category deleted successfully');
+    setDeleteDialogOpen(false);
+    router.refresh();
+
+    return { success: true, error: null };
+  }, initialState);
 
   // Don't show actions for Uncategorized category
   const isUncategorized = category.id === UNCATEGORIZED_CATEGORY_ID;
@@ -74,24 +95,8 @@ function RowActions({ category }: { category: Category }) {
     router.push(`/dashboard/admin/categories/${category.id}`);
   };
 
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    try {
-      const result = await deleteCategory(category.id);
-
-      if (!result?.success) {
-        toast.error(result?.message || 'Failed to delete category');
-        return;
-      }
-
-      toast.success('Category deleted successfully');
-      setDeleteDialogOpen(false);
-      router.refresh();
-    } catch {
-      toast.error('An unexpected error occurred');
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDelete = () => {
+    startTransition(() => dispatchDelete());
   };
 
   return (
@@ -108,7 +113,7 @@ function RowActions({ category }: { category: Category }) {
             <Pencil className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting} className="cursor-pointer text-destructive focus:text-destructive">
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} disabled={isPending} className="cursor-pointer text-destructive focus:text-destructive">
             <Trash2 className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
@@ -125,7 +130,7 @@ function RowActions({ category }: { category: Category }) {
             Properties will be moved to <strong>Uncategorized</strong>. This action cannot be undone.
           </>
         }
-        isDeleting={isDeleting}
+        isDeleting={isPending}
       />
     </>
   );
