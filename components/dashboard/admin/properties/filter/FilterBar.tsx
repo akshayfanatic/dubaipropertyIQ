@@ -13,6 +13,7 @@ import { SearchInput } from '@/components/shared/forms/search-input';
 import { ResetButton } from '@/components/shared/forms/reset-button';
 import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
+import { CityOption } from '@/types/city';
 import { fetcher } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -29,7 +30,9 @@ export function FilterBar() {
   const isMobile = useIsMobile();
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const { data: categoryOptions, isLoading } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
+  const { data: categoryOptions, isLoading: isLoadingCategories } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
+  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options', fetcher);
+  const cities = cityOptions || [];
 
   return (
     <FilterFieldSet>
@@ -47,11 +50,27 @@ export function FilterBar() {
         render={({ field }) => (
           <SelectField
             options={categoryOptions ?? []}
-            placeholder={isLoading ? 'Loading...' : 'Type'}
+            placeholder={isLoadingCategories ? 'Loading...' : 'Type'}
             value={field.value}
             onValueChange={field.onChange}
             className="w-full sm:w-40"
-            disabled={isLoading}
+            disabled={isLoadingCategories}
+          />
+        )}
+      />
+
+      {/* City field - filters by city */}
+      <Controller
+        name="city_id"
+        control={control}
+        render={({ field }) => (
+          <SelectField
+            options={cities.filter((c) => c.value !== 'all')}
+            placeholder={isLoadingCities ? 'Loading...' : 'City'}
+            value={field.value}
+            onValueChange={field.onChange}
+            className="w-full sm:w-40"
+            disabled={isLoadingCities}
           />
         )}
       />

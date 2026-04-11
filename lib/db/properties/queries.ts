@@ -41,13 +41,16 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     photos,
     features,
     floor_plan,
+    location,
+    city_id,
     created_at,
     updated_at,
     category:categories!inner (
       id,
       name,
       slug
-    )
+    ),
+    city:cities (id, name, slug)
   `,
       { count: 'exact' },
     );
@@ -60,6 +63,18 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
 
       if (filters.property_type) {
         query = query.eq('categories.slug', filters.property_type); // Filter by category slug (property_type in URL maps to category.slug)
+      }
+      if (filters.category_id) {
+        query = query.eq('category_id', filters.category_id);
+      }
+      if (filters.category_slug) {
+        query = query.eq('categories.slug', filters.category_slug);
+      }
+      if (filters.city_id) {
+        query = query.eq('city_id', filters.city_id);
+      }
+      if (filters.city_slug) {
+        query = query.eq('cities.slug', filters.city_slug);
       }
       if (filters.status) {
         query = query.eq('status', filters.status);
@@ -131,7 +146,7 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
 
 // type PropertyAmenity=Pick<Property,"amenities">
 /**
- * Get a single property by ID with amenities
+ * Get a single property by ID with amenities and FAQs
  */
 export async function getPropertyByIdAdmin(id: string): Promise<ApiResponse<Property | null>> {
   try {
@@ -144,9 +159,16 @@ export async function getPropertyByIdAdmin(id: string): Promise<ApiResponse<Prop
         *,
         category:categories!inner (id, name, slug),
         developer:developers (id, name, logo_url),
- amenities:properties_amenities (
-      amenity:amenities (id)
-    )
+        city:cities (id, name, slug, description, logo_url),
+        amenities:properties_amenities (
+          amenity:amenities (id)
+        ),
+        properties_faqs (
+          id,
+          question,
+          answer,
+          created_at
+        )
       `,
       )
       .eq('id', id)

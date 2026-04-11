@@ -7,6 +7,8 @@ interface PageProps {
   searchParams: Promise<{
     search?: string;
     property_type?: string;
+    city_id?: string;
+    city_slug?: string;
     status?: string;
     bedrooms?: string;
     min_price?: string;
@@ -25,6 +27,8 @@ function buildFilters(params: Awaited<PageProps['searchParams']>): PropertyFilte
   return {
     search: params.search || undefined,
     property_type: params.property_type && params.property_type !== 'all' ? (params.property_type as PropertyFilters['property_type']) : undefined,
+    city_id: params.city_id && params.city_id !== 'all' ? params.city_id : undefined,
+    city_slug: params.city_slug,
     status: params.status && params.status !== 'all' ? (params.status as PropertyFilters['status']) : undefined,
     bedrooms: params.bedrooms ? Number(params.bedrooms) : undefined,
     min_price: params.min_price ? Number(params.min_price) : undefined,
