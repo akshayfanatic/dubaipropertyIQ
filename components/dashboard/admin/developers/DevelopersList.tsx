@@ -24,7 +24,7 @@ export async function DevelopersList({ filters }: DevelopersListProps) {
     throw new Error(message || 'Failed to fetch developers');
   }
 
-  if (data.data.length === 0) {
+  if (!data.data?.length) {
     return (
       <EmptyState
         icon={<Building2 className="h-8 w-8 text-muted-foreground" />}

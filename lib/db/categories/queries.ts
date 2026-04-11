@@ -52,7 +52,7 @@ export async function getCategoriesAdmin(filters?: CategoryFilters): Promise<Api
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<Category> = {
-      data: data as Category[],
+      data: (data as Category[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,

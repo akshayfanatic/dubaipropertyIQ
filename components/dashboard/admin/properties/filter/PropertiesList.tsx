@@ -26,14 +26,14 @@ export async function PropertiesList({ filters }: PropertiesListProps) {
     throw new Error(error || 'Failed to fetch properties');
   }
 
-  if (data.data.length === 0) {
+  if (!data.data?.length) {
     return (
       <EmptyState
         icon={<Building2 className="h-8 w-8 text-muted-foreground" />}
         title="No properties found"
         description="Try adjusting your filters or add a new property."
         action={
-          <Link href={'/dashboard/admin/properties/new'} className={`${buttonVariants({ variant: 'default' })}`}>
+          <Link href="/dashboard/admin/properties/new" className={buttonVariants({ variant: 'default' })}>
             <Plus className="mr-2 h-4 w-4" />
             Add Property
           </Link>

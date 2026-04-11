@@ -46,7 +46,7 @@ export async function getDevelopersAdmin(filters?: DeveloperFilters): Promise<Ap
     }
 
     const result: PaginatedResult<Developer> = {
-      data: data as Developer[],
+      data: (data as Developer[]) ?? [],
       total: count || 0,
       page,
       pageSize,

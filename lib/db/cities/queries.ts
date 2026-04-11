@@ -67,7 +67,7 @@ export async function getCitiesAdmin(filters?: CityFilters): Promise<ApiResponse
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<City> = {
-      data: data as City[],
+      data: (data as City[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,

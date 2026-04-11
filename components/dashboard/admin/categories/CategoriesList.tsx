@@ -24,7 +24,7 @@ export async function CategoriesList({ filters }: CategoriesListProps) {
     throw new Error(message || 'Failed to fetch categories');
   }
 
-  if (data.data.length === 0) {
+  if (!data.data?.length) {
     return (
       <EmptyState
         icon={<Tag className="h-8 w-8 text-muted-foreground" />}
