@@ -8,6 +8,8 @@ import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { PropertyInsertData } from '@/lib/validations/property';
 import type { Property, PropertyUpdate } from '@/types/property';
+import type { Location } from '@/types/shared';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Create a new property
@@ -70,6 +72,7 @@ export async function updateProperty(id: string, updates: PropertyUpdate) {
       });
     }
 
+    revalidatePath(`/admin/properties/${id}`);
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
@@ -169,6 +172,115 @@ export async function updatePropertyAmenities(propertyId: string, amenityIds: st
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update property amenities';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Update property location
+ * Updates the location jsonb column for a property
+ */
+export async function updatePropertyLocation(propertyId: string, location: Location) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.from('properties').update({ location }).eq('id', propertyId).select().single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Property not found',
+          error: { code: 'NOT_FOUND' },
+        });
+      }
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPDATE_ERROR' },
+      });
+    }
+
+    // Revalidate cache
+    revalidatePath('/dashboard/admin/properties');
+    revalidatePath('/dashboard/admin/properties/[id]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Property location updated successfully',
+      data: data as Property,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to update property location';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save property FAQs (replace all)
+ * Deletes all existing FAQs for the property and inserts the new ones
+ */
+export async function savePropertyFAQs(propertyId: string, faqs: Array<{ question: string; answer: string }>) {
+  try {
+    const supabase = adminClient();
+
+    // Delete all existing FAQs for this property
+    const { error: deleteError } = await supabase.from('properties_faqs').delete().eq('property_id', propertyId);
+
+    if (deleteError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: deleteError.message,
+        error: { code: deleteError.code || 'DELETE_ERROR' },
+      });
+    }
+
+    // Insert new FAQs
+    if (faqs.length > 0) {
+      const faqsWithPropertyId = faqs.map((faq) => ({
+        property_id: propertyId,
+        question: faq.question,
+        answer: faq.answer,
+      }));
+
+      const { error: insertError } = await supabase.from('properties_faqs').insert(faqsWithPropertyId);
+
+      if (insertError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: insertError.message,
+          error: { code: insertError.code || 'INSERT_ERROR' },
+        });
+      }
+    }
+
+    // Revalidate cache
+    revalidatePath('/dashboard/admin/properties');
+    revalidatePath('/dashboard/admin/properties/[id]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: `${faqs.length} FAQ(s) saved successfully`,
+      data: null,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save property FAQs';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

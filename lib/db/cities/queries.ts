@@ -67,7 +67,7 @@ export async function getCitiesAdmin(filters?: CityFilters): Promise<ApiResponse
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<City> = {
-      data: data as City[],
+      data: (data as City[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,
@@ -215,8 +215,8 @@ export async function getCityOptionsAdmin(): Promise<ApiResponse<CityOption[]>> 
       });
     }
 
-    // Format for select dropdown: All Cities + actual cities
-    const options: CityOption[] = [{ label: 'All Cities', value: 'all', slug: '' }, ...data.map((city) => ({ label: city.name, value: city.id, slug: city.slug, logo_url: city.logo_url }))];
+    // Format for select dropdown: cities only
+    const options: CityOption[] = data.map((city) => ({ label: city.name, value: city.id, slug: city.slug, logo_url: city.logo_url }));
 
     return ApiResponse({
       success: true,

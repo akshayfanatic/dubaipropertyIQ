@@ -24,7 +24,7 @@ export async function AmenitiesList({ filters }: AmenitiesListProps) {
     throw new Error(message || 'Failed to fetch amenities');
   }
 
-  if (data.data.length === 0) {
+  if (!data.data?.length) {
     return (
       <EmptyState
         icon={<Layers className="h-8 w-8 text-muted-foreground" />}

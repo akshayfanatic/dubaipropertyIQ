@@ -39,7 +39,7 @@ export async function AreasList({ filters }: AreasListProps) {
     throw new Error(message || 'Failed to fetch areas');
   }
 
-  if (data.data.length === 0) {
+  if (!data.data?.length) {
     return (
       <EmptyState
         icon={<MapPin className="h-8 w-8 text-muted-foreground" />}

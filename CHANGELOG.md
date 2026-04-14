@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.2...v0.3.3) (2026-04-14)
+
+### Features
+
+- **404:** added catch all segement on group level to handle 404 error ([dcddb3a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/dcddb3a44652558576ebf2acccf57d7572d657d7))
+- **CRUD:** created db function for accessing data and mutation ([44951ab](https://github.com/akshayfanatic/dubaipropertyIQ/commit/44951abf23c3e7044df0590c7fbfc09c2cf93be1))
+- **dashboard:** implement dashboard page stats compnent and others ([64fbe7a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/64fbe7adfdedf789a9cb1a99c05c47519b1b8a50))
+- **prperties:** added new tabs and feature in property ([f5d69b5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f5d69b5dc433de0022b33baa66b3f294ceb9e816))
+- **types:** generated types of dashbaord ([77bb6ed](https://github.com/akshayfanatic/dubaipropertyIQ/commit/77bb6ed63786963fddf1a86f60892a13e5738783))
+
+### Bug Fixes
+
+- **redirection:** fix issue regarding redirection ([1baa191](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1baa191cf5aa9b7bb32223bd685e7de0275f7582))
+- **type:** fix property type issue ([29ea172](https://github.com/akshayfanatic/dubaipropertyIQ/commit/29ea172b504f06a70e1739137eb02609fbab5f87))
+- **ui:** remove types from select-field and created new generic type ([45fcd8b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/45fcd8bbd96227578c06004f24b21d85b7db71ce))
+
+### Code Style Changes
+
+- **style:** improve data-table style when hover on row ([b990dae](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b990daee583575e8fe1e9178568d7dac021ac1de))
+
+### Code Refactoring
+
+- **helper function:** reduce delay helper function delay from 1000 to 500 ms ([1f0f4f3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1f0f4f35cf1acbcc0d97d7b35dfe1b3f7d06bd2b))
+- **queries lists:** refactoring code error handling more gracefully ([76ded91](https://github.com/akshayfanatic/dubaipropertyIQ/commit/76ded912dbbc125445ab91d81d4291577a16e7cb))
+- **theme:** added suppport of shadcn-theme to react-select ([ee5c1bb](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ee5c1bbc3eaf072526540228b724ceab5e1dce1b))
+
 ### [0.3.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.1...v0.3.2) (2026-04-09)
 
 ### Features

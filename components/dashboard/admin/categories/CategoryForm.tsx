@@ -15,12 +15,13 @@ import { TextInput } from '@/components/shared/forms/text-input';
 import { TextArea } from '@/components/shared/forms/text-area';
 
 interface CategoryFormProps {
+  id?: string;
   category?: Category;
 }
 
-export function CategoryForm({ category }: CategoryFormProps) {
+export function CategoryForm({ id = '', category }: CategoryFormProps) {
   const router = useRouter();
-  const isEditMode = !!category;
+  const isEditMode = id;
 
   const {
     handleSubmit,
@@ -46,7 +47,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
 
   const onSubmit = async (data: CategoryFormData) => {
     try {
-      const result = isEditMode ? await updateCategory(category!.id, data) : await createCategory(data);
+      const result = isEditMode ? await updateCategory(id, data) : await createCategory(data);
 
       if (!result?.success) {
         toast.error(result?.message || 'Failed to save category');
@@ -56,11 +57,9 @@ export function CategoryForm({ category }: CategoryFormProps) {
       toast.success(isEditMode ? 'Category updated successfully' : 'Category created successfully');
 
       const categoryId = isEditMode ? category!.id : (result.data as Category)?.id;
+
       if (!isEditMode && categoryId) {
         router.replace(`/dashboard/admin/categories/${categoryId}`);
-      } else {
-        router.push('/dashboard/admin/categories');
-        router.refresh();
       }
     } catch {
       toast.error('An unexpected error occurred');
@@ -135,7 +134,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
       />
 
       {/* Actions */}
-      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Category" />
+      <FormActions isSubmitting={isSubmitting} isEditMode={!!isEditMode} submitLabel="Category" />
     </form>
   );
 }

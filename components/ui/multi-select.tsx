@@ -1,5 +1,7 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useTheme } from 'next-themes';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { SelectOption } from '@/types/shared';
@@ -23,11 +25,15 @@ interface MultiSelectProps {
   isLoading?: boolean;
 }
 
-const customStyles: StylesConfig<MultiSelectOption, true> = {
-  control: (base) => ({
+// Custom styles factory that uses dark mode state
+const createCustomStyles = (isDark: boolean): StylesConfig<MultiSelectOption, true> => ({
+  control: (base, state) => ({
     ...base,
     minHeight: '42px',
-    borderColor: 'hsl(var(--input))',
+    borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
+    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
+    color: isDark ? 'hsl(var(--foreground))' : base.color,
+    boxShadow: state.isFocused ? `0 0 0 1px hsl(var(--ring))` : base.boxShadow,
     '&:hover': {
       borderColor: 'hsl(var(--ring))',
     },
@@ -60,12 +66,57 @@ const customStyles: StylesConfig<MultiSelectOption, true> = {
     color: 'hsl(var(--muted-foreground))',
     fontSize: '0.875rem',
   }),
-  option: (base) => ({
+  option: (base, state) => ({
     ...base,
     display: 'flex',
     alignItems: 'center',
+    backgroundColor: state.isFocused ? (isDark ? 'hsl(var(--accent))' : 'hsl(var(--accent) / 0.5)') : isDark ? 'hsl(var(--background))' : base.backgroundColor,
+    color: state.isFocused ? (isDark ? 'hsl(var(--accent-foreground))' : base.color) : isDark ? 'hsl(var(--foreground))' : base.color,
+    ':active': {
+      backgroundColor: isDark ? 'hsl(var(--accent) / 0.7)' : 'hsl(var(--accent))',
+    },
   }),
-};
+  menu: (base) => ({
+    ...base,
+    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
+    borderColor: isDark ? 'hsl(var(--border))' : base.borderColor,
+  }),
+  menuList: (base) => ({
+    ...base,
+    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
+    color: isDark ? 'hsl(var(--foreground))' : base.color,
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color: isDark ? 'hsl(var(--foreground))' : base.color,
+  }),
+  input: (base) => ({
+    ...base,
+    color: isDark ? 'hsl(var(--foreground))' : base.color,
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+    ':hover': {
+      color: isDark ? 'hsl(var(--foreground))' : base.color,
+    },
+  }),
+  indicatorSeparator: (base) => ({
+    ...base,
+    backgroundColor: isDark ? 'hsl(var(--border))' : base.backgroundColor,
+  }),
+  clearIndicator: (base) => ({
+    ...base,
+    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+    ':hover': {
+      color: isDark ? 'hsl(var(--destructive))' : base.color,
+    },
+  }),
+  noOptionsMessage: (base) => ({
+    ...base,
+    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+  }),
+});
 
 // Custom Option component with logo support
 const CustomOption = ({ children, ...props }: OptionProps<MultiSelectOption, true>) => {
@@ -102,6 +153,10 @@ const CustomMultiValueLabel = (props: MultiValueGenericProps<MultiSelectOption, 
 };
 
 export function MultiSelect({ name, label, required = false, placeholder = 'Select options...', options, value, onChange, error, disabled = false, isLoading = false }: MultiSelectProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  const customStyles = useMemo(() => createCustomStyles(isDark), [isDark]);
+
   const selectedOptions = options.filter((option) => value?.includes(option.value));
 
   const handleChange = (newValue: MultiValue<MultiSelectOption>) => {

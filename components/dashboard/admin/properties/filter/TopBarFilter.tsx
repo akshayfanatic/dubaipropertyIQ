@@ -9,6 +9,7 @@ import { FilterBar } from './FilterBar';
 const getValuesFromParams = (searchParams: URLSearchParams) => ({
   search: searchParams.get('search') || '',
   property_type: searchParams.get('property_type') || '',
+  city_id: searchParams.get('city_id') || '',
   status: searchParams.get('status') || '',
   bedrooms: searchParams.get('bedrooms') ? Number(searchParams.get('bedrooms')) : '',
   min_price: searchParams.get('min_price') ? Number(searchParams.get('min_price')) : '',

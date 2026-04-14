@@ -5,10 +5,10 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useRef, useMemo } from 'react';
 import { useClient } from '@/hooks/use-client';
-import type { LatLng } from './types';
+import type { LocationValue } from './schema';
 
 // Component to update map center when it changes
-function MapController({ center }: { center: LatLng }) {
+function MapController({ center }: { center: LocationValue }) {
   const map = useMap();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function MapController({ center }: { center: LatLng }) {
 interface LeafletMarkerProps {
   position: [number, number];
   draggable: boolean;
-  onDragEnd: (pos: LatLng) => void;
+  onDragEnd: (pos: LocationValue) => void;
 }
 
 // Custom inline SVG icon for map marker (no CDN)
@@ -60,11 +60,11 @@ export function DraggableMarker({ position, draggable, onDragEnd }: LeafletMarke
 }
 
 interface LeafletMapProps {
-  center: LatLng;
-  position: LatLng;
+  center: LocationValue;
+  position: LocationValue;
   zoom?: number;
   draggable?: boolean;
-  onPositionChange: (pos: LatLng) => void;
+  onPositionChange: (pos: LocationValue) => void;
 }
 
 export default function LeafletMap({ center, position, zoom = 12, draggable = true, onPositionChange }: LeafletMapProps) {

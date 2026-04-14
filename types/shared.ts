@@ -3,6 +3,8 @@
  * Common types used across the application
  */
 
+import { ImageObject } from './images';
+
 /**
  * Generic paginated result for list endpoints
  */
@@ -36,6 +38,7 @@ export interface SearchFilters {
 export interface SelectOption {
   label: string;
   value: string;
+  logo_url?: string | ImageObject | null;
 }
 
 /**

@@ -12,3 +12,11 @@ export const imageObjectSchema = z.object({
 });
 
 export type ImageObjectSchema = z.infer<typeof imageObjectSchema>;
+
+// Generic FAQ validation schema (question/answer pairs)
+export const faqSchema = z.object({
+  question: z.string().min(5, 'Question must be at least 5 characters'),
+  answer: z.string().min(10, 'Answer must be at least 10 characters'),
+});
+
+export type FAQSchema = z.infer<typeof faqSchema>;

@@ -52,7 +52,7 @@ export async function getAmenitiesAdmin(filters?: AmenityFilters): Promise<ApiRe
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<Amenity> = {
-      data: data as Amenity[],
+      data: (data as Amenity[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,

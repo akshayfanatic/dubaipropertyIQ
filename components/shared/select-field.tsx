@@ -5,12 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
-
-export interface SelectOption {
-  label: string;
-  value: string;
-  logo_url?: string | ImageObject | null;
-}
+import { SelectOption } from '@/types/shared';
 
 export interface SelectFieldProps {
   /** Array of options -> [{label, value}] */

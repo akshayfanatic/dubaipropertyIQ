@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
  * Function For Delaying async execution
  * @param ms Default 1000ms
  */
-export const delay = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
+export const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * SWR Fetcher

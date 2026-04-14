@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import type { LatLng } from './types';
 import { Loader2 } from 'lucide-react';
+import { LocationValue } from './schema';
 
 // Dynamic import to avoid SSR issues with Leaflet
 const LeafletMap = dynamic(() => import('@/components/shared/location/leaflet-map').then((mod) => mod.default), {
@@ -19,8 +19,8 @@ const LeafletMap = dynamic(() => import('@/components/shared/location/leaflet-ma
 
 export interface LocationPickerProps {
   // Required - controlled state
-  value: LatLng;
-  onPositionChange: (location: LatLng) => void;
+  value: LocationValue;
+  onPositionChange: (location: LocationValue) => void;
 
   // Optional - map display customization
   className?: string;
@@ -32,7 +32,7 @@ export interface LocationPickerProps {
   showSaveButton?: boolean;
 
   // Optional - save action callback
-  onSave?: (location: LatLng) => void;
+  onSave?: (location: LocationValue) => void;
 
   // Optional - label customization
   coordinatesLabel?: string;
