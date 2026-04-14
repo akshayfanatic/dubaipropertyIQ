@@ -1,7 +1,11 @@
-import { Building2, TrendingUp, MapPin, Users } from 'lucide-react';
-import Link from 'next/link';
+import { PlusCircle } from 'lucide-react';
 import { serverClient } from '@/lib/supabase/server';
-import { Button } from '@/components/ui/button';
+import { Stats } from '@/components/dashboard/admin/dashboard/Stats';
+import { QuickActions } from '@/components/dashboard/admin/dashboard/QuickActions';
+import { RecentProperties } from '@/components/dashboard/admin/dashboard/RecentProperties';
+import { adminRoutes } from '@/config/routes';
+import { Suspense } from 'react';
+import { QuickAction } from '@/types/dashboard';
 
 export default async function DashboardPage() {
   const supabase = await serverClient();
@@ -11,6 +15,24 @@ export default async function DashboardPage() {
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
 
+  // Quick Actions - Add Property + first 4 Management routes from config/routes.ts
+  const managementItems = adminRoutes.find((g) => g.title === 'Management')?.items || [];
+
+  const quickActions: QuickAction[] = [
+    {
+      title: 'Add Property',
+      description: 'Create a new property listing',
+      href: '/dashboard/admin/properties/new',
+      icon: PlusCircle,
+    },
+    ...managementItems.slice(0, 4).map((item) => ({
+      title: item.title,
+      description: `Manage ${item.title.toLowerCase()}`,
+      href: item.href,
+      icon: item.icon,
+    })),
+  ];
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -19,68 +41,18 @@ export default async function DashboardPage() {
         <p className="text-muted-foreground">Here&apos;s your Dubai real estate intelligence overview.</p>
       </div>
 
-      {/* Stats Grid - Placeholder */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <TrendingUp className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Market Trend</p>
-              <p className="text-2xl font-bold">--</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <Building2 className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Properties</p>
-              <p className="text-2xl font-bold">--</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <MapPin className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Areas Tracked</p>
-              <p className="text-2xl font-bold">--</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Saved Searches</p>
-              <p className="text-2xl font-bold">--</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Stats Grid - Suspense boundary for independent loading */}
+      <Suspense fallback={<Stats.Skeleton />}>
+        <Stats />
+      </Suspense>
 
       {/* Quick Actions */}
-      <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Quick Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <Link href="/dashboard/profile">
-            <Button variant="outline" className="cursor-pointer">
-              Edit Profile
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <QuickActions actions={quickActions} />
+
+      {/* Recent Properties - Suspense boundary for independent loading */}
+      <Suspense fallback={<RecentProperties.Skeleton />}>
+        <RecentProperties />
+      </Suspense>
     </div>
   );
 }
