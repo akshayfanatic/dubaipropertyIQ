@@ -26,8 +26,6 @@ export interface ImageUploaderProps {
   onChange: (images: ImageObject[]) => void;
   /** Maximum number of images allowed */
   maxImages?: number;
-  /** Accepted MIME types */
-  accept?: string;
   /** Label for the uploader */
   label?: string;
   /** Whether the field is required */

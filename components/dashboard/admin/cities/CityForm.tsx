@@ -125,7 +125,6 @@ export function CityForm({ city }: CityFormProps) {
               }}
               maxImages={1}
               label="City Image"
-              accept="image/*,.svg"
             />
             <p className="text-xs text-muted-foreground">Upload city image (JPG, PNG, WebP or SVG, max 5MB)</p>
           </div>

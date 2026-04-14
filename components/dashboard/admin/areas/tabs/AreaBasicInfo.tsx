@@ -213,7 +213,6 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
               }}
               maxImages={10}
               label="Photos"
-              accept="image/*"
             />
             <p className="text-xs text-muted-foreground">Upload area photos (JPG, PNG, WebP, max 5MB each, up to 10 photos)</p>
           </div>
