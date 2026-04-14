@@ -74,3 +74,27 @@ export async function getUserByIdAdmin(id: string): Promise<ApiResponse<UserWith
     });
   }
 }
+
+/**
+ * Get user count using RPC
+ */
+export async function getUserCountAdmin(): Promise<ApiResponse<number>> {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.rpc('get_user_count');
+
+    if (error) {
+      return ApiResponse({ success: false, status: HttpStatus.INTERNAL_ERROR, message: error.message, error: { code: 'RPC_ERROR' } });
+    }
+
+    return ApiResponse({ success: true, status: HttpStatus.OK, message: 'User count fetched successfully', data: data as number });
+  } catch (error) {
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message: error instanceof Error ? error.message : 'Failed to fetch user count',
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
