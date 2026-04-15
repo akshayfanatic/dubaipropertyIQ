@@ -19,7 +19,7 @@ import { getImageUrl, generateSlug } from '@/lib/utils';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { Input } from '@/components/ui/input';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { fetcher } from '@/lib/utils';
+import { fetcher } from '@/lib/swr-config';
 import useSWR from 'swr';
 import { useMemo } from 'react';
 import { AmenityOption } from '@/types/amenities';
@@ -167,7 +167,6 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
     logo_url: getImageUrl(city.logo_url),
   }));
 
-   
   return (
     <form onSubmit={handleSubmit(onSubmit as any) /* eslint-disable-line */} className="space-y-6">
       {/* Title */}

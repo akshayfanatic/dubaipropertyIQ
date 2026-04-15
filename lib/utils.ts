@@ -14,18 +14,6 @@ export function cn(...inputs: ClassValue[]) {
 export const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * SWR Fetcher
- * Reusable fetcher for SWR hooks
- */
-export const fetcher = async <T>(url: string): Promise<T> => {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch: ${res.statusText}`);
-  }
-  return res.json();
-};
-
-/**
  * Calculate trust score from component scores (1-5 scale)
  * Returns value as percentage (0-100) for display
  */
