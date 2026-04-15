@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono } from 'next/font/google';
-import '../globals.css';
+import '@/app/(dashboard)/dashboard/globals.css';
 import { requireAuth } from '@/lib/auth/guards';
 import { serverClient } from '@/lib/supabase/server';
 import { SidebarInset } from '@/components/ui/sidebar';
