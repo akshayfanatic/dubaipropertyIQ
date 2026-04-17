@@ -30,9 +30,7 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
     <div className="space-y-6">
       <PageHeader title="Edit Property" description={`Editing: ${property.title}`} showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <PropertyForm property={property} />
-      </div>
+      <PropertyForm property={property} />
     </div>
   );
 }
