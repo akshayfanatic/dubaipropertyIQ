@@ -72,7 +72,7 @@ export const adminRoutes: RouteGroup[] = [
   {
     title: 'System',
     items: [
-      { title: 'Settings', href: '/dashboard/admin/settings', icon: Settings, isComingSoon: true },
+      { title: 'Settings', href: '/dashboard/admin/settings', icon: Settings },
       { title: 'Profile', href: '/dashboard/admin/profile', icon: User },
     ],
   },
