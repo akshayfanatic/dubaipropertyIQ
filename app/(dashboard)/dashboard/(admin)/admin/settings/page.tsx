@@ -3,9 +3,9 @@ import { getGroupedSettings } from '@/lib/db/settings/queries';
 import { StyledTabs } from '@/components/shared/styled-tabs';
 import { PageHeader } from '@/components/shared/page-header';
 import { SETTING_GROUP_LABELS, SETTING_GROUPS } from '@/config/settings';
-import { GeneralSettingsForm } from '@/components/dashboard/admin/settings/GeneralSettingsForm';
-import { ContactSettingsForm } from '@/components/dashboard/admin/settings/ContactSettingsForm';
-import { SocialSettingsForm } from '@/components/dashboard/admin/settings/SocialSettingsForm';
+import { GeneralSettingsForm } from '@/components/dashboard/admin/settings/tabs/GeneralSettingsForm';
+import { ContactSettingsForm } from '@/components/dashboard/admin/settings/tabs/ContactSettingsForm';
+import { SocialSettingsForm } from '@/components/dashboard/admin/settings/tabs/SocialSettingsForm';
 
 export const metadata = {
   title: 'Site Settings',

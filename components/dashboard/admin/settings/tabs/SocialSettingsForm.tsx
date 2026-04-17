@@ -7,7 +7,7 @@ import { updateSettings } from '@/lib/db/settings/actions';
 import { toast } from 'sonner';
 import { TextInput } from '@/components/shared/forms/text-input';
 import { FormActions } from '@/components/shared/forms/FormActions';
-import { Share2 } from 'lucide-react';
+import { Share2, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { WidgetCard } from '@/components/shared/WidgetCard';
 
 const urlSchema = z.string().url('Must be a valid URL').optional().or(z.literal(''));
@@ -59,13 +59,13 @@ export function SocialSettingsForm({ initialData }: SocialSettingsFormProps) {
     <WidgetCard icon={Share2} title="Social Settings" description="Manage your social media links displayed in the footer.">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
-          <TextInput id="facebook" label="Facebook URL" type="url" placeholder="https://facebook.com" error={errors.facebook?.message} {...register('facebook')} />
+          <TextInput id="facebook" label="Facebook URL" type="url" placeholder="https://facebook.com" icon={Facebook} error={errors.facebook?.message} {...register('facebook')} />
 
-          <TextInput id="instagram" label="Instagram URL" type="url" placeholder="https://instagram.com" error={errors.instagram?.message} {...register('instagram')} />
+          <TextInput id="instagram" label="Instagram URL" type="url" placeholder="https://instagram.com" icon={Instagram} error={errors.instagram?.message} {...register('instagram')} />
 
-          <TextInput id="linkedin" label="LinkedIn URL" type="url" placeholder="https://linkedin.com" error={errors.linkedin?.message} {...register('linkedin')} />
+          <TextInput id="linkedin" label="LinkedIn URL" type="url" placeholder="https://linkedin.com" icon={Linkedin} error={errors.linkedin?.message} {...register('linkedin')} />
 
-          <TextInput id="twitter" label="Twitter/X URL" type="url" placeholder="https://twitter.com" error={errors.twitter?.message} {...register('twitter')} />
+          <TextInput id="twitter" label="Twitter/X URL" type="url" placeholder="https://twitter.com" icon={Twitter} error={errors.twitter?.message} {...register('twitter')} />
         </div>
         <FormActions isSubmitting={isSubmitting} isEditMode submitLabel="Settings" />
       </form>
