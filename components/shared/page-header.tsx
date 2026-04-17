@@ -5,9 +5,13 @@ import { BackButton } from '@/components/ui/back-button';
 import { cn } from '@/lib/utils';
 
 interface PageHeaderProps {
+  /** Page title displayed in h1 */
   title: string;
+  /** Optional subtitle/description below title */
   description?: string;
+  /** Show back button that navigates to previous page */
   showBackButton?: boolean;
+  /** Optional action button on the right side */
   action?: {
     label: string;
     href: string;
@@ -15,6 +19,22 @@ interface PageHeaderProps {
   };
 }
 
+/**
+ * PageHeader - Reusable header component for pages
+ *
+ * Displays title, optional description, back button, and action button.
+ * Responsive layout: stacks on mobile, row on desktop.
+ *
+ * @example
+ * ```tsx
+ * <PageHeader
+ *   title="Properties"
+ *   description="Manage your property listings"
+ *   showBackButton
+ *   action={{ label: "Add Property", href: "/properties/new" }}
+ * />
+ * ```
+ */
 export function PageHeader({ title, description, showBackButton, action }: PageHeaderProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

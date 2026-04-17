@@ -6,6 +6,7 @@ import { RecentProperties } from '@/components/dashboard/admin/dashboard/RecentP
 import { adminRoutes } from '@/config/routes';
 import { Suspense } from 'react';
 import { QuickAction } from '@/types/dashboard';
+import { PageHeader } from '@/components/shared/page-header';
 
 export default async function DashboardPage() {
   const supabase = await serverClient();
@@ -35,11 +36,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back, {displayName}!</h1>
-        <p className="text-muted-foreground">Here&apos;s your Dubai real estate intelligence overview.</p>
-      </div>
+      <PageHeader title={`Welcome back, ${displayName}!`} description="Here's your Dubai real estate intelligence overview." showBackButton />
 
       {/* Stats Grid - Suspense boundary for independent loading */}
       <Suspense fallback={<Stats.Skeleton />}>
