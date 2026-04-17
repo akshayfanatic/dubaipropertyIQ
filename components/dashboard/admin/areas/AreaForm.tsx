@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { StyledTabs } from '@/components/shared/styled-tabs';
 import { AreaFormProps } from '@/types/areas';
 import { FormSkelton } from '@/components/shared/form-skelton';
 
@@ -23,38 +23,28 @@ const AreaLocation = dynamic(() => import('./tabs/AreaLocation'), {
 });
 
 export function AreaForm({ area }: AreaFormProps) {
-  return (
-    <Tabs defaultValue="basic-info" className="w-full">
-      <TabsList className="flex w-full flex-nowrap overflow-x-auto overflow-y-hidden gap-1">
-        <TabsTrigger value="basic-info" className="whitespace-nowrap shrink-0">
-          Basic Info
-        </TabsTrigger>
-        <TabsTrigger value="location-info" className="whitespace-nowrap shrink-0">
-          Location
-        </TabsTrigger>
-        <TabsTrigger value="faqs" className="whitespace-nowrap shrink-0">
-          FAQs
-        </TabsTrigger>
-        <TabsTrigger value="amenities-faqs" className="whitespace-nowrap shrink-0">
-          Amenities
-        </TabsTrigger>
-      </TabsList>
+  const tabs = [
+    {
+      value: 'basic-info',
+      label: 'Basic Info',
+      content: <AreaBasicInfo area={area} />,
+    },
+    {
+      value: 'location-info',
+      label: 'Location',
+      content: <AreaLocation areaId={area?.id} location={area?.location} />,
+    },
+    {
+      value: 'faqs',
+      label: 'FAQs',
+      content: <AreaFAQs areaId={area?.id} faqs={area?.areas_faqs} />,
+    },
+    {
+      value: 'amenities-faqs',
+      label: 'Amenities',
+      content: <AreaAmenitiesFAQs areaId={area?.id} faqs={area?.areas_amenities_faqs} />,
+    },
+  ] as const;
 
-      <TabsContent value="basic-info">
-        <AreaBasicInfo area={area} />
-      </TabsContent>
-
-      <TabsContent value="location-info">
-        <AreaLocation areaId={area?.id} location={area?.location} />
-      </TabsContent>
-
-      <TabsContent value="faqs">
-        <AreaFAQs areaId={area?.id} faqs={area?.areas_faqs} />
-      </TabsContent>
-
-      <TabsContent value="amenities-faqs">
-        <AreaAmenitiesFAQs areaId={area?.id} faqs={area?.areas_amenities_faqs} />
-      </TabsContent>
-    </Tabs>
-  );
+  return <StyledTabs tabs={tabs} defaultValue="basic-info" />;
 }
