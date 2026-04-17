@@ -9,6 +9,7 @@ import { FAQTab } from '@/components/shared/forms/FAQTab';
 import { faqSchema } from '@/lib/validations/shared';
 import { toast } from 'sonner';
 import { savePropertyFAQs } from '@/lib/db/properties/actions';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface PropertyFAQsProps {
   propertyId?: string;
@@ -55,19 +56,21 @@ export default function PropertyFAQs({ propertyId, faqs = [] }: PropertyFAQsProp
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FAQTab
-        control={form.control}
-        form={form}
-        name={'faqs' as never}
-        title="Property FAQs"
-        description="Add frequently asked questions about this property"
-        addButtonText="Add FAQ"
-        emptyMessage='No FAQs added yet. Click "Add FAQ" to create one.'
-        questionPlaceholder="e.g., What is the payment plan for this property?"
-        answerPlaceholder="Provide a detailed answer..."
-      />
-      <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="FAQs" />
-    </form>
+    <WidgetCard>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FAQTab
+          control={form.control}
+          form={form}
+          name={'faqs' as never}
+          title="Property FAQs"
+          description="Add frequently asked questions about this property"
+          addButtonText="Add FAQ"
+          emptyMessage='No FAQs added yet. Click "Add FAQ" to create one.'
+          questionPlaceholder="e.g., What is the payment plan for this property?"
+          answerPlaceholder="Provide a detailed answer..."
+        />
+        <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="FAQs" />
+      </form>
+    </WidgetCard>
   );
 }

@@ -6,12 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { User, Mail, Info } from 'lucide-react';
 import { AvatarUploader } from '@/components/ui/avatar-uploader';
-import { SettingsCard } from './SettingsCard';
 import { updateProfile } from '@/app/(auth)/auth/actions';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { cn } from '@/lib/utils';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 const profileSchema = z.object({
   displayName: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
@@ -64,7 +64,7 @@ export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps)
   };
 
   return (
-    <SettingsCard icon={User} title="Profile Information" description="Update your personal details.">
+    <WidgetCard icon={User} title="Profile Information" description="Update your personal details.">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {form.formState.errors.root && (
           <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive transition-all duration-200">
@@ -143,6 +143,6 @@ export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps)
 
         <FormActions isEditMode isSubmitting={form.formState.isSubmitting} submitLabel="Profile" />
       </form>
-    </SettingsCard>
+    </WidgetCard>
   );
 }

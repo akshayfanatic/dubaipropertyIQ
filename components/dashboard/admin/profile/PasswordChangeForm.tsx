@@ -5,11 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Lock } from 'lucide-react';
 import { PasswordInput } from '@/components/auth/inputs/PasswordInput';
-import { SettingsCard } from './SettingsCard';
 import { updatePassword } from '@/app/(auth)/auth/actions';
 import { toast } from 'sonner';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { Label } from '@/components/ui/label';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 const passwordSchema = z
   .object({
@@ -48,7 +48,7 @@ export function PasswordChangeForm() {
   };
 
   return (
-    <SettingsCard icon={Lock} title="Change Password" description="Update your password to keep your account secure.">
+    <WidgetCard icon={Lock} title="Change Password" description="Update your password to keep your account secure.">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {form.formState.errors.root && <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{form.formState.errors.root.message}</div>}
 
@@ -70,6 +70,6 @@ export function PasswordChangeForm() {
 
         <FormActions isEditMode isSubmitting={form.formState.isSubmitting} submitLabel="Profile" />
       </form>
-    </SettingsCard>
+    </WidgetCard>
   );
 }

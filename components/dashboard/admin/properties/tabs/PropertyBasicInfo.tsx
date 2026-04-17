@@ -24,6 +24,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { AmenityOption } from '@/types/amenities';
 import { CityOption } from '@/types/city';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface PropertyBasicInfoProps {
   property?: Property;
@@ -168,267 +169,269 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
   }));
 
   return (
-    <form onSubmit={handleSubmit(onSubmit as any) /* eslint-disable-line */} className="space-y-6">
-      {/* Title */}
-      <Controller
-        name="title"
-        control={control}
-        render={({ field }) => (
-          <TextInput
-            id="title"
-            label="Title"
-            required
-            placeholder="e.g., Luxury 2BR Apartment in Downtown Dubai"
-            error={errors.title?.message}
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={(e) => {
-              field.onBlur();
-              setValue('slug', generateSlug(e.target.value));
-            }}
-          />
-        )}
-      />
-
-      {/* Slug */}
-      <Controller
-        name="slug"
-        control={control}
-        render={({ field }) => <TextInput id="slug" label="Slug" placeholder="e.g., luxury-2br-apartment-downtown-dubai" error={errors.slug?.message} {...field} />}
-      />
-
-      {/* Description */}
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => <TextArea id="description" label="Description" required placeholder="Describe the property..." error={errors.description?.message} {...field} />}
-      />
-
-      {/* Category */}
-      <Controller
-        name="category_id"
-        control={control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label htmlFor="category_id">
-              Category <span className="text-destructive">*</span>
-            </Label>
-            <SelectField
-              options={categoryOptions}
-              placeholder={isLoadingCategories ? 'Loading categories...' : 'Select a category'}
-              value={field.value}
-              onValueChange={(v) => field.onChange(v)}
-              className="w-full"
-              disabled={isLoadingCategories}
-            />
-            {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
-          </div>
-        )}
-      />
-
-      {/* Developer */}
-      <Controller
-        name="developer_id"
-        control={control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label htmlFor="developer_id">Developer</Label>
-            <SelectField
-              options={developerSelectOptions}
-              placeholder={isLoadingDevelopers ? 'Loading developers...' : 'Select a developer (optional)'}
-              value={field.value ?? ''}
-              onValueChange={(v) => field.onChange(v || null)}
-              className="w-full"
-              disabled={isLoadingDevelopers}
-            />
-            {errors.developer_id && <p className="text-sm text-destructive">{errors.developer_id.message}</p>}
-          </div>
-        )}
-      />
-
-      {/* City */}
-      <Controller
-        name="city_id"
-        control={control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label htmlFor="city_id">City</Label>
-            <SelectField
-              options={citySelectOptions}
-              placeholder={isLoadingCities ? 'Loading cities...' : 'Select a city (optional)'}
-              value={field.value ?? ''}
-              onValueChange={(v) => field.onChange(v || null)}
-              className="w-full"
-              disabled={isLoadingCities}
-            />
-            {errors.city_id && <p className="text-sm text-destructive">{errors.city_id.message}</p>}
-          </div>
-        )}
-      />
-
-      {/* Bedrooms & Bathrooms */}
-      <div className="grid grid-cols-2 gap-4">
+    <WidgetCard>
+      <form onSubmit={handleSubmit(onSubmit as any) /* eslint-disable-line */} className="space-y-6">
+        {/* Title */}
         <Controller
-          name="bedrooms"
+          name="title"
           control={control}
           render={({ field }) => (
             <TextInput
-              id="bedrooms"
-              label="Bedrooms"
-              type="number"
-              min={0}
-              placeholder="0"
-              error={errors.bedrooms?.message}
-              value={field.value}
-              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-            />
-          )}
-        />
-        <Controller
-          name="bathrooms"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              id="bathrooms"
-              label="Bathrooms"
-              type="number"
-              min={0}
-              placeholder="0"
-              error={errors.bathrooms?.message}
-              value={field.value}
-              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-            />
-          )}
-        />
-      </div>
-
-      {/* Size & Price */}
-      <div className="grid grid-cols-2 gap-4">
-        <Controller
-          name="size_sqft"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              id="size_sqft"
-              label="Size (sqft)"
+              id="title"
+              label="Title"
               required
-              type="number"
-              min={1}
-              placeholder="1000"
-              error={errors.size_sqft?.message}
+              placeholder="e.g., Luxury 2BR Apartment in Downtown Dubai"
+              error={errors.title?.message}
               value={field.value}
-              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-            />
-          )}
-        />
-        <Controller
-          name="price_aed"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              id="price_aed"
-              label="Price (AED)"
-              required
-              type="number"
-              min={0}
-              placeholder="1000000"
-              error={errors.price_aed?.message}
-              value={field.value}
-              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-            />
-          )}
-        />
-      </div>
-
-      {/* Status */}
-      <Controller
-        name="status"
-        control={control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label htmlFor="status">Status</Label>
-            <SelectField options={statusOptions} placeholder="Select status" value={field.value} onValueChange={field.onChange} className="w-full" />
-          </div>
-        )}
-      />
-
-      {/* Golden Visa Eligible */}
-      <div className="flex items-center gap-2">
-        <Controller
-          name="golden_visa_eligible"
-          control={control}
-          render={({ field }) => (
-            <>
-              <Input type="checkbox" id="golden_visa_eligible" className="h-4 w-4 cursor-pointer rounded border-gray-300" checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />
-              <Label htmlFor="golden_visa_eligible" className="cursor-pointer">
-                Golden Visa Eligible (AED 2M+)
-              </Label>
-            </>
-          )}
-        />
-      </div>
-
-      {/* Amenities */}
-      <Controller
-        name="amenity_ids"
-        control={control}
-        render={({ field }) => (
-          <MultiSelect
-            name="amenity_ids"
-            label="Nearby Amenities"
-            placeholder={isLoadingAmenities ? 'Loading amenities...' : 'Select amenities...'}
-            options={amenityOptions}
-            value={field.value || []}
-            onChange={field.onChange}
-            error={errors.amenity_ids?.message as string}
-            disabled={isLoadingAmenities}
-            isLoading={isLoadingAmenities}
-          />
-        )}
-      />
-
-      {/* Photos */}
-      <Controller
-        name="photos"
-        control={control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <ImageUploader
-              bucket="property-photos"
-              value={field.value}
-              onChange={(urls) => {
-                field.onChange(urls);
-                setValue('photos', urls, { shouldDirty: true, shouldTouch: true });
+              onChange={field.onChange}
+              onBlur={(e) => {
+                field.onBlur();
+                setValue('slug', generateSlug(e.target.value));
               }}
-              maxImages={10}
-              label="Photos"
-              folder={property?.id || 'temp'}
             />
-            {errors.photos && <p className="text-sm text-destructive">{errors.photos.message}</p>}
-          </div>
-        )}
-      />
+          )}
+        />
 
-      {/* Floor Plan URL */}
-      <Controller
-        name="floor_plan"
-        control={control}
-        render={({ field }) => (
-          <TextInput
-            id="floor_plan"
-            label="Floor Plan URL"
-            type="url"
-            placeholder="https://example.com/floor-plan.pdf"
-            error={errors.floor_plan?.message}
-            value={field.value ?? ''}
-            onChange={(e) => field.onChange(e.target.value || undefined)}
+        {/* Slug */}
+        <Controller
+          name="slug"
+          control={control}
+          render={({ field }) => <TextInput id="slug" label="Slug" placeholder="e.g., luxury-2br-apartment-downtown-dubai" error={errors.slug?.message} {...field} />}
+        />
+
+        {/* Description */}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => <TextArea id="description" label="Description" required placeholder="Describe the property..." error={errors.description?.message} {...field} />}
+        />
+
+        {/* Category */}
+        <Controller
+          name="category_id"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label htmlFor="category_id">
+                Category <span className="text-destructive">*</span>
+              </Label>
+              <SelectField
+                options={categoryOptions}
+                placeholder={isLoadingCategories ? 'Loading categories...' : 'Select a category'}
+                value={field.value}
+                onValueChange={(v) => field.onChange(v)}
+                className="w-full"
+                disabled={isLoadingCategories}
+              />
+              {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
+            </div>
+          )}
+        />
+
+        {/* Developer */}
+        <Controller
+          name="developer_id"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label htmlFor="developer_id">Developer</Label>
+              <SelectField
+                options={developerSelectOptions}
+                placeholder={isLoadingDevelopers ? 'Loading developers...' : 'Select a developer (optional)'}
+                value={field.value ?? ''}
+                onValueChange={(v) => field.onChange(v || null)}
+                className="w-full"
+                disabled={isLoadingDevelopers}
+              />
+              {errors.developer_id && <p className="text-sm text-destructive">{errors.developer_id.message}</p>}
+            </div>
+          )}
+        />
+
+        {/* City */}
+        <Controller
+          name="city_id"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label htmlFor="city_id">City</Label>
+              <SelectField
+                options={citySelectOptions}
+                placeholder={isLoadingCities ? 'Loading cities...' : 'Select a city (optional)'}
+                value={field.value ?? ''}
+                onValueChange={(v) => field.onChange(v || null)}
+                className="w-full"
+                disabled={isLoadingCities}
+              />
+              {errors.city_id && <p className="text-sm text-destructive">{errors.city_id.message}</p>}
+            </div>
+          )}
+        />
+
+        {/* Bedrooms & Bathrooms */}
+        <div className="grid grid-cols-2 gap-4">
+          <Controller
+            name="bedrooms"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="bedrooms"
+                label="Bedrooms"
+                type="number"
+                min={0}
+                placeholder="0"
+                error={errors.bedrooms?.message}
+                value={field.value}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+              />
+            )}
           />
-        )}
-      />
+          <Controller
+            name="bathrooms"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="bathrooms"
+                label="Bathrooms"
+                type="number"
+                min={0}
+                placeholder="0"
+                error={errors.bathrooms?.message}
+                value={field.value}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+              />
+            )}
+          />
+        </div>
 
-      {/* Actions */}
-      <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Property" />
-    </form>
+        {/* Size & Price */}
+        <div className="grid grid-cols-2 gap-4">
+          <Controller
+            name="size_sqft"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="size_sqft"
+                label="Size (sqft)"
+                required
+                type="number"
+                min={1}
+                placeholder="1000"
+                error={errors.size_sqft?.message}
+                value={field.value}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+              />
+            )}
+          />
+          <Controller
+            name="price_aed"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                id="price_aed"
+                label="Price (AED)"
+                required
+                type="number"
+                min={0}
+                placeholder="1000000"
+                error={errors.price_aed?.message}
+                value={field.value}
+                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+              />
+            )}
+          />
+        </div>
+
+        {/* Status */}
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label htmlFor="status">Status</Label>
+              <SelectField options={statusOptions} placeholder="Select status" value={field.value} onValueChange={field.onChange} className="w-full" />
+            </div>
+          )}
+        />
+
+        {/* Golden Visa Eligible */}
+        <div className="flex items-center gap-2">
+          <Controller
+            name="golden_visa_eligible"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Input type="checkbox" id="golden_visa_eligible" className="h-4 w-4 cursor-pointer rounded border-gray-300" checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />
+                <Label htmlFor="golden_visa_eligible" className="cursor-pointer">
+                  Golden Visa Eligible (AED 2M+)
+                </Label>
+              </>
+            )}
+          />
+        </div>
+
+        {/* Amenities */}
+        <Controller
+          name="amenity_ids"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              name="amenity_ids"
+              label="Nearby Amenities"
+              placeholder={isLoadingAmenities ? 'Loading amenities...' : 'Select amenities...'}
+              options={amenityOptions}
+              value={field.value || []}
+              onChange={field.onChange}
+              error={errors.amenity_ids?.message as string}
+              disabled={isLoadingAmenities}
+              isLoading={isLoadingAmenities}
+            />
+          )}
+        />
+
+        {/* Photos */}
+        <Controller
+          name="photos"
+          control={control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <ImageUploader
+                bucket="property-photos"
+                value={field.value}
+                onChange={(urls) => {
+                  field.onChange(urls);
+                  setValue('photos', urls, { shouldDirty: true, shouldTouch: true });
+                }}
+                maxImages={10}
+                label="Photos"
+                folder={property?.id || 'temp'}
+              />
+              {errors.photos && <p className="text-sm text-destructive">{errors.photos.message}</p>}
+            </div>
+          )}
+        />
+
+        {/* Floor Plan URL */}
+        <Controller
+          name="floor_plan"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              id="floor_plan"
+              label="Floor Plan URL"
+              type="url"
+              placeholder="https://example.com/floor-plan.pdf"
+              error={errors.floor_plan?.message}
+              value={field.value ?? ''}
+              onChange={(e) => field.onChange(e.target.value || undefined)}
+            />
+          )}
+        />
+
+        {/* Actions */}
+        <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Property" />
+      </form>
+    </WidgetCard>
   );
 }
 

@@ -21,6 +21,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { AmenityOption } from '@/types/amenities';
 import { PropertyOption } from '@/types/property';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface AreaBasicInfoProps {
   area?: Area & {
@@ -103,133 +104,137 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {/* City */}
-      <Controller
-        name="city_id"
-        control={form.control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label htmlFor="city_id">
-              City <span className="text-destructive">*</span>
-            </Label>
-            <SelectField
-              options={cityOptions || []}
-              placeholder={isLoadingCities ? 'Loading cities...' : 'Select a city'}
+    <WidgetCard className="pt-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* City */}
+        <Controller
+          name="city_id"
+          control={form.control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label htmlFor="city_id">
+                City <span className="text-destructive">*</span>
+              </Label>
+              <SelectField
+                options={cityOptions || []}
+                placeholder={isLoadingCities ? 'Loading cities...' : 'Select a city'}
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled={isLoadingCities}
+              />
+              {form.formState.errors.city_id && <p className="text-sm text-destructive">{form.formState.errors.city_id.message as string}</p>}
+            </div>
+          )}
+        />
+
+        {/* Name */}
+        <Controller
+          name="name"
+          control={form.control}
+          render={({ field }) => (
+            <TextInput
+              id="name"
+              label="Name"
+              required
+              placeholder="e.g., Downtown Dubai"
+              error={form.formState.errors.name?.message as string}
               value={field.value}
-              onValueChange={field.onChange}
-              disabled={isLoadingCities}
-            />
-            {form.formState.errors.city_id && <p className="text-sm text-destructive">{form.formState.errors.city_id.message as string}</p>}
-          </div>
-        )}
-      />
-
-      {/* Name */}
-      <Controller
-        name="name"
-        control={form.control}
-        render={({ field }) => (
-          <TextInput
-            id="name"
-            label="Name"
-            required
-            placeholder="e.g., Downtown Dubai"
-            error={form.formState.errors.name?.message as string}
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={(e) => {
-              field.onBlur();
-              form.setValue('slug', generateSlug(e.target.value));
-            }}
-          />
-        )}
-      />
-
-      {/* Slug */}
-      <Controller
-        name="slug"
-        control={form.control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <TextInput id="slug" label="Slug" required placeholder="e.g., downtown-dubai" error={form?.formState?.errors?.slug?.message as string} {...field} />
-            <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
-          </div>
-        )}
-      />
-
-      {/* Amenities */}
-      <Controller
-        name="amenity_ids"
-        control={form.control}
-        render={({ field }) => (
-          <MultiSelect
-            name="amenity_ids"
-            label="Amenities"
-            placeholder={isLoadingAmenities ? 'Loading amenities...' : 'Select amenities...'}
-            options={amenityOptions}
-            value={field.value}
-            onChange={field.onChange}
-            error={form.formState.errors.amenity_ids?.message as string}
-            disabled={isLoadingAmenities}
-            isLoading={isLoadingAmenities}
-          />
-        )}
-      />
-
-      {/* Properties */}
-      <Controller
-        name="property_ids"
-        control={form.control}
-        render={({ field }) => (
-          <MultiSelect
-            name="property_ids"
-            label="Properties"
-            placeholder={isLoadingProperties ? 'Loading properties...' : 'Select properties...'}
-            options={propertyOptions}
-            value={field.value}
-            onChange={field.onChange}
-            error={form.formState.errors.property_ids?.message as string}
-            disabled={isLoadingProperties}
-            isLoading={isLoadingProperties}
-          />
-        )}
-      />
-
-      {/* Photos */}
-      <Controller
-        name="photos"
-        control={form.control}
-        render={({ field }) => (
-          <div className="grid gap-2">
-            <Label>Area Photos</Label>
-            <ImageUploader
-              bucket="area-photos"
-              folder="areas"
-              value={field.value?.map((url: string) => ({ url, alt_tag: '' })) || []}
-              onChange={(urls) => {
-                const photoUrls = urls.map((u: { url: string }) => u.url);
-                field.onChange(photoUrls);
-                form.setValue('photos', photoUrls, { shouldDirty: true, shouldTouch: true });
+              onChange={field.onChange}
+              onBlur={(e) => {
+                field.onBlur();
+                form.setValue('slug', generateSlug(e.target.value));
               }}
-              maxImages={10}
-              label="Photos"
             />
-            <p className="text-xs text-muted-foreground">Upload area photos (JPG, PNG, WebP, max 5MB each, up to 10 photos)</p>
-          </div>
-        )}
-      />
+          )}
+        />
 
-      {/* Description */}
-      <Controller
-        name="description"
-        control={form.control}
-        render={({ field }) => <TextArea id="description" label="Description" placeholder="Optional description..." error={form.formState.errors.description?.message as string} rows={3} {...field} />}
-      />
+        {/* Slug */}
+        <Controller
+          name="slug"
+          control={form.control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <TextInput id="slug" label="Slug" required placeholder="e.g., downtown-dubai" error={form?.formState?.errors?.slug?.message as string} {...field} />
+              <p className="text-xs text-muted-foreground">URL-friendly identifier (lowercase letters, numbers, and hyphens only)</p>
+            </div>
+          )}
+        />
 
-      {/* Actions */}
-      <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="Area" />
-    </form>
+        {/* Amenities */}
+        <Controller
+          name="amenity_ids"
+          control={form.control}
+          render={({ field }) => (
+            <MultiSelect
+              name="amenity_ids"
+              label="Amenities"
+              placeholder={isLoadingAmenities ? 'Loading amenities...' : 'Select amenities...'}
+              options={amenityOptions}
+              value={field.value}
+              onChange={field.onChange}
+              error={form.formState.errors.amenity_ids?.message as string}
+              disabled={isLoadingAmenities}
+              isLoading={isLoadingAmenities}
+            />
+          )}
+        />
+
+        {/* Properties */}
+        <Controller
+          name="property_ids"
+          control={form.control}
+          render={({ field }) => (
+            <MultiSelect
+              name="property_ids"
+              label="Properties"
+              placeholder={isLoadingProperties ? 'Loading properties...' : 'Select properties...'}
+              options={propertyOptions}
+              value={field.value}
+              onChange={field.onChange}
+              error={form.formState.errors.property_ids?.message as string}
+              disabled={isLoadingProperties}
+              isLoading={isLoadingProperties}
+            />
+          )}
+        />
+
+        {/* Photos */}
+        <Controller
+          name="photos"
+          control={form.control}
+          render={({ field }) => (
+            <div className="grid gap-2">
+              <Label>Area Photos</Label>
+              <ImageUploader
+                bucket="area-photos"
+                folder="areas"
+                value={field.value?.map((url: string) => ({ url, alt_tag: '' })) || []}
+                onChange={(urls) => {
+                  const photoUrls = urls.map((u: { url: string }) => u.url);
+                  field.onChange(photoUrls);
+                  form.setValue('photos', photoUrls, { shouldDirty: true, shouldTouch: true });
+                }}
+                maxImages={10}
+                label="Photos"
+              />
+              <p className="text-xs text-muted-foreground">Upload area photos (JPG, PNG, WebP, max 5MB each, up to 10 photos)</p>
+            </div>
+          )}
+        />
+
+        {/* Description */}
+        <Controller
+          name="description"
+          control={form.control}
+          render={({ field }) => (
+            <TextArea id="description" label="Description" placeholder="Optional description..." error={form.formState.errors.description?.message as string} rows={3} {...field} />
+          )}
+        />
+
+        {/* Actions */}
+        <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="Area" />
+      </form>
+    </WidgetCard>
   );
 }
 
