@@ -24,10 +24,7 @@ export default async function EditDeveloperPage({ params }: EditDeveloperPagePro
   return (
     <div className="space-y-6">
       <PageHeader title="Edit Developer" description={`Editing: ${developer.name}`} showBackButton />
-
-      <div className="rounded-lg border bg-card p-6">
-        <DeveloperForm developer={developer} />
-      </div>
+      <DeveloperForm developer={developer} />
     </div>
   );
 }

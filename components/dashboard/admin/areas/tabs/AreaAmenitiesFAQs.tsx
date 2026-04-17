@@ -9,6 +9,7 @@ import { FAQTab } from '@/components/shared/forms/FAQTab';
 import { areaFAQSchema } from '@/lib/validations/area';
 import { toast } from 'sonner';
 import { saveAreaAmenitiesFAQs } from '@/lib/db/areas/actions';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface AreaAmenitiesFAQsProps {
   areaId?: string;
@@ -55,19 +56,21 @@ export default function AreaAmenitiesFAQs({ areaId, faqs = [] }: AreaAmenitiesFA
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FAQTab
-        control={form.control}
-        form={form}
-        name={'amenities_faqs' as never}
-        title="Amenities FAQs"
-        description="Add frequently asked questions about amenities in this area"
-        addButtonText="Add Amenity FAQ"
-        emptyMessage='No Amenities FAQs added yet. Click "Add Amenity FAQ" to create one.'
-        questionPlaceholder="e.g., What schools are available in this area?"
-        answerPlaceholder="Provide a detailed answer about amenities..."
-      />
-      <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="Amenities FAQs" />
-    </form>
+    <WidgetCard className="p-0">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FAQTab
+          control={form.control}
+          form={form}
+          name={'amenities_faqs' as never}
+          title="Amenities FAQs"
+          description="Add frequently asked questions about amenities in this area"
+          addButtonText="Add Amenity FAQ"
+          emptyMessage='No Amenities FAQs added yet. Click "Add Amenity FAQ" to create one.'
+          questionPlaceholder="e.g., What schools are available in this area?"
+          answerPlaceholder="Provide a detailed answer about amenities..."
+        />
+        <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="Amenities FAQs" />
+      </form>
+    </WidgetCard>
   );
 }

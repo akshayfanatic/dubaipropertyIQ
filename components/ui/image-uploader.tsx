@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
-import { ImagePlus, X, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useCallback, useState } from 'react';
+import { X, Loader2, UploadCloud } from 'lucide-react';
+import { useDropzone } from 'react-dropzone';
 import { Label } from '@/components/ui/label';
 import { uploadImage, deleteImage } from '@/lib/storage/actions';
 import { extractPathFromUrl } from '@/lib/storage/utils';
@@ -10,30 +10,26 @@ import { validateFiles } from '@/lib/validations/storage';
 import type { ImageUploaderProps } from '@/types/storage';
 import type { ImageObject } from '@/types/images';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
-export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept = 'image/*', label = 'Photos', required = false, folder }: ImageUploaderProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+export function ImageUploader({ bucket, value, onChange, maxImages = 10, label = 'Photos', required = false, folder }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
-  const handleButtonClick = useCallback(() => {
-    fileInputRef.current?.click();
-  }, []);
+  const remainingSlots = maxImages - value.length;
 
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) return;
 
       // Check max limit
-      const remainingSlots = maxImages - value.length;
       if (remainingSlots <= 0) {
         toast.error(`Maximum ${maxImages} photos allowed`);
         return;
       }
 
-      const filesToUpload = Array.from(files).slice(0, remainingSlots);
+      const filesToUpload = acceptedFiles.slice(0, remainingSlots);
 
       // Validate files
       const validation = validateFiles(filesToUpload);
@@ -73,12 +69,17 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
         onChange([...value, ...newImages]);
         toast.success(`${newImages.length} photo(s) uploaded`);
       }
-
-      // Reset input
-      event.target.value = '';
     },
-    [bucket, folder, maxImages, onChange, value],
+    [bucket, folder, maxImages, onChange, value, remainingSlots],
   );
+
+  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp', '.svg'] },
+    multiple: true,
+    maxFiles: remainingSlots,
+    disabled: uploading,
+  });
 
   const handleRemove = useCallback(
     async (index: number) => {
@@ -120,8 +121,6 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
     [bucket, onChange, value],
   );
 
-  const remainingSlots = maxImages - value.length;
-
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -132,24 +131,13 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
             ({value.length}/{maxImages})
           </span>
         </Label>
-        {remainingSlots > 0 && (
-          <Button type="button" variant="outline" size="sm" onClick={handleButtonClick} disabled={uploading} className="cursor-pointer">
-            {uploading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <ImagePlus className="h-4 w-4" />
-                Add Photos
-              </>
-            )}
-          </Button>
+        {remainingSlots > 0 && uploading && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Uploading...
+          </div>
         )}
       </div>
-
-      <input ref={fileInputRef} type="file" accept={accept} multiple onChange={handleFileChange} className="hidden" disabled={uploading} />
 
       {/* Preview Grid */}
       {value.length > 0 && (
@@ -181,24 +169,50 @@ export function ImageUploader({ bucket, value, onChange, maxImages = 10, accept 
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           )}
+
+          {/* Add more dropzone when there are existing images */}
+          {!uploading && remainingSlots > 0 && (
+            <div
+              {...getRootProps()}
+              className={cn(
+                'flex aspect-square flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-all cursor-pointer',
+                'bg-muted/50 hover:bg-muted',
+                isDragActive && !isDragReject && 'border-primary bg-primary/5 scale-[1.02]',
+                isDragReject && 'border-destructive bg-destructive/5',
+                !isDragActive && !isDragReject && 'border-muted-foreground/25 hover:border-muted-foreground/50',
+              )}
+            >
+              <input {...getInputProps()} />
+              <UploadCloud className={cn('h-8 w-8', isDragActive && 'scale-110 transition-transform')} />
+              <span className="text-xs text-center text-muted-foreground">{isDragActive ? 'Drop images here' : 'Drag & drop or click'}</span>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state - full width dropzone */}
       {value.length === 0 && !uploading && (
-        <button
-          type="button"
-          onClick={handleButtonClick}
-          className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 px-4 py-8 text-muted-foreground hover:border-muted-foreground/50 hover:bg-muted transition-colors cursor-pointer"
+        <div
+          {...getRootProps()}
+          className={cn(
+            'flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 transition-all cursor-pointer',
+            'bg-muted/50 hover:bg-muted',
+            isDragActive && !isDragReject && 'border-primary bg-primary/5 scale-[1.01]',
+            isDragReject && 'border-destructive bg-destructive/5',
+            !isDragActive && !isDragReject && 'border-muted-foreground/25 hover:border-muted-foreground/50',
+          )}
         >
-          <ImagePlus className="h-10 w-10" />
-          <span className="text-sm">Click to add photos</span>
-          <span className="text-xs">JPG, PNG or WebP, max 5MB each</span>
-        </button>
+          <input {...getInputProps()} />
+          <UploadCloud className={cn('h-12 w-12 text-muted-foreground', isDragActive && 'scale-110 transition-transform')} />
+          <div className="text-center">
+            <p className="text-sm font-medium text-foreground">{isDragActive ? 'Drop your images here' : 'Drag & drop images here'}</p>
+            <p className="text-xs text-muted-foreground mt-1">or click to browse • JPG, PNG, WebP, SVG • max 5MB each</p>
+          </div>
+        </div>
       )}
 
       {/* Max reached message */}
-      {remainingSlots <= 0 && <p className="text-sm text-muted-foreground">Maximum {maxImages} photos reached</p>}
+      {remainingSlots <= 0 && value.length > 0 && <p className="text-sm text-muted-foreground">Maximum {maxImages} photos reached</p>}
     </div>
   );
 }

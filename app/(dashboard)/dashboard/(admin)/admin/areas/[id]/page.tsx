@@ -25,9 +25,7 @@ export default async function EditAreaPage({ params }: EditAreaPageProps) {
     <div className="space-y-6">
       <PageHeader title="Edit Area" description={`Editing: ${area.name}`} showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <AreaForm area={area} />
-      </div>
+      <AreaForm area={area} />
     </div>
   );
 }

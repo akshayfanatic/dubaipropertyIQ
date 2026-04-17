@@ -1,11 +1,11 @@
 import { Geist, Geist_Mono } from 'next/font/google';
-import '../globals.css';
+import '@/app/(dashboard)/dashboard/globals.css';
 import { requireAuth } from '@/lib/auth/guards';
 import { serverClient } from '@/lib/supabase/server';
 import { SidebarInset } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/dashboard/admin/admin-sidebar';
 import { AdminHeader } from '@/components/dashboard/admin/admin-header';
-import { AdminProvider } from '@/components/providers/admin-provider';
+import { AdminProvider } from '@/providers/admin-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({

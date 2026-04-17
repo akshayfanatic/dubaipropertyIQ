@@ -14,7 +14,7 @@ import { ResetButton } from '@/components/shared/forms/reset-button';
 import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
 import { CityOption } from '@/types/city';
-import { fetcher } from '@/lib/utils';
+import { fetcher } from '@/lib/swr-config';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const statusOptions = [

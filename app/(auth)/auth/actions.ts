@@ -89,9 +89,17 @@ export async function updateProfile(formData: FormData): Promise<AuthResult> {
   const supabase = await serverClient();
 
   const displayName = formData.get('displayName') as string;
+  const avatarUrl = formData.get('avatarUrl') as string | null;
+
+  // Build update data - explicitly set avatar_url to null when empty string
+  const updateData: Record<string, string | null> = {
+    display_name: displayName,
+    // Empty string means user wants to remove the photo
+    ...(avatarUrl === '' ? { avatar_url: null } : avatarUrl ? { avatar_url: avatarUrl } : {}),
+  };
 
   const { error } = await supabase.auth.updateUser({
-    data: { display_name: displayName },
+    data: updateData,
   });
 
   if (error) {

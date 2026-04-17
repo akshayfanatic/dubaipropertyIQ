@@ -44,8 +44,16 @@ export const adminRoutes: RouteGroup[] = [
   {
     title: 'Management',
     items: [
-      { title: 'Properties', href: '/dashboard/admin/properties', icon: Building2 },
-      { title: 'Categories', href: '/dashboard/admin/categories', icon: Layers },
+      {
+        title: 'Properties',
+        href: '/dashboard/admin/properties',
+        icon: Building2,
+        children: [
+          { title: 'All Properties', href: '/dashboard/admin/properties', icon: Building2 },
+          { title: 'Categories', href: '/dashboard/admin/categories', icon: Layers },
+        ],
+      },
+
       {
         title: 'Areas',
         href: '/dashboard/admin/areas',
@@ -64,7 +72,7 @@ export const adminRoutes: RouteGroup[] = [
   {
     title: 'System',
     items: [
-      { title: 'Settings', href: '/dashboard/admin/settings', icon: Settings, isComingSoon: true },
+      { title: 'Settings', href: '/dashboard/admin/settings', icon: Settings },
       { title: 'Profile', href: '/dashboard/admin/profile', icon: User },
     ],
   },

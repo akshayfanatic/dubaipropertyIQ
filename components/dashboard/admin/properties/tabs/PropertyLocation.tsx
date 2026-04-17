@@ -7,6 +7,7 @@ import { LocationPicker } from '@/components/shared/location/LocationPicker';
 import { locationFormSchema, type Location, type LocationValue, DEFAULT_LOCATION } from '@/components/shared/location/schema';
 import { toast } from 'sonner';
 import { updatePropertyLocation } from '@/lib/db/properties/actions';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface PropertyLocationProps {
   propertyId?: string;
@@ -50,19 +51,21 @@ export function PropertyLocation({ propertyId, location }: PropertyLocationProps
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <Controller
-        name="location"
-        control={form.control}
-        render={({ field }) => <LocationPicker value={field.value || DEFAULT_LOCATION} onPositionChange={field.onChange} showCoordinates showUseMyLocation showSaveButton={false} />}
-      />
+    <WidgetCard className="py-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <Controller
+          name="location"
+          control={form.control}
+          render={({ field }) => <LocationPicker value={field.value || DEFAULT_LOCATION} onPositionChange={field.onChange} showCoordinates showUseMyLocation showSaveButton={false} />}
+        />
 
-      <Button type="submit" disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? 'Saving...' : 'Save Location'}
-      </Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? 'Saving...' : 'Save Location'}
+        </Button>
 
-      {form.formState.errors.location && <p className="text-sm text-destructive">{form.formState.errors.location?.message as string}</p>}
-    </form>
+        {form.formState.errors.location && <p className="text-sm text-destructive">{form.formState.errors.location?.message as string}</p>}
+      </form>
+    </WidgetCard>
   );
 }
 

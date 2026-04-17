@@ -9,6 +9,7 @@ import { FAQTab } from '@/components/shared/forms/FAQTab';
 import { areaFAQSchema } from '@/lib/validations/area';
 import { toast } from 'sonner';
 import { saveAreaFAQs } from '@/lib/db/areas/actions';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface AreaFAQsProps {
   areaId?: string;
@@ -55,19 +56,21 @@ export default function AreaFAQs({ areaId, faqs = [] }: AreaFAQsProps) {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FAQTab
-        control={form.control}
-        form={form}
-        name={'faqs' as never}
-        title="Area FAQs"
-        description="Add frequently asked questions about this area"
-        addButtonText="Add FAQ"
-        emptyMessage='No FAQs added yet. Click "Add FAQ" to create one.'
-        questionPlaceholder="e.g., What is the average rental yield in Downtown Dubai?"
-        answerPlaceholder="Provide a detailed answer..."
-      />
-      <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="FAQs" />
-    </form>
+    <WidgetCard className="p-0">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FAQTab
+          control={form.control}
+          form={form}
+          name={'faqs' as never}
+          title="Area FAQs"
+          description="Add frequently asked questions about this area"
+          addButtonText="Add FAQ"
+          emptyMessage='No FAQs added yet. Click "Add FAQ" to create one.'
+          questionPlaceholder="e.g., What is the average rental yield in Downtown Dubai?"
+          answerPlaceholder="Provide a detailed answer..."
+        />
+        <FormActions isSubmitting={form.formState.isSubmitting} isEditMode={isEditMode} submitLabel="FAQs" />
+      </form>
+    </WidgetCard>
   );
 }

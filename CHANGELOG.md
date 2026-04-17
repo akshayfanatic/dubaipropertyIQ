@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.3...v0.3.4) (2026-04-17)
+
+### Features
+
+- **avatar:** created a resuble component for uploading avatar ([0b6e649](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0b6e649d444f7c8190c5be9b3f2adf0925198281))
+- **db:** created new table site_setting ([7167eb1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7167eb1bf015d1fdf7cd178a9ad458a1eefdddda))
+- **db:** imlement avatar url support to upload to url to update user ([66e6124](https://github.com/akshayfanatic/dubaipropertyIQ/commit/66e612450fb38c9cca312e323d103409d2cb09d7))
+- **site settings:** added db functions queries and settings configuration and enable navigation in dashboard ([1d059ad](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1d059ad4be03eb51ce294f10cdedfa2cc26279db))
+- **types:** add types support for importing module ([26abee4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/26abee46afeb86f592e3cca70588f9a5a267bafc))
+- **types:** added types for settings ([448958b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/448958b580faaf52061856ef71638e793e4df19e))
+
+### Code Refactoring
+
+- **navigation:** adding categories inside properties ([9281ad9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9281ad9b70b5a4558c78009ebbd900bd801b4bfa))
+- **profile:** reorganize folder structure ([4c49f9b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4c49f9bd0642d44752c50665a874527dd6a378e1))
+- **providers:** reorganize folder structure and make providers folder explicity display ([38f5627](https://github.com/akshayfanatic/dubaipropertyIQ/commit/38f56271ec4cc6f0147cce99f8cff03c8dffbbdb))
+- **setting:** reorganize structure and add icon to all tabs fields ([1bd3c68](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1bd3c68a12a5bd05a1ee4c686f144120d62115c8))
+- **style:** remove white bg div from forms ([acd0a97](https://github.com/akshayfanatic/dubaipropertyIQ/commit/acd0a97ecb9046b831fe8ed0c639ac9c5d468631))
+- **swr,provider:** using a global configuration for swr for controling it's properties ([ff01e1f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ff01e1f42303d1c4a9fd64ffb4e834fc828d86d2))
+- **tabs:** created a reusable tab for using multiple times ([e7c287d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e7c287dddecab3e83036bd634551b85aef976aa4))
+- **uploads:** add package react-dropzone for managin image and remove raw control to manage js events ([2158f71](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2158f71fc947206803f5a973aa780da7cd6d3b2c))
+- **uploads:** remove props mime from component ([d2f7e8a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d2f7e8a67f66bde7fb2fc791d18f4fda4b0ef700))
+- **Widget card:** created a resuable card WidgetCard for managin constency in ui ([f98de6c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f98de6c3d966064eac0a2954b2c293db3b8e3932))
+
 ### [0.3.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.2...v0.3.3) (2026-04-14)
 
 ### Features

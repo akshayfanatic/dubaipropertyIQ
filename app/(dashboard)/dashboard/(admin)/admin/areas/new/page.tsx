@@ -11,10 +11,7 @@ export default function NewAreaPage() {
   return (
     <div className="space-y-6">
       <PageHeader title="Add New Area" description="Create a new neighborhood/community" showBackButton />
-
-      <div className="rounded-lg border bg-card p-6">
-        <AreaForm />
-      </div>
+      <AreaForm />
     </div>
   );
 }

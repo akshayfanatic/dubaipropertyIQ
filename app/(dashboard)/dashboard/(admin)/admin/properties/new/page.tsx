@@ -12,9 +12,7 @@ export default async function NewPropertyPage() {
     <div className="space-y-6">
       <PageHeader title="Add New Property" description="Create a new property listing" showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <PropertyForm />
-      </div>
+      <PropertyForm />
     </div>
   );
 }
