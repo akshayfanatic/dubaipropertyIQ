@@ -56,7 +56,7 @@ export default function AreaFAQs({ areaId, faqs = [] }: AreaFAQsProps) {
   };
 
   return (
-    <WidgetCard className="p-0">
+    <WidgetCard className="px-0 pt-0 pb">
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FAQTab
           control={form.control}
