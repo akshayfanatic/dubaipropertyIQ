@@ -60,7 +60,8 @@ export function TiptapEditor({ content, onChange, placeholder = 'Start writing..
     editorProps: {
       attributes: {
         class: cn(
-          'prose prose-sm max-w-none focus:outline-none min-h-[300px] px-4 py-3',
+          'prose prose-sm max-w-none focus:outline-none px-4 py-3',
+          editable ? 'min-h-[300px]' : 'min-h-0',
           'prose-headings:font-bold prose-headings:tracking-tight',
           'prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg',
           'prose-p:leading-relaxed',
@@ -81,9 +82,9 @@ export function TiptapEditor({ content, onChange, placeholder = 'Start writing..
   if (!editor) return null;
 
   return (
-    <div className={cn('rounded-md border bg-background', className)}>
+    <div className={cn('rounded-md bg-background', className)}>
       {editable && (
-        <div className="flex flex-wrap items-center gap-1 border-b p-2">
+        <div className="flex flex-wrap items-center gap-1 border-b border-border p-2">
           <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')}>
             <strong>B</strong>
           </ToolbarButton>

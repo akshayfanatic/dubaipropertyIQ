@@ -17,7 +17,7 @@ export default async function AdminPagesPage({ searchParams }: { searchParams: P
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Content Pages" description="Manage legal and informational pages" />
+      <PageHeader title="Content Pages" description="Manage legal and informational pages" action={{ label: 'Add Page', href: '/dashboard/admin/pages/new' }} />
       <PagesList filters={filters} />
     </div>
   );

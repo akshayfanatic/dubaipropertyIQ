@@ -118,7 +118,7 @@ export function PageForm({ id = '', page }: PageFormProps) {
         render={({ field }) => (
           <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
-            <TiptapEditor content={field.value} onChange={field.onChange} placeholder="Start writing your page content..." />
+            <TiptapEditor content={field.value} onChange={field.onChange} placeholder="Start writing your page content..." className="border" />
             {errors.content?.message && <p className="text-sm text-destructive">{String(errors.content.message)}</p>}
           </div>
         )}
