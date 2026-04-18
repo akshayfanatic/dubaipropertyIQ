@@ -14,6 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { TiptapEditor } from '@/components/shared/editor/TiptapEditor';
 import { TextArea } from '@/components/shared/forms/text-area';
+import { useEffect } from 'react';
 
 interface PageFormProps {
   id?: string;
@@ -43,17 +44,19 @@ export function PageForm({ id = '', page }: PageFormProps) {
     },
   });
 
-  if (page) {
-    reset({
-      title: page.title,
-      slug: page.slug,
-      content: page.content as PageFormData['content'],
-      excerpt: page.excerpt || '',
-      meta_title: page.meta_title || '',
-      meta_description: page.meta_description || '',
-      is_published: page.is_published,
-    });
-  }
+  useEffect(() => {
+    if (page) {
+      reset({
+        title: page.title,
+        slug: page.slug,
+        content: page.content as PageFormData['content'],
+        excerpt: page.excerpt || '',
+        meta_title: page.meta_title || '',
+        meta_description: page.meta_description || '',
+        is_published: page.is_published,
+      });
+    }
+  }, [page, reset]);
 
   const onSubmit = async (data: PageFormData) => {
     try {
