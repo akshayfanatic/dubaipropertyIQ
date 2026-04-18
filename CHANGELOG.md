@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.4...v0.3.5) (2026-04-18)
+
+### Features
+
+- **package:** added new package tiptap editor for managing content ([cf496ba](https://github.com/akshayfanatic/dubaipropertyIQ/commit/cf496ba3cec01039a077d355f5e2b531fdcbc604))
+- **pages:** add list pages ([23ccce0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/23ccce0a2d34f09a72fa50a674690af4e027003f))
+- **pages:** add pages for editing content ([ce5d308](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ce5d3089ca802ca43d5d5f8a670ac67c246988d8))
+- **types:** added types for pages ([27cc890](https://github.com/akshayfanatic/dubaipropertyIQ/commit/27cc890b33811f29009c575297bfdd5b6102afc3))
+- **ui:** added shadcn switches ([f1f389e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f1f389e51eb5ec14d2b4c885aa1bc5995e17cb93))
+
+### Bug Fixes
+
+- **pages:** added loading files and Add Style to Tiptap Editor ([709c4c1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/709c4c1d85015f3ea43edb76930775c48260421a))
+
+### Code Refactoring
+
+- **types:** add types to page-header and use it in dashboard page ([5a58986](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5a58986985c00635d57f94333d2f22c79fe09ce0))
+
+### Code Style Changes
+
+- **tabs:** fix areas FAQ, and areas Amenitites tab padding issue ([27f5b3e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/27f5b3e2b1f0dc17fffb0f2715b4b845a899c0ba))
+
 ### [0.3.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.3...v0.3.4) (2026-04-17)
 
 ### Features

@@ -1,3 +1,4 @@
+// Initialising login role...
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -69,6 +70,7 @@ export type Database = {
           created_at: string | null;
           description: string | null;
           id: string;
+          location: Json | null;
           name: string;
           photos: string[] | null;
           slug: string;
@@ -79,6 +81,7 @@ export type Database = {
           created_at?: string | null;
           description?: string | null;
           id?: string;
+          location?: Json | null;
           name: string;
           photos?: string[] | null;
           slug: string;
@@ -89,6 +92,7 @@ export type Database = {
           created_at?: string | null;
           description?: string | null;
           id?: string;
+          location?: Json | null;
           name?: string;
           photos?: string[] | null;
           slug?: string;
@@ -351,11 +355,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      pages: {
+        Row: {
+          content: Json;
+          created_at: string | null;
+          excerpt: string | null;
+          id: string;
+          is_published: boolean | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          slug: string;
+          title: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          content?: Json;
+          created_at?: string | null;
+          excerpt?: string | null;
+          id?: string;
+          is_published?: boolean | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          slug: string;
+          title: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          content?: Json;
+          created_at?: string | null;
+          excerpt?: string | null;
+          id?: string;
+          is_published?: boolean | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          slug?: string;
+          title?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       properties: {
         Row: {
           bathrooms: number;
           bedrooms: number;
           category_id: string | null;
+          city_id: string | null;
           created_at: string | null;
           description: string;
           developer_id: string | null;
@@ -363,6 +407,7 @@ export type Database = {
           floor_plan: string | null;
           golden_visa_eligible: boolean | null;
           id: string;
+          location: Json | null;
           photos: Json | null;
           price_aed: number;
           size_sqft: number;
@@ -375,6 +420,7 @@ export type Database = {
           bathrooms?: number;
           bedrooms?: number;
           category_id?: string | null;
+          city_id?: string | null;
           created_at?: string | null;
           description?: string;
           developer_id?: string | null;
@@ -382,6 +428,7 @@ export type Database = {
           floor_plan?: string | null;
           golden_visa_eligible?: boolean | null;
           id?: string;
+          location?: Json | null;
           photos?: Json | null;
           price_aed: number;
           size_sqft: number;
@@ -394,6 +441,7 @@ export type Database = {
           bathrooms?: number;
           bedrooms?: number;
           category_id?: string | null;
+          city_id?: string | null;
           created_at?: string | null;
           description?: string;
           developer_id?: string | null;
@@ -401,6 +449,7 @@ export type Database = {
           floor_plan?: string | null;
           golden_visa_eligible?: boolean | null;
           id?: string;
+          location?: Json | null;
           photos?: Json | null;
           price_aed?: number;
           size_sqft?: number;
@@ -415,6 +464,13 @@ export type Database = {
             columns: ['category_id'];
             isOneToOne: false;
             referencedRelation: 'categories';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'properties_city_id_fkey';
+            columns: ['city_id'];
+            isOneToOne: false;
+            referencedRelation: 'cities';
             referencedColumns: ['id'];
           },
           {
@@ -462,6 +518,68 @@ export type Database = {
           },
         ];
       };
+      properties_faqs: {
+        Row: {
+          answer: string;
+          created_at: string | null;
+          id: string;
+          property_id: string;
+          question: string;
+        };
+        Insert: {
+          answer: string;
+          created_at?: string | null;
+          id?: string;
+          property_id: string;
+          question: string;
+        };
+        Update: {
+          answer?: string;
+          created_at?: string | null;
+          id?: string;
+          property_id?: string;
+          question?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'properties_faqs_property_id_fkey';
+            columns: ['property_id'];
+            isOneToOne: false;
+            referencedRelation: 'properties';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      site_settings: {
+        Row: {
+          group: string;
+          id: string;
+          key: string;
+          label: string;
+          type: string;
+          updated_at: string | null;
+          value: Json;
+        };
+        Insert: {
+          group: string;
+          id?: string;
+          key: string;
+          label: string;
+          type: string;
+          updated_at?: string | null;
+          value: Json;
+        };
+        Update: {
+          group?: string;
+          id?: string;
+          key?: string;
+          label?: string;
+          type?: string;
+          updated_at?: string | null;
+          value?: Json;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           created_at: string | null;
@@ -490,6 +608,7 @@ export type Database = {
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       generate_slug: { Args: { text_param: string }; Returns: string };
+      get_user_count: { Args: never; Returns: number };
       has_role: {
         Args: { required_role: Database['public']['Enums']['app_role'] };
         Returns: boolean;
@@ -619,3 +738,5 @@ export const Constants = {
     },
   },
 } as const;
+// A new version of Supabase CLI is available: v2.90.0 (currently installed v2.84.4)
+// We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
