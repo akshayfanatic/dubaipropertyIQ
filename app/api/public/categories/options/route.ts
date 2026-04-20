@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getCategoryOptionsAdmin } from '@/lib/db/categories/queries';
-import { requireRoleApi } from '@/lib/auth/api-guards';
+import { getCategoriesOptions } from '@/lib/db/categories/queries';
 
 export async function GET() {
-  const authError = await requireRoleApi('admin');
-  if (authError) return authError;
-
   try {
-    const response = await getCategoryOptionsAdmin();
+    const response = await getCategoriesOptions();
 
     if (!response.success) {
       return NextResponse.json({ error: response.message }, { status: response.status });
