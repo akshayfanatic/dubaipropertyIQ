@@ -5,13 +5,168 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import type { Property, PropertyFilters, PaginatedResult, PropertyListItem, PropertyOption } from '@/types/property';
 import type { Amenity } from '@/types/amenities';
+import { delay } from '@/lib/utils';
 
 // Type for Supabase join result: properties_amenities → amenities
 interface PropertyAmenityWithAmenity {
   amenity: Pick<Amenity, 'id'>;
+}
+
+/**
+ * Search filters for public property search
+ */
+export interface PropertySearchFilters {
+  location?: string; // city slug or property slug
+  q?: string; // text search
+  categories?: string; // category ID
+  minPrice?: string;
+  maxPrice?: string;
+  amenities?: string; // comma-separated amenity IDs
+  golden_visa_eligible?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+/**
+ * Get properties for public use
+ * Uses serverClient - respects RLS, accessible to all users
+ */
+export async function getProperties(filters?: PropertySearchFilters) {
+  await delay(2000);
+  try {
+    const supabase = await serverClient();
+    const page = filters?.page || 1;
+    const pageSize = filters?.pageSize || 12;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let query = supabase.from('properties').select(
+      `
+        id,
+        slug,
+        title,
+        description,
+        bedrooms,
+        bathrooms,
+        size_sqft,
+        price_aed,
+        status,
+        golden_visa_eligible,
+        photos,
+        features,
+        floor_plan,
+        location,
+        city_id,
+        created_at,
+        updated_at,
+        category:categories!inner (id, name, slug),
+        city:cities (id, name, slug)
+      `,
+      { count: 'exact' },
+    );
+
+    query = query.eq('status', 'available');
+
+    // Find matching city IDs for location search
+    let cityIds: string[] = [];
+    if (filters?.location) {
+      const { data: cities } = await supabase.from('cities').select('id').or(`slug.ilike.%${filters.location}%,name.ilike.%${filters.location}%`);
+      cityIds = cities?.map((c) => c.id) || [];
+    }
+
+    // Text search (q parameter) - searches title and description
+    if (filters?.q) {
+      query = query.or(`title.ilike.%${filters.q}%,description.ilike.%${filters.q}%`);
+    }
+
+    // Location filter - matches city OR title/description
+    if (filters?.location) {
+      if (cityIds.length > 0) {
+        query = query.or(`city_id.in.(${cityIds.join(',')}),title.ilike.%${filters.location}%,description.ilike.%${filters.location}%`);
+      } else {
+        // No cities found, search only title/description
+        query = query.or(`title.ilike.%${filters.location}%,description.ilike.%${filters.location}%`);
+      }
+    }
+
+    // Category filter
+    if (filters?.categories) {
+      query = query.eq('category_id', filters.categories);
+    }
+
+    // Price range
+    if (filters?.minPrice) {
+      query = query.gte('price_aed', Number(filters.minPrice));
+    }
+    if (filters?.maxPrice) {
+      query = query.lte('price_aed', Number(filters.maxPrice));
+    }
+
+    // Golden Visa filter
+    if (filters?.golden_visa_eligible) {
+      query = query.eq('golden_visa_eligible', filters.golden_visa_eligible === 'true');
+    }
+
+    // Amenities filter (requires separate query due to many-to-many)
+    let amenityIds: string[] = [];
+    if (filters?.amenities) {
+      amenityIds = filters.amenities.split(',').filter(Boolean);
+    }
+
+    // Apply sorting
+    query = query.order('created_at', { ascending: false });
+
+    // Apply pagination
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    // Filter by amenities if provided (client-side filter for now)
+    let filteredData = data as PropertyListItem[];
+    if (amenityIds.length > 0) {
+      const { data: propertyAmenities } = await supabase.from('properties_amenities').select('property_id, amenity_id').in('amenity_id', amenityIds);
+
+      const propertyIdsWithAmenities = new Set(propertyAmenities?.map((pa) => pa.property_id) || []);
+      filteredData = filteredData.filter((property) => propertyIdsWithAmenities.has(property.id));
+    }
+
+    const result: PaginatedResult<PropertyListItem> = {
+      data: filteredData,
+      total: count || 0,
+      page,
+      pageSize,
+      totalPages: Math.ceil((count || 0) / pageSize),
+    };
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Properties fetched successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.error('[searchProperties] Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to search properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
 }
 
 /**
