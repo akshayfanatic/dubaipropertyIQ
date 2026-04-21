@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { z } from 'zod';
-import { useFormContext } from 'react-hook-form';
-import BaseForm from '@/components/form/BaseForm';
+import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { SelectField } from '@/components/shared/select-field';
 import { useCategories } from '@/hooks/data/public/useCategories';
@@ -21,7 +20,7 @@ const priceRangeSchema = z.object({
 
 export const searchSchema = z.object({
   location: z.string(),
-  propertyType: z.string(), // cateagory
+  propertyType: z.string(),
   priceRange: priceRangeSchema,
 });
 
@@ -30,7 +29,6 @@ export default function HomeSearchForm() {
   const { categories, isLoading: categoriesLoading } = useCategories();
   const [selectedLocation, setSelectedLocation] = useState<AutocompleteResult>();
 
-  // handle Submit
   const handleSubmit = (data: z.infer<typeof searchSchema>) => {
     const params = new URLSearchParams();
 
@@ -47,10 +45,6 @@ export default function HomeSearchForm() {
     router.push(`/search${queryString ? `?${queryString}` : ''}`);
   };
 
-  const handleLocationSelect = (result: AutocompleteResult) => {
-    setSelectedLocation(result);
-  };
-
   return (
     <div className="w-full max-w-4xl rounded-xl bg-white p-4 md:p-6">
       <BaseForm
@@ -59,67 +53,56 @@ export default function HomeSearchForm() {
         defaultValues={{ location: '', propertyType: '', priceRange: { min: '', max: '' } }}
         className="flex flex-col gap-4 md:flex-row md:items-end"
       >
-        <PropertySearchFields categories={categories} categoriesLoading={categoriesLoading} onLocationSelect={handleLocationSelect} />
-        <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90 cursor-pointer">
-          <Search className="h-5 w-5" />
-          <span className="sr-only">Search properties</span>
-        </Button>
+        {(form) => (
+          <>
+            <div className="flex flex-col gap-4 md:flex-row flex-1">
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <LocationAutocomplete value={field.value} onChange={field.onChange} onSelect={setSelectedLocation} placeholder="Search e.g Location, Property" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="propertyType"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <SelectField options={categories} placeholder="Property Type" value={field.value} onValueChange={field.onChange} disabled={categoriesLoading} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="priceRange"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <PriceRangeInput value={field.value} onChange={field.onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90 cursor-pointer">
+              <Search className="h-5 w-5" />
+              <span className="sr-only">Search properties</span>
+            </Button>
+          </>
+        )}
       </BaseForm>
-    </div>
-  );
-}
-
-function PropertySearchFields({
-  categories,
-  categoriesLoading,
-  onLocationSelect,
-}: {
-  categories: Array<{ value: string; label: string }>;
-  categoriesLoading: boolean;
-  onLocationSelect: (result: AutocompleteResult) => void;
-}) {
-  const form = useFormContext();
-
-  return (
-    <div className="flex flex-col gap-4 md:flex-row flex-1">
-      <FormField
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormControl>
-              <LocationAutocomplete value={field.value} onChange={field.onChange} onSelect={onLocationSelect} placeholder="Search e.g Location, Property" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="propertyType"
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormControl>
-              <SelectField options={categories} placeholder="Property Type" value={field.value} onValueChange={field.onChange} disabled={categoriesLoading} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="priceRange"
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormControl>
-              <PriceRangeInput value={field.value} onChange={field.onChange} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
     </div>
   );
 }
