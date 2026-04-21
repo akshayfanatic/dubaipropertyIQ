@@ -5,6 +5,7 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Amenity, AmenityOption, AmenityFilters } from '@/types/amenities';
 import type { PaginatedResult } from '@/types/shared';
@@ -153,6 +154,48 @@ export async function getAmenityBySlug(slug: string): Promise<ApiResponse<Amenit
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch amenity';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get amenity options for public use
+ * Uses serverClient - respects RLS, accessible to all users
+ */
+export async function getAmenitiesOptions(): Promise<ApiResponse<AmenityOption[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('amenities').select('id, name, slug, logo_url').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const options: AmenityOption[] = data.map((amenity) => ({
+      label: amenity.name,
+      value: amenity.id,
+      logo_url: amenity.logo_url,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Amenity options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch amenity options';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

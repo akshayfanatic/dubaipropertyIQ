@@ -8,6 +8,7 @@ interface UseCategoriesReturn {
   error: unknown;
 }
 
+// Property Types
 export function useCategories(): UseCategoriesReturn {
   const { data, isLoading, error } = useSWR<SelectOption[]>('/api/public/categories/options', fetcher);
 
