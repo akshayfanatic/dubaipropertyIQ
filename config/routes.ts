@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, BarChart3, FileStack, MapPin, Briefcase, Layers, FileText } from 'lucide-react';
+import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, FileStack, MapPin, Briefcase, Layers, FileText } from 'lucide-react';
 
 // ============================================
 // Types
