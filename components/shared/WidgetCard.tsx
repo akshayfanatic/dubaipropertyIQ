@@ -9,9 +9,10 @@ interface WidgetCardProps {
   variant?: 'default' | 'destructive';
   children: React.ReactNode;
   className?: string;
+  contentClassNames?: string;
 }
 
-export function WidgetCard({ icon: Icon, title, description, variant = 'default', children, className }: WidgetCardProps) {
+export function WidgetCard({ icon: Icon, title, description, variant = 'default', children, className, contentClassNames }: WidgetCardProps) {
   const isDestructive = variant === 'destructive';
   const hasHeader = Icon || title || description;
 
@@ -32,7 +33,7 @@ export function WidgetCard({ icon: Icon, title, description, variant = 'default'
           </div>
         </CardHeader>
       )}
-      <CardContent className={cn(!hasHeader && 'px-6 pt-6')}>{children}</CardContent>
+      <CardContent className={cn(!hasHeader && 'px-6 pt-6', contentClassNames)}>{children}</CardContent>
     </Card>
   );
 }
