@@ -3,12 +3,14 @@ import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
 import { WidgetCard } from '@/components/shared/WidgetCard';
 import { Typewriter } from '@/components/shared/Typewriter';
+import { FilterSchema } from '@/components/search/types';
 
 interface SearchPageLayoutProps {
   children: React.ReactNode;
+  params: Promise<Partial<FilterSchema>>;
 }
 
-export default function SearchPageLayout({ children }: SearchPageLayoutProps) {
+export default async function SearchPageLayout({ children }: SearchPageLayoutProps) {
   return (
     <div className="min-h-screen">
       <div className="bg-background sticky top-0 z-10">
