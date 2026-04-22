@@ -312,9 +312,6 @@ export async function getPropertyByIdAdmin(id: string): Promise<ApiResponse<Prop
       .select(
         `
         *,
-        category:categories!inner (id, name, slug),
-        developer:developers (id, name, logo_url),
-        city:cities (id, name, slug, description, logo_url),
         amenities:properties_amenities (
           amenity:amenities (id)
         ),

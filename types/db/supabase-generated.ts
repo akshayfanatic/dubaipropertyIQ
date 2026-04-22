@@ -1,4 +1,3 @@
-// Initialising login role...
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -407,6 +406,7 @@ export type Database = {
           floor_plan: string | null;
           golden_visa_eligible: boolean | null;
           id: string;
+          is_featured: boolean;
           location: Json | null;
           photos: Json | null;
           price_aed: number;
@@ -428,6 +428,7 @@ export type Database = {
           floor_plan?: string | null;
           golden_visa_eligible?: boolean | null;
           id?: string;
+          is_featured?: boolean;
           location?: Json | null;
           photos?: Json | null;
           price_aed: number;
@@ -449,6 +450,7 @@ export type Database = {
           floor_plan?: string | null;
           golden_visa_eligible?: boolean | null;
           id?: string;
+          is_featured?: boolean;
           location?: Json | null;
           photos?: Json | null;
           price_aed?: number;
@@ -738,5 +740,3 @@ export const Constants = {
     },
   },
 } as const;
-// A new version of Supabase CLI is available: v2.90.0 (currently installed v2.84.4)
-// We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

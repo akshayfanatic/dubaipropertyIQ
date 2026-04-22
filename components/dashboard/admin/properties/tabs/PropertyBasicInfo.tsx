@@ -18,6 +18,7 @@ import { DeveloperOption } from '@/types';
 import { getImageUrl, generateSlug } from '@/lib/utils';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { fetcher } from '@/lib/swr-config';
 import useSWR from 'swr';
@@ -73,15 +74,16 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
           title: property.title,
           slug: property.slug,
           description: property.description,
-          category_id: property.category_id,
-          developer_id: property.developer_id ?? undefined,
+          category_id: property.category_id ?? '',
+          developer_id: property.developer_id ?? '',
           city_id: property.city_id ?? undefined,
           bedrooms: property.bedrooms ?? 0,
           bathrooms: property.bathrooms ?? 1,
           size_sqft: property.size_sqft ?? 0,
           price_aed: property.price_aed ?? 0,
           status: property.status,
-          golden_visa_eligible: property.golden_visa_eligible,
+          golden_visa_eligible: property.golden_visa_eligible ?? false,
+          is_featured: property.is_featured ?? false,
           photos: property.photos || [],
           features: property.features || [],
           floor_plan: property.floor_plan ?? undefined,
@@ -102,6 +104,7 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
           price_aed: 0,
           status: 'available',
           golden_visa_eligible: false,
+          is_featured: false,
           photos: [],
           features: [],
           floor_plan: undefined,
@@ -427,6 +430,14 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
             />
           )}
         />
+
+        {/* Featured Property */}
+        <div className="flex items-center justify-between gap-2">
+          <Label htmlFor="is_featured" className="cursor-pointer">
+            Featured Property
+          </Label>
+          <Controller name="is_featured" control={control} render={({ field }) => <Switch id="is_featured" checked={field.value} onCheckedChange={field.onChange} />} />
+        </div>
 
         {/* Actions */}
         <FormActions isSubmitting={isSubmitting} isEditMode={isEditMode} submitLabel="Property" />
