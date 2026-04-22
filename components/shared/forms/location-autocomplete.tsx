@@ -12,9 +12,10 @@ interface LocationAutocompleteProps {
   onSelect?: (result: AutocompleteResult) => void;
   placeholder?: string;
   className?: string;
+  autoComplete?: string;
 }
 
-export function LocationAutocomplete({ value = '', onChange, onSelect, placeholder = 'Search e.g Location, Property', className = '' }: LocationAutocompleteProps) {
+export function LocationAutocomplete({ value = '', onChange, onSelect, placeholder = 'Search e.g Location, Property', className = '', autoComplete = 'on' }: LocationAutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,6 +85,7 @@ export function LocationAutocomplete({ value = '', onChange, onSelect, placehold
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="pl-10"
+          autoComplete={autoComplete}
         />
       </div>
 
