@@ -46,7 +46,7 @@ export default function HomeSearchForm() {
   };
 
   return (
-    <div className="w-full max-w-4xl rounded-xl bg-white p-4 md:p-6">
+    <div className="w-full mx-auto max-w-4xl rounded-lg bg-card p-4 md:p-6">
       <BaseForm
         schema={searchSchema}
         onSubmit={handleSubmit}
@@ -62,7 +62,7 @@ export default function HomeSearchForm() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <LocationAutocomplete value={field.value} onChange={field.onChange} onSelect={setSelectedLocation} placeholder="Search e.g Location, Property" />
+                      <LocationAutocomplete value={field.value} onChange={field.onChange} onSelect={setSelectedLocation} placeholder="Search e.g Location, Property" autoComplete="off" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -96,9 +96,9 @@ export default function HomeSearchForm() {
               />
             </div>
 
-            <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90 cursor-pointer">
+            <Button type="submit" size="icon" className="h-11 w-full sm:w-11  shrink-0 bg-primary hover:bg-primary/90 cursor-pointer rounded-full">
               <Search className="h-5 w-5" />
-              <span className="sr-only">Search properties</span>
+              <span className="sm:sr-only">Search properties</span>
             </Button>
           </>
         )}
