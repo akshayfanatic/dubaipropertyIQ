@@ -21,6 +21,7 @@ interface PropertyAmenityWithAmenity {
  */
 export interface PropertySearchFilters {
   location?: string; // city slug or property slug
+  city_id?: string; // city ID for direct filtering
   q?: string; // text search
   categories?: string; // category ID
   minPrice?: string;
@@ -64,7 +65,8 @@ export async function getProperties(filters?: PropertySearchFilters) {
         created_at,
         updated_at,
         category:categories!inner (id, name, slug),
-        city:cities (id, name, slug)
+        city:cities (id, name, slug),
+        developer:developers (id, name)
       `,
       { count: 'exact' },
     );
@@ -91,6 +93,11 @@ export async function getProperties(filters?: PropertySearchFilters) {
         // No cities found, search only title/description
         query = query.or(`title.ilike.%${filters.location}%,description.ilike.%${filters.location}%`);
       }
+    }
+
+    // Direct city_id filter (takes precedence over location)
+    if (filters?.city_id) {
+      query = query.eq('city_id', filters.city_id);
     }
 
     // Category filter
