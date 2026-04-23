@@ -82,6 +82,7 @@ export interface PropertyFilters {
   sortOrder?: SortOrder;
   page?: number;
   pageSize?: number;
+  is_featured?: number;
 }
 
 // Helper type for category with joined data
@@ -95,7 +96,8 @@ export interface PropertyListItem {
   title: string;
   description: string;
   category?: { id: string; name: string }[];
-  city?: { id: string; name: string; slug: string }[];
+  city?: { id: string; name: string; slug: string; logo_url?: ImageObject | null }[];
+  developer?: { id: string; name: string; logo_url?: ImageObject | null }[] | null;
   bedrooms: number;
   bathrooms: number;
   size_sqft: number;

@@ -5,16 +5,9 @@
 
 import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
 import type { ImageObject } from './images';
+import { Tables } from './db/supabase-generated';
 
-export interface City {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  logo_url: ImageObject | null;
-  created_at: string;
-  updated_at: string;
-}
+export type City = Tables<'cities'>;
 
 export type CityInsert = Omit<City, 'id' | 'created_at' | 'updated_at'>;
 export type CityUpdate = Partial<CityInsert>;
