@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function PropertyCardHomeSkeleton() {
   return (
-    <Card className="relative overflow-hidden rounded-xl aspect-[4/3] border border-border shadow-md">
+    <Card className="relative overflow-hidden rounded-xl aspect-4/3 border border-border shadow-md">
       {/* Background */}
       <div className="absolute inset-0 bg-muted" />
 
