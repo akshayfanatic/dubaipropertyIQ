@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.5...v0.4.0) (2026-04-24)
+
+### Features
+
+- **auth:** create a data access layer to prevent proxy api routes not accesble publicly ([633d156](https://github.com/akshayfanatic/dubaipropertyIQ/commit/633d156ca72a4c5a8e53f8e58a28941dc170259e))
+- **home:** Added developer and city properties in home page ([36b85af](https://github.com/akshayfanatic/dubaipropertyIQ/commit/36b85af41b8045a636d8dcb66cd45367f37968a1))
+- **homepage:** added new section for displaying 3 properties based on cities ([1003148](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1003148bb28a69b1bc1c5f19a1ca3fee826765c9))
+- **options:** create a proxy api route for category options ([fe7c188](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fe7c188b81dbb0937839a14fd14b9c107ecbc1ad))
+- **pacakge:** add swiper js package for creating sliders ([8a0c9f1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8a0c9f11daf9e307484968da5a6e8ba304bf229a))
+- **pacakge:** update supabase cli package ([6b0524c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/6b0524ccafe03d0191ce0378b1af7fb5578979d3))
+- **properties:** added db function for queries cities and properties ([25cdfbd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/25cdfbdba8c10ae711ce0f0f8a36eb72c51c1cc0))
+- **property:** update schema in property table added is_featured columns ([921d24c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/921d24cc88167b5daa5fecc726e78f2347d2fb12))
+- **search:** added search result component ([d324f58](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d324f58091af572a0245facc17cf9ad072bbb3c5))
+- **search:** created a resubable BaseForm ([559f76b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/559f76bdca42e6c3b0942a6fe884002569bf8128))
+- **search:** created a search page for displaying properties listing in search page ([ee2b4cb](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ee2b4cb28a8b807000bf09353ac8ba69b054c43e))
+- **slider:** created a reusable slider wrapper for with navigations using swiper js package ([9c8e2bf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9c8e2bfc794a999c742c531afe1c9bb38ae4fa65))
+- **tabs:** created new tabs component which using in dipsplay properteis ([42440df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/42440dfe0e3e1286b4b2404dd19815f96e2348ea))
+- **typewriter:** created a typewriter compnent with reusable hook ([373bbc8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/373bbc8a6336ee55a92259de43e8012f3aae39d8))
+- **ui:** added new resuable compnenet price range ([2fc36ba](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2fc36ba1a611446b28e1f1a1c84813888f910bbc))
+
+### Bug Fixes
+
+- **developer:** fix developer form issue reagarding types and default value ([373f2ce](https://github.com/akshayfanatic/dubaipropertyIQ/commit/373f2ce7adabad657ccb471f7eb24ae4b39f9b50))
+- **home:** decouple SearchForm from Hero banner ([fe1ad09](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fe1ad098b858425bafab7fe52956bbe170461d1f))
+- **lint:** fix lint issue regarding form ([58d122c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/58d122cfabd88dc7133cfe723ac4e5e66e9b0960))
+- **location autocomplete:** added attrbute autocomlete for remove auto suggestion tooltip ([5949e3d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5949e3d39e3020d3b535909933d23e0f13adfac8))
+- **search:** fix suspense boundary issue ([12d7093](https://github.com/akshayfanatic/dubaipropertyIQ/commit/12d7093121085268e2b3289c8e554ff4b2453032))
+- **types:** fix developer types instead of creating manully using supabase generated types for consistency ([d2a596a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d2a596a6adeb82c163501a1c932184e3cb4ba5f9))
+- **types:** fix lint issue and remove types which are not being used ([39ea907](https://github.com/akshayfanatic/dubaipropertyIQ/commit/39ea907c8002c75f733fd5010ffd0b342a17b139))
+- **ui:** remove isClient from component only use hydaration for mapped componet ([7230559](https://github.com/akshayfanatic/dubaipropertyIQ/commit/723055978bed6b340b8fa8e1df8973070d02466d))
+- **ui:** remove tooltip from navigaton button ([9e85293](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9e852930dfd6ab96fa96952f988b518532e573ee))
+- **utility,globalimage:** refactory utility function (calculateTrustScore) ([1275f83](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1275f834f8771535b9ea5122075d3a9620ce4c5b))
+
+### Code Refactoring
+
+- **developers:** added query method for accessing developer using public client ([0ae4a39](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0ae4a397774be4be838acf59652a3d81e3bde182))
+- **home:** added Typewriter fucntionality to home banner title ([3a3ce8c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3a3ce8ccf3018034a87256c48b89219b705af071))
+- **home:** refactor home page structure and added search form inside ([d1512da](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d1512da5bacd10fbbb23dd5c56265c9b69dc9cff))
+- **test page:** remove test page property ([358ea69](https://github.com/akshayfanatic/dubaipropertyIQ/commit/358ea6989930213b9b7318dd3386f23ec364ce2e))
+- **types:** remove manual types from city and use supabase generated types ([e40bb50](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e40bb507d7d1981c251e23889a2f0e3f9bdb22b3))
+
 ### [0.3.5](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.4...v0.3.5) (2026-04-18)
 
 ### Features
