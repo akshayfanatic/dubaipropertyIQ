@@ -9,7 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Function For Delaying async execution
- * @param ms Default 1000ms
+ * @default ms 500ms
+ * @param ms Default 500ms
  */
 export const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -18,8 +19,11 @@ export const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, 
  * Returns value as percentage (0-100) for display
  */
 export function calculateTrustScore(developer: Pick<Developer, 'delivery_timeliness_score' | 'service_charge_score' | 'build_quality_score' | 'after_sales_score'>): number {
-  const { delivery_timeliness_score, service_charge_score, build_quality_score, after_sales_score } = developer;
-  const avg = (delivery_timeliness_score + service_charge_score + build_quality_score + after_sales_score) / 4;
+  const delivery = developer.delivery_timeliness_score ?? 1;
+  const service = developer.service_charge_score ?? 1;
+  const quality = developer.build_quality_score ?? 1;
+  const afterSales = developer.after_sales_score ?? 1;
+  const avg = (delivery + service + quality + afterSales) / 4;
   return Math.round((avg / 5) * 100); // Convert to 0-100 scale
 }
 

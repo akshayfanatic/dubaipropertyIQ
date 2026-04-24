@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ImageWithFallbackProps {
@@ -12,22 +11,13 @@ interface ImageWithFallbackProps {
   height?: number;
   className?: string;
   fallbackClassName?: string;
-  // Use initials as fallback instead of icon
   useInitials?: boolean;
-  // Priority for Next.js Image
   priority?: boolean;
-  // Unoptimized for Next.js Image
   unoptimized?: boolean;
-  // Fill mode for responsive images
   fill?: boolean;
-  // Style object for fill mode
   style?: React.CSSProperties;
 }
 
-/**
- * Consistent image fallback component for use across the app.
- * Displays an image with a fallback to icon or initials when loading fails or no src provided.
- */
 export function ImageWithFallback({
   src,
   alt,
@@ -44,17 +34,18 @@ export function ImageWithFallback({
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // No source provided or error occurred - show fallback
+  // Generic image placeholder SVG
+  const svgFallback = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Crect x='20' y='20' width='60' height='60' rx='4' fill='none' stroke='%23d1d5db' stroke-width='2'/%3E%3Ccircle cx='35' cy='40' r='6' fill='%23d1d5db'/%3E%3Cpath d='M20 70 L35 55 L45 65 L55 50 L80 70 Z' fill='%23d1d5db'/%3E%3C/svg%3E`;
+
+  // No source or error - show fallback
   if (!src || imageError) {
     if (useInitials && alt) {
-      // Extract initials (first letter of each word, max 2)
       const initials = alt
         .split(' ')
         .filter(Boolean)
-        .map((word) => word[0]?.toUpperCase())
+        .map((w) => w[0]?.toUpperCase())
         .slice(0, 2)
         .join('');
-
       return (
         <div
           className={cn('flex items-center justify-center rounded-md bg-muted text-muted-foreground font-medium text-xs', fill ? 'absolute inset-0' : 'shrink-0', fallbackClassName)}
@@ -64,15 +55,7 @@ export function ImageWithFallback({
         </div>
       );
     }
-
-    return (
-      <div
-        className={cn('flex items-center justify-center rounded-md bg-muted text-muted-foreground', fill ? 'absolute inset-0' : 'shrink-0', fallbackClassName)}
-        style={fill ? style : { ...style, width, height }}
-      >
-        <ImageIcon className={fill ? 'h-6 w-6 sm:h-8 sm:w-8' : 'h-4 w-4'} />
-      </div>
-    );
+    return <img src={svgFallback} alt={alt} width={width} height={height} className={cn('object-cover', className)} style={fill ? style : { ...style, width, height }} />;
   }
 
   // Has source - show image
