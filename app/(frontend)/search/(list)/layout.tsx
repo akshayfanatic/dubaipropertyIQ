@@ -13,7 +13,7 @@ interface SearchPageLayoutProps {
 export default async function SearchPageLayout({ children }: SearchPageLayoutProps) {
   return (
     <div className="min-h-screen">
-      <div className="bg-background sticky top-0 z-10">
+      <div className="bg-backgroung">
         <WidgetCard className="max-w-295 mx-auto" contentClassNames="p-0 gap-4 p-4 px-8 space-y-4">
           <h1 className=" font-semibold text-3xl">
             <Typewriter text="Search Properties in UAE" loop speed={150} />

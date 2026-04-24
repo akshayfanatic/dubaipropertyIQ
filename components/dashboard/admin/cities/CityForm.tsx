@@ -13,6 +13,7 @@ import { ImageUploader } from '@/components/ui/image-uploader';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { TextInput } from '@/components/shared/forms/text-input';
 import { TextArea } from '@/components/shared/forms/text-area';
+import type { ImageObject } from '@/types/images';
 
 interface CityFormProps {
   city?: City;
@@ -34,7 +35,7 @@ export function CityForm({ city }: CityFormProps) {
           name: city.name,
           slug: city.slug,
           description: city.description || '',
-          logo_url: city.logo_url || null,
+          logo_url: (city.logo_url as ImageObject | null) || null,
         }
       : {
           name: '',
@@ -46,10 +47,11 @@ export function CityForm({ city }: CityFormProps) {
 
   const onSubmit = async (data: CityFormData) => {
     try {
-      // Ensure logo_url is null instead of undefined for database compatibility
+      // Ensure undefined is converted to null for database compatibility
       const submitData = {
         ...data,
         logo_url: data.logo_url ?? null,
+        description: data.description ?? null,
       };
       const result = isEditMode ? await updateCity(city!.id, submitData) : await createCity(submitData);
 
