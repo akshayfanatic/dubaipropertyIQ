@@ -5,9 +5,9 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Developer, DeveloperFilters, DeveloperOption } from '@/types/developer';
-import { calculateTrustScore } from '@/lib/utils';
 import type { PaginatedResult } from '@/types/shared';
 
 /**
@@ -194,35 +194,14 @@ export async function getDeveloperOptionsAdmin(): Promise<ApiResponse<DeveloperO
 }
 
 /**
- * Get developer with computed trust score
+ * Get developers for public-facing pages
+ * Uses server client (respects RLS) - suitable for frontend components
  */
-export async function getDeveloperWithTrustScore(id: string): Promise<ApiResponse<(Developer & { trust_score: number }) | null>> {
-  const result = await getDeveloperById(id);
-
-  if (!result.success || !result.data) {
-    return result as ApiResponse<null>;
-  }
-
-  const developer = result.data;
-  return ApiResponse({
-    success: true,
-    status: HttpStatus.OK,
-    message: 'Developer fetched successfully',
-    data: {
-      ...developer,
-      trust_score: calculateTrustScore(developer),
-    },
-  });
-}
-
-/**
- * Get developer stats for dashboard
- */
-export async function getDeveloperStatsAdmin(): Promise<ApiResponse<{ total: number; withHighTrust: number }>> {
+export async function getDevelopers(): Promise<ApiResponse<Developer[]>> {
   try {
-    const supabase = adminClient();
+    const supabase = await serverClient();
 
-    const { data, error } = await supabase.from('developers').select('delivery_timeliness_score, service_charge_score, build_quality_score, after_sales_score');
+    const { data, error } = await supabase.from('developers').select('*').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -233,20 +212,14 @@ export async function getDeveloperStatsAdmin(): Promise<ApiResponse<{ total: num
       });
     }
 
-    const developers = data as Pick<Developer, 'delivery_timeliness_score' | 'service_charge_score' | 'build_quality_score' | 'after_sales_score'>[];
-    const withHighTrust = developers.filter((d) => calculateTrustScore(d) >= 70).length;
-
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
-      message: 'Developer stats fetched successfully',
-      data: {
-        total: developers.length,
-        withHighTrust,
-      },
+      message: 'Developers fetched successfully',
+      data: (data as Developer[]) ?? [],
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to fetch developer stats';
+    const message = error instanceof Error ? error.message : 'Failed to fetch developers';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
