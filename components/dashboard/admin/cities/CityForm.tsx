@@ -35,22 +35,20 @@ export function CityForm({ city }: CityFormProps) {
           name: city.name,
           slug: city.slug,
           description: city.description || '',
-          logo_url: (city.logo_url as ImageObject | null) || null,
+          logo_url: (city.logo_url as ImageObject | null) || { url: '', alt_tag: '' },
         }
       : {
           name: '',
           slug: '',
           description: '',
-          logo_url: null,
+          logo_url: { url: '', alt_tag: '' },
         },
   });
 
   const onSubmit = async (data: CityFormData) => {
     try {
-      // Ensure undefined is converted to null for database compatibility
       const submitData = {
         ...data,
-        logo_url: data.logo_url ?? null,
         description: data.description ?? null,
       };
       const result = isEditMode ? await updateCity(city!.id, submitData) : await createCity(submitData);
@@ -115,19 +113,24 @@ export function CityForm({ city }: CityFormProps) {
         control={control}
         render={({ field }) => (
           <div className="grid gap-2">
-            <Label>City Image</Label>
+            <Label>
+              City Image
+              <span className="text-destructive ml-1">*</span>
+            </Label>
             <ImageUploader
               bucket="city-logos"
               folder="cities"
-              value={field.value ? [field.value] : []}
+              value={field.value?.url ? [field.value] : []}
               onChange={(urls) => {
-                const logoUrl = urls[0] || null;
+                const logoUrl = urls[0] || { url: '', alt_tag: '' };
                 field.onChange(logoUrl);
                 setValue('logo_url', logoUrl, { shouldDirty: true, shouldTouch: true });
               }}
               maxImages={1}
               label="City Image"
+              required
             />
+            {errors.logo_url && <p className="text-base text-destructive">{errors.logo_url.message || 'City image is required'}</p>}
             <p className="text-xs text-muted-foreground">Upload city image (JPG, PNG, WebP or SVG, max 5MB)</p>
           </div>
         )}

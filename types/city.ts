@@ -10,6 +10,10 @@ import { Tables } from './db/supabase-generated';
 export type City = Tables<'cities'>;
 
 export type CityInsert = Omit<City, 'id' | 'created_at' | 'updated_at'>;
+
+export type CityWithAreaCount = City & {
+  area_count: number;
+};
 export type CityUpdate = Partial<CityInsert>;
 
 /**
