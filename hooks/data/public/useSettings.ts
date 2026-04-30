@@ -17,7 +17,11 @@ interface UseSettingsReturn {
 }
 
 export function useSettings(): UseSettingsReturn {
-  const { data, error, isLoading, isValidating } = useSWR<SettingsResponse>('/api/public/settings', fetcher);
+  const { data, error, isLoading, isValidating } = useSWR<SettingsResponse>('/api/public/settings', fetcher, {
+    dedupingInterval: 300000, // 5 min - prevent duplicate requests
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return {
     data: data?.data,
