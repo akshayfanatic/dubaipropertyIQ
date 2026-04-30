@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.4.0...v0.4.1) (2026-04-30)
+
+### Features
+
+- **animation:** created a animation slider section wrapper ([8585124](https://github.com/akshayfanatic/dubaipropertyIQ/commit/85851242d497b318450b5bb7cf05d8174784ae2d))
+- **cities:** added featured cities functionality to home page ([f04c6e7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f04c6e78e9ccaef6df5c88af4c5a617c9bf223fd))
+- **city:** displaying featured cities on home page ([e5536bb](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e5536bb1f653a9219a35c61dc5322e0e1cdc7c63))
+- **footer:** added footer with new changes ([2de2132](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2de21321d3f49d555f0b57cf39682d0b0daf4c3d))
+- **home:** added tool section in homepage ([ef9e69d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ef9e69ddefb5e4380c4de78d9f40b888053a317a))
+- **property:** added what's app chat feature user can direct chat with admin regarding particular item ([595d660](https://github.com/akshayfanatic/dubaipropertyIQ/commit/595d6609f2002f21904c57166f152b7e17c16a9e))
+- **rent vs buy calculator:** implement rent vs buy calculator with ui and validation ([c8467d0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c8467d004b58c58e2eade7eeeffe47461c6f04ec))
+
+### Code Refactoring
+
+- **config:** nextjs config issue for image access ([504eff4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/504eff457b30d1efb5b3d3ae027826da0faf5204))
+- **settings:** added caching prevent network call 5 min ([e6b2c18](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e6b2c18d56c434f674109204b230c6b5b68842df))
+
 ## [0.4.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.3.5...v0.4.0) (2026-04-24)
 
 ### Features
