@@ -10,7 +10,7 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { City, CityOption, CityFilters } from '@/types/city';
+import { City, CityOption, CityFilters, CityWithAreaCount } from '@/types/city';
 import type { PaginatedResult } from '@/types/shared';
 
 /**
@@ -359,6 +359,52 @@ export async function getCityOptions(): Promise<ApiResponse<CityOption[]>> {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch city options';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get all cities with their area counts
+ * Returns all cities with associated area counts for homepage display
+ *
+ * @returns Array of cities with area_count
+ *
+ * @example
+ * const result = await getFeaturedCitiesAreas();
+ */
+export async function getFeaturedCitiesAreas(): Promise<ApiResponse<CityWithAreaCount[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('cities').select('*, areas(count)').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const citiesWithCount: CityWithAreaCount[] = (data ?? []).map((city) => ({
+      ...city,
+      area_count: city.areas?.[0]?.count ?? 0,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Cities with areas fetched successfully',
+      data: citiesWithCount,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch cities with areas';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
