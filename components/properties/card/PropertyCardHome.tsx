@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { Bed, Bath, MessageCircle } from 'lucide-react';
+import { Bed, Bath } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { formatPrice, formatSize } from '@/lib/utils/price';
 import { cn } from '@/lib/utils';
+import { PropertyWhatsAppButton } from '@/components/properties/PropertyWhatsAppButton';
 import type { PropertyListItem } from '@/types/property';
 import type { ImageObject } from '@/types/images';
 
@@ -28,17 +28,9 @@ export function PropertyCardHome({ property, className }: PropertyCardHomeProps)
   const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
   const status = statusConfig[property.status] || { label: property.status, className: 'bg-muted/90 text-muted-foreground backdrop-blur-sm' };
 
-  const handleWhatsAppClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const message = `Hi, I'm interested in ${property.title}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  };
-
   return (
     <Link href={`/properties/${property.slug}`} className="group block">
-      <Card className={cn('relative overflow-hidden rounded-xl aspect-[4/3] border border-border shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1', className)}>
+      <Card className={cn('relative overflow-hidden rounded-xl aspect-4/3 border border-border shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1', className)}>
         {/* Background Image */}
         <div className="absolute inset-0 bg-muted">
           <ImageWithFallback src={firstImage} alt={property.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -81,14 +73,7 @@ export function PropertyCardHome({ property, className }: PropertyCardHomeProps)
           <div className="h-px bg-primary-foreground/20 mb-3" />
 
           {/* WhatsApp Button */}
-          <Button
-            size="sm"
-            onClick={handleWhatsAppClick}
-            className="h-11 w-full rounded-lg bg-card hover:bg-card/90 text-primary gap-2.5 border-2 border-primary/20 font-semibold text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer"
-          >
-            <MessageCircle className="h-5 w-5 fill-primary" strokeWidth={0} />
-            <span>WhatsApp</span>
-          </Button>
+          <PropertyWhatsAppButton property={property} variant="card" />
         </div>
       </Card>
     </Link>
