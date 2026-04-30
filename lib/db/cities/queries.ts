@@ -8,8 +8,9 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { City, CityOption, CityFilters } from '@/types/city';
+import { City, CityOption, CityFilters, CityWithAreaCount } from '@/types/city';
 import type { PaginatedResult } from '@/types/shared';
 
 /**
@@ -226,6 +227,184 @@ export async function getCityOptionsAdmin(): Promise<ApiResponse<CityOption[]>> 
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch city options';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get cities for public-facing pages
+ * Uses server client (respects RLS) - suitable for frontend components
+ *
+ * @param filters - Optional filters (search, page, pageSize, limit)
+ * @returns Paginated list of cities
+ *
+ * @example
+ * // Get all cities
+ * const result = await getCities();
+ *
+ * @example
+ * // Get paginated with search
+ * const result = await getCities({ search: 'dubai', page: 1, limit: 10 });
+ *
+ * @example
+ * // Get limited results (for homepage preview)
+ * const result = await getCities({ limit: 6 });
+ */
+export async function getCities(filters?: CityFilters & { limit?: number }): Promise<ApiResponse<PaginatedResult<City>>> {
+  try {
+    const supabase = await serverClient();
+    const page = filters?.page || 1;
+    const pageSize = filters?.limit || filters?.pageSize;
+    const from = pageSize ? (page - 1) * pageSize : 0;
+
+    let query = supabase.from('cities').select('*', { count: 'exact' });
+
+    // Apply search filter
+    if (filters?.search) {
+      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+    }
+
+    // Apply ordering
+    query = query.order('name', { ascending: true });
+
+    // Apply pagination/limit
+    if (pageSize) {
+      const to = from + pageSize - 1;
+      query = query.range(from, to);
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const effectivePageSize = pageSize || count || 0;
+
+    const result: PaginatedResult<City> = {
+      data: (data as City[]) ?? [],
+      total: count || 0,
+      page,
+      pageSize: effectivePageSize,
+      totalPages: pageSize ? Math.ceil((count || 0) / pageSize) : 1,
+    };
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Cities fetched successfully',
+      data: result,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch cities';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get city options for public dropdowns (select components)
+ * Uses server client - suitable for frontend filters, search forms
+ *
+ * @returns Array of city options with label/value for selects
+ *
+ * @example
+ * // In Server Component for location filter
+ * const result = await getCityOptionsPublic();
+ * if (result.success) {
+ *   <Select options={result.data} />
+ * }
+ */
+export async function getCityOptions(): Promise<ApiResponse<CityOption[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('cities').select('id, name, slug, logo_url').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const options: CityOption[] = data.map((city) => ({
+      label: city.name,
+      value: city.id,
+      slug: city.slug,
+      logo_url: city.logo_url,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'City options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch city options';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get all cities with their area counts
+ * Returns all cities with associated area counts for homepage display
+ *
+ * @returns Array of cities with area_count
+ *
+ * @example
+ * const result = await getFeaturedCitiesAreas();
+ */
+export async function getFeaturedCitiesAreas(): Promise<ApiResponse<CityWithAreaCount[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('cities').select('*, areas(count)').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const citiesWithCount: CityWithAreaCount[] = (data ?? []).map((city) => ({
+      ...city,
+      area_count: city.areas?.[0]?.count ?? 0,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Cities with areas fetched successfully',
+      data: citiesWithCount,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch cities with areas';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

@@ -1,0 +1,284 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
+import { calculateMortgage, generateAmortizationSchedule, formatAED, formatNumber } from '@/components/shared/calculators/mortgage-calculator/calculator';
+import { MORTGAGE_CONSTANTS } from '@/components/shared/calculators/mortgage-calculator/constants';
+import { mortgageSchema, type MortgageFormData } from '@/components/shared/calculators/mortgage-calculator/validation';
+import type { CityWithAreaCount } from '@/types/city';
+import { cn } from '@/lib/utils';
+import { Calculator } from 'lucide-react';
+
+interface MortgageCalculatorProps {
+  city?: CityWithAreaCount | null;
+  initialValue?: number;
+}
+
+const RESIDENCY_OPTIONS = [
+  { value: 20, label: 'UAE resident (20%)' },
+  { value: 25, label: 'Non-resident (25%)' },
+] as const;
+
+export function MortgageCalculator({ city, initialValue }: MortgageCalculatorProps) {
+  const [showAmortization, setShowAmortization] = useState(false);
+  const [showFees, setShowFees] = useState(false);
+
+  const { register, control, setValue } = useForm<MortgageFormData>({
+    resolver: zodResolver(mortgageSchema),
+    defaultValues: {
+      propertyValue: initialValue || 2_000_000,
+      downPaymentPercent: 20,
+      interestRate: MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE,
+      loanTerm: 25,
+    },
+  });
+
+  const formValues = useWatch({
+    control,
+    name: ['propertyValue', 'downPaymentPercent', 'interestRate', 'loanTerm'],
+  });
+
+  const [propertyValue, downPaymentPercent, interestRate, loanTerm] = formValues;
+
+  const results = useMemo(
+    () =>
+      calculateMortgage({
+        propertyValue: propertyValue ?? 2_000_000,
+        downPaymentPercent: downPaymentPercent ?? 20,
+        interestRate: interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE,
+        loanTerm: loanTerm ?? 25,
+      }),
+    [propertyValue, downPaymentPercent, interestRate, loanTerm],
+  );
+
+  const amortizationSchedule = useMemo(
+    () =>
+      generateAmortizationSchedule({
+        propertyValue: propertyValue ?? 2_000_000,
+        downPaymentPercent: downPaymentPercent ?? 20,
+        interestRate: interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE,
+        loanTerm: loanTerm ?? 25,
+      }),
+    [propertyValue, downPaymentPercent, interestRate, loanTerm],
+  );
+
+  const downPaymentAmount = ((propertyValue ?? 2_000_000) * (downPaymentPercent ?? 20)) / 100;
+
+  const handleResidencyChange = (percent: number) => {
+    setValue('downPaymentPercent', percent);
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Left - Inputs */}
+      <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+        {/* Property Value Card */}
+        <div className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+          <label className="font-semibold text-foreground block mb-4">Property value</label>
+          <div className="flex items-baseline gap-1 mb-4">
+            <span className="text-3xl font-bold text-primary">{formatNumber(propertyValue ?? 2_000_000)}</span>
+            <span className="text-muted-foreground">AED</span>
+          </div>
+          <div className="relative px-2">
+            <Slider
+              value={[propertyValue ?? 2_000_000]}
+              onValueChange={([v]) => setValue('propertyValue', v)}
+              min={MORTGAGE_CONSTANTS.MIN_PROPERTY_VALUE}
+              max={MORTGAGE_CONSTANTS.MAX_PROPERTY_VALUE}
+              step={100000}
+              className="w-full"
+            />
+          </div>
+          <div className="flex justify-between mt-3 text-xs text-muted-foreground">
+            <span>{formatNumber(MORTGAGE_CONSTANTS.MIN_PROPERTY_VALUE)} AED</span>
+            <span>{formatNumber(MORTGAGE_CONSTANTS.MAX_PROPERTY_VALUE)} AED</span>
+          </div>
+          <Input type="number" value={propertyValue} {...register('propertyValue', { valueAsNumber: true })} className="mt-4" />
+        </div>
+
+        {/* Residency / Down Payment */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Residency Status */}
+          <div className="p-6 rounded-2xl border border-border bg-card">
+            <label className="font-semibold text-foreground block mb-3">Down payment</label>
+            <p className="text-xs text-muted-foreground mb-4">Select based on residency status</p>
+            <div className="space-y-2">
+              {RESIDENCY_OPTIONS.map((option) => (
+                <button
+                  key={option.label}
+                  type="button"
+                  onClick={() => handleResidencyChange(option.value)}
+                  className={cn(
+                    'w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left',
+                    (downPaymentPercent ?? 20) === option.value ? 'bg-primary text-primary-foreground shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/70',
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom Down Payment */}
+          <div className="p-6 rounded-2xl border border-border bg-card">
+            <label className="font-semibold text-foreground block mb-2">Custom amount</label>
+            <div className="flex items-baseline gap-1 mb-4">
+              <span className="text-2xl font-bold text-chart-2">{formatNumber(downPaymentAmount)}</span>
+              <span className="text-muted-foreground text-sm">AED</span>
+              <span className="ml-2 text-sm font-medium text-chart-2">({downPaymentPercent ?? 20}%)</span>
+            </div>
+            <div className="relative px-2">
+              <Slider
+                value={[downPaymentPercent ?? 20]}
+                onValueChange={([v]) => setValue('downPaymentPercent', v)}
+                min={MORTGAGE_CONSTANTS.MIN_DOWN_PAYMENT}
+                max={MORTGAGE_CONSTANTS.MAX_DOWN_PAYMENT}
+                step={1}
+                className="w-full"
+              />
+            </div>
+            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
+              <span>{MORTGAGE_CONSTANTS.MIN_DOWN_PAYMENT}%</span>
+              <span>{MORTGAGE_CONSTANTS.MAX_DOWN_PAYMENT}%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Interest Rate & Loan Term */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Interest Rate */}
+          <div className="p-6 rounded-2xl border border-border bg-card">
+            <label className="font-semibold text-foreground block mb-4">Interest rate %</label>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative px-2 flex-1">
+                <Slider value={[interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE]} onValueChange={([v]) => setValue('interestRate', v)} min={0.5} max={15} step={0.25} className="w-full" />
+              </div>
+              <Input type="number" value={interestRate} {...register('interestRate', { valueAsNumber: true })} className="w-20 text-center" step={0.25} />
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>0.5%</span>
+              <span>15%</span>
+            </div>
+          </div>
+
+          {/* Loan Term */}
+          <div className="p-6 rounded-2xl border border-border bg-card">
+            <label className="font-semibold text-foreground block mb-4">Loan term</label>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative px-2 flex-1">
+                <Slider
+                  value={[loanTerm ?? 25]}
+                  onValueChange={([v]) => setValue('loanTerm', v)}
+                  min={MORTGAGE_CONSTANTS.MIN_LOAN_TERM}
+                  max={MORTGAGE_CONSTANTS.MAX_LOAN_TERM}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <Input type="number" value={loanTerm} {...register('loanTerm', { valueAsNumber: true })} className="w-16 text-center" />
+                <span className="text-sm text-muted-foreground">years</span>
+              </div>
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>{MORTGAGE_CONSTANTS.MIN_LOAN_TERM} years</span>
+              <span>{MORTGAGE_CONSTANTS.MAX_LOAN_TERM} years</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right - Results (Sticky on desktop) */}
+      <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8 space-y-4">
+        {/* Monthly Payment Card */}
+        <div className="p-6 rounded-2xl bg-primary/10 border-2 border-primary/20 text-center">
+          <div className="flex justify-center mb-3">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <Calculator className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mb-1">Monthly payment</p>
+          <p className="text-3xl font-bold text-foreground">{formatAED(results.monthlyPayment)}</p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <p className="text-xs text-muted-foreground mb-1">Loan amount</p>
+            <p className="text-lg font-bold text-foreground">{formatAED(results.loanAmount)}</p>
+          </div>
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <p className="text-xs text-muted-foreground mb-1">Down payment</p>
+            <p className="text-lg font-bold text-foreground">{formatAED(results.downPayment)}</p>
+          </div>
+        </div>
+
+        {/* Total Interest Card */}
+        <div className="p-4 rounded-xl border border-chart-3/30 bg-chart-3/5">
+          <p className="text-xs text-muted-foreground mb-1">Total interest</p>
+          <p className="text-xl font-bold text-chart-3">{formatAED(results.totalInterest)}</p>
+          <p className="text-xs text-muted-foreground mt-1">over {loanTerm ?? 25} years</p>
+        </div>
+
+        {/* Total Amount */}
+        <div className="p-4 rounded-xl border border-border bg-card">
+          <p className="text-xs text-muted-foreground mb-1">Total payment</p>
+          <p className="text-lg font-bold text-foreground">{formatAED(results.totalAmount)}</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex p-1 bg-muted rounded-lg">
+          <button
+            onClick={() => setShowAmortization(false)}
+            className={cn(
+              'flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
+              !showAmortization ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            Summary
+          </button>
+          <button
+            onClick={() => setShowAmortization(true)}
+            className={cn(
+              'flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
+              showAmortization ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            Amortization
+          </button>
+        </div>
+
+        {/* Amortization Schedule (when shown) */}
+        {showAmortization && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 max-h-96 overflow-y-auto">
+            <div className="overflow-hidden rounded-xl border border-border">
+              <table className="w-full text-xs">
+                <thead className="bg-muted/50 sticky top-0">
+                  <tr>
+                    <th className="text-left py-2 px-3 font-semibold text-foreground">Year</th>
+                    <th className="text-right py-2 px-2 font-semibold text-chart-4">Interest</th>
+                    <th className="text-right py-2 px-2 font-semibold text-primary">Principal</th>
+                    <th className="text-right py-2 px-2 font-semibold text-foreground">Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {amortizationSchedule.map((row) => (
+                    <tr key={row.year} className="border-b border-border/50">
+                      <td className="py-2 px-3 text-foreground">{row.year}</td>
+                      <td className="text-right py-2 px-2 text-chart-4">{formatAED(row.interest)}</td>
+                      <td className="text-right py-2 px-2 text-primary">{formatAED(row.principal)}</td>
+                      <td className="text-right py-2 px-2 text-muted-foreground">{formatAED(row.balance)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

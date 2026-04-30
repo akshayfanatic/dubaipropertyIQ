@@ -4,22 +4,23 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { LocationPicker } from '@/components/shared/location/LocationPicker';
-import { locationFormSchema, type Location, type LocationValue, DEFAULT_LOCATION } from '@/components/shared/location/schema';
+import type { Location } from '@/types/shared';
 import { toast } from 'sonner';
 import { updatePropertyLocation } from '@/lib/db/properties/actions';
 import { WidgetCard } from '@/components/shared/WidgetCard';
+import { locationSchema } from '@/components/shared/location/schema';
+
+const DEFAULT_LOCATION: Location = { lat: 25.0657, lng: 55.17128 };
 
 interface PropertyLocationProps {
   propertyId?: string;
-  location?: LocationValue | null;
+  location?: Location | null;
 }
 
 export function PropertyLocation({ propertyId, location }: PropertyLocationProps) {
   const form = useForm<Location>({
-    resolver: zodResolver(locationFormSchema),
-    defaultValues: {
-      location: location || DEFAULT_LOCATION,
-    },
+    resolver: zodResolver(locationSchema),
+    defaultValues: location || DEFAULT_LOCATION,
   });
 
   const onSubmit = async (data: Location) => {
@@ -30,18 +31,11 @@ export function PropertyLocation({ propertyId, location }: PropertyLocationProps
       return;
     }
 
-    if (!data.location) {
-      toast.error('Invalid location', {
-        description: 'Please select a valid location on the map.',
-      });
-      return;
-    }
-
-    const result = await updatePropertyLocation(propertyId, data.location);
+    const result = await updatePropertyLocation(propertyId, data);
 
     if (result.success) {
       toast.success('Location saved successfully', {
-        description: `Lat: ${data.location.lat.toFixed(5)}, Lng: ${data.location.lng.toFixed(5)}`,
+        description: `Lat: ${data.lat.toFixed(5)}, Lng: ${data.lng.toFixed(5)}`,
       });
     } else {
       toast.error('Failed to save location', {
@@ -54,16 +48,27 @@ export function PropertyLocation({ propertyId, location }: PropertyLocationProps
     <WidgetCard className="py-6">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Controller
-          name="location"
+          name="lat"
           control={form.control}
-          render={({ field }) => <LocationPicker value={field.value || DEFAULT_LOCATION} onPositionChange={field.onChange} showCoordinates showUseMyLocation showSaveButton={false} />}
+          render={({ field }) => (
+            <LocationPicker
+              value={{ lat: field.value, lng: form.watch('lng') }}
+              onPositionChange={(pos) => {
+                field.onChange(pos.lat);
+                form.setValue('lng', pos.lng);
+              }}
+              showCoordinates
+              showUseMyLocation
+              showSaveButton={false}
+            />
+          )}
         />
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Saving...' : 'Save Location'}
         </Button>
 
-        {form.formState.errors.location && <p className="text-sm text-destructive">{form.formState.errors.location?.message as string}</p>}
+        {(form.formState.errors.lat || form.formState.errors.lng) && <p className="text-sm text-destructive">Please select a valid location</p>}
       </form>
     </WidgetCard>
   );

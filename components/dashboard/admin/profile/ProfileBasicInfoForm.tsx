@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { User, Mail, Info } from 'lucide-react';
@@ -38,6 +38,8 @@ export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps)
       avatarUrl: initialData?.avatarUrl || null,
     },
   });
+
+  const displayName = useWatch({ control: form.control, name: 'displayName' });
 
   useEffect(() => {
     if (initialData?.displayName) {
@@ -80,13 +82,7 @@ export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps)
             Profile Photo
           </Label>
           <div className="rounded-xl border border-dashed border-border/60 bg-muted/30 p-6 transition-all duration-200 hover:border-border/80">
-            <AvatarUploader
-              bucket="user-profile"
-              value={avatarUrl}
-              onChange={setAvatarUrl}
-              disabled={form.formState.isSubmitting}
-              displayName={initialData?.displayName || form.watch('displayName') || ''}
-            />
+            <AvatarUploader bucket="user-profile" value={avatarUrl} onChange={setAvatarUrl} disabled={form.formState.isSubmitting} displayName={initialData?.displayName || displayName || ''} />
           </div>
         </div>
 

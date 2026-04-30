@@ -625,4 +625,4 @@ export const Constants = {
   },
 } as const;
 
-let areas: Tables<'areas'>;
+// let areas: Tables<'areas'>;

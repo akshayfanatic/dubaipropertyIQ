@@ -15,7 +15,7 @@ export const citySchema = z.object({
     .max(50, 'Slug must be less than 50 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
-  logo_url: imageObjectSchema.nullable().optional(),
+  logo_url: imageObjectSchema,
 });
 
 export type CityFormData = z.infer<typeof citySchema>;

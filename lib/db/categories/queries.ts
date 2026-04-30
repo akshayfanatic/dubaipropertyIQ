@@ -5,6 +5,7 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Category, CategoryOption, CategoryFilters } from '@/types/category';
 import type { PaginatedResult } from '@/types/shared';
@@ -74,30 +75,6 @@ export async function getCategoriesAdmin(filters?: CategoryFilters): Promise<Api
       error: { code: 'INTERNAL_ERROR' },
     });
   }
-}
-
-/** @deprecated Use getCategoriesAdmin() instead - returns all categories without pagination */
-export async function getAllCategories(): Promise<ApiResponse<Category[]>> {
-  const result = await getCategoriesAdmin();
-  if (result.success && result.data) {
-    return {
-      success: true,
-      status: result.status,
-      message: result.message,
-      data: result.data.data,
-    } as ApiResponse<Category[]>;
-  }
-  return {
-    success: false,
-    status: result.status,
-    message: result.message,
-    error: result.error,
-  } as ApiResponse<Category[]>;
-}
-
-/** @deprecated Use getCategoriesAdmin() instead - unified method handles both paginated and non-paginated queries */
-export async function getCategoriesPaginated(filters?: CategoryFilters): Promise<ApiResponse<PaginatedResult<Category>>> {
-  return getCategoriesAdmin(filters);
 }
 
 /**
@@ -177,6 +154,48 @@ export async function getCategoryBySlug(slug: string): Promise<ApiResponse<Categ
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch category';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get category options for public use
+ * Uses serverClient - respects RLS, accessible to all users
+ */
+export async function getCategoriesOptions(): Promise<ApiResponse<CategoryOption[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('categories').select('id, name, slug, logo_url').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const options: CategoryOption[] = data.map((cat) => ({
+      label: cat.name,
+      value: cat.id,
+      logo_url: cat.logo_url,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Category options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch category options';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

@@ -14,6 +14,7 @@ interface StyledTabsProps {
   tabs: readonly TabConfig[] | TabConfig[];
   defaultValue?: string;
   className?: string;
+  onValueChange?: (value: string) => void;
 }
 
 /**
@@ -27,12 +28,13 @@ interface StyledTabsProps {
  *     { value: 'advanced', label: 'Advanced', content: <AdvancedForm /> },
  *   ]}
  *   defaultValue="basic"
+ *   onValueChange={(value) => console.log('Tab changed:', value)}
  * />
  * ```
  */
-export function StyledTabs({ tabs, defaultValue, className }: StyledTabsProps) {
+export function StyledTabs({ tabs, defaultValue, className, onValueChange }: StyledTabsProps) {
   return (
-    <Tabs defaultValue={defaultValue ?? tabs[0]?.value} className={cn('space-y-4', className)}>
+    <Tabs defaultValue={defaultValue ?? tabs[0]?.value} onValueChange={onValueChange} className={cn('space-y-4', className)}>
       <TabsList variant="line" className="inline-flex gap-3">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value} asChild>

@@ -7,6 +7,8 @@ import { developerSchema, DeveloperFormData } from '@/lib/validations/developer'
 import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
 import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
+import type { ImageObject } from '@/types/images';
+import { Json } from '@/types/database.types';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -18,6 +20,16 @@ import { WidgetCard } from '@/components/shared/WidgetCard';
 
 interface DeveloperFormProps {
   developer?: Developer;
+}
+
+// Helper to safely convert Json to ImageObject
+function toImageObject(json: Json | null): ImageObject | null {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) return null;
+  const obj = json as Record<string, unknown>;
+  if (typeof obj?.url === 'string' && typeof obj?.alt_tag === 'string') {
+    return { url: obj.url, alt_tag: obj.alt_tag };
+  }
+  return null;
 }
 
 export function DeveloperForm({ developer }: DeveloperFormProps) {
@@ -35,17 +47,17 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
       ? {
           name: developer.name,
           slug: developer.slug,
-          logo_url: developer.logo_url || null,
+          logo_url: toImageObject(developer.logo_url as Json | null),
           description: developer.description || '',
           website_url: developer.website_url || '',
-          delivery_timeliness_score: developer.delivery_timeliness_score,
-          service_charge_score: developer.service_charge_score,
-          build_quality_score: developer.build_quality_score,
-          after_sales_score: developer.after_sales_score,
-          total_projects: developer.total_projects,
-          completed_projects: developer.completed_projects,
-          ongoing_projects: developer.ongoing_projects,
-          years_active: developer.years_active,
+          delivery_timeliness_score: developer.delivery_timeliness_score ?? 1,
+          service_charge_score: developer.service_charge_score ?? 1,
+          build_quality_score: developer.build_quality_score ?? 1,
+          after_sales_score: developer.after_sales_score ?? 1,
+          total_projects: developer.total_projects ?? 0,
+          completed_projects: developer.completed_projects ?? 0,
+          ongoing_projects: developer.ongoing_projects ?? 0,
+          years_active: developer.years_active ?? 0,
         }
       : {
           name: '',
@@ -69,6 +81,7 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
   const serviceChargeScore = useWatch({ control, name: 'service_charge_score' });
   const buildQualityScore = useWatch({ control, name: 'build_quality_score' });
   const afterSalesScore = useWatch({ control, name: 'after_sales_score' });
+
   const computedTrustScore = calculateTrustScore({
     delivery_timeliness_score: deliveryTimelinessScore ?? 1,
     service_charge_score: serviceChargeScore ?? 1,

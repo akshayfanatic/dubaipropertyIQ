@@ -7,7 +7,7 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { Page, PageInsert, PageUpdate } from '@/types/page';
+import { Page } from '@/types/page';
 import { PageInsertData, PageUpdateData } from '@/lib/validations/page';
 import { revalidatePath } from 'next/cache';
 
