@@ -22,19 +22,29 @@ export function SectionCard({ title, description, children, className, contentCl
   const hasHeader = title || description;
 
   return (
-    <Card className={cn('border-none shadow-none', className)}>
-      {hasHeader && (
-        <CardHeader className="text-start">
-          <div className={cn('flex items-start justify-between gap-4', classes?.wrapper)}>
-            <div className="space-y-2 sm:space-y-4">
-              {title && <CardTitle className={cn('text-2xl md:text-3xl', classes?.title)}>{title}</CardTitle>}
-              {description && <CardDescription className={cn('text-sm sm:text-base', classes?.description)}>{description}</CardDescription>}
-            </div>
-            {navigation}
-          </div>
-        </CardHeader>
-      )}
-      <CardContent className={cn(!hasHeader && 'pt-2 sm:pt-4', contentClassName)}>{children}</CardContent>
-    </Card>
+    <section className={cn('py-16 px-4 md:px-6', className)}>
+      <div className="container mx-auto">
+        <Card className="border-none shadow-none bg-transparent p-0 gap-2">
+          {/* HEADER */}
+          {hasHeader && (
+            <CardHeader className="px-0 pb-4">
+              <div className={cn('flex justify justify-between gap-4', classes?.wrapper)}>
+                <div className="space-y-2 w-full">
+                  {title && <CardTitle className={cn('text-2xl md:text-3xl', classes?.title)}>{title}</CardTitle>}
+
+                  {description && <CardDescription className={cn('text-sm md:text-base', classes?.description)}>{description}</CardDescription>}
+                </div>
+
+                {navigation && <div className="shrink-0">{navigation}</div>}
+              </div>
+            </CardHeader>
+          )}
+
+          {/* CONTENT */}
+          <CardContent className={cn('px-0', !hasHeader && 'pt-0', contentClassName)}>{children}</CardContent>
+        </Card>
+      </div>
+    </section>
   );
 }
+Request;
