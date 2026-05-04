@@ -1,5 +1,7 @@
 'use client';
 
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 interface LoginButtonProps {
@@ -8,12 +10,9 @@ interface LoginButtonProps {
   className?: string;
 }
 
-export function LoginButton({ label = 'Log in', href = '/auth/login', className }: LoginButtonProps) {
+export function LoginButton({ label = 'Log in', href = '/auth/login' }: LoginButtonProps) {
   return (
-    <Link
-      href={href}
-      className={`inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${className ?? ''}`}
-    >
+    <Link href={href} className={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'text-secondary font-semibold')}>
       {label}
     </Link>
   );
