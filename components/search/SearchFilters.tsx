@@ -114,7 +114,7 @@ function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUr
           <FormItem className="flex-1 min-w-48 max-w-sm">
             <FormControl>
               {/* <LocationAutocomplete value={field.value || ''} onChange={field.onChange} onSelect={onLocationSelect} placeholder="Search e.g Location, Property" /> */}
-              <TextInput placeholder="Select Properties" {...field} type="search" />
+              <TextInput className="bg-primary-foreground" placeholder="Select Properties" {...field} type="search" />
             </FormControl>
             <FormMessage />
           </FormItem>

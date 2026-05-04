@@ -8,7 +8,7 @@ import Link from 'next/link';
 // Breadcrumb mapping for admin routes
 const breadcrumbMap: Record<string, string> = {
   '/pages/privacy-policy': 'Privacy Policy',
-  '/dashboard/admin/properties': 'Properties',
+  '/search': 'Properties Rent For Dubai',
   '/dashboard/admin/users': 'Users',
   '/dashboard/admin/analytics': 'Analytics',
   '/dashboard/admin/settings': 'Settings',
