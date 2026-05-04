@@ -47,7 +47,7 @@ export default function Header({ logo, navItems = defaultNavItems, sticky = true
   const logoHref = logo?.href ?? '/';
 
   return (
-    <header className={cn('w-full border-b border-border bg-background/90 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
+    <header className={cn('w-full border-b border-border bg-white backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
       <div className="container mx-auto flex h-20.25 items-center justify-between px-4 lg:px-8">
         {/* Logo - Left */}
         <Link href={logoHref} className="flex items-center gap-0.5">
