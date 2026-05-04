@@ -46,7 +46,7 @@ export const propertyFormSchema = z.object({
   status: propertyStatusSchema,
   golden_visa_eligible: z.boolean(),
   is_featured: z.boolean().default(false),
-  photos: z.array(imageObjectSchema).min(1, 'At least one photo is required'), // one photo required
+  photos: z.array(imageObjectSchema).min(3, 'At least three photo is required'), // Three photo required
   features: z.array(z.string()),
   floor_plan: z.string().url('Invalid floor plan URL').nullable().optional(),
   location: locationSchema.optional(), // NEW: Location coordinates (lat/lng)
