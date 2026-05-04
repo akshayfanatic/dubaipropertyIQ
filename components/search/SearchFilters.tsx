@@ -8,10 +8,10 @@ import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { SelectField } from '@/components/shared/select-field';
 import { useCategories } from '@/hooks/data/public/useCategories';
-import { LocationAutocomplete } from '@/components/shared/forms/location-autocomplete';
 import { PriceRangeInput } from '@/components/shared/forms/price-range-input';
 import { filterSchema, type FilterSchema } from './types';
 import type { AutocompleteResult } from '@/hooks/data/public/useLocationAutocomplete';
+import { TextInput } from '../shared/forms/text-input';
 
 export default function SearchFilters() {
   const router = useRouter();
@@ -113,7 +113,8 @@ function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUr
         render={({ field }) => (
           <FormItem className="flex-1 min-w-48 max-w-sm">
             <FormControl>
-              <LocationAutocomplete value={field.value || ''} onChange={field.onChange} onSelect={onLocationSelect} placeholder="Search e.g Location, Property" />
+              {/* <LocationAutocomplete value={field.value || ''} onChange={field.onChange} onSelect={onLocationSelect} placeholder="Search e.g Location, Property" /> */}
+              <TextInput placeholder="Select Properties" {...field} type="search" />
             </FormControl>
             <FormMessage />
           </FormItem>
