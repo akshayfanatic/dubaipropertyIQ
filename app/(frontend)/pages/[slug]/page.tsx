@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getPageBySlug, getPublishedPages } from '@/lib/db/pages/queries';
 import { PageContentRenderer } from '@/components/pages/PageContent';
 import { PageHeader } from '@/components/shared/page-header';
+import PageLayout from '@/components/layout/PageLayout';
+import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 
 export const revalidate = 60;
 
@@ -45,12 +47,9 @@ export default async function PagePage({ params }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl py-8">
+    <PageLayout className="space-y-4" breadcrumb={<PublicBreadCrumb />}>
       <PageHeader title={page.title} />
-
-      {page?.excerpt ? <p className="mb-8 text-lg text-muted-foreground">{page.excerpt}</p> : null}
-
       <PageContentRenderer content={page.content ?? ''} />
-    </div>
+    </PageLayout>
   );
 }

@@ -15,9 +15,6 @@ export default async function SearchPageLayout({ children }: SearchPageLayoutPro
     <div className="min-h-screen">
       <div className="bg-backgroung">
         <WidgetCard className="max-w-295 mx-auto" contentClassNames="p-0 gap-4 p-4 px-8 space-y-4">
-          <h1 className=" font-semibold text-3xl">
-            <Typewriter text="Search Properties in UAE" loop speed={150} />
-          </h1>
           <SearchFilters />
         </WidgetCard>
       </div>
