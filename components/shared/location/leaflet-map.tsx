@@ -81,3 +81,50 @@ export default function LeafletMap({ center, position, zoom = 12, draggable = tr
     </div>
   );
 }
+
+type ReadOnlyMapProps = {
+  center: {
+    lat: number;
+    lng: number;
+  };
+  zoom?: number;
+};
+
+export const propertyMarkerIcon = L.divIcon({
+  className: '',
+  html: `
+    <div class="relative flex items-center justify-center">
+      <div class="absolute h-6 w-6 rounded-full bg-primary/20 animate-ping"></div>
+      <div class="relative h-5 w-5 rounded-full border-2 border-white bg-primary shadow-lg"></div>
+    </div>
+  `,
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+});
+
+export function ReadOnlyMapClient({ center, zoom = 13 }: ReadOnlyMapProps) {
+  const isClient = useClient();
+
+  if (!isClient) return null;
+
+  return (
+    <div className="w-full h-100 rounded-2xl overflow-hidden border border-border shadow-lg relative z-0">
+      <MapContainer
+        center={[center.lat, center.lng]}
+        zoom={zoom}
+        scrollWheelZoom={false}
+        dragging={false}
+        doubleClickZoom={false}
+        touchZoom={false}
+        zoomControl={true}
+        boxZoom={false}
+        keyboard={false}
+        className="h-full w-full z-0"
+      >
+        <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        <Marker position={[center.lat, center.lng]} icon={propertyMarkerIcon} />
+      </MapContainer>
+    </div>
+  );
+}
