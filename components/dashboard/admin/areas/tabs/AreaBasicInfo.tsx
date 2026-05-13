@@ -35,9 +35,9 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
   const isEditMode = !!area;
 
   const router = useRouter();
-  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options', fetcher);
-  const { data: amenityResponse, isLoading: isLoadingAmenities } = useSWR<{ success: boolean; data: AmenityOption[] }>('/api/admin/amenities/options', fetcher);
-  const { data: propertyResponse, isLoading: isLoadingProperties } = useSWR<{ success: boolean; data: PropertyOption[] }>('/api/admin/properties/options', fetcher);
+  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options');
+  const { data: amenityResponse, isLoading: isLoadingAmenities } = useSWR<{ success: boolean; data: AmenityOption[] }>('/api/admin/amenities/options');
+  const { data: propertyResponse, isLoading: isLoadingProperties } = useSWR<{ success: boolean; data: PropertyOption[] }>('/api/admin/properties/options');
   const amenityOptions = amenityResponse?.data || [];
   const propertyOptions = propertyResponse?.data || [];
 
@@ -58,7 +58,8 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
       name: area?.name || '',
       slug: area?.slug || '',
       description: area?.description || '',
-      photos: area?.photos || [],
+      /* eslint "@typescript-eslint/no-explicit-any": "off" */
+      photos: (area?.photos as any) || [],
       amenity_ids: areaAmenityIds,
       property_ids: areaPropertyIds,
     },
@@ -208,11 +209,10 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
               <ImageUploader
                 bucket="area-photos"
                 folder="areas"
-                value={field.value?.map((url: string) => ({ url, alt_tag: '' })) || []}
-                onChange={(urls) => {
-                  const photoUrls = urls.map((u: { url: string }) => u.url);
-                  field.onChange(photoUrls);
-                  form.setValue('photos', photoUrls, { shouldDirty: true, shouldTouch: true });
+                value={field.value || []}
+                onChange={(images) => {
+                  field.onChange(images);
+                  form.setValue('photos', images, { shouldDirty: true, shouldTouch: true });
                 }}
                 maxImages={10}
                 label="Photos"

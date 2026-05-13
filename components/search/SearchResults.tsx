@@ -25,9 +25,9 @@ interface PropertyGridProps {
 
 function PropertyGrid({ children, pagination }: PropertyGridProps) {
   return (
-    <div className="max-w-295 mx-auto">
-      <div className="space-y-8">{children}</div>
-      {<div className="mt-6">{pagination}</div>}
+    <div className="w-full">
+      <div className="space-y-5 sm:space-y-6">{children}</div>
+      {pagination && <div className="mt-8 flex justify-center">{pagination}</div>}
     </div>
   );
 }
@@ -48,7 +48,7 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
 
   if (!response.success || !response.data) {
     return (
-      <div className="max-w-295 mx-auto">
+      <div className="w-full">
         <EmptyState icon={<AlertCircle className="h-8 w-8 text-muted-foreground" />} title="Error" description="Failed to load properties. Please try again later." />
       </div>
     );
@@ -56,10 +56,12 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
 
   const paginatedResult = response.data as PaginatedResult<PropertyListItem>;
   const { data: properties, total, page: resultPage, pageSize } = paginatedResult;
+  const firstResult = total === 0 ? 0 : (resultPage - 1) * pageSize + 1;
+  const lastResult = Math.min(resultPage * pageSize, total);
 
   if (properties.length === 0) {
     return (
-      <div className="max-w-295 mx-auto">
+      <div className="w-full">
         <EmptyState icon={<Building className="h-8 w-8 text-muted-foreground" />} title="No Results" description={`No properties found in ${location || 'Dubai'}. Try adjusting your filters.`} />
       </div>
     );
@@ -67,22 +69,33 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
 
   return (
     <PropertyGrid pagination={total > pageSize ? <Pagination total={total} page={resultPage} pageSize={pageSize} /> : undefined}>
-      {properties.map((property) => (
-        <PropertyCard key={property.id} property={property} />
-      ))}
+      <div className="flex flex-col gap-1 rounded-xl border bg-card px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-base font-semibold leading-6 text-foreground">Available properties</h2>
+        <p className="text-sm leading-6 text-muted-foreground" aria-live="polite">
+          Showing {firstResult}-{lastResult} of {total}
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-5">
+        {properties.map((property) => (
+          <PropertyCard key={property.id} property={property} />
+        ))}
+      </div>
     </PropertyGrid>
   );
 }
 
 export function SearchResultsSkeleton() {
   return (
-    <div className="max-w-295 mx-auto space-y-6">
-      <div className="grid grid-cols-1 gap-8">
+    <div className="w-full space-y-6">
+      <div className="rounded-xl border bg-card px-4 py-3 shadow-sm">
+        <Skeleton className="h-6 w-48" />
+      </div>
+      <div className="grid grid-cols-1 gap-5">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <PropertyCardSkeleton key={i} />
         ))}
       </div>
-      <div className="flex justify-center items-center gap-2 pt-4">
+      <div className="flex items-center justify-center gap-2 pt-2">
         <Skeleton className="h-9 w-9 rounded-lg" />
         <Skeleton className="h-9 w-9 rounded-lg" />
         <Skeleton className="h-9 w-9 rounded-lg" />

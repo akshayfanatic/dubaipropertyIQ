@@ -17,7 +17,7 @@ interface PropertyAmenityWithAmenity {
 }
 
 interface RawAmenityJoin {
-  amenities: Amenity;
+  amenities: Amenity | Amenity[] | null;
 }
 
 /**
@@ -40,7 +40,13 @@ const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | nul
   const { properties_amenities, ...rest } = data;
   return {
     ...rest,
-    amenities: properties_amenities?.map((item) => item.amenities).filter(Boolean) || [],
+    amenities:
+      properties_amenities
+        ?.map((item) => {
+          const a = item.amenities;
+          return Array.isArray(a) ? a[0] : a;
+        })
+        .filter(Boolean) || [],
   } as Property;
 };
 
@@ -250,7 +256,7 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
       success: true,
       status: HttpStatus.OK,
       message: 'Property fetched successfully',
-      data: normalizeProperty(data as { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>),
+      data: normalizeProperty(data as unknown as { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>),
     });
   } catch (error) {
     console.error('[getPropertyBySlug] Error:', error);
