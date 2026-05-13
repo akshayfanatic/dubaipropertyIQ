@@ -1,9 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Home } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, Home } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 
 // Breadcrumb mapping for admin routes
 const breadcrumbMap: Record<string, string> = {
@@ -15,8 +16,18 @@ const breadcrumbMap: Record<string, string> = {
   '/dashboard/admin/profile': 'Profile',
 };
 
-export function PublicBreadCrumb() {
+type PublicBreadCrumbProps = {
+  enableBackButton?: boolean;
+};
+
+/**
+ *
+ *  @param  enableBackButton Enbling Back Button defualt value false
+ * @returns
+ */
+export function PublicBreadCrumb({ enableBackButton = false }: PublicBreadCrumbProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Generate breadcrumbs from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -30,30 +41,45 @@ export function PublicBreadCrumb() {
   });
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href={'/'}>
-              <Home size={18} />
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {breadcrumbs.slice(1).map((crumb, idx, arr) => (
-          <span key={crumb.href} className="contents">
-            <BreadcrumbSeparator className=" md:block" />
-            <BreadcrumbItem>
-              {idx === arr.length - 1 ? (
-                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild className=" md:block">
-                  <Link href={crumb.href}>{crumb.label}</Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
-          </span>
-        ))}
-      </BreadcrumbList>
-    </Breadcrumb>
+    <div className="flex items-center gap-2 mb-2">
+      {enableBackButton && (
+        <>
+          <button onClick={() => router.back()} className="flex items-center gap-1.5 pr-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer group">
+            <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <div className="h-4 w-px bg-border/60 mx-1" />
+        </>
+      )}
+
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/" className="hover:text-primary transition-colors">
+                <Home size={16} className="mb-0.5" />
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          {breadcrumbs.slice(1).map((crumb, idx, arr) => (
+            <React.Fragment key={crumb.href}>
+              <BreadcrumbSeparator className="opacity-50" />
+              <BreadcrumbItem>
+                {idx === arr.length - 1 ? (
+                  <BreadcrumbPage className="font-semibold text-foreground max-w-[150px] sm:max-w-[300px] truncate">{crumb.label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link href={crumb.href} className="hover:text-primary transition-colors">
+                      {crumb.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
   );
 }
