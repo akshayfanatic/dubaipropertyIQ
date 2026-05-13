@@ -16,6 +16,10 @@ interface PropertyAmenityWithAmenity {
   amenity: Pick<Amenity, 'id'>;
 }
 
+interface RawAmenityJoin {
+  amenities: Amenity;
+}
+
 /**
  * Search filters for public property search
  */
@@ -31,6 +35,14 @@ export interface PropertySearchFilters {
   page?: number;
   pageSize?: number;
 }
+
+const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>) => {
+  const { properties_amenities, ...rest } = data;
+  return {
+    ...rest,
+    amenities: properties_amenities?.map((item) => item.amenities).filter(Boolean) || [],
+  } as Property;
+};
 
 /**
  * Get properties for public use
@@ -167,6 +179,82 @@ export async function getProperties(filters?: PropertySearchFilters) {
   } catch (error) {
     console.error('[searchProperties] Error:', error);
     const message = error instanceof Error ? error.message : 'Failed to search properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get a single property by slug for public display
+ * Uses serverClient - respects RLS, accessible to all users
+ * Returns property with category, city, and developer details
+ */
+export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Property | null>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select(
+        `
+          id,
+          slug,
+          title,
+          description,
+          bedrooms,
+          bathrooms,
+          size_sqft,
+          price_aed,
+          status,
+          golden_visa_eligible,
+          photos,
+          features,
+          floor_plan,
+          location,
+          city_id,
+          created_at,
+          updated_at,
+          properties_amenities ( amenities ( * ) ),
+          category:categories!inner (id, name, slug),
+          city:cities (id, name, slug, logo_url),
+          developer:developers (id, name, slug, logo_url),
+          properties_faqs (*)
+        `,
+      )
+      .eq('slug', slug)
+      .eq('status', 'available')
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Property not found',
+          error: { code: 'NOT_FOUND' },
+        });
+      }
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Property fetched successfully',
+      data: normalizeProperty(data as { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>),
+    });
+  } catch (error) {
+    console.error('[getPropertyBySlug] Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to fetch property';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,
