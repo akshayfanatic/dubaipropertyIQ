@@ -14,6 +14,22 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/properties',
+        destination: '/search',
+        permanent: true,
+      },
+      {
+        source: '/developers',
+        destination: '/search',
+        permanent: true,
+      },
+    ];
+  },
+
   experimental: {
     globalNotFound: true,
     serverActions: {
