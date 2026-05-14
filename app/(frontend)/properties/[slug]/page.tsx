@@ -81,53 +81,41 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
       <PropertyContentLayout SidebarContent={<SideBarContent property={property} />}>
         {/* Title & Price & Description */}
-        <div id="overview">
-          <PropertyInfo property={property}>
-            <PropertyDescription description={property.description} />
-          </PropertyInfo>
-        </div>
+        <PropertyInfo id="overview" property={property}>
+          <PropertyDescription description={property.description} />
+        </PropertyInfo>
 
         {/* ── Developer Section ── */}
         {property.developer && (
-          <div id="developer">
-            <PropertyContentCard title="Developer">
-              <DeveloperInfo developer={property.developer} />
-            </PropertyContentCard>
-          </div>
+          <PropertyContentCard id="developer" title="Developer">
+            <DeveloperInfo developer={property.developer} />
+          </PropertyContentCard>
         )}
 
         {/* ── Key Information Section ── */}
-        <div id="key-info">
-          <PropertyContentCard title="Key Information" className="gap-2">
-            <PropertyAttributes {...property} />
-          </PropertyContentCard>
-        </div>
+        <PropertyContentCard id="key-info" title="Key Information" className="gap-2">
+          <PropertyAttributes {...property} />
+        </PropertyContentCard>
 
         {/* ── Location Section ── */}
         {property.location && (
-          <div id="location">
-            <PropertyContentCard title="Location" className="gap-2">
-              <ReadOnlyMap center={property.location} />
-            </PropertyContentCard>
-          </div>
+          <PropertyContentCard id="location" title="Location" className="gap-2">
+            <ReadOnlyMap center={property.location} />
+          </PropertyContentCard>
         )}
 
         {/* ── Amenities Section ── */}
         {property.amenities?.length ? (
-          <div id="amenities">
-            <PropertyContentCard title="Amenities" className="gap-2">
-              <PropertyAmenities amenities={property.amenities} />
-            </PropertyContentCard>
-          </div>
+          <PropertyContentCard id="amenities" title="Amenities" className="gap-2">
+            <PropertyAmenities amenities={property.amenities} />
+          </PropertyContentCard>
         ) : null}
 
         {/* ── FAQ Section ── */}
         {property.properties_faqs?.length ? (
-          <div id="faq">
-            <PropertyContentCard title="Frequently Asked Questions" className="gap-2">
-              <FAQAccordion faqs={property.properties_faqs} />
-            </PropertyContentCard>
-          </div>
+          <PropertyContentCard id="faq" title="Frequently Asked Questions" className="gap-2">
+            <FAQAccordion faqs={property.properties_faqs} />
+          </PropertyContentCard>
         ) : null}
       </PropertyContentLayout>
     </PageLayout>
