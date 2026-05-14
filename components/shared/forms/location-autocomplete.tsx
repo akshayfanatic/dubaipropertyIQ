@@ -84,7 +84,7 @@ export function LocationAutocomplete({ value = '', onChange, onSelect, placehold
           onFocus={() => value.length >= 2 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-10"
+          className="pl-10 bg-inherit"
           autoComplete={autoComplete}
         />
       </div>

@@ -101,6 +101,7 @@ export function AdminSidebar() {
                         {hasChildren ? (
                           // Accordion item with children
                           <>
+                            {/* PARENT ITEM WHEN COLLAPSE */}
                             {state === 'collapsed' ? (
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -123,10 +124,11 @@ export function AdminSidebar() {
                               </Tooltip>
                             ) : (
                               <>
+                                {/*PARENT WITH CHILDREN */}
                                 <div
                                   className={cn(
-                                    'flex items-center justify-between w-full px-2 py-1.5 rounded-md transition-all duration-200 ease-out cursor-pointer hover:bg-accent overflow-hidden',
-                                    (active || hasActiveChild) && 'bg-accent',
+                                    'flex items-center justify-between w-full px-2 py-1.5 rounded-md transition-all duration-200 ease-out cursor-pointer hover:bg-primary hover:text-secondary overflow-hidden',
+                                    (active || hasActiveChild) && 'bg-primary text-secondary hover:text-white dark:text-white',
                                     (active || hasActiveChild) &&
                                       'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full relative',
                                   )}
@@ -136,16 +138,13 @@ export function AdminSidebar() {
                                   <span className="ml-2 text-sm font-medium truncate">{item.title}</span>
                                   <span className="ml-auto flex items-center">
                                     {isClient &&
-                                      (expanded ? (
-                                        <ChevronDown className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
-                                      ) : (
-                                        <ChevronRight className="h-3 w-3 transition-transform duration-200 text-muted-foreground" />
-                                      ))}
-                                    {!isClient && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                                      (expanded ? <ChevronDown className="h-3 w-3 transition-transform duration-200" /> : <ChevronRight className="h-3 w-3 transition-transform duration-200" />)}
+                                    {!isClient && <ChevronRight className="h-3 w-3" />}
                                   </span>
                                 </div>
                               </>
                             )}
+
                             {expanded && item.children && (
                               <SidebarMenuSub>
                                 {item.children.map((child) => {
@@ -154,7 +153,12 @@ export function AdminSidebar() {
                                   return (
                                     <SidebarMenuSubItem key={child.href}>
                                       <SidebarMenuSubButton asChild isActive={childActive}>
-                                        <Link href={child.isComingSoon ? '#' : child.href} onClick={child.isComingSoon ? (e) => e.preventDefault() : undefined}>
+                                        {/* MENU CHILDREN ITEMS */}
+                                        <Link
+                                          className={`${childActive && 'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full relative bg-primary text-secondary hover:text-white dark:text-white '}`}
+                                          href={child.isComingSoon ? '#' : child.href}
+                                          onClick={child.isComingSoon ? (e) => e.preventDefault() : undefined}
+                                        >
                                           <ChildIcon className="h-4 w-4" />
                                           <span>{child.title}</span>
                                         </Link>
@@ -176,7 +180,7 @@ export function AdminSidebar() {
                                 'relative transition-all duration-200 ease-out',
                                 item.isComingSoon && 'cursor-not-allowed opacity-60',
                                 active &&
-                                  'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full',
+                                  'before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-primary before:rounded-r-full before:animate-in before:slide-in-from-left-full bg-primary! text-secondary! dark:text-white!',
                               )}
                             >
                               <Link href={item.isComingSoon ? '#' : item.href} onClick={item.isComingSoon ? (e) => e.preventDefault() : undefined}>

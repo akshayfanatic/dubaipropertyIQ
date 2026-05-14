@@ -26,7 +26,7 @@ export const swrConfig: SWRConfiguration = {
   fetcher,
   revalidateOnFocus: false,
   revalidateOnReconnect: true,
-  dedupingInterval: 2000,
+  dedupingInterval: 60000,
   errorRetryCount: 2,
 };
 

@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import { imageObjectSchema } from './shared';
 
 // Area form validation schema
 export const areaSchema = z.object({
@@ -15,7 +16,7 @@ export const areaSchema = z.object({
     .max(50, 'Slug must be less than 50 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
-  photos: z.array(z.string()),
+  photos: z.array(imageObjectSchema).min(3, 'At least three photo is required'), // Three photo required
   amenity_ids: z.array(z.string().uuid()).optional(),
   property_ids: z.array(z.string().uuid()).optional(),
   faqs: z

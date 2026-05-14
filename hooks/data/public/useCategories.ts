@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { fetcher } from '@/lib/swr-config';
 import { SelectOption } from '@/types/shared';
 
 interface UseCategoriesReturn {
@@ -10,7 +9,7 @@ interface UseCategoriesReturn {
 
 // Property Types
 export function useCategories(): UseCategoriesReturn {
-  const { data, isLoading, error } = useSWR<SelectOption[]>('/api/public/categories/options', fetcher);
+  const { data, isLoading, error } = useSWR<SelectOption[]>('/api/public/categories/options');
 
   return {
     categories: data ?? [],

@@ -3,16 +3,14 @@
 import Link from 'next/link';
 import useSWR from 'swr';
 import type { Page } from '@/types/page';
-import { fetcher } from '@/lib/swr-config';
 
 type QuickLinksProps = {
   title?: string;
 };
 export function QuickLinks({ title = '' }: QuickLinksProps) {
-  const { data: response } = useSWR<{ data: Page[] }>('/api/public/pages', fetcher);
+  const { data: response } = useSWR<{ data: Page[] }>('/api/public/pages');
   const pages = response?.data || [];
 
-  console.log(pages);
   if (pages.length === 0) return null;
 
   return (

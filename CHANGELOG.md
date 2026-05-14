@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.4.1...v0.5.0) (2026-05-14)
+
+### Features
+
+- **breadcrumb:** created public breadcrumb seprate ([b26f773](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b26f7738f9d523c28b258d21e99551487f890f46))
+- **map:** added leaflet map for public side ([d442a36](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d442a36804b74b2cfba24c6ea04425ac58371d50))
+- **Page Layout,BreadCrumb:** added Page Layout for Public Facing Frontend ([b7142df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b7142df8a77a9d0b98c7b87218b6dd055fbaccdd))
+
+### Code Style Changes
+
+- **css:** fix css classes related issue ([c1665d5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c1665d5153f3f7624480b3603674be8a45533157))
+- **global primitives:** fix css issue and apply shadcn primitives ([540fe1d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/540fe1d57749a6a0385d72441cf38bfa3e0cf9ca))
+- **ui style:** change design of all components ([4372377](https://github.com/akshayfanatic/dubaipropertyIQ/commit/43723775e7a43f82fae4fb253f86225ba93aaf2f))
+
+### Code Refactoring
+
+- **added page layout:** added page layout to calculators ([41dbf80](https://github.com/akshayfanatic/dubaipropertyIQ/commit/41dbf80eb9b59774c0ed1329ab0a0eb0732ad498))
+- **form:** added validation for at least user upload 3 photos instead of one ([37699ca](https://github.com/akshayfanatic/dubaipropertyIQ/commit/37699caa1aaa96d7e833d8a334d5a34aac3ce50a))
+- **search:** applied normal search input for /search page insteated of <LocationAutoComplete /> ([152e7ea](https://github.com/akshayfanatic/dubaipropertyIQ/commit/152e7ea029976a88bf8024ae251a5518f9b977f8))
+- **swr:** remove fetcher from swr hooks and make it using global swr configuration with provider ([ae3188a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ae3188ae8b56a54db1acf165cf535f6b8e818bcd))
+
 ### [0.4.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.4.0...v0.4.1) (2026-04-30)
 
 ### Features

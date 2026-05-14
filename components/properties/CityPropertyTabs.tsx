@@ -5,7 +5,6 @@ import useSWR from 'swr';
 import { StyledTab2, type TabConfig } from '@/components/shared/styled-tabs-2';
 import { PropertyCardHome } from '@/components/properties/card/PropertyCardHome';
 import { PropertyCardHomeSkeleton } from '@/components/properties/card/PropertyCardHomeSkeleton';
-import { fetcher } from '@/lib/swr-config';
 import type { City } from '@/types/city';
 import type { PropertyListItem, PaginatedResult } from '@/types/property';
 import { ApiResponse } from '@/lib/utils/response';
@@ -19,7 +18,7 @@ export function CityPropertyTabs({ cities, propertiesPerCity = 6 }: CityProperty
   const [activeCity, setActiveCity] = useState<string>(cities[0]?.id || '');
 
   const queryString = `?city_id=${activeCity}&pageSize=${propertiesPerCity}`;
-  const { data, isLoading } = useSWR<ApiResponse<PaginatedResult<PropertyListItem>>>(`/api/public/properties${queryString}`, fetcher);
+  const { data, isLoading } = useSWR<ApiResponse<PaginatedResult<PropertyListItem>>>(`/api/public/properties${queryString}`);
 
   const properties = data?.data?.data ?? [];
 

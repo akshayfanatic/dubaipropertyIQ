@@ -14,7 +14,6 @@ import { ResetButton } from '@/components/shared/forms/reset-button';
 import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
 import { CityOption } from '@/types/city';
-import { fetcher } from '@/lib/swr-config';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const statusOptions = [
@@ -30,8 +29,8 @@ export function FilterBar() {
   const isMobile = useIsMobile();
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const { data: categoryOptions, isLoading: isLoadingCategories } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
-  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options', fetcher);
+  const { data: categoryOptions, isLoading: isLoadingCategories } = useSWR<CategoryOption[]>('/api/admin/categories/options');
+  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options');
   const cities = cityOptions || [];
 
   return (

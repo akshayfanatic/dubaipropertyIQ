@@ -61,22 +61,22 @@ export function AuthBrandingPanel() {
                 animationDelay: `${(index + 1) * 150}ms`,
               }}
             >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/15 group-hover:shadow-lg group-hover:shadow-primary/20">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm transition-all duration-300 bg-white/15 shadow-lg shadow-primary/20">
                 <feature.icon className="h-5 w-5 text-primary/90" />
               </div>
               <div className="pt-1.5">
-                <h3 className="font-semibold text-white/95">{feature.title}</h3>
-                <p className="text-sm text-white/50">{feature.description}</p>
+                <h3 className="font-semibold text-black">{feature.title}</h3>
+                <p className="mt-1.5 text-muted-foreground">{feature.description}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* Trust indicator */}
-        <div className="mt-12 flex items-center gap-2 text-center animate-fade-in animate-duration-500 animate-delay-700">
+        <div className="mt-12 flex items-center gap-2 text-center animate-fade-in animate-duration-500 animate-delay-700 cursor-pointer">
           <div className="flex -space-x-2">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-6 w-6 rounded-full border-2 border-auth-brand-bg bg-gradient-to-br from-white/20 to-white/5" />
+              <div key={i} className="h-6 w-6 rounded-full border-2 border-auth-brand-bg bg-primary border-white from-white/20 to-white/5 animate-float-x" />
             ))}
           </div>
           <p className="text-xs text-white/40">Trusted by 10,000+ investors in the UAE</p>

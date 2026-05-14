@@ -8,6 +8,7 @@ import type { PaginatedResult, SelectOption, Location, FAQ } from './shared';
 import type { ImageObject } from './images';
 import type { Amenity } from './amenities';
 import { Tables } from './db/supabase-generated';
+import { Developer } from './developer';
 
 // Re-export for convenience
 export type { PaginatedResult, Location };
@@ -49,6 +50,7 @@ export type Property = Omit<Tables<'properties'>, 'location' | 'photos' | 'featu
   properties_faqs?: PropertyFAQ[];
   properties_amenities?: PropertyAmenities;
   amenities?: Amenity[]; // Populated via joins for form display
+  developer?: Developer;
 };
 
 export type PropertyFAQs = Tables<'properties_faqs'>;

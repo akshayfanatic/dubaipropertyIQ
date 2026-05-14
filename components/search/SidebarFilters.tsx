@@ -2,7 +2,7 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { X, Sparkles, RotateCcw, Building2, Filter } from 'lucide-react';
+import { X, Sparkles, RotateCcw, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormLabel } from '@/components/ui/form';
@@ -25,18 +25,18 @@ export default function SidebarFilters() {
   const searchParams = useSearchParams();
   const { amenities } = useAmenities();
 
-  if (isClient) {
-    const defaultValues: SidebarFilterValues = {
-      amenities: searchParams.get('amenities')?.split(',') || [],
-      goldenVisaEligible: searchParams.get('golden_visa_eligible') === 'true',
-    };
+  if (!isClient) return null;
 
-    return (
-      <BaseForm schema={sidebarFilterSchema} onSubmit={() => {}} defaultValues={defaultValues}>
-        <FilterFields amenities={amenities} />
-      </BaseForm>
-    );
-  }
+  const defaultValues: SidebarFilterValues = {
+    amenities: searchParams.get('amenities')?.split(',') || [],
+    goldenVisaEligible: searchParams.get('golden_visa_eligible') === 'true',
+  };
+
+  return (
+    <BaseForm schema={sidebarFilterSchema} onSubmit={() => {}} defaultValues={defaultValues}>
+      <FilterFields amenities={amenities} />
+    </BaseForm>
+  );
 }
 
 interface FilterFieldsProps {
@@ -76,28 +76,27 @@ function FilterFields({ amenities }: FilterFieldsProps) {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-3 pb-2 border-b">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-          <Filter className="h-5 w-5 text-primary" />
+    <div className="space-y-5">
+      <div className="flex items-start gap-3 border-b pb-4">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <Filter className="h-4 w-4 text-primary" />
         </div>
-        <div>
-          <h3 className="font-semibold text-base">Filters</h3>
-          <p className="text-xs text-muted-foreground">Narrow down your search</p>
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold leading-6">Filters</h2>
+          <p className="text-sm leading-5 text-muted-foreground">Refine the visible listings</p>
         </div>
       </div>
 
-      {/* Amenities */}
       <FormField
         control={form.control}
         name="amenities"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="space-y-2">
+            <FormLabel className="text-sm font-medium">Amenities</FormLabel>
             <FormControl>
               <MultiSelect
                 name="amenities"
-                placeholder="Select amenities..."
+                placeholder="Select amenities"
                 options={amenities}
                 value={field.value || []}
                 onChange={(val) => {
@@ -110,19 +109,18 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         )}
       />
 
-      {/* Golden Visa */}
       <FormField
         control={form.control}
         name="goldenVisaEligible"
         render={({ field }) => (
-          <FormItem className="flex items-center justify-between rounded-lg border bg-card p-3 hover:bg-muted/50 transition-colors cursor-pointer">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
+          <FormItem className="flex items-start justify-between gap-3 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/50">
+            <div className="flex min-w-0 items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
                 <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <div className="space-y-0.5">
-                <FormLabel className="font-medium cursor-pointer text-sm">Golden Visa Eligible</FormLabel>
-                <p className="text-xs text-muted-foreground">Properties qualifying for UAE residency</p>
+              <div className="min-w-0 space-y-1">
+                <FormLabel className="cursor-pointer text-sm font-medium leading-5">Golden Visa eligible</FormLabel>
+                <p className="text-xs leading-5 text-muted-foreground">Properties qualifying for UAE residency</p>
               </div>
             </div>
             <FormControl>
@@ -138,14 +136,13 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         )}
       />
 
-      {/* Reset */}
       {hasActiveFilters && (
         <Button
           type="button"
           variant="outline"
           onClick={handleReset}
           disabled={isResetting}
-          className="w-full gap-2 border-destructive/50 text-destructive hover:bg-destructive/10 hover:border-destructive transition-all"
+          className="h-10 w-full gap-2 border-destructive/50 text-destructive transition-colors hover:border-destructive hover:bg-destructive/10"
         >
           {isResetting ? <RotateCcw className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
           {isResetting ? 'Clearing...' : 'Clear all filters'}

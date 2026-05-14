@@ -1,30 +1,27 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
+import { Search } from 'lucide-react';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { SelectField } from '@/components/shared/select-field';
 import { useCategories } from '@/hooks/data/public/useCategories';
-import { LocationAutocomplete } from '@/components/shared/forms/location-autocomplete';
 import { PriceRangeInput } from '@/components/shared/forms/price-range-input';
 import { filterSchema, type FilterSchema } from './types';
-import type { AutocompleteResult } from '@/hooks/data/public/useLocationAutocomplete';
+import { TextInput } from '../shared/forms/text-input';
 
 export default function SearchFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { categories, isLoading: categoriesLoading } = useCategories();
-  const [selectedLocation, setSelectedLocation] = useState<AutocompleteResult | undefined>();
 
   const buildUrl = (data: FilterSchema) => {
     const params = new URLSearchParams();
 
-    if (selectedLocation?.slug) {
-      params.set('location', selectedLocation.label);
-    } else if (data.location) {
+    if (data.location) {
       params.set('q', data.location);
     }
     if (data.propertyType) params.set('categories', data.propertyType);
@@ -40,7 +37,6 @@ export default function SearchFilters() {
 
   return (
     <BaseForm
-      key={selectedLocation?.slug || 'default'}
       schema={filterSchema}
       onSubmit={(data) => router.push(buildUrl(data))}
       defaultValues={{
@@ -54,9 +50,9 @@ export default function SearchFilters() {
         goldenVisaEligible: goldenVisaParam === 'true',
       }}
       mode="onChange"
-      className="flex flex-wrap gap-3 w-full"
+      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(14rem,1fr)_minmax(12rem,14rem)] xl:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)_minmax(18rem,22rem)]"
     >
-      <FilterFields categories={categories} categoriesLoading={categoriesLoading} onLocationSelect={setSelectedLocation} buildUrl={buildUrl} />
+      <FilterFields categories={categories} categoriesLoading={categoriesLoading} buildUrl={buildUrl} />
     </BaseForm>
   );
 }
@@ -64,11 +60,10 @@ export default function SearchFilters() {
 interface FilterFieldsProps {
   categories: Array<{ value: string; label: string }>;
   categoriesLoading: boolean;
-  onLocationSelect: (location: AutocompleteResult | undefined) => void;
   buildUrl: (data: FilterSchema) => string;
 }
 
-function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUrl }: FilterFieldsProps) {
+function FilterFields({ categories, categoriesLoading, buildUrl }: FilterFieldsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const form = useFormContext<FilterSchema>();
@@ -111,9 +106,9 @@ function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUr
         control={form.control}
         name="location"
         render={({ field }) => (
-          <FormItem className="flex-1 min-w-48 max-w-sm">
+          <FormItem className="min-w-0">
             <FormControl>
-              <LocationAutocomplete value={field.value || ''} onChange={field.onChange} onSelect={onLocationSelect} placeholder="Search e.g Location, Property" />
+              <TextInput className="h-11 bg-background" icon={Search} placeholder="Location, community, or property" {...field} type="search" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -124,9 +119,9 @@ function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUr
         control={form.control}
         name="propertyType"
         render={({ field }) => (
-          <FormItem className="w-full max-w-sm shrink-0">
+          <FormItem className="min-w-0">
             <FormControl>
-              <SelectField options={categories} placeholder="Property Type" value={field.value} onValueChange={field.onChange} disabled={categoriesLoading} />
+              <SelectField options={categories} placeholder="Property type" value={field.value} onValueChange={field.onChange} disabled={categoriesLoading} className="h-11 bg-background" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -137,9 +132,9 @@ function FilterFields({ categories, categoriesLoading, onLocationSelect, buildUr
         control={form.control}
         name="priceRange"
         render={({ field }) => (
-          <FormItem className="w-full sm:w-auto shrink-0">
+          <FormItem className="min-w-0 md:col-span-2 xl:col-span-1">
             <FormControl>
-              <PriceRangeInput value={field.value} onChange={field.onChange} />
+              <PriceRangeInput value={field.value} onChange={field.onChange} className="w-full" />
             </FormControl>
             <FormMessage />
           </FormItem>

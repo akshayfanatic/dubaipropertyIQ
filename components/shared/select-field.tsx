@@ -63,7 +63,7 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
         <SelectTrigger ref={ref} className={cn('w-full min-w-0', className)}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent position="popper" className="max-h-60">
+        <SelectContent position="popper" className="max-h-60 bg-primary-foreground">
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value} className="flex items-center gap-2">
               {showLogo && <SelectLogo logo_url={option.logo_url} alt={option.label} />}

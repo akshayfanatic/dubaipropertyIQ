@@ -7,8 +7,8 @@ const SiteLogo = () => {
         <Building2 className="h-6 w-6 text-primary-foreground" />
       </div>
       <div>
-        <p className="text-xl font-bold tracking-tight">Dubai Property IQ</p>
-        <p className="text-xs text-white/50">Intelligent Real Estate Analytics</p>
+        <p className="text-xl font-bold tracking-tight text-foreground">Dubai Property IQ</p>
+        <p className="mt-1.5 text-muted-foreground">Intelligent Real Estate Analytics</p>
       </div>
     </div>
   );

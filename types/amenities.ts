@@ -5,16 +5,9 @@
 
 import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
 import type { ImageObject } from './images';
+import { Tables } from './db/supabase-generated';
 
-export interface Amenity {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  logo_url: ImageObject | null;
-  created_at: string;
-  updated_at: string;
-}
+export type Amenity = Tables<'amenities'>;
 
 export type AmenityInsert = Omit<Amenity, 'id' | 'created_at' | 'updated_at'>;
 export type AmenityUpdate = Partial<AmenityInsert>;

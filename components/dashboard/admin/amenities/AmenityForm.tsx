@@ -34,7 +34,8 @@ export function AmenityForm({ amenity }: AmenityFormProps) {
           name: amenity.name,
           slug: amenity.slug,
           description: amenity.description || '',
-          logo_url: amenity.logo_url || null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          logo_url: (amenity.logo_url as any) || null,
         }
       : {
           name: '',

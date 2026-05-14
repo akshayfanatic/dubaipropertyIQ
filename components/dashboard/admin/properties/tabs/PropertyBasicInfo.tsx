@@ -20,7 +20,6 @@ import { FormActions } from '@/components/shared/forms/FormActions';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { fetcher } from '@/lib/swr-config';
 import useSWR from 'swr';
 import { useMemo } from 'react';
 import { AmenityOption } from '@/types/amenities';
@@ -43,17 +42,17 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
   const isEditMode = !!property;
 
   // Fetch category options
-  const { data: categories, isLoading: isLoadingCategories } = useSWR<CategoryOption[]>('/api/admin/categories/options', fetcher);
+  const { data: categories, isLoading: isLoadingCategories } = useSWR<CategoryOption[]>('/api/admin/categories/options');
 
   // Fetch developer options
-  const { data: developerList, isLoading: isLoadingDevelopers } = useSWR<DeveloperOption[]>('/api/admin/developers/options', fetcher);
+  const { data: developerList, isLoading: isLoadingDevelopers } = useSWR<DeveloperOption[]>('/api/admin/developers/options');
 
   // Fetch amenity options
-  const { data: amenityResponse, isLoading: isLoadingAmenities } = useSWR<{ success: boolean; data: AmenityOption[] }>('/api/admin/amenities/options', fetcher);
+  const { data: amenityResponse, isLoading: isLoadingAmenities } = useSWR<{ success: boolean; data: AmenityOption[] }>('/api/admin/amenities/options');
   const amenityOptions = amenityResponse?.data || [];
 
   // Fetch city options
-  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options', fetcher);
+  const { data: cityOptions, isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options');
   const cityList = cityOptions || [];
 
   // Extract amenity IDs from property data

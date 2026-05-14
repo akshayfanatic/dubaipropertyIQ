@@ -9,12 +9,13 @@ import { cn } from '@/lib/utils';
 interface PropertyWhatsAppButtonProps {
   property: Pick<PropertyListItem, 'title' | 'slug'>;
   className?: string;
-  variant?: 'card' | 'detail';
+  variant?: 'card' | 'detail' | 'primary';
 }
 
 const buttonStyles = {
   card: 'h-11 w-full rounded-lg bg-card hover:bg-card/90 text-primary gap-2.5 border-2 border-primary/20 font-semibold text-sm shadow-lg hover:shadow-xl',
   detail: 'h-12 rounded-lg bg-card hover:bg-card/90 text-primary gap-2.5 border-2 border-primary/20 font-semibold shadow-lg',
+  primary: 'h-12 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground gap-2.5 font-semibold shadow-lg hover:shadow-xl border-0',
 };
 
 export function PropertyWhatsAppButton({ property, className, variant = 'card' }: PropertyWhatsAppButtonProps) {
@@ -31,9 +32,11 @@ export function PropertyWhatsAppButton({ property, className, variant = 'card' }
     window.open(url, '_blank');
   };
 
+  const isPrimary = variant === 'primary';
+
   return (
     <Button size="sm" onClick={handleClick} className={cn(buttonStyles[variant], className)}>
-      <MessageCircle className="h-5 w-5 fill-primary" strokeWidth={0} />
+      <MessageCircle className={cn('h-5 w-5', isPrimary ? 'fill-primary-foreground' : 'fill-primary')} strokeWidth={0} />
       <span>WhatsApp</span>
     </Button>
   );
