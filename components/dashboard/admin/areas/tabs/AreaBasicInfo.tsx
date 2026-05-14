@@ -9,7 +9,6 @@ import { FormActions } from '@/components/shared/forms/FormActions';
 import { TextInput } from '@/components/shared/forms/text-input';
 import { TextArea } from '@/components/shared/forms/text-area';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { fetcher } from '@/lib/swr-config';
 import { generateSlug } from '@/lib/utils';
 import { CityOption } from '@/types/city';
 import { Area } from '@/types/areas';

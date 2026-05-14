@@ -2,14 +2,13 @@ import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { Building2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-import type { ImageObject } from '@/types/images';
-
 interface DeveloperInfoProps {
   developer: {
     name: string;
-    logo_url?: string | ImageObject | null;
-    description?: string;
-    slug?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    logo_url?: any;
+    description?: string | null;
+    slug?: string | null;
   } | null;
 }
 

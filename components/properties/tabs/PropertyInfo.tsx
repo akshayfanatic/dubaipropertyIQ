@@ -10,14 +10,15 @@ interface PropertyInfoProps {
     developer?: { name: string };
   };
   children?: React.ReactNode;
+  id?: string;
 }
 
-export function PropertyInfo({ property, children }: PropertyInfoProps) {
+export function PropertyInfo({ property, children, id }: PropertyInfoProps) {
   const cityName = property.city?.name || 'Dubai';
   const developerName = property.developer?.name;
 
   return (
-    <Card className="border border-border/50 shadow-2xl rounded-2xl bg-card/50 backdrop-blur-sm">
+    <Card id={id} className="border border-border/50 shadow-2xl rounded-2xl bg-card/50 backdrop-blur-sm">
       <CardContent className="p-6">
         {/* Title & Price */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">

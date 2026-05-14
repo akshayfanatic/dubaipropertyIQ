@@ -6,11 +6,12 @@ type PropertyContentCardProps = {
   title: string;
   children: React.ReactNode;
   className?: string;
+  id?: string;
 };
 
-const PropertyContentCard = ({ title, children, className = '' }: PropertyContentCardProps) => {
+const PropertyContentCard = ({ title, children, className = '', id = '' }: PropertyContentCardProps) => {
   return (
-    <Card className={cn('bg-transparent border-none shadow-none', className)}>
+    <Card id={id} className={cn('bg-transparent border-none shadow-none', className)}>
       <CardHeader className="p-0 mb-4">
         <CardTitle className="text-xl font-bold border-l-4 border-primary pl-4 leading-none">{title}</CardTitle>
       </CardHeader>

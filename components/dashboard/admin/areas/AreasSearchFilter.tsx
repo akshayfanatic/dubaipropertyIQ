@@ -30,7 +30,7 @@ export function AreasSearchFilter() {
   const isSyncingRef = useRef(false);
   const lastSyncedRef = useRef<string>('');
 
-  const { data: cityOptions = [], isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options', fetcher);
+  const { data: cityOptions = [], isLoading: isLoadingCities } = useSWR<CityOption[]>('/api/admin/cities/options');
 
   const methods = useForm<AreasSearchForm>({
     defaultValues: getValuesFromParams(searchParams),

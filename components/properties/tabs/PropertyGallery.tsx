@@ -1,5 +1,4 @@
 'use client';
-import type { SwiperClass } from 'swiper/types';
 import { useRef, useState } from 'react';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
@@ -20,8 +19,10 @@ interface PropertyGalleryProps {
 }
 
 export function PropertyGallery({ photos, title, statusLabel, statusClassName }: PropertyGalleryProps) {
-  const swiperRef = useRef<SwiperClass | null>(null);
-  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const swiperRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
   const images = photos?.length ? photos : [{ url: '/assets/images/placeholder.jpg', alt_tag: title }];
 
