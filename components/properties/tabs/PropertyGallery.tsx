@@ -10,15 +10,17 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import type { ImageObject } from '@/types/images';
 import { cn } from '@/lib/utils';
+import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 
 interface PropertyGalleryProps {
   photos: ImageObject[];
   title: string;
   statusLabel: string;
   statusClassName: string;
+  golden_visa_eligible?: boolean;
 }
 
-export function PropertyGallery({ photos, title, statusLabel, statusClassName }: PropertyGalleryProps) {
+export function PropertyGallery({ photos, title, statusLabel, statusClassName, golden_visa_eligible }: PropertyGalleryProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,9 +53,10 @@ export function PropertyGallery({ photos, title, statusLabel, statusClassName }:
             </div>
           </div>
 
-          {/* Status Badge */}
-          <div className="absolute top-4 left-4 z-10">
+          {/* Status & Golden Visa Badge */}
+          <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
             <div className={cn('px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md bg-white/90 backdrop-blur-sm text-black', statusClassName)}>{statusLabel}</div>
+            {golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" className="px-3 py-1.5 text-sm shadow-xl backdrop-blur-md" />}
           </div>
 
           {/* Overlay */}

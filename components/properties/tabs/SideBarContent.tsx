@@ -1,8 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { PropertyWhatsAppButton } from '../PropertyWhatsAppButton';
-import { CheckCircle2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Property } from '@/types';
+import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 
 interface SidebarContentProps {
   property: Property & { category?: { name: string } };
@@ -38,11 +37,8 @@ const SideBarContent = ({ property }: SidebarContentProps) => {
           </div>
 
           {property.golden_visa_eligible && (
-            <div className="pt-2 w-fit">
-              <Badge variant="secondary" className="w-full justify-center py-1.5 gap-2 bg-amber-50 text-amber-700 border-amber-200/50 hover:bg-amber-100 transition-colors">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Golden Visa Eligible
-              </Badge>
+            <div className="pt-2">
+              <GoldenVisaBadge variant="gradient-soft" />
             </div>
           )}
         </div>

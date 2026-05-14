@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatPrice, formatSize } from '@/lib/utils/price';
 import { cn } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
+import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 
 interface PropertyCardProps {
   property: PropertyListItem;
@@ -36,7 +37,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <div className="absolute inset-0 bg-linear-to-t from-foreground/55 via-foreground/10 to-transparent md:bg-linear-to-r md:from-transparent md:via-transparent md:to-foreground/10" />
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
             <Badge className={cn('rounded-lg px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur-sm', status.className)}>{status.label}</Badge>
-            {property.golden_visa_eligible && <Badge className="rounded-lg border-0 bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-amber-600">Golden Visa</Badge>}
+            {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" />}
           </div>
         </div>
 
