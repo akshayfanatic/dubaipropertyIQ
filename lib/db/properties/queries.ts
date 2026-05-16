@@ -232,7 +232,6 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
         `,
       )
       .eq('slug', slug)
-      .eq('status', 'available')
       .single();
 
     if (error) {

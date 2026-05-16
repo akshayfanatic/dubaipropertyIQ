@@ -9,7 +9,7 @@ interface SidebarContentProps {
 const SideBarContent = ({ property }: SidebarContentProps) => {
   const categoryName = property.category?.name;
   return (
-    <Card className="border-none shadow-xl relative overflow-hidden rounded-2xl bg-card">
+    <Card className="max-w-full w-full border-none shadow-xl relative overflow-hidden rounded-2xl bg-card">
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-primary" />
       <CardContent className="p-6 space-y-4">
         <h3 className="text-lg font-semibold">Interested in this property?</h3>
