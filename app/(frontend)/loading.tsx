@@ -1,30 +1,29 @@
-import HeroBanner from '@/components/home/HeroBanner';
-import HomeSearchForm from '@/components/home/HomeSearchForm';
-import { SectionCard } from '@/components/shared/SectionCard';
-import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeveloperCardSkeleton } from '@/components/developers/card/DeveloperCard';
 import { PropertyCardHomeSkeleton } from '@/components/properties/card/PropertyCard';
+import { PageBanner } from '@/components/shared/PageBanner';
+import { HomeBannerSkeleton } from '@/components/home/HomeBanner';
+import { Separator } from '@/components/ui/separator';
 
 export default function Loading() {
   return (
     <>
-      {/* Hero Section */}
-      <HeroBanner
-        badge="Premium Properties"
-        headline="Find Your Dream Home"
-        subtext="Discover exceptional properties in Dubai's most prestigious locations. Your perfect home awaits with our curated collection."
-        backgroundImage="/assets/images/hero-bg.jpg"
-      >
-        <HomeSearchForm />
-      </HeroBanner>
+      <PageBanner>
+        <HomeBannerSkeleton />
+      </PageBanner>
+
+      <Separator />
 
       {/* Explore Properties by City Section */}
-      <Card className="border-none">
-        <SectionCard title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="container mx-auto">
+      <div className="bg-white py-12 md:py-16">
+        <div className="container mx-auto space-y-6">
+          <div className="space-y-2 text-center">
+            <Skeleton className="h-10 w-64 mx-auto" />
+            <Skeleton className="h-6 w-96 mx-auto" />
+          </div>
           <div className="space-y-6">
             {/* City tabs skeleton */}
-            <div className="w-full flex gap-2 overflow-hidden">
+            <div className="w-full flex gap-2 justify-center overflow-hidden">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Skeleton key={i} className={`h-10 rounded-full ${i === 0 ? 'w-24' : 'w-20'}`} />
               ))}
@@ -36,21 +35,23 @@ export default function Loading() {
               ))}
             </div>
           </div>
-        </SectionCard>
-      </Card>
+        </div>
+      </div>
+
+      <Separator />
 
       {/* Developers Slider Section */}
-      <Card className="py-12 md:py-16">
+      <div className="bg-white py-12 md:py-16">
         <div className="container mx-auto space-y-6">
           {/* Section title & description */}
           <div className="space-y-2">
-            <Skeleton className="h-7 w-64" />
+            <Skeleton className="h-8 w-64" />
             <Skeleton className="h-5 w-96" />
           </div>
           {/* Developer cards */}
           <DeveloperCardSkeleton count={4} />
         </div>
-      </Card>
+      </div>
     </>
   );
 }

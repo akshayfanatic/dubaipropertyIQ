@@ -106,3 +106,22 @@ export default function HomeSearchForm() {
     </div>
   );
 }
+
+export function HomeSearchFormSkeleton() {
+  return (
+    <div className="w-full mx-auto max-w-4xl rounded-lg p-4 md:p-6 md:py-8 shadow-sm border animate-pulse">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end">
+        <div className="flex flex-col gap-4 md:flex-row flex-1">
+          {/* Location field */}
+          <div className="h-10 flex-1 bg-gray-200 rounded" />
+          {/* Property type field */}
+          <div className="h-10 flex-1 bg-gray-200 rounded" />
+          {/* Price range field */}
+          <div className="h-10 flex-1 bg-gray-200 rounded" />
+        </div>
+        {/* Search button */}
+        <div className="h-12 w-full md:w-40 bg-gray-200 rounded" />
+      </div>
+    </div>
+  );
+}

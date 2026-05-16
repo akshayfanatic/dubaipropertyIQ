@@ -222,3 +222,16 @@
 .animate-float-x {
   animation: floatX 0.9s ease-in-out infinite;
 }
+
+/* =========================
+   REUSABLE ANIMATIONS (UTILITIES)
+========================= */
+@layer utilities {
+  .card-entrance {
+    @apply animate-fade-up animate-once animate-duration-1000 animate-ease-out;
+  }
+
+  .icon-wiggle-subtle {
+    @apply animate-wiggle animate-infinite animate-duration-2000 animate-ease-in-out;
+  }
+}
