@@ -1,141 +1,198 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useFormContext } from 'react-hook-form';
-import { useDebouncedCallback } from 'use-debounce';
 import { Search } from 'lucide-react';
+import { useDebouncedCallback } from 'use-debounce';
+import { useFormContext } from 'react-hook-form';
+import { useQueryStates, parseAsString, parseAsArrayOf, parseAsBoolean } from 'nuqs';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { SelectField } from '@/components/shared/select-field';
-import { useCategories } from '@/hooks/data/public/useCategories';
 import { PriceRangeInput } from '@/components/shared/forms/price-range-input';
-import { filterSchema, type FilterSchema } from './types';
 import { TextInput } from '../shared/forms/text-input';
+import { useCategories } from '@/hooks/data/public/useCategories';
+import { filterSchema, type FilterSchema } from './types';
+
+const defaultValues: FilterSchema = {
+  location: '',
+  propertyType: '',
+  priceRange: {
+    min: '',
+    max: '',
+  },
+  amenities: [],
+  goldenVisaEligible: false,
+};
 
 export default function SearchFilters() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const { categories, isLoading: categoriesLoading } = useCategories();
 
-  const buildUrl = (data: FilterSchema) => {
-    const params = new URLSearchParams();
+  /**
+   * URL STATE
+   */
+  const [query, setQuery] = useQueryStates(
+    {
+      q: parseAsString.withDefault(''),
+      categories: parseAsString.withDefault(''),
+      minPrice: parseAsString.withDefault(''),
+      maxPrice: parseAsString.withDefault(''),
+      amenities: parseAsArrayOf(parseAsString).withDefault([]),
+      golden_visa_eligible: parseAsBoolean.withDefault(false),
+    },
+    {
+      shallow: false,
+      history: 'replace',
+    },
+  );
 
-    if (data.location) {
-      params.set('q', data.location);
-    }
-    if (data.propertyType) params.set('categories', data.propertyType);
-    if (data.priceRange.min) params.set('minPrice', data.priceRange.min);
-    if (data.priceRange.max) params.set('maxPrice', data.priceRange.max);
+  /**
+   * URL UPDATE
+   */
+  const updateQuery = useDebouncedCallback((data: FilterSchema) => {
+    setQuery({
+      q: data.location || null,
 
-    return `/search?${params.toString()}`;
+      categories: data.propertyType || null,
+
+      minPrice: data.priceRange.min || null,
+
+      maxPrice: data.priceRange.max || null,
+
+      amenities: (data.amenities?.length ?? 0) > 0 ? data.amenities : null,
+
+      golden_visa_eligible: data.goldenVisaEligible || null,
+    });
+  }, 500);
+
+  /**
+   * RESET FILTERS
+   */
+  const resetQuery = () => {
+    setQuery({
+      q: null,
+      categories: null,
+      minPrice: null,
+      maxPrice: null,
+      amenities: null,
+      golden_visa_eligible: null,
+    });
   };
-
-  const amenitiesParam = searchParams.get('amenities');
-  const defaultAmenities = amenitiesParam ? amenitiesParam.split(',') : [];
-  const goldenVisaParam = searchParams.get('golden_visa_eligible');
 
   return (
     <BaseForm
       schema={filterSchema}
-      onSubmit={(data) => router.push(buildUrl(data))}
-      defaultValues={{
-        location: searchParams.get('q') || searchParams.get('location') || '',
-        propertyType: searchParams.get('categories') || '',
-        priceRange: {
-          min: searchParams.get('minPrice') || '',
-          max: searchParams.get('maxPrice') || '',
-        },
-        amenities: defaultAmenities,
-        goldenVisaEligible: goldenVisaParam === 'true',
-      }}
       mode="onChange"
+      onSubmit={() => {}}
+      defaultValues={{
+        location: query.q,
+        propertyType: query.categories,
+        priceRange: {
+          min: query.minPrice,
+          max: query.maxPrice,
+        },
+        amenities: query.amenities,
+        goldenVisaEligible: query.golden_visa_eligible,
+      }}
       className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(14rem,1fr)_minmax(12rem,14rem)] xl:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)_minmax(18rem,22rem)]"
     >
-      <FilterFields categories={categories} categoriesLoading={categoriesLoading} buildUrl={buildUrl} />
+      <FilterFields categories={categories} categoriesLoading={categoriesLoading} updateQuery={updateQuery} resetQuery={resetQuery} />
     </BaseForm>
   );
 }
 
 interface FilterFieldsProps {
-  categories: Array<{ value: string; label: string }>;
+  categories: Array<{
+    value: string;
+    label: string;
+  }>;
   categoriesLoading: boolean;
-  buildUrl: (data: FilterSchema) => string;
+  updateQuery: (data: FilterSchema) => void;
+  resetQuery: () => void;
 }
 
-function FilterFields({ categories, categoriesLoading, buildUrl }: FilterFieldsProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+function FilterFields({ categories, categoriesLoading, updateQuery, resetQuery }: FilterFieldsProps) {
   const form = useFormContext<FilterSchema>();
-  const isSyncingRef = useRef(false);
-
-  const debouncedPush = useDebouncedCallback((url: string) => {
-    if (!isSyncingRef.current) {
-      router.push(url);
-    }
-  }, 500);
-
-  // Sync form with URL when reset from sidebar
-  useEffect(() => {
-    const currentAmenities = form.getValues('amenities') || [];
-    const amenitiesParam = searchParams.get('amenities');
-    const goldenVisaParam = searchParams.get('golden_visa_eligible');
-
-    // If URL has no amenity params but form does, reset form
-    if (!amenitiesParam && !goldenVisaParam && currentAmenities.length > 0) {
-      form.reset({
-        ...form.getValues(),
-        amenities: [],
-        goldenVisaEligible: false,
-      });
-    }
-  }, [searchParams, form]);
-
-  useEffect(() => {
-    const subscription = form.watch((value, { type }) => {
-      if (type === 'change') {
-        debouncedPush(buildUrl(value as FilterSchema));
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form, buildUrl, debouncedPush]);
 
   return (
     <>
+      {/* LOCATION */}
       <FormField
         control={form.control}
         name="location"
         render={({ field }) => (
           <FormItem className="min-w-0">
             <FormControl>
-              <TextInput className="h-11 bg-background" icon={Search} placeholder="Location, community, or property" {...field} type="search" />
+              <TextInput
+                {...field}
+                type="search"
+                icon={Search}
+                placeholder="Location, community, or property"
+                className="h-11 bg-background"
+                onChange={(e) => {
+                  field.onChange(e);
+
+                  updateQuery({
+                    ...form.getValues(),
+                    location: e.target.value,
+                  });
+                }}
+              />
             </FormControl>
+
             <FormMessage />
           </FormItem>
         )}
       />
 
+      {/* PROPERTY TYPE */}
       <FormField
         control={form.control}
         name="propertyType"
         render={({ field }) => (
           <FormItem className="min-w-0">
             <FormControl>
-              <SelectField options={categories} placeholder="Property type" value={field.value} onValueChange={field.onChange} disabled={categoriesLoading} className="h-11 bg-background" />
+              <SelectField
+                value={field.value}
+                options={categories}
+                disabled={categoriesLoading}
+                placeholder="Property type"
+                className="h-11 bg-background"
+                onValueChange={(value) => {
+                  field.onChange(value);
+
+                  updateQuery({
+                    ...form.getValues(),
+                    propertyType: value,
+                  });
+                }}
+              />
             </FormControl>
+
             <FormMessage />
           </FormItem>
         )}
       />
 
+      {/* PRICE RANGE */}
       <FormField
         control={form.control}
         name="priceRange"
         render={({ field }) => (
           <FormItem className="min-w-0 md:col-span-2 xl:col-span-1">
             <FormControl>
-              <PriceRangeInput value={field.value} onChange={field.onChange} className="w-full" />
+              <PriceRangeInput
+                value={field.value}
+                className="w-full"
+                onChange={(value) => {
+                  field.onChange(value);
+
+                  updateQuery({
+                    ...form.getValues(),
+                    priceRange: value,
+                  });
+                }}
+              />
             </FormControl>
+
             <FormMessage />
           </FormItem>
         )}
