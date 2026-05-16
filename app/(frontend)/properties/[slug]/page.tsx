@@ -73,7 +73,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   };
 
   return (
-    <PageLayout className="py-2 space-y-4 px-4" breadcrumb={<PublicBreadCrumb enableBackButton />}>
+    <PageLayout className="py-2 space-y-4 px-4" breadcrumb={<PublicBreadCrumb />}>
       <PropertyQuickNav />
 
       {/* ── Gallery Section ── */}

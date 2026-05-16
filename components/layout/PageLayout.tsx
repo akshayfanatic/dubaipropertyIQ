@@ -1,17 +1,20 @@
-import React from 'react';
-import { cn } from '@/lib/utils'; // adjust path
+import { cn } from '@/lib/utils';
 
-interface PageProps {
+type PageProps = {
   breadcrumb?: React.ReactNode;
-  children?: React.ReactNode;
+  children: React.ReactNode;
   className?: string;
-}
+  contentFullWidth?: boolean;
+};
 
-const PageLayout = ({ breadcrumb, children, className }: PageProps) => {
+const PageLayout = ({ breadcrumb, children, className, contentFullWidth = false }: PageProps) => {
   return (
-    <div className={cn('container mx-auto py-8 px-8', className)}>
-      {breadcrumb && <div>{breadcrumb}</div>}
-      <div>{children}</div>
+    <div className="py-8">
+      {/* Breadcrumb always container */}
+      {breadcrumb && <div className="container mx-auto px-8 mb-6">{breadcrumb}</div>}
+
+      {/* Content conditional */}
+      <div className={cn(contentFullWidth ? 'w-full' : 'container mx-auto px-8', className)}>{children}</div>
     </div>
   );
 };
