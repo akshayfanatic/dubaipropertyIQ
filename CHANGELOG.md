@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.0...v0.5.1) (2026-05-16)
+
+### Features
+
+- **progress:** added new shadcn component progress bar ([1a36ef5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1a36ef5fc6dfb9ae6c6ce0e18f660d6483b581fe))
+- **redirection:** added redirection to public properties and developers ([d7efe15](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d7efe154cc57403c212a8e8e558f29518732d5e8))
+
+### Code Refactoring
+
+- **property:** remove unused component files ([02a6757](https://github.com/akshayfanatic/dubaipropertyIQ/commit/02a6757f2f8e9afb14527f3c8bb088e37e5ca71e))
+
+### Code Style Changes
+
+- **css:** add new varibale in frontend route group css ([e965f25](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e965f25e647b9938051ab4626984131d406b4453))
+- **properties:** fix design issue and style regarding properties ([47ba2cb](https://github.com/akshayfanatic/dubaipropertyIQ/commit/47ba2cb1b280d1cfd827e530dbb87cce0ad43c05))
+
 ## [0.5.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.4.1...v0.5.0) (2026-05-14)
 
 ### Features
