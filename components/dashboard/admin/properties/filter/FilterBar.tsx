@@ -15,14 +15,7 @@ import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import { CategoryOption } from '@/types/category';
 import { CityOption } from '@/types/city';
 import { useIsMobile } from '@/hooks/use-mobile';
-
-const statusOptions = [
-  { value: 'all', label: 'All Status' },
-  { value: 'available', label: 'Available' },
-  { value: 'sold', label: 'Sold' },
-  { value: 'reserved', label: 'Reserved' },
-  { value: 'off_plan', label: 'Off Plan' },
-];
+import { PROPERTY_STATUS_OPTIONS } from '@/types';
 
 export function FilterBar() {
   const { control, reset } = useFormContext();
@@ -78,7 +71,7 @@ export function FilterBar() {
       <Controller
         name="status"
         control={control}
-        render={({ field }) => <SelectField options={statusOptions} placeholder="Status" value={field.value} onValueChange={field.onChange} className="w-full sm:w-40" />}
+        render={({ field }) => <SelectField options={PROPERTY_STATUS_OPTIONS} placeholder="Status" value={field.value} onValueChange={field.onChange} className="w-full sm:w-40" />}
       />
 
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>

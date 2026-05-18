@@ -9,14 +9,14 @@ import type { ImageObject } from './images';
 import type { Amenity } from './amenities';
 import { Tables } from './db/supabase-generated';
 import { Developer } from './developer';
+import type { PropertyStatus } from './enums';
 
 // Re-export for convenience
 export type { PaginatedResult, Location };
+export type { PropertyStatus } from './enums';
 
 // Keep for backward compatibility with existing code
 export type PropertyType = 'apartment' | 'villa' | 'townhouse' | 'penthouse' | 'land';
-
-export type PropertyStatus = 'available' | 'sold' | 'reserved' | 'off_plan';
 
 /**
  * PropertyFAQ - FAQ for a property

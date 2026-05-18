@@ -25,17 +25,11 @@ import { useMemo } from 'react';
 import { AmenityOption } from '@/types/amenities';
 import { CityOption } from '@/types/city';
 import { WidgetCard } from '@/components/shared/WidgetCard';
+import { PROPERTY_STATUSES, PROPERTY_STATUS_OPTIONS } from '@/types/enums';
 
 interface PropertyBasicInfoProps {
   property?: Property;
 }
-
-const statusOptions = [
-  { value: 'available', label: 'Available' },
-  { value: 'sold', label: 'Sold' },
-  { value: 'reserved', label: 'Reserved' },
-  { value: 'off_plan', label: 'Off Plan' },
-];
 
 export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
   const router = useRouter();
@@ -101,7 +95,7 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
           bathrooms: 0,
           size_sqft: 0,
           price_aed: 0,
-          status: 'available',
+          status: PROPERTY_STATUSES[0],
           golden_visa_eligible: false,
           is_featured: false,
           photos: [],
@@ -351,7 +345,7 @@ export function PropertyBasicInfo({ property }: PropertyBasicInfoProps) {
           render={({ field }) => (
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
-              <SelectField options={statusOptions} placeholder="Select status" value={field.value} onValueChange={field.onChange} className="w-full" />
+              <SelectField options={PROPERTY_STATUS_OPTIONS} placeholder="Select status" value={field.value} onValueChange={field.onChange} className="w-full" />
             </div>
           )}
         />

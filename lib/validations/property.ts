@@ -6,12 +6,13 @@
 import { z } from 'zod';
 import { imageObjectSchema, faqSchema } from './shared';
 import { locationSchema } from '@/components/shared/location/schema';
+import { PROPERTY_STATUSES } from '@/types/enums';
 
 // Property Type enum validation (for backward compatibility)
 export const propertyTypeSchema = z.enum(['apartment', 'villa', 'townhouse', 'penthouse', 'land']);
 
 // Property Status enum validation
-export const propertyStatusSchema = z.enum(['available', 'sold', 'reserved', 'off_plan']);
+export const propertyStatusSchema = z.enum(PROPERTY_STATUSES);
 
 // Slug validation schema
 export const propertySlugSchema = z
