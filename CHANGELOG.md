@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.1...v0.5.2) (2026-05-18)
+
+### Features
+
+- **map:** added draggable feature to map ([d646541](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d6465410bdf41d274d77e6f41162c3a28f0348ee))
+- **nuqs:** add new package for managing query params ([10cf38d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/10cf38d8f0ec15eec6876c30eb7d2650707d79ec))
+- **properties:** added dynamic skelton to properties ([aee55d7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/aee55d7059e943e36bb3519386b419c7bf311e24))
+
+### Bug Fixes
+
+- **codex:** move skill to agents.md for codex ([4da1e79](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4da1e79dd8a9e7f261f95f2b990c1f71ea91e212))
+
+### Code Refactoring
+
+- **types:** add new enum.ts file for managin table enums -- removed static varibale from file and using reusble varibale frrom constant in property status ([578c070](https://github.com/akshayfanatic/dubaipropertyIQ/commit/578c0704e7b3d69913037a9bbcf5dd6e16bdd8de))
+
 ### [0.5.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.0...v0.5.1) (2026-05-16)
 
 ### Features
