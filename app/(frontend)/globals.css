@@ -46,6 +46,7 @@
   --accent-foreground: var(--primary);
 
   --destructive: oklch(0.58 0.22 27.29);
+  --destructive-foreground: oklch(1 0 0);
 
   --border: oklch(0.89 0.02 260.47);
   --input: oklch(0.9 0.01 260.47);
@@ -113,7 +114,7 @@
 
 /* =========================
    DARK THEME
-========================= */
+ ========================= */
 .dark {
   --background: oklch(0.21 0.04 260.47);
   --foreground: oklch(0.93 0.01 260.47);
@@ -137,6 +138,7 @@
   --accent-foreground: var(--foreground);
 
   --destructive: oklch(0.64 0.21 27.29);
+  --destructive-foreground: oklch(0.93 0.01 260.47);
 
   --border: oklch(0.45 0.03 260.47);
   --input: var(--border);
@@ -157,13 +159,16 @@
 
 /* =========================
    TAILWIND MAPPING
-========================= */
+ ========================= */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
@@ -176,6 +181,9 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
   --color-border: var(--border);
   --color-input: var(--input);
@@ -213,4 +221,17 @@
 
 .animate-float-x {
   animation: floatX 0.9s ease-in-out infinite;
+}
+
+/* =========================
+   REUSABLE ANIMATIONS (UTILITIES)
+========================= */
+@layer utilities {
+  .card-entrance {
+    @apply animate-fade-up animate-once animate-duration-1000 animate-ease-out;
+  }
+
+  .icon-wiggle-subtle {
+    @apply animate-wiggle animate-infinite animate-duration-2000 animate-ease-in-out;
+  }
 }

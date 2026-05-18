@@ -6,3 +6,4 @@ export * from './developer';
 export * from './city';
 export * from './settings';
 export * from './page';
+export * from './enums';

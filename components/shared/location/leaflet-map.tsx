@@ -88,6 +88,7 @@ type ReadOnlyMapProps = {
     lng: number;
   };
   zoom?: number;
+  draggable?: boolean;
 };
 
 export const propertyMarkerIcon = L.divIcon({
@@ -102,7 +103,7 @@ export const propertyMarkerIcon = L.divIcon({
   iconAnchor: [12, 12],
 });
 
-export function ReadOnlyMapClient({ center, zoom = 13 }: ReadOnlyMapProps) {
+export function ReadOnlyMapClient({ center, zoom = 13, draggable = true }: ReadOnlyMapProps) {
   const isClient = useClient();
 
   if (!isClient) return null;
@@ -113,12 +114,12 @@ export function ReadOnlyMapClient({ center, zoom = 13 }: ReadOnlyMapProps) {
         center={[center.lat, center.lng]}
         zoom={zoom}
         scrollWheelZoom={false}
-        dragging={false}
+        dragging={draggable}
         doubleClickZoom={false}
-        touchZoom={false}
+        touchZoom={draggable}
         zoomControl={true}
         boxZoom={false}
-        keyboard={false}
+        keyboard={draggable}
         className="h-full w-full z-0"
       >
         <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

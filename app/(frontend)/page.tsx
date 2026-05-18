@@ -1,4 +1,3 @@
-import HeroBanner from '@/components/home/HeroBanner';
 import HomeSearchForm from '@/components/home/HomeSearchForm';
 import { CityPropertyTabs } from '@/components/properties/CityPropertyTabs';
 import { SectionCard } from '@/components/shared/SectionCard';
@@ -13,6 +12,8 @@ import { ToolsSection } from '@/components/home/ToolsSection';
 import { FeaturedCities } from '@/components/home/FeaturedCities';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { Separator } from '@/components/ui/separator';
+import { PageBanner } from '@/components/shared/PageBanner';
+import HomeBanner from '@/components/home/HomeBanner';
 
 async function getHomeData() {
   const [citiesResult, featuredCitiesResult, developersResult] = await Promise.all([getCities({ limit: 5 }), getFeaturedCitiesAreas(), getDevelopers()]);
@@ -29,9 +30,9 @@ export default async function Home() {
 
   return (
     <>
-      <HeroBanner headline="Find Your Dream Home" subtext="Discover exceptional properties in Dubai's most prestigious locations. Your perfect home awaits with our curated collection.">
-        <HomeSearchForm />
-      </HeroBanner>
+      <PageBanner>
+        <HomeBanner headline="Find Your Dream Home" subtext="Discover exceptional properties in Dubai" searchForm={<HomeSearchForm />} />
+      </PageBanner>
 
       <Separator />
 

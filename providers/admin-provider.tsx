@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { SWRProvider } from '@/providers/swr-provider';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 interface AdminProviderProps {
   children: React.ReactNode;
@@ -12,9 +13,11 @@ interface AdminProviderProps {
 export function AdminProvider({ children }: AdminProviderProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <SWRProvider>
-        <SidebarProvider>{children}</SidebarProvider>
-      </SWRProvider>
+      <NuqsAdapter>
+        <SWRProvider>
+          <SidebarProvider>{children}</SidebarProvider>
+        </SWRProvider>
+      </NuqsAdapter>
     </ThemeProvider>
   );
 }

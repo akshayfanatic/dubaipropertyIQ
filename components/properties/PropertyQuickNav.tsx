@@ -62,7 +62,7 @@ export function PropertyQuickNav() {
       )}
     >
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-start gap-1 sm:gap-2 h-20.25 overflow-x-auto no-scrollbar scroll-smooth">
+        <div className="flex items-center justify-start gap-1 sm:gap-2 h-16 overflow-x-auto no-scrollbar scroll-smooth">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;

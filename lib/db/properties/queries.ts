@@ -10,6 +10,7 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import type { Property, PropertyFilters, PaginatedResult, PropertyListItem, PropertyOption } from '@/types/property';
 import type { Amenity } from '@/types/amenities';
 import { delay } from '@/lib/utils';
+import type { PropertyStatus } from '@/types/enums';
 
 // Type for Supabase join result: properties_amenities → amenities
 interface PropertyAmenityWithAmenity {
@@ -31,9 +32,12 @@ export interface PropertySearchFilters {
   minPrice?: string;
   maxPrice?: string;
   amenities?: string; // comma-separated amenity IDs
-  golden_visa_eligible?: string;
+  developer_id?: string;
+  developer_slug?: string;
+  status?: PropertyStatus;
   page?: number;
   pageSize?: number;
+  golden_visa_eligible?: boolean | string;
 }
 
 const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>) => {
@@ -54,7 +58,7 @@ const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | nul
  * Get properties for public use
  * Uses serverClient - respects RLS, accessible to all users
  */
-export async function getProperties(filters?: PropertySearchFilters) {
+export async function getProperties(filters?: PropertySearchFilters): Promise<ApiResponse<PaginatedResult<PropertyListItem>>> {
   await delay(2000);
   try {
     const supabase = await serverClient();
@@ -84,12 +88,12 @@ export async function getProperties(filters?: PropertySearchFilters) {
         updated_at,
         category:categories!inner (id, name, slug),
         city:cities (id, name, slug),
-        developer:developers (id, name)
+        developer:developers (id, name, slug, logo_url)
       `,
       { count: 'exact' },
     );
 
-    query = query.eq('status', 'available');
+    query = query.eq('status', filters?.status || 'available');
 
     // Find matching city IDs for location search
     let cityIds: string[] = [];
@@ -133,7 +137,19 @@ export async function getProperties(filters?: PropertySearchFilters) {
 
     // Golden Visa filter
     if (filters?.golden_visa_eligible) {
-      query = query.eq('golden_visa_eligible', filters.golden_visa_eligible === 'true');
+      query = query.eq('golden_visa_eligible', filters.golden_visa_eligible === true || filters.golden_visa_eligible === 'true');
+    }
+
+    // Developer filter
+    if (filters?.developer_id) {
+      query = query.eq('developer_id', filters.developer_id);
+    }
+
+    if (filters?.developer_slug) {
+      const { data: dev } = await supabase.from('developers').select('id').eq('slug', filters.developer_slug).single();
+      if (dev) {
+        query = query.eq('developer_id', dev.id);
+      }
     }
 
     // Amenities filter (requires separate query due to many-to-many)
@@ -232,7 +248,6 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
         `,
       )
       .eq('slug', slug)
-      .eq('status', 'available')
       .single();
 
     if (error) {

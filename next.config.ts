@@ -12,8 +12,28 @@ const nextConfig: NextConfig = {
         hostname: supabaseHostname ?? '',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/properties',
+        destination: '/search',
+        permanent: true,
+      },
+      {
+        source: '/developers',
+        destination: '/search',
+        permanent: true,
+      },
+    ];
+  },
+
   experimental: {
     globalNotFound: true,
     serverActions: {
