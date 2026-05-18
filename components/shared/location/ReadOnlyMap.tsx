@@ -8,6 +8,7 @@ type ReadOnlyMapProps = {
     lng: number;
   };
   zoom?: number;
+  draggable?: boolean;
 };
 
 const LeafletMapClient = dynamic<ReadOnlyMapProps>(() => import('./leaflet-map').then((mod) => mod.ReadOnlyMapClient), { ssr: false });
