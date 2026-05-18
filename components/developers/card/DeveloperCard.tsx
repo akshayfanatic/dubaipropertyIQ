@@ -1,5 +1,4 @@
 'use client';
-
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Developer } from '@/types/developer';
@@ -20,30 +19,34 @@ export function DeveloperCard({ name, logo_url, total_projects, years_active }: 
   const logoSrc = getLogoUrl(logo_url);
 
   return (
-    <Card className="group relative overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300">
+    <Card className="group relative overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 bg-background cursor-pointer card-entrance">
       <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
       <div className="relative p-5">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl overflow-hidden bg-linear-to-br from-muted to-muted/50 flex items-center justify-center shrink-0 ring-1 ring-border/50 group-hover:ring-primary/20 transition-all">
-            <ImageWithFallback src={logoSrc} alt={name} width={64} height={64} className="object-cover w-full h-full p-3" />
+          {/* Logo Container with reusable wiggle utility */}
+          <div className="w-16 h-16 rounded-2xl overflow-hidden bg-linear-to-br from-muted to-muted/50 flex items-center justify-center shrink-0 ring-1 ring-border/50 group-hover:ring-primary/20 transition-all shadow-sm icon-wiggle-subtle">
+            <ImageWithFallback src={logoSrc} alt={name} width={64} height={64} className="object-cover w-full h-full p-3 transition-transform duration-500 group-hover:scale-110" />
           </div>
+
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="font-semibold text-base truncate group-hover:text-primary transition-colors">{name}</h3>
-              <ArrowUpRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <h3 className="font-bold text-base truncate group-hover:text-primary transition-colors tracking-tight">{name}</h3>
+              <ArrowUpRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
             </div>
+
             {(total_projects ?? 0) > 0 || (years_active ?? 0) > 0 ? (
-              <div className="flex gap-4 text-xs text-muted-foreground mt-2">
+              <div className="flex flex-wrap gap-2 mt-2">
                 {(total_projects ?? 0) > 0 && (
-                  <span className="flex items-center gap-1.5 bg-muted/50 px-2 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 bg-muted/50 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2.5 py-1 rounded-full border border-border/50 group-hover:bg-primary/5 group-hover:text-primary transition-colors">
                     <Building2 className="w-3 h-3" />
-                    <span className="font-medium text-foreground">{total_projects}</span> Projects
+                    <span className="text-foreground group-hover:text-primary">{total_projects}</span> Projects
                   </span>
                 )}
                 {(years_active ?? 0) > 0 && (
-                  <span className="flex items-center gap-1.5 bg-muted/50 px-2 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 bg-muted/50 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2.5 py-1 rounded-full border border-border/50 group-hover:bg-primary/5 group-hover:text-primary transition-colors">
                     <Calendar className="w-3 h-3" />
-                    <span className="font-medium text-foreground">{years_active}</span> Years
+                    <span className="text-foreground group-hover:text-primary">{years_active}</span> Years
                   </span>
                 )}
               </div>

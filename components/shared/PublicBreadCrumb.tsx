@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { ArrowLeft, ChevronLeft, Home } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -25,7 +25,7 @@ type PublicBreadCrumbProps = {
  *  @param  enableBackButton Enbling Back Button defualt value false
  * @returns
  */
-export function PublicBreadCrumb({ enableBackButton = false }: PublicBreadCrumbProps) {
+export function PublicBreadCrumb({ enableBackButton = true }: PublicBreadCrumbProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -45,7 +45,7 @@ export function PublicBreadCrumb({ enableBackButton = false }: PublicBreadCrumbP
       {enableBackButton && (
         <>
           <button onClick={() => router.back()} className="flex items-center gap-1.5 pr-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer group">
-            <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
+            <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
             Back
           </button>
           <div className="h-4 w-px bg-border/60 mx-1" />

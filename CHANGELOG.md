@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.2...v0.6.0) (2026-05-18)
+
+### Features
+
+- **components:** added dynamic page for handling developer information with layout ([4d0eda0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4d0eda05fddba2d0b8e57adc723e01c33f90407d))
+- **developer:** added component for managin developer page ([aaac56a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/aaac56a2dfdb8295385a82c508e5825da329ef2a))
+
+### Code Refactoring
+
+- **breadcrumb:** added props in public breadcrumb compnent ([eed68a2](https://github.com/akshayfanatic/dubaipropertyIQ/commit/eed68a24c699a2656cdc96b3f8a7faebfa28837a))
+
 ### [0.5.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.1...v0.5.2) (2026-05-18)
 
 ### Features

@@ -75,7 +75,7 @@ export async function getDevelopersAdmin(filters?: DeveloperFilters): Promise<Ap
  */
 export async function getDeveloperById(id: string): Promise<ApiResponse<Developer | null>> {
   try {
-    const supabase = adminClient();
+    const supabase = await serverClient();
 
     const { data, error } = await supabase.from('developers').select('*').eq('id', id).single();
 
@@ -118,7 +118,7 @@ export async function getDeveloperById(id: string): Promise<ApiResponse<Develope
  */
 export async function getDeveloperBySlug(slug: string): Promise<ApiResponse<Developer | null>> {
   try {
-    const supabase = adminClient();
+    const supabase = await serverClient();
 
     const { data, error } = await supabase.from('developers').select('*').eq('slug', slug).single();
 
