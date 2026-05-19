@@ -7,21 +7,12 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Area, AreaOption, AreaFilters, AreaFAQ, AreaAmenityFAQ } from '@/types/areas';
-import type { PaginatedResult, Location } from '@/types/shared';
+import type { PaginatedResult } from '@/types/shared';
 
 /**
  * Area with city information
  */
-export interface AreaWithCity {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  location: Location | null;
-  photos: string[];
-  city_id: string;
-  created_at: string;
-  updated_at: string;
+export type AreaWithCity = Area & {
   cities: {
     name: string;
     slug: string;
@@ -42,7 +33,7 @@ export interface AreaWithCity {
     question: string;
     answer: string;
   }>;
-}
+};
 
 /**
  * Get areas with optional search and pagination
@@ -173,6 +164,45 @@ export async function getAreasWithCityAdmin(filters?: AreaFilters): Promise<ApiR
       status: HttpStatus.OK,
       message: 'Areas fetched successfully',
       data: result,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch areas';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get all areas for a city by city slug
+ */
+export async function getAreasByCity(citySlug: string): Promise<ApiResponse<Pick<Area, 'name' | 'photos' | 'slug'>[]>> {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase.from('areas').select('name, photos, slug, cities!inner()').eq('cities.slug', citySlug).order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Areas fetched successfully',
+      data: (data || []).map((area) => ({
+        name: area.name,
+        photos: area.photos,
+        slug: area.slug,
+      })),
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch areas';

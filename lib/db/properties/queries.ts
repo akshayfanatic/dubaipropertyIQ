@@ -286,6 +286,69 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
 }
 
 /**
+ * Get available properties by city slug for public city pages
+ */
+export async function getPropertiesByCity(citySlug: string): Promise<ApiResponse<PropertyListItem[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select(
+        `
+          id,
+          slug,
+          title,
+          description,
+          bedrooms,
+          bathrooms,
+          size_sqft,
+          price_aed,
+          status,
+          golden_visa_eligible,
+          photos,
+          features,
+          floor_plan,
+          location,
+          city_id,
+          created_at,
+          updated_at,
+          category:categories (id, name, slug),
+          city:cities!inner (id, name, slug),
+          developer:developers (id, name, slug, logo_url)
+        `,
+      )
+      .eq('cities.slug', citySlug)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Properties fetched successfully',
+      data: data as PropertyListItem[],
+    });
+  } catch (error) {
+    console.error('[getPropertiesByCity] Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to fetch properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
  * Get all properties with optional filters and pagination
  */
 export async function getPropertiesAdmin(filters?: PropertyFilters) {
