@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
-import { Json } from '@/types/database.types';
+import type { Json } from '@/types/db/supabase-generated';
 
 function isImageObject(value: Json | null): value is { url: string; alt_tag: string } {
   return value !== null && typeof value === 'object' && !Array.isArray(value) && 'url' in value && 'alt_tag' in value && typeof value.url === 'string' && typeof value.alt_tag === 'string';

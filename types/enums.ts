@@ -10,6 +10,7 @@ export const PROPERTY_STATUS_LABELS: Record<PropertyStatus, string> = {
   sold: 'Sold',
   reserved: 'Reserved',
   off_plan: 'Off Plan',
+  draft: 'Draft',
 };
 
 export const PROPERTY_STATUS_OPTIONS: SelectOption[] = PROPERTY_STATUSES.map((status) => ({

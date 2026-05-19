@@ -8,7 +8,7 @@ import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
 import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
-import { Json } from '@/types/database.types';
+import type { Json } from '@/types/db/supabase-generated';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
