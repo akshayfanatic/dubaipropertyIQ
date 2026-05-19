@@ -3,22 +3,19 @@
  * Types for neighborhoods/communities within cities in DubaiPropertyIQ
  */
 
-import type { PaginationFilters, SearchFilters, SelectOption, FAQ, Location } from './shared';
+import type { PaginationFilters, SearchFilters, SelectOption, FAQ } from './shared';
+import type { Tables, TablesInsert, TablesUpdate } from './db/supabase-generated';
+import type { ImageObject } from './images';
 
-export interface Area {
-  id: string;
-  city_id: string;
-  name: string;
-  slug: string;
-  description: string | null; // Matches database (can be null)
-  location?: Location | null; // Generic Location type from shared
-  photos: string[] | null; // Matches database (can be null)
-  created_at: string;
-  updated_at: string;
-}
-
-export type AreaInsert = Omit<Area, 'id' | 'created_at' | 'updated_at'>;
-export type AreaUpdate = Partial<AreaInsert>;
+export type Area = Omit<Tables<'areas'>, 'photos'> & {
+  photos: ImageObject[];
+};
+export type AreaInsert = Omit<TablesInsert<'areas'>, 'photos'> & {
+  photos?: ImageObject[] | null;
+};
+export type AreaUpdate = Omit<TablesUpdate<'areas'>, 'photos'> & {
+  photos?: ImageObject[] | null;
+};
 
 /**
  * Area filters for admin list page

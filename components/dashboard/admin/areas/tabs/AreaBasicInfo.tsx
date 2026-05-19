@@ -57,8 +57,7 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
       name: area?.name || '',
       slug: area?.slug || '',
       description: area?.description || '',
-      /* eslint "@typescript-eslint/no-explicit-any": "off" */
-      photos: (area?.photos as any) || [],
+      photos: area?.photos || [],
       amenity_ids: areaAmenityIds,
       property_ids: areaPropertyIds,
     },
