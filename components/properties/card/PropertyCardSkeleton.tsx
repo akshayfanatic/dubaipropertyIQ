@@ -32,3 +32,13 @@ export function PropertyCardSkeleton() {
     </div>
   );
 }
+
+export function PropertyCardsSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      {Array.from({ length: count }).map((_, index) => (
+        <PropertyCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+}

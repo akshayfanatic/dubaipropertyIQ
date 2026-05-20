@@ -9,13 +9,14 @@ import { useState } from 'react';
 import { deleteArea } from '@/lib/db/areas/actions';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
+import type { ImageObject } from '@/types/images';
 
 interface AreaWithCity {
   id: string;
   name: string;
   slug: string;
   description: string | null;
-  photos: string[];
+  photos: ImageObject[];
   city_id: string;
   cities: {
     name: string;
@@ -51,7 +52,7 @@ export const columns: ColumnDef<AreaWithCity>[] = [
     accessorKey: 'photos',
     header: 'Photos',
     cell: ({ row }) => {
-      const photos = row.getValue('photos') as string[];
+      const photos = row.getValue('photos') as ImageObject[];
       return <span className="text-muted-foreground">{photos.length || 0} photos</span>;
     },
   },

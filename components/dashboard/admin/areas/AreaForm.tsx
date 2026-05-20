@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import { StyledTabs } from '@/components/shared/styled-tabs';
 import { AreaFormProps } from '@/types/areas';
 import { FormSkelton } from '@/components/shared/form-skelton';
+import type { LocationValue } from '@/components/shared/location/schema';
+import type { Json } from '@/types/db/supabase-generated';
 
 // Dynamic imports for code-splitting tabs
 const AreaBasicInfo = dynamic(() => import('./tabs/AreaBasicInfo'), {
@@ -22,7 +24,20 @@ const AreaLocation = dynamic(() => import('./tabs/AreaLocation'), {
   loading: () => <FormSkelton fields={1} showPageHeader={false} showSubmitButton />,
 });
 
+function parseLocation(location: Json | null | undefined): LocationValue | null {
+  if (!location || typeof location !== 'object' || Array.isArray(location)) {
+    return null;
+  }
+
+  const lat = location.lat;
+  const lng = location.lng;
+
+  return typeof lat === 'number' && typeof lng === 'number' ? { lat, lng } : null;
+}
+
 export function AreaForm({ area }: AreaFormProps) {
+  const location = parseLocation(area?.location);
+
   const tabs = [
     {
       value: 'basic-info',
@@ -32,7 +47,7 @@ export function AreaForm({ area }: AreaFormProps) {
     {
       value: 'location-info',
       label: 'Location',
-      content: <AreaLocation areaId={area?.id} location={area?.location} />,
+      content: <AreaLocation areaId={area?.id} location={location} />,
     },
     {
       value: 'faqs',
