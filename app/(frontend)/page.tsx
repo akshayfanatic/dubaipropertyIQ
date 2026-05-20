@@ -33,7 +33,6 @@ export default async function Home() {
       <PageBanner>
         <HomeBanner headline="Find Your Dream Home" subtext="Discover exceptional properties in Dubai" searchForm={<HomeSearchForm />} />
       </PageBanner>
-
       <Separator />
 
       <AnimateSection>

@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-interface AnimateSectionProps {
+interface AnimateSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  className?: string;
   delay?: number;
 }
 
-export function AnimateSection({ children, className, delay = 0 }: AnimateSectionProps) {
+export function AnimateSection({ children, className, delay = 0, ...props }: AnimateSectionProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,7 +30,7 @@ export function AnimateSection({ children, className, delay = 0 }: AnimateSectio
   }, [delay]);
 
   return (
-    <div ref={ref} className={cn(isVisible && 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out', !isVisible && 'opacity-0', className)}>
+    <div ref={ref} className={cn(isVisible && 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out', !isVisible && 'opacity-0', className)} {...props}>
       {children}
     </div>
   );

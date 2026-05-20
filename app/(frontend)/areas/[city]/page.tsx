@@ -11,6 +11,7 @@ import { getCityBySlug, getCityOptions } from '@/lib/db/cities/queries';
 import { getPropertiesByCity } from '@/lib/db/properties/queries';
 import { SliderSection } from '@/components/sliders/SliderSection';
 import type { ImageObject } from '@/types/images';
+import { AnimateSection } from '@/components/shared/AnimateSection';
 
 type AreaPageProps = {
   params: Promise<{
@@ -32,7 +33,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
   const cityImageAlt = typeof cityImage === 'string' ? `${cityInformation.data.name} area skyline` : cityImage?.alt_tag || `${cityInformation.data.name} area skyline`;
 
   return (
-    <PageLayout contentFullWidth>
+    <PageLayout wrapperClassName="py-0" contentFullWidth>
       <PageBanner
         imageUrl={cityImageUrl}
         alt={cityImageAlt}
@@ -51,35 +52,36 @@ export default async function AreaPage({ params }: AreaPageProps) {
         </div>
       </PageBanner>
 
-      <SectionCard
-        title="Explore all Areas"
-        description="Explore communities and neighborhoods in this city."
-        classes={{ title: 'text-3xl font-bold text-foreground', description: 'text-muted-foreground' }}
-      >
-        <AreasItems city={city} />
-      </SectionCard>
+      <AnimateSection>
+        <SectionCard
+          title="Explore all Areas"
+          description="Explore communities and neighborhoods in this city."
+          classes={{ title: 'text-3xl font-bold text-foreground', description: 'text-muted-foreground' }}
+        >
+          <AreasItems city={city} />
+        </SectionCard>
+      </AnimateSection>
 
-      <PropertiesItems city={city} />
+      <AnimateSection>
+        <PropertiesItems city={city} />
+      </AnimateSection>
     </PageLayout>
   );
 }
 
 async function AreasItems({ city }: { city: string }) {
   const { success, data: areas, message } = await getAreasByCity(city);
-  const hasAreas = Boolean(areas?.length);
 
   if (!success) {
     return <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{message || 'Failed to fetch areas'}</div>;
   }
 
-  if (!hasAreas) {
-    return <div className="rounded-lg border bg-muted/30 p-6 text-center text-sm text-muted-foreground">No areas found for this city.</div>;
-  }
+  if (!areas?.length) return;
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {areas?.map((area) => (
-        <AreaCard key={area.slug} name={area.name} photos={area.photos} />
+        <AreaCard key={area.slug} name={area.name} photos={area.photos} slug={area.slug} citySlug={city} />
       ))}
     </div>
   );
@@ -87,13 +89,12 @@ async function AreasItems({ city }: { city: string }) {
 
 async function PropertiesItems({ city }: { city: string }) {
   const { success, data: properties, message } = await getPropertiesByCity(city);
-  const hasProperties = Boolean(properties?.length);
 
   if (!success) {
     return <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{message || 'Failed to fetch properties'}</div>;
   }
 
-  if (!hasProperties) return null;
+  if (!properties?.length) return null;
 
   return (
     <SliderSection

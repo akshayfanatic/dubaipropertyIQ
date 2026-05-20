@@ -47,4 +47,3 @@ export function SectionCard({ title, description, children, className, contentCl
     </section>
   );
 }
-Request;

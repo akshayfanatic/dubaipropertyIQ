@@ -1,14 +1,17 @@
+import Link from 'next/link';
 import { Building2, MapPin } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import type { Area } from '@/types/areas';
 
-type AreaCardProps = Pick<Area, 'name' | 'photos'>;
+type AreaCardProps = Pick<Area, 'name' | 'photos' | 'slug'> & {
+  citySlug: string;
+};
 
-export function AreaCard({ name, photos }: AreaCardProps) {
+export function AreaCard({ name, photos, slug, citySlug }: AreaCardProps) {
   const firstImage = photos?.[0]?.url;
 
   return (
-    <div className="group block rounded-xl">
+    <Link href={`/areas/${citySlug}/${slug}`} className="group block rounded-xl">
       <article className="relative aspect-4/3 overflow-hidden rounded-xl border border-border bg-card shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
         <ImageWithFallback
           src={firstImage}
@@ -33,6 +36,6 @@ export function AreaCard({ name, photos }: AreaCardProps) {
           </h2>
         </div>
       </article>
-    </div>
+    </Link>
   );
 }

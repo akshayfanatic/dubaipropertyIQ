@@ -5,8 +5,15 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
+import { getPropertiesByArea } from '@/lib/db/properties/queries';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Area, AreaOption, AreaFilters, AreaFAQ, AreaAmenityFAQ } from '@/types/areas';
+import type { Amenity } from '@/types/amenities';
+import type { City } from '@/types/city';
+import type { ImageObject } from '@/types/images';
+import type { PropertyListItem } from '@/types/property';
+import type { Location } from '@/types/shared';
 import type { PaginatedResult } from '@/types/shared';
 
 /**
@@ -34,6 +41,48 @@ export type AreaWithCity = Area & {
     answer: string;
   }>;
 };
+
+export type AreaAmenity = Pick<Amenity, 'id' | 'name' | 'slug' | 'description'> & {
+  logo_url: ImageObject | null;
+};
+
+export type AreaDetail = Omit<Area, 'location'> & {
+  location?: Location | null;
+  city: Pick<City, 'id' | 'name' | 'slug' | 'logo_url'> | null;
+  amenities: AreaAmenity[];
+  faqs: AreaFAQ[];
+  amenities_faqs: AreaAmenityFAQ[];
+  property_ids: string[];
+  properties: PropertyListItem[];
+};
+
+type AreaDetailRow = Omit<Area, 'location'> & {
+  location?: unknown;
+  cities?: Pick<City, 'id' | 'name' | 'slug' | 'logo_url'> | Pick<City, 'id' | 'name' | 'slug' | 'logo_url'>[] | null;
+  areas_amenities?: Array<{
+    amenities?: AreaAmenity | AreaAmenity[] | null;
+  }> | null;
+  areas_faqs?: AreaFAQ[] | null;
+  areas_amenities_faqs?: AreaAmenityFAQ[] | null;
+  areas_properties?: Array<{ property_id: string }> | null;
+};
+
+function parseAreaLocation(location: unknown): Location | null {
+  if (!location || typeof location !== 'object' || Array.isArray(location)) {
+    return null;
+  }
+
+  const coords = location as { lat?: unknown; lng?: unknown };
+  return typeof coords.lat === 'number' && typeof coords.lng === 'number' ? { lat: coords.lat, lng: coords.lng } : null;
+}
+
+function firstOrValue<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) {
+    return value[0] ?? null;
+  }
+
+  return value ?? null;
+}
 
 /**
  * Get areas with city information joined
@@ -144,6 +193,88 @@ export async function getAreasByCity(citySlug: string): Promise<ApiResponse<Pick
 }
 
 /**
+ * Get public area detail by area slug.
+ */
+export async function getAreaBySlug(slug: string): Promise<ApiResponse<AreaDetail | null>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase
+      .from('areas')
+      .select(
+        `
+          *,
+          cities!inner(id, name, slug, logo_url),
+          areas_amenities(amenities(id, name, slug, description, logo_url)),
+          areas_faqs(id, area_id, question, answer, created_at),
+          areas_amenities_faqs(id, area_id, question, answer, created_at),
+          areas_properties(property_id)
+        `,
+      )
+      .eq('slug', slug)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Area not found',
+          error: { code: 'NOT_FOUND' },
+        });
+      }
+
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const row = data as AreaDetailRow;
+    const propertiesResponse = await getPropertiesByArea(slug);
+
+    if (!propertiesResponse.success) {
+      return ApiResponse({
+        success: false,
+        status: propertiesResponse.status,
+        message: propertiesResponse.message,
+        error: propertiesResponse.error,
+      });
+    }
+
+    const amenities = row.areas_amenities?.map((item) => firstOrValue(item.amenities)).filter((amenity): amenity is AreaAmenity => Boolean(amenity)) ?? [];
+
+    const area: AreaDetail = {
+      ...row,
+      location: parseAreaLocation(row.location),
+      city: firstOrValue(row.cities),
+      amenities,
+      faqs: row.areas_faqs ?? [],
+      amenities_faqs: row.areas_amenities_faqs ?? [],
+      property_ids: row.areas_properties?.map((item) => item.property_id) ?? [],
+      properties: propertiesResponse.data ?? [],
+    };
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Area fetched successfully',
+      data: area,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch area';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
  * Get a single area by ID with related data
  */
 export async function getAreaByIdAdmin(id: string): Promise<ApiResponse<AreaWithCity | null>> {
@@ -178,49 +309,6 @@ export async function getAreaByIdAdmin(id: string): Promise<ApiResponse<AreaWith
       status: HttpStatus.OK,
       message: 'Area fetched successfully',
       data: data as AreaWithCity | null,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to fetch area';
-    return ApiResponse({
-      success: false,
-      status: HttpStatus.INTERNAL_ERROR,
-      message,
-      error: { code: 'INTERNAL_ERROR' },
-    });
-  }
-}
-
-/**
- * Get a area by slug
- */
-export async function getAreaBySlug(slug: string): Promise<ApiResponse<Area | null>> {
-  try {
-    const supabase = adminClient();
-
-    const { data, error } = await supabase.from('areas').select('*').eq('slug', slug).single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return ApiResponse({
-          success: false,
-          status: HttpStatus.NOT_FOUND,
-          message: 'Area not found',
-          error: { code: 'NOT_FOUND' },
-        });
-      }
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: error.message,
-        error: { code: error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    return ApiResponse({
-      success: true,
-      status: HttpStatus.OK,
-      message: 'Area fetched successfully',
-      data: data as Area,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch area';
