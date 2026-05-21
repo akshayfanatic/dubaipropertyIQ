@@ -58,7 +58,7 @@ const companyLinks: NavigationLink[] = [
   { label: 'About Dubai Property IQ', href: '/about' },
   { label: 'Customer Account', href: '/customer' },
   { label: 'Privacy Policy', href: '/pages/privacy-policy' },
-  { label: 'Terms & Conditions', href: '/pages/terms-and-conditions' },
+  { label: 'Terms & Conditions', href: '/pages/terms-conditions' },
 ];
 
 const topLevelLinks: NavigationLink[] = [

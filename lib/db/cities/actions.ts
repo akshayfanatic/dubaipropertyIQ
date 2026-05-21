@@ -3,7 +3,6 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { City, CityInsert, CityUpdate } from '@/types/city';
-
 import { revalidatePath } from 'next/cache';
 
 /**
