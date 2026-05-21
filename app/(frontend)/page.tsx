@@ -30,18 +30,33 @@ export default async function Home() {
 
   return (
     <>
-      <PageBanner>
-        <HomeBanner headline="Find Your Dream Home" subtext="Discover exceptional properties in Dubai" searchForm={<HomeSearchForm />} />
+      <PageBanner
+        imageUrl="/assets/images/hero-bg-2.jpg"
+        alt="Dubai skyline and property search hero"
+        heightClassName="min-h-[640px] md:min-h-[680px]"
+        overlayClassName="bg-[linear-gradient(90deg,oklch(0.18_0.04_260.47_/_0.86),oklch(0.21_0.03_263.61_/_0.58),oklch(0.21_0.03_263.61_/_0.22))]"
+        contentClassName="container mx-auto px-4 md:px-6"
+      >
+        <HomeBanner
+          badge="Dubai Property IQ"
+          headline="Explore Your Home"
+          subtext="Search Dubai communities, compare property types, and find the right investment path with cleaner market context."
+          searchForm={
+            <HomeSearchForm className="max-w-5xl rounded-2xl border-white/30 bg-background/78 shadow-2xl shadow-foreground/20 backdrop-blur-md **:data-[slot=select-trigger]:bg-card/92 [&_input]:bg-card/92" />
+          }
+        />
       </PageBanner>
       <Separator />
 
       <AnimateSection>
         <SectionCard title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="bg-white">
-          <div className="space-y-4 flex items-center flex-col">
+          <div className="flex flex-col gap-8">
             <CityPropertyTabs cities={cities} />
-            <Link href="/properties" className={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'text-secondary font-semibold')}>
-              View All Properties
-            </Link>
+            <div className="flex justify-center">
+              <Link href="/properties" className={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'text-secondary font-semibold')}>
+                View All Properties
+              </Link>
+            </div>
           </div>
         </SectionCard>
       </AnimateSection>
@@ -58,7 +73,7 @@ export default async function Home() {
 
       <AnimateSection>
         <SliderSection
-          title="Project By Developers in the UAE"
+          title="Explore Developers Projects"
           className="bg-white"
           data={developers}
           SlideComponent={DeveloperCard}
