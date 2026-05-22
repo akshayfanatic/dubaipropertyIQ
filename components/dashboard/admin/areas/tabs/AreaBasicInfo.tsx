@@ -203,7 +203,9 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
           control={form.control}
           render={({ field }) => (
             <div className="grid gap-2">
-              <Label>Area Photos</Label>
+              <Label>
+                Area Photos <span className="text-destructive">*</span>
+              </Label>
               <ImageUploader
                 bucket="area-photos"
                 folder="areas"
@@ -215,6 +217,7 @@ function AreaBasicInfo({ area }: AreaBasicInfoProps) {
                 maxImages={10}
                 label="Photos"
               />
+              {form.formState.errors.photos && <p className="text-sm text-destructive">{form.formState.errors.photos.message as string}</p>}
               <p className="text-xs text-muted-foreground">Upload area photos (JPG, PNG, WebP, max 5MB each, up to 10 photos)</p>
             </div>
           )}

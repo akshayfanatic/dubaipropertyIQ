@@ -4,20 +4,12 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Developer } from '@/types/developer';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
-import type { Json } from '@/types/db/supabase-generated';
 import { Building2, Calendar, ArrowUpRight } from 'lucide-react';
 
 type DeveloperCardProps = Developer;
 
-function getLogoUrl(logo_url: Json | null): string | null {
-  if (!logo_url) return null;
-  if (typeof logo_url === 'string') return logo_url;
-  if (typeof logo_url === 'object' && 'url' in logo_url && typeof logo_url.url === 'string') return logo_url.url;
-  return null;
-}
-
 export function DeveloperCard({ name, logo_url, total_projects, years_active, slug }: DeveloperCardProps) {
-  const logoSrc = getLogoUrl(logo_url);
+  const logoSrc = logo_url?.url ?? null;
 
   return (
     <Link href={`/developers/${slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl">
