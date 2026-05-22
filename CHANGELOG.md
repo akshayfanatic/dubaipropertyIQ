@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.6.0...v0.7.0) (2026-05-22)
+
+### Features
+
+- **about:** added about page with dynamic settings ([69b28dd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/69b28ddf5fb2620e8ac92c15d0053e568ddc4ff1))
+- **area:** added new feature displaying data related to city ([3457b9d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3457b9d0ad9695cf5dbee520f8275edda1575bc9))
+- **areas:** added areas page feature with dynamic content ([e131d5d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e131d5dbab64c173eb0b61269180eeb5c736a14c))
+- **auth:** added new backlink icon to auth form ([940524e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/940524e9c697bc6fb17baec4e2f37deff3dfc69e))
+- **megamenu:** Added Mega Menu on dekstop ([95e5c01](https://github.com/akshayfanatic/dubaipropertyIQ/commit/95e5c01f3a5feeaab642427f7cebd67337573fba))
+- **megamenu:** Added Mega Menu on dekstop ([b094ea1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b094ea1e6b05694486ffe861789fdcd811beb36e))
+- **properties:** added server function to make queries properties and areas by city ([7a5fd8c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7a5fd8cc3dc078e103c2f67f0b4defb6932694c0))
+
+### Bug Fixes
+
+- **areas:** fix types issues reagarding areas photos columns ([5b2f782](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5b2f782ba7fc7e48c284e74af67530f8685a5b24))
+- **types:** fix types issue make it compatible to db ([227adaf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/227adafccfb229f9ae3e800456a34c5125741170))
+
+### Code Style Changes
+
+- **home:** redesign home page banner ([d8887e8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d8887e8749c9ed4df41cff1a82c8675ff44c3e4b))
+- **impeccable:** setup impeccable configuration ([ed2fcbd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ed2fcbdb418b158941310c6b75f5674197f03c13))
+
+### Code Refactoring
+
+- **whatsappbutton:** added property whatsapp button with props ([e9215a3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e9215a32b4c03874a59e3a17b2858853d5f94c44))
+
 ## [0.6.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.5.2...v0.6.0) (2026-05-18)
 
 ### Features
