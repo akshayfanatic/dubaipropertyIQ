@@ -3,7 +3,6 @@ import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 import { AuthSection } from '@/components/modals/auth/auth-section';
-import { buttonVariants } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import type { HeaderMenus, NavigationSection } from '@/lib/db/menus/queries';
 
@@ -78,6 +77,9 @@ function isActivePath(pathname: string, href: string) {
   return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
 }
 
+const desktopNavItemClasses =
+  'inline-flex h-9 items-center justify-center rounded-md bg-transparent px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:bg-accent focus:text-foreground focus-visible:ring-ring/50 data-[active=true]:bg-accent data-[active=true]:!text-primary data-[active=true]:hover:!text-primary data-[active=true]:focus:!text-primary data-[state=open]:bg-accent data-[state=open]:!text-primary';
+
 function MegaMenuLink({ item }: { item: NavItem }) {
   return (
     <NavigationMenuLink asChild>
@@ -93,10 +95,10 @@ function MegaMenuLink({ item }: { item: NavItem }) {
 
 function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
   return (
-    <div className="w-[min(92vw,840px)] rounded-xl bg-popover p-5 text-popover-foreground">
-      <div className="grid grid-cols-[minmax(0,1fr)_220px] gap-8">
+    <div className="max-h-[min(70vh,620px)] w-[min(calc(100vw-2rem),560px)] overflow-y-auto rounded-xl bg-popover p-4 text-popover-foreground xl:w-210 xl:p-5">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-8">
         {/* Explore link columns */}
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-5 xl:gap-8">
           {sections.map((column) => (
             <div key={column.title} className="min-w-0">
               {column.href ? (
@@ -122,9 +124,9 @@ function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
         <NavigationMenuLink asChild>
           <Link
             href="/search"
-            className="group block overflow-hidden rounded-xl border border-border bg-muted/30 transition-colors hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="group hidden overflow-hidden rounded-xl border border-border bg-muted/30 transition-colors hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
           >
-            <span className="relative block aspect-[4/3] overflow-hidden">
+            <span className="relative block aspect-4/3 overflow-hidden">
               <Image src="/assets/images/property-home.jpg" alt="Dubai property interior" fill sizes="220px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
             </span>
             <span className="block p-3">
@@ -140,8 +142,8 @@ function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
 
 function ResourcesMenuPanel({ sections }: { sections: NavigationSection[] }) {
   return (
-    <div className="w-[min(92vw,720px)] rounded-xl bg-popover p-5 text-popover-foreground">
-      <div className="grid grid-cols-[1fr_1fr_240px] gap-8">
+    <div className="max-h-[min(70vh,620px)] w-[min(calc(100vw-2rem),480px)] overflow-y-auto rounded-xl bg-popover p-4 text-popover-foreground xl:w-180 xl:p-5">
+      <div className="grid grid-cols-2 gap-5 xl:grid-cols-[1fr_1fr_240px] xl:gap-8">
         {sections.map((column) => (
           <div key={column.title} className="min-w-0">
             <p className="mb-3 text-sm font-semibold text-foreground">{column.title}</p>
@@ -155,10 +157,10 @@ function ResourcesMenuPanel({ sections }: { sections: NavigationSection[] }) {
 
         <Link
           href="/about"
-          className="group relative min-h-48 overflow-hidden rounded-xl border border-border bg-muted transition-colors hover:border-primary/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="group relative hidden min-h-48 overflow-hidden rounded-xl border border-border bg-muted transition-colors hover:border-primary/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
         >
           <Image src="/assets/images/hero-bg.jpg" alt="Dubai Property IQ about page preview" fill sizes="240px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-          <span className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/35 to-transparent" />
+          <span className="absolute inset-0 bg-linear-to-t from-foreground/80 via-foreground/35 to-transparent" />
           <span className="relative flex min-h-48 flex-col justify-end p-4 text-primary-foreground">
             <span className="mb-3 inline-flex w-fit rounded-md bg-background/95 px-2.5 py-1 text-xs font-semibold text-primary">About us</span>
             <span className="block text-lg font-semibold leading-6">Dubai Property IQ</span>
@@ -182,18 +184,14 @@ export function DesktopNav({ navItems, pathname, menus }: DesktopNavProps) {
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent/70">
-                Explore
-              </NavigationMenuTrigger>
+              <NavigationMenuTrigger className={desktopNavItemClasses}>Explore</NavigationMenuTrigger>
               <NavigationMenuContent className="left-0 translate-x-0 rounded-xl border bg-popover p-0 shadow-lg">
                 <MegaMenuPanel sections={exploreSections} />
               </NavigationMenuContent>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent/70">
-                Resources
-              </NavigationMenuTrigger>
+              <NavigationMenuTrigger className={desktopNavItemClasses}>Resources</NavigationMenuTrigger>
               <NavigationMenuContent className="left-1/2 -translate-x-1/2 rounded-xl border bg-popover p-0 shadow-lg">
                 <ResourcesMenuPanel sections={resourceSections} />
               </NavigationMenuContent>
@@ -205,14 +203,7 @@ export function DesktopNav({ navItems, pathname, menus }: DesktopNavProps) {
               return (
                 <NavigationMenuItem key={item.href}>
                   <NavigationMenuLink asChild active={isActive}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        buttonVariants({ variant: 'ghost', size: 'sm' }),
-                        'h-9 px-3 text-sm font-semibold text-muted-foreground hover:text-foreground focus-visible:ring-ring/50',
-                        isActive && 'bg-accent text-primary',
-                      )}
-                    >
+                    <Link href={item.href} className={cn(desktopNavItemClasses, isActive && 'bg-accent text-primary!')}>
                       {item.label}
                     </Link>
                   </NavigationMenuLink>
