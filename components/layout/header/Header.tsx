@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { DesktopNav } from './DesktopNav';
 import { MobileNav } from './MobileNav';
 import type { HeaderMenus } from '@/lib/db/menus/queries';
-import { useClient } from '@/hooks/use-client';
 
 /* =============================================================================
  * Types & Constants
@@ -41,14 +40,12 @@ const defaultNavItems: NavItem[] = [
  * ============================================================================= */
 
 export default function Header({ logo, navItems = defaultNavItems, menus, sticky = true }: HeaderProps) {
-  const isClient = useClient();
   const pathname = usePathname();
 
   const logoSrc = logo?.src;
   const logoAlt = logo?.alt ?? 'Dubai Property IQ';
   const logoHref = logo?.href ?? '/';
 
-  if (!isClient) return;
   return (
     <header className={cn('w-full border-b border-border bg-background/95 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
       <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
