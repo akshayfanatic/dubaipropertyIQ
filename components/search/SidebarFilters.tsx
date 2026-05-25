@@ -1,15 +1,14 @@
 'use client';
 
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { X, Sparkles, RotateCcw, Filter } from 'lucide-react';
+import { useQueryStates, parseAsArrayOf, parseAsBoolean, parseAsString } from 'nuqs';
+import { X, Sparkles, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormLabel } from '@/components/ui/form';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Switch } from '@/components/ui/switch';
 import { useAmenities } from '@/hooks/data/public/useAmenities';
-import { useClient } from '@/hooks/use-client';
 import { z } from 'zod';
 import { useState } from 'react';
 
@@ -21,15 +20,21 @@ const sidebarFilterSchema = z.object({
 type SidebarFilterValues = z.infer<typeof sidebarFilterSchema>;
 
 export default function SidebarFilters() {
-  const isClient = useClient();
-  const searchParams = useSearchParams();
   const { amenities } = useAmenities();
-
-  if (!isClient) return null;
+  const [query] = useQueryStates(
+    {
+      amenities: parseAsArrayOf(parseAsString).withDefault([]),
+      golden_visa_eligible: parseAsBoolean.withDefault(false),
+    },
+    {
+      shallow: false,
+      history: 'replace',
+    },
+  );
 
   const defaultValues: SidebarFilterValues = {
-    amenities: searchParams.get('amenities')?.split(',') || [],
-    goldenVisaEligible: searchParams.get('golden_visa_eligible') === 'true',
+    amenities: query.amenities,
+    goldenVisaEligible: query.golden_visa_eligible,
   };
 
   return (
@@ -45,45 +50,50 @@ interface FilterFieldsProps {
 
 function FilterFields({ amenities }: FilterFieldsProps) {
   const form = useFormContext<SidebarFilterValues>();
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [isResetting, setIsResetting] = useState(false);
+  const [, setQuery] = useQueryStates(
+    {
+      amenities: parseAsArrayOf(parseAsString).withDefault([]),
+      golden_visa_eligible: parseAsBoolean.withDefault(false),
+    },
+    {
+      shallow: false,
+      history: 'replace',
+    },
+  );
 
   const formValues = useWatch({ control: form.control });
 
-  const hasActiveFilters = (formValues.amenities && formValues.amenities.length > 0) || formValues.goldenVisaEligible === true;
+  const hasActiveFilters = (formValues.amenities?.length ?? 0) > 0 || formValues.goldenVisaEligible === true;
 
   const updateUrl = (data: SidebarFilterValues) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (data.amenities?.length) {
-      params.set('amenities', data.amenities.join(','));
-    } else {
-      params.delete('amenities');
-    }
-    if (data.goldenVisaEligible) {
-      params.set('golden_visa_eligible', 'true');
-    } else {
-      params.delete('golden_visa_eligible');
-    }
-    router.push(`/search?${params.toString()}`);
+    setQuery({
+      amenities: data.amenities?.length ? data.amenities : null,
+      golden_visa_eligible: data.goldenVisaEligible || null,
+    });
   };
 
   const handleReset = async () => {
     setIsResetting(true);
     form.reset({ amenities: [], goldenVisaEligible: false });
-    router.push('/search');
+    await setQuery({
+      amenities: null,
+      golden_visa_eligible: null,
+    });
     setTimeout(() => setIsResetting(false), 500);
   };
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-start gap-3 border-b pb-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-          <Filter className="h-4 w-4 text-primary" />
-        </div>
-        <div className="min-w-0">
-          <h2 className="text-base font-semibold leading-6">Filters</h2>
-          <p className="text-sm leading-5 text-muted-foreground">Refine the visible listings</p>
+    <div className="space-y-6">
+      <div className="flex items-start justify-between gap-3 border-b pb-4">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <SlidersHorizontal className="h-4 w-4 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold leading-6 text-foreground">Refine search</h2>
+            <p className="text-sm leading-5 text-muted-foreground">Amenities and eligibility</p>
+          </div>
         </div>
       </div>
 
@@ -91,12 +101,15 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         control={form.control}
         name="amenities"
         render={({ field }) => (
-          <FormItem className="space-y-2">
-            <FormLabel className="text-sm font-medium">Amenities</FormLabel>
+          <FormItem className="space-y-3">
+            <div className="space-y-1">
+              <FormLabel className="text-sm font-medium text-foreground">Amenities</FormLabel>
+              <p className="text-xs leading-5 text-muted-foreground">Choose nearby lifestyle, commute, or building features.</p>
+            </div>
             <FormControl>
               <MultiSelect
                 name="amenities"
-                placeholder="Select amenities"
+                placeholder="Any amenity"
                 options={amenities}
                 value={field.value || []}
                 onChange={(val) => {
@@ -113,25 +126,27 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         control={form.control}
         name="goldenVisaEligible"
         render={({ field }) => (
-          <FormItem className="flex items-start justify-between gap-3 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/50">
-            <div className="flex min-w-0 items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
-                <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+          <FormItem className="border-t pt-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div className="min-w-0 space-y-1">
+                  <FormLabel className="cursor-pointer text-sm font-medium leading-5 text-foreground">Golden Visa eligible</FormLabel>
+                  <p className="text-xs leading-5 text-muted-foreground">Show properties qualifying for UAE residency.</p>
+                </div>
               </div>
-              <div className="min-w-0 space-y-1">
-                <FormLabel className="cursor-pointer text-sm font-medium leading-5">Golden Visa eligible</FormLabel>
-                <p className="text-xs leading-5 text-muted-foreground">Properties qualifying for UAE residency</p>
-              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value || false}
+                  onCheckedChange={(val) => {
+                    field.onChange(val);
+                    updateUrl({ ...form.getValues(), goldenVisaEligible: val });
+                  }}
+                />
+              </FormControl>
             </div>
-            <FormControl>
-              <Switch
-                checked={field.value || false}
-                onCheckedChange={(val) => {
-                  field.onChange(val);
-                  updateUrl({ ...form.getValues(), goldenVisaEligible: val });
-                }}
-              />
-            </FormControl>
           </FormItem>
         )}
       />
@@ -142,7 +157,7 @@ function FilterFields({ amenities }: FilterFieldsProps) {
           variant="outline"
           onClick={handleReset}
           disabled={isResetting}
-          className="h-10 w-full gap-2 border-destructive/50 text-destructive transition-colors hover:border-destructive hover:bg-destructive/10"
+          className="h-10 w-full gap-2 border-destructive/40 text-destructive transition-colors hover:border-destructive hover:bg-destructive/10"
         >
           {isResetting ? <RotateCcw className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
           {isResetting ? 'Clearing...' : 'Clear all filters'}

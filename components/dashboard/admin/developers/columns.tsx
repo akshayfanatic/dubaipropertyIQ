@@ -13,11 +13,6 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
-import { Json } from '@/types/database.types';
-
-function isImageObject(value: Json | null): value is { url: string; alt_tag: string } {
-  return value !== null && typeof value === 'object' && !Array.isArray(value) && 'url' in value && 'alt_tag' in value && typeof value.url === 'string' && typeof value.alt_tag === 'string';
-}
 
 export const columns: ColumnDef<Developer>[] = [
   {
@@ -25,8 +20,8 @@ export const columns: ColumnDef<Developer>[] = [
     header: 'Developer',
     cell: ({ row }) => {
       const developer = row.original;
-      const logoUrl = developer.logo_url && isImageObject(developer.logo_url) ? developer.logo_url.url : null;
-      const altTag = developer.logo_url && isImageObject(developer.logo_url) ? developer.logo_url.alt_tag : developer.name;
+      const logoUrl = developer.logo_url?.url ?? null;
+      const altTag = developer.logo_url?.alt_tag || developer.name;
 
       return (
         <div className="flex items-center gap-3">

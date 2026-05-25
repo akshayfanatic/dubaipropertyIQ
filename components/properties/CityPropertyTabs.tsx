@@ -32,7 +32,7 @@ export function CityPropertyTabs({ cities, propertiesPerCity = 6 }: CityProperty
         ))}
       </div>
     ) : properties.length > 0 ? (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {properties.map((property) => (
           <PropertyCardHome key={property.id} property={property} />
         ))}

@@ -286,6 +286,180 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
 }
 
 /**
+ * Get available properties by city slug for public city pages
+ */
+export async function getPropertiesByCity(citySlug: string): Promise<ApiResponse<PropertyListItem[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select(
+        `
+          id,
+          slug,
+          title,
+          description,
+          bedrooms,
+          bathrooms,
+          size_sqft,
+          price_aed,
+          status,
+          golden_visa_eligible,
+          photos,
+          features,
+          floor_plan,
+          location,
+          city_id,
+          created_at,
+          updated_at,
+          category:categories (id, name, slug),
+          city:cities!inner (id, name, slug),
+          developer:developers (id, name, slug, logo_url)
+        `,
+      )
+      .eq('cities.slug', citySlug)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Properties fetched successfully',
+      data: data as PropertyListItem[],
+    });
+  } catch (error) {
+    console.error('[getPropertiesByCity] Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to fetch properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get available public properties linked to an area through areas_properties.
+ */
+export async function getPropertiesByArea(areaSlug: string, citySlug?: string): Promise<ApiResponse<PropertyListItem[]>> {
+  try {
+    const supabase = await serverClient();
+
+    let areaQuery = supabase.from('areas').select('id, cities!inner(slug)').eq('slug', areaSlug);
+
+    if (citySlug) {
+      areaQuery = areaQuery.eq('cities.slug', citySlug);
+    }
+
+    const { data: area, error: areaError } = await areaQuery.single();
+
+    if (areaError) {
+      if (areaError.code === 'PGRST116') {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.NOT_FOUND,
+          message: 'Area not found',
+          error: { code: 'NOT_FOUND' },
+        });
+      }
+
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: areaError.message,
+        error: { code: areaError.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const { data: linkedProperties, error: linkError } = await supabase.from('areas_properties').select('property_id').eq('area_id', area.id);
+
+    if (linkError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: linkError.message,
+        error: { code: linkError.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const propertyIds = linkedProperties?.map((item) => item.property_id) ?? [];
+    if (propertyIds.length === 0) {
+      return ApiResponse({
+        success: true,
+        status: HttpStatus.OK,
+        message: 'Properties fetched successfully',
+        data: [],
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select(
+        `
+          id,
+          slug,
+          title,
+          description,
+          bedrooms,
+          bathrooms,
+          size_sqft,
+          price_aed,
+          status,
+          golden_visa_eligible,
+          photos,
+          features,
+          floor_plan,
+          location,
+          city_id,
+          created_at,
+          updated_at,
+          category:categories (id, name, slug),
+          city:cities (id, name, slug),
+          developer:developers (id, name, slug, logo_url)
+        `,
+      )
+      .in('id', propertyIds)
+      .eq('status', 'available')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Properties fetched successfully',
+      data: data as PropertyListItem[],
+    });
+  } catch (error) {
+    console.error('[getPropertiesByArea] Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to fetch properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
  * Get all properties with optional filters and pagination
  */
 export async function getPropertiesAdmin(filters?: PropertyFilters) {

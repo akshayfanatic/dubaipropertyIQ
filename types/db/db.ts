@@ -38,7 +38,7 @@ export interface Area {
   name: string;
   slug: string;
   description: string | null;
-  photos: string[] | null;
+  photos: Json | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -214,7 +214,7 @@ export interface Database {
           description?: string | null;
           id?: string;
           name: string;
-          photos?: string[] | null;
+          photos?: Json | null;
           slug: string;
           updated_at?: string | null;
         };

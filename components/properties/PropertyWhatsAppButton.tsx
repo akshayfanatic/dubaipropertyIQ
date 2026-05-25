@@ -7,9 +7,10 @@ import type { PropertyListItem } from '@/types/property';
 import { cn } from '@/lib/utils';
 
 interface PropertyWhatsAppButtonProps {
-  property: Pick<PropertyListItem, 'title' | 'slug'>;
+  property?: Pick<PropertyListItem, 'title' | 'slug'>;
   className?: string;
   variant?: 'card' | 'detail' | 'primary';
+  label?: string;
 }
 
 const buttonStyles = {
@@ -18,7 +19,7 @@ const buttonStyles = {
   primary: 'h-12 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground gap-2.5 font-semibold shadow-lg hover:shadow-xl border-0',
 };
 
-export function PropertyWhatsAppButton({ property, className, variant = 'card' }: PropertyWhatsAppButtonProps) {
+export function PropertyWhatsAppButton({ property, className, variant = 'card', label = 'WhatsApp' }: PropertyWhatsAppButtonProps) {
   const { data: settings } = useSettings();
   const whatsappNumber = settings?.contact?.whatsapp as string | undefined;
 
@@ -26,7 +27,9 @@ export function PropertyWhatsAppButton({ property, className, variant = 'card' }
     e.preventDefault();
     e.stopPropagation();
 
-    const message = `Hello, I'm interested in getting more information about ${property.title} from DubaiPropertyIQ or any similar projects that might be available. Project link: ${window.location.origin}/properties/${property.slug}`;
+    const message = property
+      ? `Hello, I'm interested in getting more information about ${property.title} from DubaiPropertyIQ or any similar projects that might be available. Project link: ${window.location.origin}/properties/${property.slug}`
+      : `Hello, I would like to get more information from Dubai Property IQ. Website: ${window.location.origin}`;
     const cleanNumber = whatsappNumber?.replace(/\s/g, '').replace(/(?<=^\+)\+/g, '') || '';
     const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
@@ -35,9 +38,9 @@ export function PropertyWhatsAppButton({ property, className, variant = 'card' }
   const isPrimary = variant === 'primary';
 
   return (
-    <Button size="sm" onClick={handleClick} className={cn(buttonStyles[variant], className)}>
+    <Button size="sm" onClick={handleClick} disabled={!whatsappNumber} className={cn(buttonStyles[variant], className)}>
       <MessageCircle className={cn('h-5 w-5', isPrimary ? 'fill-primary-foreground' : 'fill-primary')} strokeWidth={0} />
-      <span>WhatsApp</span>
+      <span>{label}</span>
     </Button>
   );
 }

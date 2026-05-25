@@ -71,7 +71,7 @@ export type Database = {
           id: string;
           location: Json | null;
           name: string;
-          photos: string[] | null;
+          photos: Json | null;
           slug: string;
           updated_at: string | null;
         };
@@ -82,7 +82,7 @@ export type Database = {
           id?: string;
           location?: Json | null;
           name: string;
-          photos?: string[] | null;
+          photos?: Json | null;
           slug: string;
           updated_at?: string | null;
         };
@@ -93,7 +93,7 @@ export type Database = {
           id?: string;
           location?: Json | null;
           name?: string;
-          photos?: string[] | null;
+          photos?: Json | null;
           slug?: string;
           updated_at?: string | null;
         };
@@ -618,7 +618,7 @@ export type Database = {
     };
     Enums: {
       app_role: 'admin' | 'agent' | 'customer';
-      property_status_enum: 'available' | 'sold' | 'reserved' | 'off_plan';
+      property_status_enum: 'available' | 'sold' | 'reserved' | 'off_plan' | 'draft';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -736,7 +736,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ['admin', 'agent', 'customer'],
-      property_status_enum: ['available', 'sold', 'reserved', 'off_plan'],
+      property_status_enum: ['available', 'sold', 'reserved', 'off_plan', 'draft'],
     },
   },
 } as const;

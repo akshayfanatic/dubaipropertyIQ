@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { Bath, Bed, MapPin, Maximize } from 'lucide-react';
+import { Bath, Bed, Building2, Eye, MapPin, Maximize } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { PropertyWhatsAppButton } from '@/components/properties/PropertyWhatsAppButton';
+import { Button } from '@/components/ui/button';
 import type { PropertyListItem } from '@/types/property';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatPrice, formatSize } from '@/lib/utils/price';
@@ -27,60 +28,84 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
   const city = Array.isArray(property.city) ? property.city[0] : (property.city as { name: string; slug: string } | undefined);
   const cityName = city?.name || 'Location';
+  const category = property.category?.[0]?.name || 'Property';
+  const developer = property.developer?.[0]?.name;
   const status = statusConfig[property.status] || { label: property.status, className: 'bg-muted/95 text-muted-foreground' };
+  const propertyHref = `/properties/${property.slug}`;
 
   return (
-    <Card className="group overflow-hidden rounded-xl border bg-card p-0 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
-      <Link href={`/properties/${property.slug}`} className="grid min-h-72 grid-cols-1 md:grid-cols-[20rem_minmax(0,1fr)]">
-        <div className="relative min-h-64 overflow-hidden bg-muted md:min-h-full">
+    <Card className="group overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="grid grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
+        <Link href={propertyHref} className="relative min-h-64 overflow-hidden bg-muted lg:min-h-full">
           <ImageWithFallback src={firstImage} alt={property.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" fallbackClassName="bg-muted" />
-          <div className="absolute inset-0 bg-linear-to-t from-foreground/55 via-foreground/10 to-transparent md:bg-linear-to-r md:from-transparent md:via-transparent md:to-foreground/10" />
-          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
+          <div className="absolute inset-0 bg-linear-to-t from-foreground/50 via-foreground/10 to-transparent" />
+          <div className="absolute left-3 top-3 z-10 flex flex-wrap items-center gap-2">
             <Badge className={cn('rounded-lg px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur-sm', status.className)}>{status.label}</Badge>
             {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" />}
           </div>
-        </div>
+          <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-3 text-xs font-medium text-primary-foreground">
+            <span className="rounded-md bg-foreground/55 px-2 py-1 backdrop-blur-sm">{category}</span>
+            {photos?.length > 1 && <span className="rounded-md bg-foreground/55 px-2 py-1 backdrop-blur-sm">{photos.length} photos</span>}
+          </div>
+        </Link>
 
-        <div className="flex min-w-0 flex-col justify-between gap-5 p-4 sm:p-5 lg:p-6">
-          <div className="space-y-3">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0 flex-1">
-                <p className="text-xl font-bold text-primary">{formatPrice(property.price_aed)}</p>
-                <h3 className="mt-1 line-clamp-2 text-lg font-semibold leading-6 transition-colors group-hover:text-primary">{property.title}</h3>
+        <div className="flex min-w-0 flex-col justify-between gap-4 p-4 sm:p-5">
+          <div className="space-y-3.5">
+            <div className="space-y-2">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                <p className="text-2xl font-bold leading-8 text-foreground">{formatPrice(property.price_aed)}</p>
+                {developer && <span className="text-xs leading-5 text-muted-foreground sm:pt-1">{developer}</span>}
               </div>
-              <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground sm:max-w-44 sm:justify-end">
+
+              <Link href={propertyHref} className="block">
+                <h3 className="line-clamp-2 text-lg font-semibold leading-6 text-foreground transition-colors group-hover:text-primary">{property.title}</h3>
+              </Link>
+
+              <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 shrink-0" />
                 <span className="truncate">{cityName}</span>
               </div>
             </div>
 
-            <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">{property.description}</p>
-
-            <div className="flex w-fit flex-wrap items-center gap-2 rounded-lg bg-primary/10 px-2.5 py-1.5 text-sm font-medium text-foreground">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-y py-3 text-sm text-muted-foreground">
               {property.bedrooms > 0 && (
                 <span className="flex items-center gap-1.5">
-                  <Bed className="h-4 w-4 text-muted-foreground" />
-                  {property.bedrooms}
+                  <Bed className="h-4 w-4" />
+                  <span className="font-medium text-foreground">{property.bedrooms}</span>
                 </span>
               )}
               {property.bathrooms > 0 && (
                 <span className="flex items-center gap-1.5">
-                  <Bath className="h-4 w-4 text-muted-foreground" />
-                  {property.bathrooms}
+                  <Bath className="h-4 w-4" />
+                  <span className="font-medium text-foreground">{property.bathrooms}</span>
                 </span>
               )}
               {property.size_sqft > 0 && (
                 <span className="flex items-center gap-1.5">
-                  <Maximize className="h-4 w-4 text-muted-foreground" />
-                  {formatSize(property.size_sqft)} sqft
+                  <Maximize className="h-4 w-4" />
+                  <span className="font-medium text-foreground">{formatSize(property.size_sqft)} sqft</span>
                 </span>
               )}
+              <span className="flex items-center gap-1.5">
+                <Building2 className="h-4 w-4" />
+                <span className="font-medium text-foreground">{category}</span>
+              </span>
             </div>
+
+            <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">{property.description}</p>
           </div>
 
-          <PropertyWhatsAppButton property={property} variant="card" className="shadow-sm hover:shadow-md" />
+          <div className="grid grid-cols-2 gap-3">
+            <Button asChild variant="secondary" className="h-11 rounded-lg font-semibold text-primary">
+              <Link href={propertyHref}>
+                <Eye className="h-4 w-4" />
+                Details
+              </Link>
+            </Button>
+            <PropertyWhatsAppButton property={property} variant="card" className="h-11 rounded-lg border-primary/15 bg-secondary text-primary shadow-none hover:bg-secondary/80 hover:shadow-sm" />
+          </div>
         </div>
-      </Link>
+      </div>
     </Card>
   );
 }

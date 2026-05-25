@@ -14,7 +14,10 @@ export const developerSchema = z.object({
     .min(2, 'Slug must be at least 2 characters')
     .max(50, 'Slug must be less than 50 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
-  logo_url: imageObjectSchema.nullable().optional(),
+  logo_url: imageObjectSchema
+    .nullable()
+    .optional()
+    .refine((value) => value != null, 'Developer logo is required'),
   description: z.string().max(2000, 'Description must be less than 2000 characters').nullable().or(z.literal('')),
   website_url: z.string().url('Must be a valid URL').nullable().or(z.literal('')),
 
@@ -31,14 +34,14 @@ export const developerSchema = z.object({
   years_active: z.number().min(0),
 });
 
-export type DeveloperFormData = z.infer<typeof developerSchema>;
+export type DeveloperFormData = z.input<typeof developerSchema>;
 
 // Developer insert schema (for creating new developers)
 export const developerInsertSchema = developerSchema;
 
-export type DeveloperInsertData = z.infer<typeof developerInsertSchema>;
+export type DeveloperInsertData = z.output<typeof developerInsertSchema>;
 
 // Developer update schema (for partial updates)
 export const developerUpdateSchema = developerSchema.partial();
 
-export type DeveloperUpdateData = z.infer<typeof developerUpdateSchema>;
+export type DeveloperUpdateData = z.output<typeof developerUpdateSchema>;

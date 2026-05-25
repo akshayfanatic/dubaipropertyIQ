@@ -7,6 +7,7 @@ import { Pagination } from '@/components/shared/pagination';
 import { columns } from './columns';
 import Link from 'next/link';
 import type { AreaFilters } from '@/types/areas';
+import type { ImageObject } from '@/types/images';
 import type { PaginatedResult } from '@/types/shared';
 
 interface AreaWithCity {
@@ -14,7 +15,7 @@ interface AreaWithCity {
   name: string;
   slug: string;
   description: string | null;
-  photos: string[];
+  photos: ImageObject[];
   city_id: string;
   created_at: string;
   updated_at: string;

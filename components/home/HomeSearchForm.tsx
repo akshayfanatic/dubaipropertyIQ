@@ -12,6 +12,7 @@ import { LocationAutocomplete } from '@/components/shared/forms/location-autocom
 import { PriceRangeInput } from '@/components/shared/forms/price-range-input';
 import { Button } from '@/components/ui/button';
 import type { AutocompleteResult } from '@/hooks/data/public/useLocationAutocomplete';
+import { cn } from '@/lib/utils';
 
 const priceRangeSchema = z.object({
   min: z.string().optional(),
@@ -24,7 +25,11 @@ export const searchSchema = z.object({
   priceRange: priceRangeSchema,
 });
 
-export default function HomeSearchForm() {
+interface HomeSearchFormProps {
+  className?: string;
+}
+
+export default function HomeSearchForm({ className }: HomeSearchFormProps) {
   const router = useRouter();
   const { categories, isLoading: categoriesLoading } = useCategories();
   const [selectedLocation, setSelectedLocation] = useState<AutocompleteResult>();
@@ -46,7 +51,7 @@ export default function HomeSearchForm() {
   };
 
   return (
-    <div className="w-full mx-auto max-w-4xl rounded-lg  p-4 md:p-6 md:py-8 shadow-sm border">
+    <div className={cn('w-full mx-auto max-w-4xl rounded-lg p-4 md:p-5 shadow-sm border', className)}>
       <BaseForm
         schema={searchSchema}
         onSubmit={handleSubmit}
@@ -109,7 +114,7 @@ export default function HomeSearchForm() {
 
 export function HomeSearchFormSkeleton() {
   return (
-    <div className="w-full mx-auto max-w-4xl rounded-lg p-4 md:p-6 md:py-8 shadow-sm border animate-pulse">
+    <div className="w-full mx-auto max-w-4xl rounded-lg p-4 md:p-5 shadow-sm border animate-pulse">
       <div className="flex flex-col gap-4 md:flex-row md:items-end">
         <div className="flex flex-col gap-4 md:flex-row flex-1">
           {/* Location field */}

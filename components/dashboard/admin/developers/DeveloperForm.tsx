@@ -8,7 +8,6 @@ import { createDeveloper, updateDeveloper } from '@/lib/db/developers/actions';
 import { Developer } from '@/types/developer';
 import { calculateTrustScore, getTrustScoreLabel, generateSlug } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
-import { Json } from '@/types/database.types';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -23,7 +22,7 @@ interface DeveloperFormProps {
 }
 
 // Helper to safely convert Json to ImageObject
-function toImageObject(json: Json | null): ImageObject | null {
+function toImageObject(json: unknown): ImageObject | null {
   if (!json || typeof json !== 'object' || Array.isArray(json)) return null;
   const obj = json as Record<string, unknown>;
   if (typeof obj?.url === 'string' && typeof obj?.alt_tag === 'string') {
@@ -47,7 +46,7 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
       ? {
           name: developer.name,
           slug: developer.slug,
-          logo_url: toImageObject(developer.logo_url as Json | null),
+          logo_url: toImageObject(developer.logo_url),
           description: developer.description || '',
           website_url: developer.website_url || '',
           delivery_timeliness_score: developer.delivery_timeliness_score ?? 1,
@@ -92,10 +91,15 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
 
   const onSubmit = async (data: DeveloperFormData) => {
     try {
+      if (!data.logo_url) {
+        toast.error('Developer logo is required');
+        return;
+      }
+
       // Convert empty strings to null for optional URL fields
       const processedData = {
         ...data,
-        logo_url: data.logo_url || null,
+        logo_url: data.logo_url,
         description: data.description || null,
         website_url: data.website_url || null,
       };
@@ -165,11 +169,13 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
             control={control}
             render={({ field }) => (
               <div className="grid gap-2">
-                <Label>Developer Logo</Label>
+                <Label>
+                  Developer Logo <span className="text-destructive">*</span>
+                </Label>
                 <ImageUploader
                   bucket="developer-logos"
                   folder="logos"
-                  value={field.value ? [field.value] : []}
+                  value={field.value?.url ? [field.value] : []}
                   onChange={(urls) => {
                     const logoUrl = urls[0] || null;
                     field.onChange(logoUrl);
@@ -177,7 +183,9 @@ export function DeveloperForm({ developer }: DeveloperFormProps) {
                   }}
                   maxImages={1}
                   label="Logo"
+                  required
                 />
+                {errors.logo_url && <p className="text-sm text-destructive">{errors.logo_url.message || 'Developer logo is required'}</p>}
                 <p className="text-xs text-muted-foreground">Upload developer logo (JPG, PNG or WebP, max 5MB)</p>
               </div>
             )}

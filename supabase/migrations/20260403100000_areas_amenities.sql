@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS areas (
   name TEXT NOT NULL,
   slug TEXT NOT NULL,
   description TEXT,
-  photos TEXT[] DEFAULT '{}',
+  photos JSONB DEFAULT '[]'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
 
@@ -53,7 +53,7 @@ CREATE INDEX IF NOT EXISTS idx_areas_name ON areas(name);
 
 -- Comments
 COMMENT ON TABLE areas IS 'Neighborhoods/communities within cities';
-COMMENT ON COLUMN areas.photos IS 'Array of photo URLs (like properties table)';
+COMMENT ON COLUMN areas.photos IS 'SEO-friendly area photos stored as JSON objects with url and alt_tag, matching properties.photos';
 
 -- Auto-update updated_at
 DROP TRIGGER IF EXISTS update_areas_updated_at ON areas;

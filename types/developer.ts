@@ -7,7 +7,9 @@ import type { PaginationFilters, SearchFilters } from './shared';
 import type { ImageObject } from './images';
 import { Tables } from './db/supabase-generated';
 
-export type Developer = Tables<'developers'>;
+export type Developer = Omit<Tables<'developers'>, 'logo_url'> & {
+  logo_url: ImageObject | null;
+};
 
 // Computed trust score (average of all components)
 export type DeveloperWithTrustScore = Developer & {
@@ -23,7 +25,7 @@ export type DeveloperUpdate = Partial<DeveloperInsert>;
 export type DeveloperOption = {
   label: string;
   value: string;
-  logo_url: ImageObject | null; // Changed from string
+  logo_url: ImageObject | null;
 };
 
 /**

@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { DesktopNav } from './DesktopNav';
 import { MobileNav } from './MobileNav';
+import type { HeaderMenus } from '@/lib/db/menus/queries';
 
 /* =============================================================================
  * Types & Constants
@@ -24,22 +25,21 @@ interface HeaderProps {
     href?: string;
   };
   navItems?: NavItem[];
+  menus?: HeaderMenus;
   sticky?: boolean;
 }
 
 const defaultNavItems: NavItem[] = [
-  { label: 'Properties', href: '/properties' },
-  { label: 'Services', href: '/services' },
-  { label: 'Agents', href: '/agents' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Search', href: '/search' },
+  { label: 'Mortgage', href: '/calculators/mortgage-calculator' },
+  { label: 'Rent vs Buy', href: '/calculators/rent-vs-buy-calculator' },
 ];
 
 /* =============================================================================
  * Header Component
  * ============================================================================= */
 
-export default function Header({ logo, navItems = defaultNavItems, sticky = true }: HeaderProps) {
+export default function Header({ logo, navItems = defaultNavItems, menus, sticky = true }: HeaderProps) {
   const pathname = usePathname();
 
   const logoSrc = logo?.src;
@@ -47,7 +47,7 @@ export default function Header({ logo, navItems = defaultNavItems, sticky = true
   const logoHref = logo?.href ?? '/';
 
   return (
-    <header className={cn('w-full border-b border-border bg-white backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
+    <header className={cn('w-full border-b border-border bg-background/95 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
       <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
         {/* Logo - Left */}
         <Link href={logoHref} className="flex items-center gap-0.5">
@@ -62,10 +62,10 @@ export default function Header({ logo, navItems = defaultNavItems, sticky = true
         </Link>
 
         {/* Desktop Navigation */}
-        <DesktopNav navItems={navItems} pathname={pathname} />
+        <DesktopNav navItems={navItems} pathname={pathname} menus={menus} />
 
         {/* Mobile Navigation */}
-        <MobileNav navItems={navItems} pathname={pathname} />
+        <MobileNav navItems={navItems} pathname={pathname} menus={menus} />
       </div>
     </header>
   );

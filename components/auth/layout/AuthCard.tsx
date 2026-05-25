@@ -3,6 +3,8 @@
 import { Building2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import { BackLink } from '@/components/ui/back-button';
+
 interface AuthCardProps {
   /** Main heading text */
   title: string;
@@ -35,9 +37,13 @@ export function AuthCard({ title, subtitle, children, footer, showMobileLogo = t
         )}
 
         {/* Header */}
-        <div className="mb-8 animate-slide-in-from-bottom animate-duration-500 animate-delay-100">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>
-          <p className="mt-1.5 text-muted-foreground">{subtitle}</p>
+        <div className="mb-8 flex items-center gap-4 animate-slide-in-from-bottom animate-duration-500 animate-delay-100">
+          <BackLink href="/" />
+
+          <div className="flex min-w-0 flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>
+            <p className="text-muted-foreground">{subtitle}</p>
+          </div>
         </div>
 
         {/* Form Card */}

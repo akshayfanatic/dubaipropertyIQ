@@ -45,13 +45,13 @@ interface StyledTab2Props {
 export function StyledTab2({ tabs, defaultValue, className, onValueChange }: StyledTab2Props) {
   return (
     <Tabs defaultValue={defaultValue ?? tabs[0]?.value} onValueChange={onValueChange} className={cn('w-full', className)}>
-      <TabsList className={cn('inline-flex gap-0 bg-transparent p-0 h-auto rounded-none border-b border-border', 'w-full justify-start overflow-x-auto overflow-y-hidden', 'hide-scrollbar')}>
+      <TabsList className={cn('inline-flex h-auto w-full justify-start gap-2 overflow-x-auto overflow-y-hidden rounded-none border-b border-border bg-transparent p-0', 'hide-scrollbar')}>
         {tabs.map((tab) => (
           <TabsTrigger
             key={tab.value}
             value={tab.value}
             className={cn(
-              'px-8 py-4 text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap w-fit max-w-fit cursor-pointer',
+              'w-fit max-w-fit cursor-pointer whitespace-nowrap px-4 py-4 text-sm font-medium text-muted-foreground hover:text-foreground sm:px-6',
               'transition-colors bg-transparent border-0 shadow-none rounded-none',
               'data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:shadow-none data-[state=active]:rounded-none',
               'focus-visible:ring-0 focus-visible:outline-none',
