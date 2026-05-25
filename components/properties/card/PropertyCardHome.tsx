@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { Bed, Bath } from 'lucide-react';
+import { Bath, Bed, Building2, Eye, MapPin, Maximize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { formatPrice, formatSize } from '@/lib/utils/price';
 import { cn } from '@/lib/utils';
 import { PropertyWhatsAppButton } from '@/components/properties/PropertyWhatsAppButton';
 import type { PropertyListItem } from '@/types/property';
 import type { ImageObject } from '@/types/images';
+import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 
 interface PropertyCardHomeProps {
   property: PropertyListItem;
@@ -27,55 +29,77 @@ export function PropertyCardHome({ property, className }: PropertyCardHomeProps)
   const photos = property.photos as ImageObject[];
   const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
   const status = statusConfig[property.status] || { label: property.status, className: 'bg-muted/90 text-muted-foreground backdrop-blur-sm' };
+  const city = Array.isArray(property.city) ? property.city[0] : (property.city as { name: string; slug: string } | undefined);
+  const cityName = city?.name || 'Dubai';
+  const category = property.category?.[0]?.name || 'Property';
+  const propertyHref = `/properties/${property.slug}`;
 
   return (
-    <Link href={`/properties/${property.slug}`} className="group block">
-      <Card className={cn('relative overflow-hidden rounded-xl aspect-4/3 border border-border shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1', className)}>
-        {/* Background Image */}
-        <div className="absolute inset-0 bg-muted">
+    <Card className={cn('group w-full max-w-sm overflow-hidden rounded-xl border border-border bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg', className)}>
+      <Link href={propertyHref} className="relative block aspect-[16/9] overflow-hidden bg-muted">
+        <div className="absolute inset-0">
           <ImageWithFallback src={firstImage} alt={property.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
         </div>
+        <div className="absolute inset-0 bg-linear-to-t from-foreground/35 via-transparent to-transparent" />
 
-        {/* Top Bar */}
-        <div className="absolute top-3 left-3 right-3 flex justify-start items-start z-10">
-          <Badge className={cn('px-3 py-1 text-xs font-semibold rounded-lg shadow-sm', status.className)}>{status.label}</Badge>
+        <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-col items-start gap-2">
+          <Badge className={cn('rounded-md px-2.5 py-1 text-[11px] font-semibold shadow-sm', status.className)}>{status.label}</Badge>
+          <Badge className="rounded-md bg-background/92 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-sm">{category}</Badge>
+          {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" className="bg-background/92 px-2.5 py-1 shadow-sm" />}
         </div>
+      </Link>
 
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-primary-foreground">
-          <div className="mb-3">
-            <h3 className="text-lg font-bold mb-1.5 line-clamp-1 drop-shadow-sm">{property.title}</h3>
-
-            <p className="text-xl font-bold mb-2.5 drop-shadow-sm">{formatPrice(property.price_aed)}</p>
-
-            <div className="inline-flex items-center gap-2 text-sm font-medium text-primary-foreground bg-primary/10 backdrop-blur-sm rounded-lg px-2 py-1 w-fit">
-              {property.bedrooms > 0 && (
-                <>
-                  <span className="flex items-center gap-1.5">
-                    <Bed className="h-3.5 w-3.5" strokeWidth={2.5} /> {property.bedrooms}
-                  </span>
-                  <span className="text-primary-foreground/40">•</span>
-                </>
-              )}
-              {property.bathrooms > 0 && (
-                <>
-                  <span className="flex items-center gap-1.5">
-                    <Bath className="h-3.5 w-3.5" strokeWidth={2.5} /> {property.bathrooms}
-                  </span>
-                  <span className="text-primary-foreground/40">•</span>
-                </>
-              )}
-              {property.size_sqft > 0 && <span>{formatSize(property.size_sqft)} sqft</span>}
-            </div>
+      <div className="space-y-2.5 p-3">
+        <div className="space-y-1">
+          <p className="text-base font-bold leading-5 text-foreground">{formatPrice(property.price_aed)}</p>
+          <Link href={propertyHref} className="block">
+            <h3 className="line-clamp-2 text-[13px] font-semibold leading-4 text-foreground transition-colors group-hover:text-primary">{property.title}</h3>
+          </Link>
+          <div className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">{cityName}</span>
           </div>
-
-          {/* Background Strip before WhatsApp */}
-          <div className="h-px bg-primary-foreground/20 mb-3" />
-
-          {/* WhatsApp Button */}
-          <PropertyWhatsAppButton property={property} variant="card" />
         </div>
-      </Card>
-    </Link>
+
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-y py-1.5 text-[11px] text-muted-foreground">
+          {property.bedrooms > 0 && (
+            <span className="flex items-center gap-1.5">
+              <Bed className="h-3 w-3" />
+              <span className="font-medium text-foreground">{property.bedrooms}</span>
+            </span>
+          )}
+          {property.bathrooms > 0 && (
+            <span className="flex items-center gap-1.5">
+              <Bath className="h-3 w-3" />
+              <span className="font-medium text-foreground">{property.bathrooms}</span>
+            </span>
+          )}
+          {property.size_sqft > 0 && (
+            <span className="flex items-center gap-1.5">
+              <Maximize className="h-3 w-3" />
+              <span className="font-medium text-foreground">{formatSize(property.size_sqft)} sqft</span>
+            </span>
+          )}
+          <span className="flex items-center gap-1.5">
+            <Building2 className="h-3 w-3" />
+            <span className="font-medium text-foreground">{category}</span>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <Button asChild variant="secondary" className="h-9 rounded-lg text-xs font-semibold text-primary">
+            <Link href={propertyHref}>
+              <Eye className="h-3.5 w-3.5" />
+              Details
+            </Link>
+          </Button>
+          <PropertyWhatsAppButton
+            property={property}
+            variant="card"
+            className="h-9 rounded-lg border-0 bg-primary text-xs text-primary-foreground shadow-none hover:bg-primary/90 hover:text-primary-foreground hover:shadow-sm [&_svg]:h-3.5 [&_svg]:w-3.5 [&_svg]:fill-primary-foreground"
+          />
+        </div>
+      </div>
+    </Card>
   );
 }

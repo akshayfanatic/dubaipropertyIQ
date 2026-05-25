@@ -3,20 +3,29 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function PropertyCardHomeSkeleton() {
   return (
-    <Card className="relative overflow-hidden rounded-xl aspect-4/3 border border-border shadow-md">
-      {/* Background */}
-      <div className="absolute inset-0 bg-muted" />
+    <Card className="w-full max-w-sm overflow-hidden rounded-xl border border-border bg-card p-0 shadow-sm">
+      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+        <Skeleton className="absolute inset-0 rounded-none" />
 
-      {/* Top Bar */}
-      <div className="absolute top-3 left-3 z-10">
-        <Skeleton className="h-6 w-16 rounded-md bg-foreground/10" />
+        <div className="absolute left-2.5 top-2.5 z-10">
+          <Skeleton className="h-5 w-18 rounded-md bg-foreground/10" />
+        </div>
+        <div className="absolute bottom-2.5 left-2.5 z-10">
+          <Skeleton className="h-5 w-22 rounded-md bg-foreground/10" />
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="absolute bottom-0 left-0 right-0 p-4">
-        <Skeleton className="h-5 w-3/4 mb-2 bg-foreground/10" />
-        <Skeleton className="h-6 w-24 mb-3 bg-foreground/10" />
-        <Skeleton className="h-8 w-full rounded-lg bg-foreground/5" />
+      <div className="space-y-2.5 p-3">
+        <div className="space-y-1">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-3.5 w-4/5" />
+          <Skeleton className="h-3.5 w-2/3" />
+        </div>
+        <Skeleton className="h-8 w-full rounded-none" />
+        <div className="grid grid-cols-2 gap-2">
+          <Skeleton className="h-9 w-full rounded-lg" />
+          <Skeleton className="h-9 w-full rounded-lg" />
+        </div>
       </div>
     </Card>
   );
