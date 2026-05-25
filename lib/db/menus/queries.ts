@@ -32,9 +32,9 @@ export type HeaderMenus = {
 };
 
 export type HeaderMenuOptions = {
-  propertyTypeLimit?: number;
   areaLimit?: number;
   propertyLimit?: number;
+  developerLimit?: number;
 };
 
 type AreaMenuRow = {
@@ -43,9 +43,9 @@ type AreaMenuRow = {
   cities: { slug: string } | { slug: string }[] | null;
 };
 
-const DEFAULT_PROPERTY_TYPE_LIMIT = 5;
 const DEFAULT_AREA_LIMIT = 5;
 const DEFAULT_PROPERTY_LIMIT = 5;
+const DEFAULT_DEVELOPER_LIMIT = 5;
 
 const guideLinks: NavigationLink[] = [
   { label: 'Buying Guide', href: '/pages/buying-guide' },
@@ -75,7 +75,7 @@ function firstOrValue<T>(value: T | T[] | null | undefined): T | null {
   return value ?? null;
 }
 
-function buildHeaderMenus(params: { propertyTypeLinks: NavigationLink[]; areaLinks: NavigationLink[]; propertyLinks: NavigationLink[] }): HeaderMenus {
+function buildHeaderMenus(params: { areaLinks: NavigationLink[]; propertyLinks: NavigationLink[]; developerLinks: NavigationLink[] }): HeaderMenus {
   const propertySections: NavigationSection[] = [
     {
       title: 'Popular Areas',
@@ -83,9 +83,8 @@ function buildHeaderMenus(params: { propertyTypeLinks: NavigationLink[]; areaLin
       links: params.areaLinks,
     },
     {
-      title: 'Properties',
-      href: '/search',
-      links: params.propertyTypeLinks,
+      title: 'Developers',
+      links: params.developerLinks,
     },
   ];
 
@@ -125,31 +124,9 @@ export async function getHeaderMenus(options: HeaderMenuOptions = {}): Promise<A
      * Setup
      * -------------------------------------------------------------------------- */
     const supabase = await serverClient();
-    const propertyTypeLimit = options.propertyTypeLimit ?? DEFAULT_PROPERTY_TYPE_LIMIT;
     const areaLimit = options.areaLimit ?? DEFAULT_AREA_LIMIT;
     const propertyLimit = options.propertyLimit ?? DEFAULT_PROPERTY_LIMIT;
-
-    /* --------------------------------------------------------------------------
-     * Property Type Links ( Property Type )
-     * --------------------------------------------------------------------------
-     * Uses category id in the URL because the search page filters by category_id.
-     */
-    const categoriesResult = await supabase.from('categories').select('id, name, slug').order('name', { ascending: true }).limit(propertyTypeLimit);
-
-    if (categoriesResult.error) {
-      return ApiResponse({
-        success: false,
-        status: HttpStatus.INTERNAL_ERROR,
-        message: categoriesResult.error.message,
-        error: { code: categoriesResult.error.code || 'QUERY_ERROR' },
-      });
-    }
-
-    const propertyTypeLinks: NavigationLink[] = (categoriesResult.data ?? []).map((category) => ({
-      id: category.id,
-      label: category.name,
-      href: `/search?categories=${category.id}`,
-    }));
+    const developerLimit = options.developerLimit ?? DEFAULT_DEVELOPER_LIMIT;
 
     /* --------------------------------------------------------------------------
      * Popular Area Links
@@ -199,6 +176,27 @@ export async function getHeaderMenus(options: HeaderMenuOptions = {}): Promise<A
     }));
 
     /* --------------------------------------------------------------------------
+     * Developer Links
+     * --------------------------------------------------------------------------
+     * Developer routes use the public profile page: /developers/[slug].
+     */
+    const developersResult = await supabase.from('developers').select('name, slug').order('name', { ascending: true }).limit(developerLimit);
+
+    if (developersResult.error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: developersResult.error.message,
+        error: { code: developersResult.error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const developerLinks: NavigationLink[] = (developersResult.data ?? []).map((developer) => ({
+      label: developer.name,
+      href: `/developers/${developer.slug}`,
+    }));
+
+    /* --------------------------------------------------------------------------
      * Final Menu Response
      * -------------------------------------------------------------------------- */
     return ApiResponse({
@@ -206,9 +204,9 @@ export async function getHeaderMenus(options: HeaderMenuOptions = {}): Promise<A
       status: HttpStatus.OK,
       message: 'Header menus fetched successfully',
       data: buildHeaderMenus({
-        propertyTypeLinks,
         areaLinks,
         propertyLinks,
+        developerLinks,
       }),
     });
   } catch (error) {

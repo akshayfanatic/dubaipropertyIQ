@@ -29,13 +29,22 @@ const fallbackExploreSections: NavigationSection[] = [
     ],
   },
   {
-    title: 'Properties',
+    title: 'Featured Properties',
     href: '/search',
     links: [
-      { label: 'Apartments', href: '/search?property_type=apartment' },
-      { label: 'Villas', href: '/search?property_type=villa' },
-      { label: 'Townhouses', href: '/search?property_type=townhouse' },
-      { label: 'Land', href: '/search?property_type=land' },
+      { label: 'Dubai Marina Apartment', href: '/search' },
+      { label: 'Downtown Dubai Residence', href: '/search' },
+      { label: 'Palm Jumeirah Villa', href: '/search' },
+      { label: 'Business Bay Investment', href: '/search' },
+    ],
+  },
+  {
+    title: 'Developers',
+    links: [
+      { label: 'Emaar Properties', href: '/developers/emaar-properties' },
+      { label: 'DAMAC Properties', href: '/developers/damac-properties' },
+      { label: 'Nakheel', href: '/developers/nakheel' },
+      { label: 'Meraas', href: '/developers/meraas' },
     ],
   },
 ];
@@ -94,6 +103,9 @@ function MegaMenuLink({ item }: { item: NavItem }) {
 }
 
 function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
+  const developerSection = sections.find((section) => section.title.toLowerCase() === 'developers');
+  const developerPromoHref = developerSection?.links[0]?.href ?? '/search';
+
   return (
     <div className="max-h-[min(70vh,620px)] w-[min(calc(100vw-2rem),560px)] overflow-y-auto rounded-xl bg-popover p-4 text-popover-foreground xl:w-210 xl:p-5">
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-8">
@@ -123,15 +135,15 @@ function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
         {/* Property image panel */}
         <NavigationMenuLink asChild>
           <Link
-            href="/search"
+            href={developerPromoHref}
             className="group hidden overflow-hidden rounded-xl border border-border bg-muted/30 transition-colors hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
           >
             <span className="relative block aspect-4/3 overflow-hidden">
               <Image src="/assets/images/property-home.jpg" alt="Dubai property interior" fill sizes="220px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
             </span>
             <span className="block p-3">
-              <span className="block text-sm font-semibold leading-5 text-foreground">Browse properties</span>
-              <span className="mt-1 block text-xs leading-4 text-muted-foreground">Search available Dubai listings</span>
+              <span className="block text-sm font-semibold leading-5 text-foreground">Explore developers</span>
+              <span className="mt-1 block text-xs leading-4 text-muted-foreground">Review developer profiles and linked projects</span>
             </span>
           </Link>
         </NavigationMenuLink>
