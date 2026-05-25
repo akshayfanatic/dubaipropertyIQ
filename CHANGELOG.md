@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.0...v0.7.1) (2026-05-25)
+
+### Features
+
+- **developer:** added developer links to magamneu ([2be7a07](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2be7a071bd4dcb708cc15f71ee350ed14476b627))
+- **search:** added nuqs support for query param based component instead of using raw query ([fd9d563](https://github.com/akshayfanatic/dubaipropertyIQ/commit/fd9d56359f9241a210c140763c50b7b728564a86))
+
+### Bug Fixes
+
+- **mega menu:** fix megamenu responsiveness on dekstop and mobile ([ab79378](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ab7937893e4f12d6a3b977cd15f004eebc26b1ab))
+
+### Code Refactoring
+
+- **validation:** added validation to upload at atleast images and prevent user to form submission ([38ed5af](https://github.com/akshayfanatic/dubaipropertyIQ/commit/38ed5af69091cc74baebf3e83989a4236a029c57))
+
+### Code Style Changes
+
+- **cards,skelton:** redesign card for properties ([d61f5b4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d61f5b4d2a3a86fd2c1b4aa51bdb04668852bb4a))
+
 ## [0.7.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.6.0...v0.7.0) (2026-05-22)
 
 ### Features
