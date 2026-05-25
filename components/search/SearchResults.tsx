@@ -26,7 +26,7 @@ interface PropertyGridProps {
 function PropertyGrid({ children, pagination }: PropertyGridProps) {
   return (
     <div className="w-full">
-      <div className="space-y-5 sm:space-y-6">{children}</div>
+      <div className="space-y-4 sm:space-y-5">{children}</div>
       {pagination && <div className="mt-8 flex justify-center">{pagination}</div>}
     </div>
   );
@@ -69,13 +69,13 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
 
   return (
     <PropertyGrid pagination={total > pageSize ? <Pagination total={total} page={resultPage} pageSize={pageSize} /> : undefined}>
-      <div className="flex flex-col gap-1 rounded-xl border bg-card px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-base font-semibold leading-6 text-foreground">Available properties</h2>
+      <div className="flex flex-col gap-1 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold leading-7 text-foreground">Available properties</h2>
         <p className="text-sm leading-6 text-muted-foreground" aria-live="polite">
           Showing {firstResult}-{lastResult} of {total}
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-5">
+      <div className="grid grid-cols-1 gap-4 sm:gap-5">
         {properties.map((property) => (
           <PropertyCard key={property.id} property={property} />
         ))}
@@ -86,11 +86,11 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
 
 export function SearchResultsSkeleton() {
   return (
-    <div className="w-full space-y-6">
-      <div className="rounded-xl border bg-card px-4 py-3 shadow-sm">
+    <div className="w-full space-y-5">
+      <div className="border-b pb-3">
         <Skeleton className="h-6 w-48" />
       </div>
-      <div className="grid grid-cols-1 gap-5">
+      <div className="grid grid-cols-1 gap-4 sm:gap-5">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <PropertyCardSkeleton key={i} />
         ))}

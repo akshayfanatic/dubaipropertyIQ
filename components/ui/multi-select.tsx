@@ -171,6 +171,7 @@ export function MultiSelect({ name, label, required = false, placeholder = 'Sele
         </Label>
       )}
       <Select
+        instanceId={name}
         inputId={name}
         isMulti
         options={options}

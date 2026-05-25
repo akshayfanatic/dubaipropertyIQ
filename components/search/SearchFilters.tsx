@@ -12,17 +12,6 @@ import { TextInput } from '../shared/forms/text-input';
 import { useCategories } from '@/hooks/data/public/useCategories';
 import { filterSchema, type FilterSchema } from './types';
 
-const defaultValues: FilterSchema = {
-  location: '',
-  propertyType: '',
-  priceRange: {
-    min: '',
-    max: '',
-  },
-  amenities: [],
-  goldenVisaEligible: false,
-};
-
 export default function SearchFilters() {
   const { categories, isLoading: categoriesLoading } = useCategories();
 
@@ -63,20 +52,6 @@ export default function SearchFilters() {
     });
   }, 500);
 
-  /**
-   * RESET FILTERS
-   */
-  const resetQuery = () => {
-    setQuery({
-      q: null,
-      categories: null,
-      minPrice: null,
-      maxPrice: null,
-      amenities: null,
-      golden_visa_eligible: null,
-    });
-  };
-
   return (
     <BaseForm
       schema={filterSchema}
@@ -92,9 +67,9 @@ export default function SearchFilters() {
         amenities: query.amenities,
         goldenVisaEligible: query.golden_visa_eligible,
       }}
-      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(14rem,1fr)_minmax(12rem,14rem)] xl:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)_minmax(18rem,22rem)]"
+      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)] lg:grid-cols-[minmax(18rem,1fr)_minmax(12rem,15rem)_minmax(20rem,24rem)]"
     >
-      <FilterFields categories={categories} categoriesLoading={categoriesLoading} updateQuery={updateQuery} resetQuery={resetQuery} />
+      <FilterFields categories={categories} categoriesLoading={categoriesLoading} updateQuery={updateQuery} />
     </BaseForm>
   );
 }
@@ -106,10 +81,9 @@ interface FilterFieldsProps {
   }>;
   categoriesLoading: boolean;
   updateQuery: (data: FilterSchema) => void;
-  resetQuery: () => void;
 }
 
-function FilterFields({ categories, categoriesLoading, updateQuery, resetQuery }: FilterFieldsProps) {
+function FilterFields({ categories, categoriesLoading, updateQuery }: FilterFieldsProps) {
   const form = useFormContext<FilterSchema>();
 
   return (
@@ -126,7 +100,7 @@ function FilterFields({ categories, categoriesLoading, updateQuery, resetQuery }
                 type="search"
                 icon={Search}
                 placeholder="Location, community, or property"
-                className="h-11 bg-background"
+                className="h-11 bg-background text-foreground"
                 onChange={(e) => {
                   field.onChange(e);
 
@@ -155,7 +129,7 @@ function FilterFields({ categories, categoriesLoading, updateQuery, resetQuery }
                 options={categories}
                 disabled={categoriesLoading}
                 placeholder="Property type"
-                className="h-11 bg-background"
+                className="h-11 bg-background text-foreground"
                 onValueChange={(value) => {
                   field.onChange(value);
 
@@ -177,7 +151,7 @@ function FilterFields({ categories, categoriesLoading, updateQuery, resetQuery }
         control={form.control}
         name="priceRange"
         render={({ field }) => (
-          <FormItem className="min-w-0 md:col-span-2 xl:col-span-1">
+          <FormItem className="min-w-0 md:col-span-2 lg:col-span-1">
             <FormControl>
               <PriceRangeInput
                 value={field.value}
