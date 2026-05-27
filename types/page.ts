@@ -4,7 +4,7 @@
  * Based on Database['public']['Tables']['pages']['Row']
  */
 
-import type { PaginationFilters, SearchFilters } from './shared';
+import type { PaginationFilters, SearchFilters, TiptapContent } from './shared';
 
 export interface Page {
   id: string;
@@ -19,24 +19,7 @@ export interface Page {
   updated_at: string;
 }
 
-/**
- * Tiptap JSON content structure (what's stored in content: Json)
- */
-export interface PageContent {
-  type: 'doc';
-  content: PageContentNode[];
-}
-
-export interface PageContentNode {
-  type?: string;
-  attrs?: Record<string, unknown>;
-  content?: PageContentNode[];
-  text?: string;
-  marks?: Array<{
-    type: string;
-    attrs?: Record<string, unknown>;
-  }>;
-}
+export type PageContent = TiptapContent;
 
 export type PageInsert = Omit<Page, 'id' | 'created_at' | 'updated_at'>;
 export type PageUpdate = Partial<Omit<PageInsert, 'slug'>>;

@@ -42,6 +42,25 @@ export interface SelectOption {
 }
 
 /**
+ * Tiptap JSON content structure stored in rich-text content columns.
+ */
+export interface TiptapContent {
+  type: 'doc';
+  content: TiptapContentNode[];
+}
+
+export interface TiptapContentNode {
+  type?: string;
+  attrs?: Record<string, unknown>;
+  content?: TiptapContentNode[];
+  text?: string;
+  marks?: Array<{
+    type: string;
+    attrs?: Record<string, unknown>;
+  }>;
+}
+
+/**
  * Generic Location type with coordinates
  * Used across different entities (Area, Property, etc.)
  */

@@ -1,36 +1,6 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: '14.4';
-  };
-  graphql_public: {
-    Tables: {
-      [_ in never]: never;
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json;
-          operationName?: string;
-          query?: string;
-          variables?: Json;
-        };
-        Returns: Json;
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
   public: {
     Tables: {
       amenities: {
@@ -236,6 +206,48 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      blogs: {
+        Row: {
+          content: Json;
+          created_at: string | null;
+          excerpt: string | null;
+          feature_image_url: Json | null;
+          id: string;
+          is_published: boolean | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          slug: string;
+          title: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          content?: Json;
+          created_at?: string | null;
+          excerpt?: string | null;
+          feature_image_url?: Json | null;
+          id?: string;
+          is_published?: boolean | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          slug: string;
+          title: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          content?: Json;
+          created_at?: string | null;
+          excerpt?: string | null;
+          feature_image_url?: Json | null;
+          id?: string;
+          is_published?: boolean | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          slug?: string;
+          title?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [];
       };
       categories: {
         Row: {
@@ -730,9 +742,6 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       app_role: ['admin', 'agent', 'customer'],
