@@ -96,13 +96,21 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button asChild variant="secondary" className="h-11 rounded-lg font-semibold text-primary">
+            <Button
+              asChild
+              variant="outline"
+              className="h-11 rounded-lg border-primary/20 bg-card font-semibold text-primary shadow-none transition-all hover:border-primary/35 hover:bg-primary/10 hover:text-primary hover:shadow-sm"
+            >
               <Link href={propertyHref}>
                 <Eye className="h-4 w-4" />
                 Details
               </Link>
             </Button>
-            <PropertyWhatsAppButton property={property} variant="card" className="h-11 rounded-lg border-primary/15 bg-secondary text-primary shadow-none hover:bg-secondary/80 hover:shadow-sm" />
+            <PropertyWhatsAppButton
+              property={property}
+              variant="card"
+              className="h-11 rounded-lg border-0 bg-primary text-primary-foreground shadow-none hover:bg-primary/90 hover:text-primary-foreground hover:shadow-sm [&_svg]:fill-primary-foreground"
+            />
           </div>
         </div>
       </div>
