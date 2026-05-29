@@ -63,12 +63,12 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
 
   return (
     <PageLayout contentFullWidth wrapperClassName="py-0">
-      {/* Breadcrumb */}
+      {/* ── Breadcrumb Section ── */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <PublicBreadCrumb />
       </div>
 
-      {/* Banner */}
+      {/* ── Hero Banner Section ── */}
       <PageBanner
         imageUrl={bannerImage?.url}
         alt={bannerImage?.alt_tag || `${areaDetail.name} community photo`}
@@ -92,10 +92,10 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </div>
       </PageBanner>
 
-      {/* Quick Navigation */}
+      {/* ── Quick Navigation Section ── */}
       <AreaQuickNav />
 
-      {/* General Information */}
+      {/* ── General Information Section ── */}
       <AnimateSection>
         <SectionCard>
           <PropertyContentCard id="general-information" title="General Information">
@@ -118,10 +118,9 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </SectionCard>
       </AnimateSection>
 
-      {/* Section Separator */}
       <Separator />
 
-      {/* Gallery */}
+      {/* ── Gallery Section ── */}
       {galleryPhotos.length > 0 && (
         <AnimateSection id="gallery">
           <SectionCard>
@@ -136,10 +135,9 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </AnimateSection>
       )}
 
-      {/* Section Separator */}
       {galleryPhotos.length > 0 && <Separator />}
 
-      {/* Location */}
+      {/* ── Location Section ── */}
       {areaDetail.location && (
         <AnimateSection>
           <SectionCard>
@@ -152,10 +150,9 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </AnimateSection>
       )}
 
-      {/* Section Separator */}
       {areaDetail.location && <Separator />}
 
-      {/* Properties */}
+      {/* ── Properties Section ── */}
       {areaDetail.properties.length > 0 && (
         <AnimateSection>
           <SliderSection
@@ -178,10 +175,9 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </AnimateSection>
       )}
 
-      {/* Section Separator */}
       {areaDetail.properties.length > 0 && <Separator />}
 
-      {/* Area FAQs */}
+      {/* ── Area FAQs Section ── */}
       {areaDetail.faqs.length > 0 && (
         <AnimateSection>
           <SectionCard>
@@ -192,10 +188,9 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
         </AnimateSection>
       )}
 
-      {/* Section Separator */}
       {areaDetail.faqs.length > 0 && areaDetail.amenities_faqs.length > 0 && <Separator />}
 
-      {/* Amenities FAQs */}
+      {/* ── Amenities FAQs Section ── */}
       {areaDetail.amenities_faqs.length > 0 && (
         <AnimateSection>
           <SectionCard>
