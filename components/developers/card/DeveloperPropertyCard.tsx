@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { Bed, Building2 } from 'lucide-react';
+import { Bed, Building2, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { cn } from '@/lib/utils';
 import { PropertyWhatsAppButton } from '@/components/properties/PropertyWhatsAppButton';
+import { Button } from '@/components/ui/button';
 
 export interface DeveloperPropertyCardProps {
   imageSrc: string;
@@ -46,9 +47,10 @@ export function DeveloperPropertyCard({
   className,
 }: DeveloperPropertyCardProps) {
   const statusBadge = status ? statusConfig[status] || { label: status, className: 'bg-muted/90 text-muted-foreground backdrop-blur-sm' } : null;
+  const propertyHref = slug !== '#' ? `/properties/${slug}` : '#';
 
   return (
-    <Link href={slug !== '#' ? `/properties/${slug}` : '#'} className="group block">
+    <div className="group block">
       <Card className={cn('relative  overflow-hidden rounded-xl aspect-4/3 border border-border shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1', className)}>
         {/* Background Image */}
         <div className="absolute inset-0 bg-muted">
@@ -106,11 +108,26 @@ export function DeveloperPropertyCard({
           {/* Background Strip before WhatsApp */}
           <div className="h-px bg-primary-foreground/20 mb-3" />
 
-          {/* WhatsApp Button */}
-          <PropertyWhatsAppButton property={{ title, slug }} variant="card" />
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              asChild
+              variant="outline"
+              className="h-10 rounded-lg border-primary-foreground/25 bg-background/95 text-xs font-semibold text-primary shadow-none backdrop-blur-sm transition-all hover:border-primary-foreground/40 hover:bg-background hover:text-primary hover:shadow-sm"
+            >
+              <Link href={propertyHref}>
+                <Eye className="h-3.5 w-3.5" />
+                Details
+              </Link>
+            </Button>
+            <PropertyWhatsAppButton
+              property={{ title, slug }}
+              variant="card"
+              className="h-10 rounded-lg border-0 bg-primary text-xs text-primary-foreground shadow-none hover:bg-primary/90 hover:text-primary-foreground hover:shadow-sm [&_svg]:h-3.5 [&_svg]:w-3.5 [&_svg]:fill-primary-foreground"
+            />
+          </div>
         </div>
       </Card>
-    </Link>
+    </div>
   );
 }
 

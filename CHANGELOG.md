@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.1...v0.7.2) (2026-05-28)
+
+### Features
+
+- **blogs:** added feature to display blogs data in backend with dynamic data ([409fbfd](https://github.com/akshayfanatic/dubaipropertyIQ/commit/409fbfd67ff055624c75012f6230d6b02ea40cd7))
+- **blogs:** added new sql migration for adding blogs ([f47c7bf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f47c7bf8ac399346b47897e3075a4d3871e5f664))
+- **blogs:** added server functions for query and mutations of blos ([4f3f57d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4f3f57d269f0a8678f03adb42ab9eb10449504fb))
+- **blogs:** added types to blog ([d12441e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d12441e412b47168bc3526a7e44dbf8277a1ede6))
+
+### Code Refactoring
+
+- **changefont:** change the font of frontend pages ([9475f68](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9475f68aa484ba20627e5d250c753ce70c9f79f4))
+- **suggested link:** added a suggested link in category and amenitity form ([86608ab](https://github.com/akshayfanatic/dubaipropertyIQ/commit/86608ab9cabf2cac1c45d1189d421bd9b0415bdb))
+- **types:** update new types and refactor new types for Tiptap Editor ([0b4066c](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0b4066c95d8b70d3d2130114668f5ef60d3508ca))
+
 ### [0.7.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.0...v0.7.1) (2026-05-25)
 
 ### Features

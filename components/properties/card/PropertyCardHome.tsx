@@ -87,7 +87,11 @@ export function PropertyCardHome({ property, className }: PropertyCardHomeProps)
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <Button asChild variant="secondary" className="h-9 rounded-lg text-xs font-semibold text-primary">
+          <Button
+            asChild
+            variant="outline"
+            className="h-9 rounded-lg border-primary/20 bg-card text-xs font-semibold text-primary shadow-none transition-all hover:border-primary/35 hover:bg-primary/10 hover:text-primary hover:shadow-sm"
+          >
             <Link href={propertyHref}>
               <Eye className="h-3.5 w-3.5" />
               Details

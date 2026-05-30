@@ -13,6 +13,7 @@ import { ImageUploader } from '@/components/ui/image-uploader';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { TextInput } from '@/components/shared/forms/text-input';
 import { TextArea } from '@/components/shared/forms/text-area';
+import { ExternalLink } from 'lucide-react';
 
 interface CategoryFormProps {
   id?: string;
@@ -108,6 +109,14 @@ export function CategoryForm({ id = '', category }: CategoryFormProps) {
         render={({ field }) => (
           <div className="grid gap-2">
             <Label>Category Logo</Label>
+            <p className="text-xs leading-5 text-muted-foreground">
+              Need an icon?{' '}
+              <a href="https://lucide.dev/icons/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-primary underline-offset-4 hover:underline">
+                Browse Lucide Icons
+                <ExternalLink className="h-3 w-3" />
+              </a>
+              .
+            </p>
             <ImageUploader
               bucket="category-logos"
               folder="logos"
