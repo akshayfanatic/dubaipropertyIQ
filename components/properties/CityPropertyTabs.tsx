@@ -12,12 +12,13 @@ import { ApiResponse } from '@/lib/utils/response';
 interface CityPropertyTabsProps {
   cities: City[];
   propertiesPerCity?: number;
+  isFeatured?: boolean;
 }
 
-export function CityPropertyTabs({ cities, propertiesPerCity = 6 }: CityPropertyTabsProps) {
+export function CityPropertyTabs({ cities, propertiesPerCity = 6, isFeatured }: CityPropertyTabsProps) {
   const [activeCity, setActiveCity] = useState<string>(cities[0]?.id || '');
 
-  const queryString = `?city_id=${activeCity}&pageSize=${propertiesPerCity}`;
+  const queryString = `?city_id=${activeCity}&pageSize=${propertiesPerCity}${isFeatured !== undefined ? `&is_featured=${isFeatured}` : ''}`;
   const { data, isLoading } = useSWR<ApiResponse<PaginatedResult<PropertyListItem>>>(`/api/public/properties${queryString}`);
 
   const properties = data?.data?.data ?? [];

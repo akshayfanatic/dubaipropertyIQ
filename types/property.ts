@@ -80,11 +80,11 @@ export interface PropertyFilters {
   min_size?: number;
   max_size?: number;
   golden_visa_eligible?: boolean;
+  is_featured?: boolean;
   sortBy?: string;
   sortOrder?: SortOrder;
   page?: number;
   pageSize?: number;
-  is_featured?: number;
 }
 
 // Helper type for category with joined data
@@ -106,6 +106,7 @@ export interface PropertyListItem {
   price_aed: number;
   status: PropertyStatus;
   golden_visa_eligible: boolean;
+  is_featured: boolean;
   photos: ImageObject[]; // Changed from string[]
   features: string[];
   floor_plan: string | null;

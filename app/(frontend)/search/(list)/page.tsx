@@ -9,6 +9,7 @@ export type SearchParams = {
   maxPrice?: string;
   amenities?: string | string[];
   golden_visa_eligible?: string;
+  is_featured?: string;
   page?: string;
 };
 

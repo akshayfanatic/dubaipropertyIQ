@@ -51,9 +51,9 @@ export default async function Home() {
       <AnimateSection>
         <SectionCard title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="bg-white">
           <div className="flex flex-col gap-8">
-            <CityPropertyTabs cities={cities} />
+            <CityPropertyTabs cities={cities} propertiesPerCity={3} isFeatured />
             <div className="flex justify-center">
-              <Link href="/properties" className={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'text-secondary font-semibold')}>
+              <Link href="/search" className={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'text-secondary font-semibold')}>
                 View All Properties
               </Link>
             </div>

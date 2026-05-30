@@ -15,6 +15,7 @@ interface SearchResultsProps {
   maxPrice?: string;
   amenities?: string | string[];
   golden_visa_eligible?: string;
+  is_featured?: string;
   page?: string;
 }
 
@@ -32,7 +33,7 @@ function PropertyGrid({ children, pagination }: PropertyGridProps) {
   );
 }
 
-export async function SearchResults({ location, q, categories, minPrice, maxPrice, amenities, golden_visa_eligible, page }: SearchResultsProps) {
+export async function SearchResults({ location, q, categories, minPrice, maxPrice, amenities, golden_visa_eligible, is_featured, page }: SearchResultsProps) {
   const currentPage = parseInt(page || '1', 10);
 
   const response = await getProperties({
@@ -43,6 +44,7 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
     maxPrice,
     amenities: Array.isArray(amenities) ? amenities.join(',') : amenities,
     golden_visa_eligible,
+    is_featured,
     page: currentPage,
   });
 

@@ -16,6 +16,7 @@ interface PageProps {
     min_size?: string;
     max_size?: string;
     golden_visa_eligible?: string;
+    is_featured?: string;
     sortBy?: string;
     sortOrder?: string;
     page?: string;
@@ -36,6 +37,7 @@ function buildFilters(params: Awaited<PageProps['searchParams']>): PropertyFilte
     min_size: params.min_size ? Number(params.min_size) : undefined,
     max_size: params.max_size ? Number(params.max_size) : undefined,
     golden_visa_eligible: params.golden_visa_eligible === 'true',
+    is_featured: params.is_featured !== undefined ? params.is_featured === 'true' : undefined,
     sortBy: params.sortBy || undefined,
     sortOrder: (params.sortOrder as PropertyFilters['sortOrder']) || undefined,
     page: params.page ? Number(params.page) : 1,
