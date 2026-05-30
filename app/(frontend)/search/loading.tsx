@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { WidgetCard } from '@/components/shared/WidgetCard';
-import { PropertyCardSkeleton } from '@/components/properties/card';
+import { PropertyCardTileSkeleton } from '@/components/properties/card';
 
 export default function SearchLoading() {
   return (
@@ -41,7 +41,7 @@ export default function SearchLoading() {
           <main className="flex-1">
             <div className="grid grid-cols-1 gap-8">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <PropertyCardSkeleton key={i} />
+                <PropertyCardTileSkeleton key={i} />
               ))}
             </div>
             {/* Pagination Skeleton */}

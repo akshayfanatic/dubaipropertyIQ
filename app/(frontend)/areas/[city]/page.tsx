@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { AreaCard } from '@/components/areas/card/AreaCard';
 import { CitySelectField } from '@/components/city/CitySelectField';
 import PageLayout from '@/components/layout/PageLayout';
-import { PropertyCardHomeSlide } from '@/components/properties/card';
+import { PropertyCardSlide } from '@/components/properties/card';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
@@ -115,7 +115,7 @@ async function PropertiesSection({ city }: { city: string }) {
         title="Properties"
         description="Browse available properties in this city."
         data={properties}
-        SlideComponent={PropertyCardHomeSlide}
+        SlideComponent={PropertyCardSlide}
         delay={4000}
         spaceBetween={20}
         slidesPerView={1}

@@ -6,7 +6,7 @@ import { AreaGallerySection } from '@/components/areas/AreaGallerySection';
 import { AreaQuickNav } from '@/components/areas/AreaQuickNav';
 import PageLayout from '@/components/layout/PageLayout';
 import PropertyContentCard from '@/components/properties/card/PropertyContentCard';
-import { PropertyCardHomeSlide } from '@/components/properties/card';
+import { PropertyCardSlide } from '@/components/properties/card';
 import { SliderSection } from '@/components/sliders/SliderSection';
 import { FAQAccordion } from '@/components/shared/FAQAccordion';
 import { PageBanner } from '@/components/shared/PageBanner';
@@ -159,7 +159,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             title={`Properties in ${areaDetail.name}`}
             description={`Browse available properties linked to ${areaDetail.name}.`}
             data={areaDetail.properties}
-            SlideComponent={PropertyCardHomeSlide}
+            SlideComponent={PropertyCardSlide}
             delay={4000}
             spaceBetween={20}
             slidesPerView={1}

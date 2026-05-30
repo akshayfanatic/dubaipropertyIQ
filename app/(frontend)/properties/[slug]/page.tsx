@@ -16,17 +16,11 @@ import type { ImageObject } from '@/types/images';
 import { PropertyInfo } from '@/components/properties/tabs/PropertyInfo';
 import SideBarContent from '@/components/properties/tabs/SideBarContent';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
+import { getPropertyStatusBadgeConfig } from '@/config';
 
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
 }
-
-const statusConfig: Record<string, { label: string; className: string }> = {
-  available: { label: 'Available', className: 'bg-primary/95 text-primary-foreground backdrop-blur-sm' },
-  sold: { label: 'Sold', className: 'bg-muted/90 text-muted-foreground backdrop-blur-sm' },
-  reserved: { label: 'Reserved', className: 'bg-accent/90 text-accent-foreground backdrop-blur-sm' },
-  off_plan: { label: 'Off Plan', className: 'bg-secondary/90 text-secondary-foreground backdrop-blur-sm' },
-};
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
@@ -67,10 +61,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const property = response.data;
   const photos = property.photos as ImageObject[];
 
-  const status = statusConfig[property.status] || {
-    label: property.status,
-    className: 'bg-muted/90 text-muted-foreground backdrop-blur-sm',
-  };
+  const status = getPropertyStatusBadgeConfig(property.status);
 
   return (
     <PageLayout className="py-2 space-y-4 px-4" breadcrumb={<PublicBreadCrumb />}>

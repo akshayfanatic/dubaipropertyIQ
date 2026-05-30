@@ -9,7 +9,7 @@ import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import DeveloperQueryForm from '@/components/developers/forms/DeveloperQueryForm';
 import { DeveloperInquiryForm } from '@/components/developers/forms/DeveloperInquiryForm';
-import { DeveloperPropertyCardSkeleton } from '@/components/developers/card/DeveloperPropertyCard';
+import { PropertyCardSkeleton } from '@/components/properties/card';
 import { getDeveloperBySlug } from '@/lib/db/developers/queries';
 import { ImageObject } from '@/types/images';
 
@@ -17,7 +17,7 @@ export function PropertiesSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: 6 }).map((_, i) => (
-        <DeveloperPropertyCardSkeleton key={i} />
+        <PropertyCardSkeleton key={i} />
       ))}
     </div>
   );
