@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.2...v0.7.3) (2026-06-01)
+
+### Features
+
+- **customer:** created customer sccafolding minimal ui ([62c824f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/62c824f101a28b57b87569ac635a9073a3b3729f))
+- **property:** added a quick action button in filter of property for changing status without opening page ([8e5bdae](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8e5bdaed106d8de00abcd8f5b9369abc373bb231))
+
+### Code Refactoring
+
+- **area:** added comments to editor appeared ui ([f645290](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f6452901da449d3a2f743a0d76a416bdb338e8cc))
+- **home:** change property card design for home page ([556c354](https://github.com/akshayfanatic/dubaipropertyIQ/commit/556c354f9db61c2979e1064bb1fcd12a6d75e1ab))
+- **property:** modify file name of property card ([bd9095b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/bd9095bd2dc3bdd93e6d68e11252254610595e03))
+
 ### [0.7.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.1...v0.7.2) (2026-05-28)
 
 ### Features
