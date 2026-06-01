@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { ToolsSection } from '@/components/home/ToolsSection';
 import { FeaturedCities } from '@/components/home/FeaturedCities';
 import { BlogGuidesSection } from '@/components/home/BlogGuidesSection';
+import { NewsletterSection } from '@/components/home/NewsletterSection';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
@@ -33,6 +34,7 @@ export default async function Home() {
 
   return (
     <>
+      {/* Hero: search-first homepage banner */}
       <PageBanner
         imageUrl="/assets/images/hero-bg-2.jpg"
         alt="Dubai skyline and property search hero"
@@ -48,6 +50,7 @@ export default async function Home() {
         />
       </PageBanner>
 
+      {/* Featured properties: city tabs with property cards */}
       <AnimateSection>
         <SectionCard eyebrow="Hand-picked" title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="bg-muted/45">
           <div className="flex flex-col gap-8">
@@ -61,6 +64,7 @@ export default async function Home() {
         </SectionCard>
       </AnimateSection>
 
+      {/* Investment areas: image-led city/community cards */}
       <AnimateSection>
         <SectionCard
           eyebrow="Explore by community"
@@ -73,6 +77,7 @@ export default async function Home() {
         </SectionCard>
       </AnimateSection>
 
+      {/* Developers: carousel of developer profiles */}
       <AnimateSection>
         <SliderSection
           title="Explore Developers Projects"
@@ -90,6 +95,7 @@ export default async function Home() {
         />
       </AnimateSection>
 
+      {/* Investment tools: calculator links and live yield calculator */}
       <AnimateSection>
         <SectionCard
           eyebrow="Free investor tools"
@@ -101,6 +107,7 @@ export default async function Home() {
         </SectionCard>
       </AnimateSection>
 
+      {/* Blog guides: latest published market insights */}
       {blogs.length > 0 && (
         <AnimateSection>
           <SectionCard
@@ -121,6 +128,11 @@ export default async function Home() {
           </SectionCard>
         </AnimateSection>
       )}
+
+      {/* Newsletter: weekly Dubai property intelligence signup */}
+      <AnimateSection>
+        <NewsletterSection />
+      </AnimateSection>
     </>
   );
 }
