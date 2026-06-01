@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils';
 import { ToolsSection } from '@/components/home/ToolsSection';
 import { FeaturedCities } from '@/components/home/FeaturedCities';
 import { AnimateSection } from '@/components/shared/AnimateSection';
-import { Separator } from '@/components/ui/separator';
 import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
 
@@ -44,10 +43,9 @@ export default async function Home() {
           searchForm={<HomeSearchForm />}
         />
       </PageBanner>
-      <Separator />
 
       <AnimateSection>
-        <SectionCard title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="bg-white">
+        <SectionCard eyebrow="Hand-picked" title="Explore Properties by City" description="Discover the latest off-plan properties and be informed." className="bg-muted/45">
           <div className="flex flex-col gap-8">
             <CityPropertyTabs cities={cities} propertiesPerCity={4} isFeatured />
             <div className="flex justify-center">
@@ -59,20 +57,22 @@ export default async function Home() {
         </SectionCard>
       </AnimateSection>
 
-      <Separator />
-
       <AnimateSection>
-        <SectionCard title="Featured Investment Areas" description="Explore top investment locations across the UAE with market insights and rental yields" className="bg-white">
+        <SectionCard
+          eyebrow="Explore by community"
+          title="Featured Investment Areas"
+          description="Explore top investment locations across the UAE with market insights and rental yields"
+          className="bg-background"
+          align="center"
+        >
           <FeaturedCities cities={featuredCities} />
         </SectionCard>
       </AnimateSection>
 
-      <Separator />
-
       <AnimateSection>
         <SliderSection
           title="Explore Developers Projects"
-          className="bg-white"
+          className="bg-muted/45"
           data={developers}
           SlideComponent={DeveloperCard}
           delay={4000}
@@ -86,10 +86,13 @@ export default async function Home() {
         />
       </AnimateSection>
 
-      <Separator />
-
       <AnimateSection>
-        <SectionCard title="Property Investment Tools" description="Make informed decisions with our suite of Dubai-specific calculators and comparison tools" className="bg-white">
+        <SectionCard
+          eyebrow="Free investor tools"
+          title="Property Investment Tools"
+          description="Make informed decisions with our suite of Dubai-specific calculators and comparison tools"
+          className="bg-background"
+        >
           <ToolsSection />
         </SectionCard>
       </AnimateSection>
