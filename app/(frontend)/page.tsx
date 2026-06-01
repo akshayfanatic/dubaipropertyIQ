@@ -41,9 +41,7 @@ export default async function Home() {
           badge="Dubai Property IQ"
           headline="Explore Your Home"
           subtext="Search Dubai communities, compare property types, and find the right investment path with cleaner market context."
-          searchForm={
-            <HomeSearchForm className="max-w-5xl rounded-2xl border-white/30 bg-background/78 shadow-2xl shadow-foreground/20 backdrop-blur-md **:data-[slot=select-trigger]:bg-card/92 [&_input]:bg-card/92" />
-          }
+          searchForm={<HomeSearchForm />}
         />
       </PageBanner>
       <Separator />
