@@ -9,6 +9,8 @@ import React from 'react';
 // Breadcrumb mapping for admin routes
 const breadcrumbMap: Record<string, string> = {
   '/pages/privacy-policy': 'Privacy Policy',
+  '/pages/terms-conditions': 'Terms & Conditions',
+  '/pages/cookie-policy': 'Cookie Policy',
   '/search': 'Properties Rent For Dubai',
   '/dashboard/admin/users': 'Users',
   '/dashboard/admin/analytics': 'Analytics',

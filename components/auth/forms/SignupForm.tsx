@@ -100,11 +100,11 @@ export function SignupForm() {
           />
           <label htmlFor="terms" className="cursor-pointer text-sm text-muted-foreground select-none">
             I agree to the{' '}
-            <Link href="/terms" className="font-medium text-primary transition-colors hover:text-primary/80">
+            <Link href="/pages/terms-conditions" className="font-medium text-primary transition-colors hover:text-primary/80">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="font-medium text-primary transition-colors hover:text-primary/80">
+            <Link href="/pages/privacy-policy" className="font-medium text-primary transition-colors hover:text-primary/80">
               Privacy Policy
             </Link>
           </label>

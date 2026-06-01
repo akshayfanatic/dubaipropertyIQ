@@ -31,6 +31,21 @@ const nextConfig: NextConfig = {
         destination: '/search',
         permanent: true,
       },
+      {
+        source: '/privacy-policy',
+        destination: '/pages/privacy-policy',
+        permanent: true,
+      },
+      {
+        source: '/terms-conditions',
+        destination: '/pages/terms-conditions',
+        permanent: true,
+      },
+      {
+        source: '/cookie-policy',
+        destination: '/pages/cookie-policy',
+        permanent: true,
+      },
     ];
   },
 

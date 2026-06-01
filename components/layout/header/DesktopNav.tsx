@@ -74,7 +74,8 @@ const fallbackResourceSections: NavigationSection[] = [
       { label: 'About Dubai Property IQ', href: '/about' },
       { label: 'Customer Account', href: '/customer' },
       { label: 'Privacy Policy', href: '/pages/privacy-policy' },
-      { label: 'Terms & Conditions', href: '/pages/terms-and-conditions' },
+      { label: 'Terms & Conditions', href: '/pages/terms-conditions' },
+      { label: 'Cookie Policy', href: '/pages/cookie-policy' },
     ],
   },
 ];

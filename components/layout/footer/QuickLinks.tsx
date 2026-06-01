@@ -3,24 +3,30 @@
 import Link from 'next/link';
 import useSWR from 'swr';
 import type { Page } from '@/types/page';
+import type { LinkItem } from '@/types/footer';
 
 type QuickLinksProps = {
   title?: string;
+  links?: LinkItem[];
+  excludeHrefs?: string[];
+  includeDynamic?: boolean;
 };
-export function QuickLinks({ title = '' }: QuickLinksProps) {
+export function QuickLinks({ title = '', links = [], excludeHrefs = [], includeDynamic = true }: QuickLinksProps) {
   const { data: response } = useSWR<{ data: Page[] }>('/api/public/pages');
-  const pages = response?.data || [];
+  const staticHrefs = new Set([...links.map((link) => link.href), ...excludeHrefs]);
+  const pageLinks = includeDynamic ? (response?.data || []).map((page) => ({ label: page.title, href: `/pages/${page.slug}` })).filter((link) => !staticHrefs.has(link.href)) : [];
+  const allLinks = [...links, ...pageLinks];
 
-  if (pages.length === 0) return null;
+  if (allLinks.length === 0) return null;
 
   return (
-    <div>
-      {title ? <h3 className="text-sm font-semibold mb-3">{title}</h3> : null}
-      <ul className="space-y-2">
-        {pages.map((page) => (
-          <li key={page.id}>
-            <Link href={`/pages/${page.slug}`} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              {page.title}
+    <div className="space-y-4">
+      {title ? <h3 className="text-[0.82rem] font-bold uppercase tracking-[0.1em] text-white">{title}</h3> : null}
+      <ul className="grid gap-1">
+        {allLinks.map((link) => (
+          <li key={link.href}>
+            <Link href={link.href} className="block py-1 text-[0.88rem] text-white/65 transition-all duration-300 ease-out hover:pl-1.5 hover:text-[#9cc4f7]">
+              {link.label}
             </Link>
           </li>
         ))}
