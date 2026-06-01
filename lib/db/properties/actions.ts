@@ -5,6 +5,7 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin';
+import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { PropertyInsertData } from '@/lib/validations/property';
 import type { Property, PropertyUpdate } from '@/types/property';
@@ -286,6 +287,78 @@ export async function savePropertyFAQs(propertyId: string, faqs: Array<{ questio
       status: HttpStatus.INTERNAL_ERROR,
       message,
       error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+export async function toggleSavedProperty(propertyId: string) {
+  try {
+    const supabase = await serverClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.FORBIDDEN,
+        message: 'Please log in to save properties',
+        error: { code: 'UNAUTHENTICATED' },
+        data: { saved: false },
+      });
+    }
+
+    const { data: existing, error: existingError } = await supabase.from('customer_saved_properties').select('id').eq('user_id', user.id).eq('property_id', propertyId).maybeSingle();
+
+    if (existingError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: existingError.message,
+        error: { code: existingError.code || 'QUERY_ERROR' },
+        data: { saved: false },
+      });
+    }
+
+    if (existing) {
+      const { error } = await supabase.from('customer_saved_properties').delete().eq('id', existing.id).eq('user_id', user.id);
+
+      if (error) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: error.message,
+          error: { code: error.code || 'DELETE_ERROR' },
+          data: { saved: true },
+        });
+      }
+
+      revalidatePath('/customer');
+      return ApiResponse({ success: true, status: HttpStatus.OK, message: 'Property removed from saved properties', data: { saved: false } });
+    }
+
+    const { error } = await supabase.from('customer_saved_properties').insert({ user_id: user.id, property_id: propertyId });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'INSERT_ERROR' },
+        data: { saved: false },
+      });
+    }
+
+    revalidatePath('/customer', 'page');
+    return ApiResponse({ success: true, status: HttpStatus.OK, message: 'Property added to saved properties', data: { saved: true } });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to update saved property';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+      data: { saved: false },
     });
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { Bath, Bed, Building2, MapPin, Maximize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,13 +13,15 @@ import type { PropertyListItem } from '@/types/property';
 import type { ImageObject } from '@/types/images';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 import { getPropertyStatusBadgeConfig } from '@/config';
+import { PropertySaveButton } from '@/components/properties/PropertySaveButton';
 
 interface PropertyCardProps {
   property: PropertyListItem;
   className?: string;
+  wishlistSlot?: ReactNode;
 }
 
-export function PropertyCard({ property, className }: PropertyCardProps) {
+export function PropertyCard({ property, className, wishlistSlot }: PropertyCardProps) {
   const photos = property.photos as ImageObject[];
   const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
   const status = getPropertyStatusBadgeConfig(property.status);
@@ -50,6 +53,8 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
           )}
           {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" className="bg-background/92 px-2.5 py-1 shadow-sm" />}
         </div>
+
+        <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} />}</div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-primary-foreground">
           <div className="mb-2 space-y-1">

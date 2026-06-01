@@ -21,6 +21,10 @@ interface RawAmenityJoin {
   amenities: Amenity | Amenity[] | null;
 }
 
+type SavedPropertyRow = {
+  property: PropertyListItem | PropertyListItem[] | null;
+};
+
 /**
  * Search filters for public property search
  */
@@ -719,6 +723,82 @@ export async function getPropertyOptionsAdmin(): Promise<ApiResponse<PropertyOpt
       status: HttpStatus.INTERNAL_ERROR,
       message,
       error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+export async function getSavedProperties(): Promise<ApiResponse<PropertyListItem[]>> {
+  try {
+    const supabase = await serverClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.FORBIDDEN,
+        message: 'Please log in to view saved properties',
+        error: { code: 'UNAUTHENTICATED' },
+        data: [],
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('customer_saved_properties')
+      .select(
+        `
+          property:properties (
+            id,
+            slug,
+            title,
+            description,
+            bedrooms,
+            bathrooms,
+            size_sqft,
+            price_aed,
+            status,
+            golden_visa_eligible,
+            is_featured,
+            photos,
+            features,
+            floor_plan,
+            location,
+            city_id,
+            created_at,
+            updated_at,
+            category:categories (id, name, slug),
+            city:cities (id, name, slug),
+            developer:developers (id, name, slug, logo_url)
+          )
+        `,
+      )
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+        data: [],
+      });
+    }
+
+    const properties = ((data ?? []) as SavedPropertyRow[])
+      .map((row) => (Array.isArray(row.property) ? row.property[0] : row.property))
+      .filter((property): property is PropertyListItem => Boolean(property));
+
+    return ApiResponse({ success: true, status: HttpStatus.OK, message: 'Saved properties fetched successfully', data: properties });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch saved properties';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+      data: [],
     });
   }
 }
