@@ -30,7 +30,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
   const propertyHref = `/properties/${property.slug}`;
 
   return (
-    <Card className="group overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+    <Card className="card-entrance group overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
         <div className="relative min-h-64 overflow-hidden bg-muted lg:min-h-full">
           <Link href={propertyHref} className="absolute inset-0">
@@ -101,7 +101,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
               className="h-11 rounded-lg border-primary/20 bg-card font-semibold text-primary shadow-none transition-all hover:border-primary/35 hover:bg-primary/10 hover:text-primary hover:shadow-sm"
             >
               <Link href={propertyHref}>
-                <Eye className="h-4 w-4" />
+                <Eye className="h-4 w-4 group-hover:animate-float-x" />
                 Details
               </Link>
             </Button>
