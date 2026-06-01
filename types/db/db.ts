@@ -132,6 +132,7 @@ export interface Property {
   floor_plan: string | null;
   features: string[] | null;
   golden_visa_eligible: boolean | null;
+  is_featured: boolean;
   status: Database['public']['Enums']['property_status_enum'];
   created_at: string | null;
   updated_at: string | null;
@@ -329,6 +330,7 @@ export interface Database {
           floor_plan?: string | null;
           golden_visa_eligible?: boolean | null;
           id?: string;
+          is_featured?: boolean;
           photos?: Json | null;
           price_aed: number;
           size_sqft: number;

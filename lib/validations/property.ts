@@ -82,6 +82,7 @@ export const propertyFiltersSchema = z.object({
   min_size: z.number().min(0).optional(),
   max_size: z.number().min(0).optional(),
   golden_visa_eligible: z.boolean().optional(),
+  is_featured: z.boolean().optional(),
   sortBy: z.string().optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
   page: z.number().int().positive().optional(),

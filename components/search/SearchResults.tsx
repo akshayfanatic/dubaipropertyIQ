@@ -4,7 +4,7 @@ import { Building, AlertCircle } from 'lucide-react';
 import type { PaginatedResult } from '@/types/shared';
 import { Pagination } from '@/components/shared/pagination';
 import { EmptyState } from '@/components/shared/no-item-found';
-import { PropertyCard, PropertyCardSkeleton } from '@/components/properties/card';
+import { PropertyCardTile, PropertyCardTileSkeleton } from '@/components/properties/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface SearchResultsProps {
@@ -15,6 +15,7 @@ interface SearchResultsProps {
   maxPrice?: string;
   amenities?: string | string[];
   golden_visa_eligible?: string;
+  is_featured?: string;
   page?: string;
 }
 
@@ -32,7 +33,7 @@ function PropertyGrid({ children, pagination }: PropertyGridProps) {
   );
 }
 
-export async function SearchResults({ location, q, categories, minPrice, maxPrice, amenities, golden_visa_eligible, page }: SearchResultsProps) {
+export async function SearchResults({ location, q, categories, minPrice, maxPrice, amenities, golden_visa_eligible, is_featured, page }: SearchResultsProps) {
   const currentPage = parseInt(page || '1', 10);
 
   const response = await getProperties({
@@ -43,6 +44,7 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
     maxPrice,
     amenities: Array.isArray(amenities) ? amenities.join(',') : amenities,
     golden_visa_eligible,
+    is_featured,
     page: currentPage,
   });
 
@@ -77,7 +79,7 @@ export async function SearchResults({ location, q, categories, minPrice, maxPric
       </div>
       <div className="grid grid-cols-1 gap-4 sm:gap-5">
         {properties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
+          <PropertyCardTile key={property.id} property={property} />
         ))}
       </div>
     </PropertyGrid>
@@ -92,7 +94,7 @@ export function SearchResultsSkeleton() {
       </div>
       <div className="grid grid-cols-1 gap-4 sm:gap-5">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <PropertyCardSkeleton key={i} />
+          <PropertyCardTileSkeleton key={i} />
         ))}
       </div>
       <div className="flex items-center justify-center gap-2 pt-2">

@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeveloperCardSkeleton } from '@/components/developers/card/DeveloperCard';
-import { PropertyCardHomeSkeleton } from '@/components/properties/card/PropertyCard';
+import { PropertyCardSkeleton } from '@/components/properties/card';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { HomeBannerSkeleton } from '@/components/home/HomeBanner';
 import { Separator } from '@/components/ui/separator';
@@ -31,7 +31,7 @@ export default function Loading() {
             {/* Tab content skeleton - property cards grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 3 }).map((_, i) => (
-                <PropertyCardHomeSkeleton key={i} />
+                <PropertyCardSkeleton key={i} />
               ))}
             </div>
           </div>

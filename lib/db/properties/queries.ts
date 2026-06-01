@@ -38,6 +38,7 @@ export interface PropertySearchFilters {
   page?: number;
   pageSize?: number;
   golden_visa_eligible?: boolean | string;
+  is_featured?: boolean | string;
 }
 
 const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>) => {
@@ -79,6 +80,7 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
         price_aed,
         status,
         golden_visa_eligible,
+        is_featured,
         photos,
         features,
         floor_plan,
@@ -138,6 +140,11 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
     // Golden Visa filter
     if (filters?.golden_visa_eligible) {
       query = query.eq('golden_visa_eligible', filters.golden_visa_eligible === true || filters.golden_visa_eligible === 'true');
+    }
+
+    // Featured filter
+    if (filters?.is_featured !== undefined) {
+      query = query.eq('is_featured', filters.is_featured === true || filters.is_featured === 'true');
     }
 
     // Developer filter
@@ -233,6 +240,7 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
           price_aed,
           status,
           golden_visa_eligible,
+          is_featured,
           photos,
           features,
           floor_plan,
@@ -306,6 +314,7 @@ export async function getPropertiesByCity(citySlug: string): Promise<ApiResponse
           price_aed,
           status,
           golden_visa_eligible,
+          is_featured,
           photos,
           features,
           floor_plan,
@@ -416,6 +425,7 @@ export async function getPropertiesByArea(areaSlug: string, citySlug?: string): 
           price_aed,
           status,
           golden_visa_eligible,
+          is_featured,
           photos,
           features,
           floor_plan,
@@ -483,6 +493,7 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
     price_aed,
     status,
     golden_visa_eligible,
+    is_featured,
     photos,
     features,
     floor_plan,
@@ -541,6 +552,9 @@ export async function getPropertiesAdmin(filters?: PropertyFilters) {
       }
       if (filters.golden_visa_eligible !== undefined) {
         query = query.eq('golden_visa_eligible', filters.golden_visa_eligible);
+      }
+      if (filters.is_featured !== undefined) {
+        query = query.eq('is_featured', filters.is_featured);
       }
     }
 

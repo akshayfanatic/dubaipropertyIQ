@@ -1,12 +1,9 @@
 import { Suspense } from 'react';
 import { PropertiesSkeleton } from './layout';
 import { getProperties } from '@/lib/db/properties/queries';
-import { DeveloperPropertyCard } from '@/components/developers/card/DeveloperPropertyCard';
-import type { ImageObject } from '@/types/images';
-import type { PropertyListItem } from '@/types/property';
-import { formatPrice } from '@/lib/utils/price';
 import { parsePropertyStatus } from '@/types/enums';
 import { Pagination } from '@/components/shared/pagination';
+import { PropertyCard } from '@/components/properties/card';
 
 type DeveloperPageProps = {
   params: Promise<{
@@ -53,31 +50,10 @@ async function DeveloperPropertiesList({ slug, query, status, page }: { slug: st
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data.data.map((property) => (
-          <DeveloperPropertyCard key={property.id} {...getDeveloperPropertyCardProps(property)} />
+          <PropertyCard key={property.id} property={property} />
         ))}
       </div>
       {data.total > data.pageSize && <Pagination total={data.total} page={data.page} pageSize={data.pageSize} />}
     </div>
   );
-}
-
-function getDeveloperPropertyCardProps(property: PropertyListItem) {
-  const photos = property.photos as ImageObject[] | null;
-  const city = Array.isArray(property.city) ? property.city[0] : property.city;
-  const category = Array.isArray(property.category) ? property.category[0] : property.category;
-  const developer = Array.isArray(property.developer) ? property.developer[0] : property.developer;
-  const developerLogo = developer?.logo_url as ImageObject | null | undefined;
-
-  return {
-    imageSrc: photos?.[0]?.url || '/assets/images/placeholder.jpg',
-    developerLogoSrc: developerLogo?.url,
-    developerName: developer?.name,
-    title: property.title,
-    slug: property.slug,
-    location: city?.name || 'Dubai',
-    beds: property.bedrooms > 0 ? String(property.bedrooms) : 'Studio',
-    propertyType: category?.name || 'Property',
-    price: formatPrice(property.price_aed),
-    status: property.status,
-  };
 }
