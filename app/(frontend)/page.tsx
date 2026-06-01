@@ -7,25 +7,29 @@ import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
 import { getCities, getFeaturedCitiesAreas } from '@/lib/db/cities/queries';
 import { getDevelopers } from '@/lib/db/developers/queries';
+import { getPublishedBlogs } from '@/lib/db/blogs/queries';
 import { cn } from '@/lib/utils';
 import { ToolsSection } from '@/components/home/ToolsSection';
 import { FeaturedCities } from '@/components/home/FeaturedCities';
+import { BlogGuidesSection } from '@/components/home/BlogGuidesSection';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
+import { ArrowRight } from 'lucide-react';
 
 async function getHomeData() {
-  const [citiesResult, featuredCitiesResult, developersResult] = await Promise.all([getCities({ limit: 5 }), getFeaturedCitiesAreas(), getDevelopers()]);
+  const [citiesResult, featuredCitiesResult, developersResult, blogsResult] = await Promise.all([getCities({ limit: 5 }), getFeaturedCitiesAreas(), getDevelopers(), getPublishedBlogs()]);
 
   return {
     cities: citiesResult.success ? (citiesResult.data?.data ?? []) : [],
     featuredCities: featuredCitiesResult.success ? (featuredCitiesResult.data ?? []) : [],
     developers: developersResult.success ? (developersResult.data ?? []) : [],
+    blogs: blogsResult.success ? (blogsResult.data ?? []).slice(0, 3) : [],
   };
 }
 
 export default async function Home() {
-  const { cities, featuredCities, developers } = await getHomeData();
+  const { cities, featuredCities, developers, blogs } = await getHomeData();
 
   return (
     <>
@@ -96,6 +100,27 @@ export default async function Home() {
           <ToolsSection />
         </SectionCard>
       </AnimateSection>
+
+      {blogs.length > 0 && (
+        <AnimateSection>
+          <SectionCard
+            eyebrow="Market insights"
+            title="Guides for smarter investors"
+            className="bg-muted/45"
+            navigation={
+              <Link
+                href="/blogs"
+                className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'gap-2 rounded-full bg-background font-bold text-primary hover:bg-primary hover:text-primary-foreground')}
+              >
+                All guides
+                <ArrowRight className="size-4" />
+              </Link>
+            }
+          >
+            <BlogGuidesSection blogs={blogs} limit={3} />
+          </SectionCard>
+        </AnimateSection>
+      )}
     </>
   );
 }
