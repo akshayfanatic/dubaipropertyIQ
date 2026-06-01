@@ -23,7 +23,7 @@ export default function HomeBanner({ badge, headline, subtext, searchForm }: Hom
 
       {/* Headline */}
       <h1 className="animation-ease-out fill-mode-both mx-auto mb-5 max-w-4xl animate-in slide-in-from-bottom-8 text-4xl font-bold leading-[1.05] tracking-tight text-white fade-in drop-shadow-sm animation-duration-1000 delay-200 md:text-5xl lg:text-6xl">
-        <Typewriter speed={200} loop text={headline} />
+        {headline}
       </h1>
 
       {/* Subtext */}
