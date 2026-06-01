@@ -65,7 +65,7 @@ export function MobileNav({ navItems, pathname, menus, isHeroHeader }: MobileNav
   const resourceSections = menus?.resources.sections ?? [];
 
   return (
-    <div className="flex items-center gap-2 md:hidden">
+    <div className="flex items-center gap-2 lg:hidden">
       <Sheet>
         <SheetTrigger asChild>
           <Button

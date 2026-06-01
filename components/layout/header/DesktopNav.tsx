@@ -89,6 +89,17 @@ function isActivePath(pathname: string, href: string) {
   return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
 }
 
+function isDeveloperSection(section: NavigationSection) {
+  return section.title.toLowerCase().includes('developer');
+}
+
+function mergeResourceSections(resourceSections: NavigationSection[], developerSections: NavigationSection[]) {
+  const resourceTitles = new Set(resourceSections.map((section) => section.title.toLowerCase()));
+  const missingDeveloperSections = developerSections.filter((section) => !resourceTitles.has(section.title.toLowerCase()));
+
+  return [...resourceSections, ...missingDeveloperSections];
+}
+
 function getDesktopNavItemClasses(isHeroHeader?: boolean) {
   return cn(
     'inline-flex h-9 items-center justify-center rounded-md bg-transparent px-3 text-sm font-semibold transition-colors focus-visible:ring-ring/50 data-[active=true]:!text-primary data-[active=true]:hover:!text-primary data-[active=true]:focus:!text-primary data-[state=open]:bg-accent data-[state=open]:!text-primary',
@@ -98,12 +109,15 @@ function getDesktopNavItemClasses(isHeroHeader?: boolean) {
   );
 }
 
-function MegaMenuLink({ item }: { item: NavItem }) {
+function MegaMenuLink({ item, compact = false }: { item: NavItem; compact?: boolean }) {
   return (
     <NavigationMenuLink asChild>
       <Link
         href={item.href}
-        className="block rounded-md px-0 py-1.5 text-sm leading-5 text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className={cn(
+          'block rounded-lg px-2.5 text-sm text-muted-foreground transition-all duration-200 hover:translate-x-0.5 hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+          compact ? 'py-1.5 leading-4' : 'py-2 leading-5',
+        )}
       >
         {item.label}
       </Link>
@@ -111,51 +125,51 @@ function MegaMenuLink({ item }: { item: NavItem }) {
   );
 }
 
-function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
-  const developerSection = sections.find((section) => section.title.toLowerCase() === 'developers');
-  const developerPromoHref = developerSection?.links[0]?.href ?? '/search';
-
+function SearchImageSlot() {
   return (
-    <div className="max-h-[min(70vh,620px)] w-[min(calc(100vw-2rem),560px)] overflow-y-auto rounded-xl bg-popover p-4 text-popover-foreground xl:w-210 xl:p-5">
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-8">
-        {/* Explore link columns */}
-        <div className="grid grid-cols-3 gap-5 xl:gap-8">
-          {sections.map((column) => (
-            <div key={column.title} className="min-w-0">
-              {column.href ? (
+    <NavigationMenuLink asChild>
+      <Link
+        href="/search"
+        aria-label="Search properties"
+        className="group relative hidden min-h-[180px] overflow-hidden rounded-xl border border-primary/15 bg-muted shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
+      >
+        <Image src="/assets/images/property-home.jpg" alt="Dubai property search" fill sizes="230px" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
+        <span className="absolute inset-0 bg-linear-to-t from-foreground/75 via-foreground/20 to-transparent" />
+        <span className="absolute inset-x-0 bottom-0 p-4">
+          <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-primary-foreground/80">Property search</span>
+          <span className="mt-1 block text-base font-bold leading-5 text-primary-foreground">Find Dubai homes</span>
+          <span className="mt-2 inline-flex rounded-md bg-primary px-2.5 py-1.5 text-xs font-bold text-primary-foreground transition-colors group-hover:bg-primary/90">Open search</span>
+        </span>
+      </Link>
+    </NavigationMenuLink>
+  );
+}
+
+function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
+  return (
+    <div className="w-[min(calc(100vw_-_2rem),640px)] rounded-2xl bg-popover p-5 text-popover-foreground shadow-xl">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_230px]">
+        <div className="grid grid-cols-2 gap-4">
+          {sections.map((section) => (
+            <div key={section.title} className="min-w-0">
+              {section.href ? (
                 <NavigationMenuLink asChild>
-                  <Link href={column.href} className="mb-3 block text-sm font-semibold text-foreground underline underline-offset-2 hover:text-primary">
-                    {column.title}
+                  <Link href={section.href} className="mb-1.5 block text-sm font-semibold text-foreground underline underline-offset-4 transition-colors hover:text-primary">
+                    {section.title}
                   </Link>
                 </NavigationMenuLink>
               ) : (
-                <p className="mb-3 text-sm font-semibold text-foreground">{column.title}</p>
+                <p className="mb-1.5 text-sm font-semibold text-foreground">{section.title}</p>
               )}
-
-              <div className="grid gap-1">
-                {column.links.map((item) => (
-                  <MegaMenuLink key={item.label} item={item} />
+              <div className="grid gap-0.5">
+                {section.links.map((item) => (
+                  <MegaMenuLink key={`${section.title}-${item.href}-${item.label}`} item={item} compact />
                 ))}
               </div>
             </div>
           ))}
         </div>
-
-        {/* Property image panel */}
-        <NavigationMenuLink asChild>
-          <Link
-            href={developerPromoHref}
-            className="group hidden overflow-hidden rounded-xl border border-border bg-muted/30 transition-colors hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
-          >
-            <span className="relative block aspect-4/3 overflow-hidden">
-              <Image src="/assets/images/property-home.jpg" alt="Dubai property interior" fill sizes="220px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-            </span>
-            <span className="block p-3">
-              <span className="block text-sm font-semibold leading-5 text-foreground">Explore developers</span>
-              <span className="mt-1 block text-xs leading-4 text-muted-foreground">Review developer profiles and linked projects</span>
-            </span>
-          </Link>
-        </NavigationMenuLink>
+        <SearchImageSlot />
       </div>
     </div>
   );
@@ -163,32 +177,18 @@ function MegaMenuPanel({ sections }: { sections: NavigationSection[] }) {
 
 function ResourcesMenuPanel({ sections }: { sections: NavigationSection[] }) {
   return (
-    <div className="max-h-[min(70vh,620px)] w-[min(calc(100vw-2rem),480px)] overflow-y-auto rounded-xl bg-popover p-4 text-popover-foreground xl:w-180 xl:p-5">
-      <div className="grid grid-cols-2 gap-5 xl:grid-cols-[1fr_1fr_240px] xl:gap-8">
-        {sections.map((column) => (
-          <div key={column.title} className="min-w-0">
-            <p className="mb-3 text-sm font-semibold text-foreground">{column.title}</p>
-            <div className="grid gap-1">
-              {column.links.map((item) => (
-                <MegaMenuLink key={item.label} item={item} />
+    <div className="w-[min(calc(100vw_-_2rem),640px)] rounded-2xl bg-popover p-5 text-popover-foreground shadow-xl">
+      <div className="grid min-h-[180px] grid-cols-3 gap-4">
+        {sections.map((section) => (
+          <div key={section.title} className="min-w-0">
+            <p className="mb-1.5 text-sm font-semibold text-foreground">{section.title}</p>
+            <div className="grid gap-0.5">
+              {section.links.map((item) => (
+                <MegaMenuLink key={`${section.title}-${item.href}-${item.label}`} item={item} compact />
               ))}
             </div>
           </div>
         ))}
-
-        <Link
-          href="/about"
-          className="group relative hidden min-h-48 overflow-hidden rounded-xl border border-border bg-muted transition-colors hover:border-primary/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
-        >
-          <Image src="/assets/images/hero-bg.jpg" alt="Dubai Property IQ about page preview" fill sizes="240px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-          <span className="absolute inset-0 bg-linear-to-t from-foreground/80 via-foreground/35 to-transparent" />
-          <span className="relative flex min-h-48 flex-col justify-end p-4 text-primary-foreground">
-            <span className="mb-3 inline-flex w-fit rounded-md bg-background/95 px-2.5 py-1 text-xs font-semibold text-primary">About us</span>
-            <span className="block text-lg font-semibold leading-6">Dubai Property IQ</span>
-            <span className="mt-2 block text-sm leading-5 text-primary-foreground/85">How we help buyers and investors compare Dubai property decisions.</span>
-            <span className="mt-4 text-sm font-semibold text-primary-foreground">Read our story</span>
-          </span>
-        </Link>
       </div>
     </div>
   );
@@ -196,25 +196,27 @@ function ResourcesMenuPanel({ sections }: { sections: NavigationSection[] }) {
 
 export function DesktopNav({ navItems, pathname, menus, isHeroHeader }: DesktopNavProps) {
   const topLevelLinks = menus?.topLevelLinks ?? (navItems.length > 0 ? navItems : directLinks);
-  const exploreSections = menus?.explore.sections ?? fallbackExploreSections;
-  const resourceSections = menus?.resources.sections ?? fallbackResourceSections;
+  const rawExploreSections = menus?.explore.sections ?? fallbackExploreSections;
+  const developerSections = rawExploreSections.filter(isDeveloperSection);
+  const exploreSections = rawExploreSections.filter((section) => !isDeveloperSection(section));
+  const resourceSections = mergeResourceSections(menus?.resources.sections ?? fallbackResourceSections, developerSections);
   const desktopNavItemClasses = getDesktopNavItemClasses(isHeroHeader);
 
   return (
     <>
-      <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+      <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className={desktopNavItemClasses}>Explore</NavigationMenuTrigger>
-              <NavigationMenuContent className="left-0 translate-x-0 rounded-xl border bg-popover p-0 shadow-lg">
+              <NavigationMenuContent className="left-0 rounded-2xl border bg-popover p-0 shadow-xl">
                 <MegaMenuPanel sections={exploreSections} />
               </NavigationMenuContent>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuTrigger className={desktopNavItemClasses}>Resources</NavigationMenuTrigger>
-              <NavigationMenuContent className="left-1/2 -translate-x-1/2 rounded-xl border bg-popover p-0 shadow-lg">
+              <NavigationMenuContent className="left-0 rounded-2xl border bg-popover p-0 shadow-xl">
                 <ResourcesMenuPanel sections={resourceSections} />
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -236,7 +238,7 @@ export function DesktopNav({ navItems, pathname, menus, isHeroHeader }: DesktopN
         </NavigationMenu>
       </nav>
 
-      <div className="hidden items-center gap-2 md:flex">
+      <div className="hidden items-center gap-2 lg:flex">
         <Button
           asChild
           variant="ghost"
