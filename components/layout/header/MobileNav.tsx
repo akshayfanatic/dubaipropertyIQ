@@ -18,6 +18,7 @@ interface MobileNavProps {
   navItems: NavItem[];
   pathname: string;
   menus?: HeaderMenus;
+  isHeroHeader?: boolean;
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -58,7 +59,7 @@ function MobileSectionAccordion({ section, value, pathname }: { section: Navigat
   );
 }
 
-export function MobileNav({ navItems, pathname, menus }: MobileNavProps) {
+export function MobileNav({ navItems, pathname, menus, isHeroHeader }: MobileNavProps) {
   const topLevelLinks = menus?.topLevelLinks ?? navItems;
   const exploreSections = menus?.explore.sections ?? [];
   const resourceSections = menus?.resources.sections ?? [];
@@ -67,7 +68,11 @@ export function MobileNav({ navItems, pathname, menus }: MobileNavProps) {
     <div className="flex items-center gap-2 md:hidden">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn('size-10 rounded-[11px] border', isHeroHeader ? 'border-white/20 bg-white/10 text-white hover:bg-white/15 hover:text-white' : 'border-border bg-muted text-primary')}
+          >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
           </Button>

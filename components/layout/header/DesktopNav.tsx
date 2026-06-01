@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { AuthSection } from '@/components/modals/auth/auth-section';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import type { HeaderMenus, NavigationSection } from '@/lib/db/menus/queries';
+import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -15,6 +17,7 @@ interface DesktopNavProps {
   navItems: NavItem[];
   pathname: string;
   menus?: HeaderMenus;
+  isHeroHeader?: boolean;
 }
 
 const fallbackExploreSections: NavigationSection[] = [
@@ -86,8 +89,14 @@ function isActivePath(pathname: string, href: string) {
   return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
 }
 
-const desktopNavItemClasses =
-  'inline-flex h-9 items-center justify-center rounded-md bg-transparent px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:bg-accent focus:text-foreground focus-visible:ring-ring/50 data-[active=true]:bg-accent data-[active=true]:!text-primary data-[active=true]:hover:!text-primary data-[active=true]:focus:!text-primary data-[state=open]:bg-accent data-[state=open]:!text-primary';
+function getDesktopNavItemClasses(isHeroHeader?: boolean) {
+  return cn(
+    'inline-flex h-9 items-center justify-center rounded-md bg-transparent px-3 text-sm font-semibold transition-colors focus-visible:ring-ring/50 data-[active=true]:!text-primary data-[active=true]:hover:!text-primary data-[active=true]:focus:!text-primary data-[state=open]:bg-accent data-[state=open]:!text-primary',
+    isHeroHeader
+      ? 'text-white/85 hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[active=true]:bg-white/10'
+      : 'text-muted-foreground hover:bg-accent hover:text-foreground focus:bg-accent focus:text-foreground data-[active=true]:bg-accent',
+  );
+}
 
 function MegaMenuLink({ item }: { item: NavItem }) {
   return (
@@ -185,10 +194,11 @@ function ResourcesMenuPanel({ sections }: { sections: NavigationSection[] }) {
   );
 }
 
-export function DesktopNav({ navItems, pathname, menus }: DesktopNavProps) {
+export function DesktopNav({ navItems, pathname, menus, isHeroHeader }: DesktopNavProps) {
   const topLevelLinks = menus?.topLevelLinks ?? (navItems.length > 0 ? navItems : directLinks);
   const exploreSections = menus?.explore.sections ?? fallbackExploreSections;
   const resourceSections = menus?.resources.sections ?? fallbackResourceSections;
+  const desktopNavItemClasses = getDesktopNavItemClasses(isHeroHeader);
 
   return (
     <>
@@ -226,7 +236,22 @@ export function DesktopNav({ navItems, pathname, menus }: DesktopNavProps) {
         </NavigationMenu>
       </nav>
 
-      <div className="hidden md:block">
+      <div className="hidden items-center gap-2 md:flex">
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={cn(
+            'size-10 rounded-[11px] border transition-all hover:-translate-y-0.5',
+            isHeroHeader
+              ? 'border-white/20 bg-white/10 text-white hover:bg-primary hover:text-primary-foreground'
+              : 'border-border bg-muted text-primary hover:bg-primary hover:text-primary-foreground',
+          )}
+        >
+          <Link href="/search" aria-label="Search properties">
+            <Search className="size-4" />
+          </Link>
+        </Button>
         <AuthSection />
       </div>
     </>
