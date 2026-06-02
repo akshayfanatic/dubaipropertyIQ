@@ -4,11 +4,13 @@ import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
 interface SectionCardProps {
+  id?: string;
   eyebrow?: string;
   title?: string;
   description?: string;
   children: ReactNode;
   className?: string;
+  containerClassName?: string;
   contentClassName?: string;
   navigation?: ReactNode;
   align?: 'left' | 'center';
@@ -20,13 +22,13 @@ interface SectionCardProps {
   };
 }
 
-export function SectionCard({ eyebrow, title, description, children, className, contentClassName, navigation, align = 'left', classes }: SectionCardProps) {
+export function SectionCard({ id, eyebrow, title, description, children, className, containerClassName, contentClassName, navigation, align = 'left', classes }: SectionCardProps) {
   const hasHeader = eyebrow || title || description;
   const isCentered = align === 'center' && !navigation;
 
   return (
-    <section className={cn('px-0 py-[clamp(3.5rem,7vw,6.5rem)]', className)}>
-      <div className="mx-auto w-[min(92%,1440px)]">
+    <section id={id} className={cn('px-0 py-[clamp(3.5rem,7vw,6.5rem)]', className)}>
+      <div className={cn('mx-auto w-[min(92%,1440px)]', containerClassName)}>
         {hasHeader && (
           <div
             className={cn(
@@ -35,7 +37,7 @@ export function SectionCard({ eyebrow, title, description, children, className, 
               classes?.wrapper,
             )}
           >
-            <div className={cn('max-w-[640px]', isCentered && 'mx-auto')}>
+            <div className={cn('max-w-160', isCentered && 'mx-auto')}>
               {eyebrow && (
                 <span
                   className={cn(

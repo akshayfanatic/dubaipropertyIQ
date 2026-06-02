@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
-import PropertyContentCard from '@/components/properties/card/PropertyContentCard';
 import PropertyAmenities from '@/components/properties/tabs/Amenities';
 import { FAQAccordion } from '@/components/shared/FAQAccordion';
 import PropertyAttributes from '@/components/properties/tabs/KeyInformation';
@@ -17,10 +16,17 @@ import { PropertyInfo } from '@/components/properties/tabs/PropertyInfo';
 import SideBarContent from '@/components/properties/tabs/SideBarContent';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
 import { getPropertyStatusBadgeConfig } from '@/config';
+import { SectionCard } from '@/components/shared/SectionCard';
 
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
 }
+
+const propertySectionClasses = {
+  wrapper: 'mb-9 gap-4',
+  eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+  title: 'text-[clamp(1.35rem,2.4vw,1.9rem)] leading-tight',
+};
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
@@ -78,35 +84,35 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
         {/* ── Developer Section ── */}
         {property.developer && (
-          <PropertyContentCard id="developer" title="Developer">
+          <SectionCard id="developer" eyebrow="Developer" title="Developer" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
             <DeveloperInfo developer={property.developer} />
-          </PropertyContentCard>
+          </SectionCard>
         )}
 
         {/* ── Key Information Section ── */}
-        <PropertyContentCard id="key-info" title="Key Information" className="gap-2">
+        <SectionCard id="key-info" eyebrow="Key facts" title="Key Information" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
           <PropertyAttributes {...property} />
-        </PropertyContentCard>
+        </SectionCard>
 
         {/* ── Location Section ── */}
         {property.location && (
-          <PropertyContentCard id="location" title="Location" className="gap-2">
+          <SectionCard id="location" eyebrow="Location" title="Location" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
             <ReadOnlyMap center={property.location} />
-          </PropertyContentCard>
+          </SectionCard>
         )}
 
         {/* ── Amenities Section ── */}
         {property.amenities?.length ? (
-          <PropertyContentCard id="amenities" title="Amenities" className="gap-2">
+          <SectionCard id="amenities" eyebrow="Amenities" title="Amenities" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
             <PropertyAmenities amenities={property.amenities} />
-          </PropertyContentCard>
+          </SectionCard>
         ) : null}
 
         {/* ── FAQ Section ── */}
         {property.properties_faqs?.length ? (
-          <PropertyContentCard id="faq" title="Frequently Asked Questions" className="gap-2">
+          <SectionCard id="faq" eyebrow="FAQ" title="Frequently Asked Questions" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
             <FAQAccordion faqs={property.properties_faqs} />
-          </PropertyContentCard>
+          </SectionCard>
         ) : null}
       </PropertyContentLayout>
     </PageLayout>

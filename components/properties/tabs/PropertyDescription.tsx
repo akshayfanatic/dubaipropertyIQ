@@ -14,12 +14,12 @@ export function PropertyDescription({ description }: PropertyDescriptionProps) {
 
   return (
     <div className="space-y-4">
-      <div className="text-muted-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">
+      <div className="whitespace-pre-line text-base font-medium leading-8 text-muted-foreground">
         {excerpt}
         {isLong && (
           <Dialog>
             <DialogTrigger asChild>
-              <button className="ml-2 text-primary font-black hover:underline cursor-pointer transition-colors">Read More</button>
+              <button className="ml-2 cursor-pointer font-extrabold text-primary transition-colors hover:text-primary-700 hover:underline">Read More</button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl md:max-w-4xl lg:max-w-5xl">
               <DialogHeader>

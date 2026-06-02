@@ -36,20 +36,26 @@ export function PropertyGallery({ photos, title, statusLabel, statusClassName, g
     >
       {/* Trigger */}
       <DialogTrigger asChild>
-        <div className="relative aspect-16/10 md:aspect-21/9 rounded-2xl overflow-hidden cursor-pointer group shadow-lg">
-          <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
+        <div className="group relative aspect-16/10 cursor-pointer overflow-hidden rounded-[22px] border border-border bg-card p-2 shadow-[0_24px_60px_oklch(0.18_0.05_260.47_/_0.18)] md:aspect-21/9">
+          <div className="grid h-full grid-cols-3 grid-rows-2 gap-2">
             {/* LARGE MAIN IMAGE */}
-            <div className="col-span-3 md:col-span-2 row-span-2 relative h-full overflow-hidden">
-              <ImageWithFallback src={images[0]?.url} alt={images[0]?.alt_tag || title} fill priority className="object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="relative col-span-3 row-span-2 h-full overflow-hidden rounded-2xl md:col-span-2">
+              <ImageWithFallback
+                src={images[0]?.url}
+                alt={images[0]?.alt_tag || title}
+                fill
+                priority
+                className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-[1.035]"
+              />
             </div>
 
             {/* SECONDARY IMAGES (Right side stacked) */}
-            <div className="hidden md:block relative h-full overflow-hidden">
-              <ImageWithFallback src={images[1]?.url} alt={images[1]?.alt_tag || `${title}-1`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="relative hidden h-full overflow-hidden rounded-2xl md:block">
+              <ImageWithFallback src={images[1]?.url} alt={images[1]?.alt_tag || `${title}-1`} fill className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-[1.035]" />
             </div>
-            <div className="hidden md:block relative h-full overflow-hidden">
-              <ImageWithFallback src={images[2]?.url} alt={images[2]?.alt_tag || `${title}-2`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-              {images.length > 3 && <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold text-lg">+{images.length - 3}</div>}
+            <div className="relative hidden h-full overflow-hidden rounded-2xl md:block">
+              <ImageWithFallback src={images[2]?.url} alt={images[2]?.alt_tag || `${title}-2`} fill className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-[1.035]" />
+              {images.length > 3 && <div className="absolute inset-0 flex items-center justify-center bg-foreground/40 text-lg font-bold text-primary-foreground">+{images.length - 3}</div>}
             </div>
           </div>
 
@@ -60,16 +66,16 @@ export function PropertyGallery({ photos, title, statusLabel, statusClassName, g
           </div>
 
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/5 group-hover:bg-black/15 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-foreground/5 transition-colors duration-300 group-hover:bg-foreground/10" />
 
           {/* View Photos Button */}
-          <div className="absolute bottom-6 right-6 z-10">
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/95 hover:bg-primary text-foreground hover:text-white text-sm font-bold shadow-xl transition-all hover:scale-105 active:scale-95 backdrop-blur-md group/btn border border-primary/10">
+          <div className="absolute bottom-5 right-5 z-10">
+            <button className="group/btn flex min-h-11 items-center gap-2 rounded-xl border border-primary-foreground/35 bg-background/95 px-4 text-sm font-extrabold text-foreground shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.12)] backdrop-blur-md transition-[transform,background-color,color] duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground active:translate-y-0">
               <div className="grid grid-cols-2 gap-0.5">
-                <div className="w-1.5 h-1.5 bg-primary group-hover/btn:bg-white rounded-[1px] transition-colors" />
-                <div className="w-1.5 h-1.5 bg-primary group-hover/btn:bg-white rounded-[1px] transition-colors" />
-                <div className="w-1.5 h-1.5 bg-primary group-hover/btn:bg-white rounded-[1px] transition-colors" />
-                <div className="w-1.5 h-1.5 bg-primary group-hover/btn:bg-white rounded-[1px] transition-colors" />
+                <div className="h-1.5 w-1.5 rounded-[1px] bg-primary transition-colors group-hover/btn:bg-primary-foreground" />
+                <div className="h-1.5 w-1.5 rounded-[1px] bg-primary transition-colors group-hover/btn:bg-primary-foreground" />
+                <div className="h-1.5 w-1.5 rounded-[1px] bg-primary transition-colors group-hover/btn:bg-primary-foreground" />
+                <div className="h-1.5 w-1.5 rounded-[1px] bg-primary transition-colors group-hover/btn:bg-primary-foreground" />
               </div>
               Show all photos
             </button>
