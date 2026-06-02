@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, Building2, KeyRound, MapPin, Sparkles, HelpCircle } from 'lucide-react';
+import { useQuickNav } from '@/hooks/useQuickNav';
 
 const navItems = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -14,53 +14,12 @@ const navItems = [
 ];
 
 export function PropertyQuickNav() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [visibleItems, setVisibleItems] = useState(navItems);
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      setVisibleItems(navItems.filter((item) => document.getElementById(item.id)));
-    });
-
-    const handleScroll = () => {
-      // Show after scrolling 600px (approx when gallery is gone)
-      const scrollY = window.scrollY;
-      setIsVisible(scrollY > 600);
-
-      // Simple active tab detection
-      const offsets = navItems.map((item) => {
-        const el = document.getElementById(item.id);
-        if (!el) return { id: item.id, top: -1 };
-        return { id: item.id, top: el.offsetTop - 120 };
-      });
-
-      const current = offsets.filter((o) => o.top !== -1 && o.top <= scrollY).sort((a, b) => b.top - a.top)[0];
-
-      if (current) {
-        setActiveTab((previous) => (previous === current.id ? previous : current.id));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = el.offsetTop - 100;
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth',
-      });
-    }
-  };
+  const { activeTab, isVisible, scrollToSection, visibleItems } = useQuickNav({
+    items: navItems,
+    initialActiveId: 'overview',
+    stickyOffset: 100,
+    visibilityThreshold: 600,
+  });
 
   return (
     <div

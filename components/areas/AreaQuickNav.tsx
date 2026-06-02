@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Building2, HelpCircle, Images, Info, MapPin, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useQuickNav } from '@/hooks/useQuickNav';
 
 const navItems = [
   { id: 'general-information', label: 'General Information', icon: Info },
@@ -17,47 +17,11 @@ const navItems = [
 const stickyOffset = 144;
 
 export function AreaQuickNav() {
-  const [activeTab, setActiveTab] = useState('general-information');
-  const [visibleItems, setVisibleItems] = useState(navItems);
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      setVisibleItems(navItems.filter((item) => document.getElementById(item.id)));
-    });
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-
-      const offsets = navItems.map((item) => {
-        const el = document.getElementById(item.id);
-        return { id: item.id, top: el ? el.offsetTop - stickyOffset : -1 };
-      });
-
-      const current = offsets.filter((item) => item.top !== -1 && item.top <= scrollY).sort((a, b) => b.top - a.top)[0];
-
-      if (current) {
-        setActiveTab((previous) => (previous === current.id ? previous : current.id));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    window.scrollTo({
-      top: el.offsetTop - stickyOffset,
-      behavior: 'smooth',
-    });
-  };
+  const { activeTab, scrollToSection, visibleItems } = useQuickNav({
+    items: navItems,
+    initialActiveId: 'general-information',
+    stickyOffset,
+  });
 
   return (
     <div className="sticky top-16 z-40 border-b border-border bg-[oklch(0.985_0.008_260.47_/_0.92)] shadow-[0_10px_28px_oklch(0.2_0.03_263.61_/_0.06)] backdrop-blur-[18px] backdrop-saturate-[1.18]">
