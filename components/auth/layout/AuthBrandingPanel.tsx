@@ -45,7 +45,7 @@ export function AuthBrandingPanel() {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-8 py-12 text-white lg:px-12 animate-fade-up animate-once animate-duration-1000 animate-ease-out">
+      <div className="mx-auto relative z-10 flex flex-col items-center justify-center px-8 py-12 text-white lg:px-12 animate-fade-up animate-once animate-duration-1000 animate-ease-out">
         {/* Logo */}
         <div className="animate-fade-in animate-duration-700">
           <SiteLogo />
@@ -79,7 +79,9 @@ export function AuthBrandingPanel() {
               <div key={i} className="h-6 w-6 rounded-full border-2 border-auth-brand-bg bg-primary border-white from-white/20 to-white/5 animate-float-x" />
             ))}
           </div>
-          <p className="text-xs text-white/40">Trusted by 10,000+ investors in the UAE</p>
+          <p className="text-xs text-white/40">
+            <span className="invisible">Trusted by 10,000+ investors in the UAE</span>
+          </p>
         </div>
       </div>
     </div>
