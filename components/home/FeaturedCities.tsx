@@ -14,7 +14,7 @@ function getCityImageUrl(city: CityWithAreaCount): string {
 
 export function FeaturedCities({ cities }: FeaturedCitiesProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
       {cities.map((city, index) => (
         <AnimateSection key={city.id} delay={index * 100}>
           <CityCard city={city} imageUrl={getCityImageUrl(city)} areaCount={city.area_count} />

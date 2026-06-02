@@ -30,6 +30,13 @@ type DeveloperLayoutProps = {
   }>;
 };
 
+const developerSectionClasses = {
+  wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] items-center text-center',
+  eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+  title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+  description: 'mx-auto max-w-[500px] font-medium',
+};
+
 export default async function DeveloperLayout({ children, params }: DeveloperLayoutProps) {
   const { slug } = await params;
   const { data: developer, success } = await getDeveloperBySlug(slug);
@@ -63,13 +70,28 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
 
       {/* Developer Stats */}
       <AnimateSection>
-        <SectionCard title="Developer Overview">
+        <SectionCard
+          eyebrow="Developer overview"
+          title="Overview"
+          description="Key developer stats."
+          align="center"
+          className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+          classes={developerSectionClasses}
+        >
           <DeveloperStats keyStats={keyStats} />
         </SectionCard>
       </AnimateSection>
 
       {/* Properties Section Wrapper */}
-      <SectionCard title={`Properties By ${developer.name}`} contentClassName="space-y-8">
+      <SectionCard
+        eyebrow="Developer inventory"
+        title={`Curated property by ${developer.name}.`}
+        description="Browse active listings."
+        align="center"
+        className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+        contentClassName="space-y-8"
+        classes={developerSectionClasses}
+      >
         <div className="flex w-full justify-end">
           <DeveloperQueryForm />
         </div>
@@ -77,7 +99,14 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
       </SectionCard>
 
       <AnimateSection>
-        <SectionCard title={`Enquire With ${developer.name}`} description="Share your requirements and get matched with suitable availability from this developer.">
+        <SectionCard
+          eyebrow="Developer enquiry"
+          title="Enquire"
+          description={`Contact us about ${developer.name} projects.`}
+          align="center"
+          className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+          classes={developerSectionClasses}
+        >
           <DeveloperInquiryForm developerName={developer.name} />
         </SectionCard>
       </AnimateSection>

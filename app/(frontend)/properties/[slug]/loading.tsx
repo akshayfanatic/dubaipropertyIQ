@@ -8,8 +8,14 @@ import {
   DeveloperInfoSkeleton,
 } from '@/components/properties/PropertySkeletons';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
-import PropertyContentCard from '@/components/properties/card/PropertyContentCard';
+import { SectionCard } from '@/components/shared/SectionCard';
 import { Skeleton } from '@/components/ui/skeleton';
+
+const propertySectionClasses = {
+  wrapper: 'mb-9 gap-4',
+  eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+  title: 'text-[clamp(1.35rem,2.4vw,1.9rem)] leading-tight',
+};
 
 export default function Loading() {
   return (
@@ -22,24 +28,24 @@ export default function Loading() {
         <PropertyInfoSkeleton />
 
         {/* ── Developer Section Skeleton ── */}
-        <PropertyContentCard title="Developer">
+        <SectionCard eyebrow="Developer" title="Developer" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
           <DeveloperInfoSkeleton />
-        </PropertyContentCard>
+        </SectionCard>
 
         {/* ── Key Information Section Skeleton ── */}
-        <PropertyContentCard title="Key Information" className="gap-2">
+        <SectionCard eyebrow="Key facts" title="Key Information" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
           <PropertyAttributesSkeleton />
-        </PropertyContentCard>
+        </SectionCard>
 
         {/* ── Location Section Skeleton ── */}
-        <PropertyContentCard title="Location" className="gap-2">
+        <SectionCard eyebrow="Location" title="Location" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
           <Skeleton className="h-[400px] w-full rounded-xl" />
-        </PropertyContentCard>
+        </SectionCard>
 
         {/* ── Amenities Section Skeleton ── */}
-        <PropertyContentCard title="Amenities" className="gap-2">
+        <SectionCard eyebrow="Amenities" title="Amenities" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
           <PropertyAmenitiesSkeleton />
-        </PropertyContentCard>
+        </SectionCard>
       </PropertyContentLayout>
     </PageLayout>
   );

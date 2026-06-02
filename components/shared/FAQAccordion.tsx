@@ -13,22 +13,22 @@ export function FAQAccordion({ faqs, type = 'single', defaultValue, className }:
   if (!faqs || faqs.length === 0) return null;
 
   const items = faqs.map((faq) => (
-    <AccordionItem key={faq.id} value={faq.id}>
-      <AccordionTrigger className="text-left text-md font-bold hover:no-underline py-4">{faq.question}</AccordionTrigger>
-      <AccordionContent className="text-base text-muted-foreground leading-relaxed pb-4">{faq.answer}</AccordionContent>
+    <AccordionItem key={faq.id} value={faq.id} className="overflow-hidden rounded-2xl !border border-border bg-card shadow-sm">
+      <AccordionTrigger className="px-5 py-4 text-left text-base font-extrabold leading-6 text-foreground hover:no-underline">{faq.question}</AccordionTrigger>
+      <AccordionContent className="border-t border-border px-5 pb-5 pt-4 text-base font-medium leading-7 text-muted-foreground">{faq.answer}</AccordionContent>
     </AccordionItem>
   ));
 
   if (type === 'single') {
     return (
-      <Accordion type="single" collapsible defaultValue={defaultValue} className={cn('w-full', className)}>
+      <Accordion type="single" collapsible defaultValue={defaultValue} className={cn('grid w-full gap-3', className)}>
         {items}
       </Accordion>
     );
   }
 
   return (
-    <Accordion type="multiple" defaultValue={defaultValue ? [defaultValue] : undefined} className={cn('w-full', className)}>
+    <Accordion type="multiple" defaultValue={defaultValue ? [defaultValue] : undefined} className={cn('grid w-full gap-3', className)}>
       {items}
     </Accordion>
   );

@@ -26,7 +26,7 @@ export function DeveloperCard({ name, logo_url, total_projects, years_active, sl
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-1">
                 <h3 className="font-bold text-base truncate group-hover:text-primary transition-colors tracking-tight">{name}</h3>
-                <ArrowUpRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground/30 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:animate-float-x group-hover:text-primary" />
               </div>
 
               {(total_projects ?? 0) > 0 || (years_active ?? 0) > 0 ? (

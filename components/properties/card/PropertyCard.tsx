@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { Bath, Bed, Building2, MapPin, Maximize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,13 +13,15 @@ import type { PropertyListItem } from '@/types/property';
 import type { ImageObject } from '@/types/images';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 import { getPropertyStatusBadgeConfig } from '@/config';
+import { PropertySaveButton } from '@/components/properties/PropertySaveButton';
 
 interface PropertyCardProps {
   property: PropertyListItem;
   className?: string;
+  wishlistSlot?: ReactNode;
 }
 
-export function PropertyCard({ property, className }: PropertyCardProps) {
+export function PropertyCard({ property, className, wishlistSlot }: PropertyCardProps) {
   const photos = property.photos as ImageObject[];
   const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
   const status = getPropertyStatusBadgeConfig(property.status);
@@ -34,7 +37,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
   return (
     <Card
       className={cn(
-        'group relative h-[360px] w-full overflow-hidden rounded-xl border border-border bg-muted p-0 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:h-[380px] xl:h-[400px]',
+        'card-entrance group relative h-[360px] w-full overflow-hidden rounded-xl border border-border bg-muted p-0 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:h-[380px] xl:h-[400px]',
         className,
       )}
     >
@@ -50,6 +53,8 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
           )}
           {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" className="bg-background/92 px-2.5 py-1 shadow-sm" />}
         </div>
+
+        <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} />}</div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-primary-foreground">
           <div className="mb-2 space-y-1">
@@ -91,7 +96,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
               </span>
               {property.size_sqft > 0 && (
                 <span className="flex items-center gap-1 border-l border-primary-foreground/25 pl-2">
-                  <Maximize className="h-3.5 w-3.5" />
+                  <Maximize className="h-3.5 w-3.5 group-hover:animate-float-x" />
                   <span>{formatSize(property.size_sqft)} sqft</span>
                 </span>
               )}

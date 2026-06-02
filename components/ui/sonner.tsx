@@ -20,12 +20,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       toastOptions={{
         classNames: {
-          toast: 'border-border/50 bg-popover text-popover-foreground shadow-lg',
+          toast: 'group toast group-[.toaster]:border-border/50 group-[.toaster]:bg-popover group-[.toaster]:text-popover-foreground group-[.toaster]:shadow-lg',
           success:
-            'border-green-200 dark:border-green-900/30 bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-200 [&_[data-description]]:text-green-700 dark:[&_[data-description]]:text-green-300',
-          error: 'border-destructive/20 bg-destructive/10 text-destructive [&_[data-description]]:text-destructive/80',
-          info: 'bg-popover border-border/50 text-popover-foreground',
-          warning: 'bg-popover border-border/50 text-popover-foreground',
+            'group-[.toaster]:border-green-200 group-[.toaster]:bg-green-50 group-[.toaster]:text-green-800 dark:group-[.toaster]:border-green-900/30 dark:group-[.toaster]:bg-green-950/50 dark:group-[.toaster]:text-green-200 [&_[data-description]]:text-green-700 dark:[&_[data-description]]:text-green-300',
+          error: 'group-[.toaster]:border-destructive/20 group-[.toaster]:bg-destructive/10 group-[.toaster]:text-destructive [&_[data-description]]:text-destructive/80',
+          info: 'group-[.toaster]:border-border/50 group-[.toaster]:bg-popover group-[.toaster]:text-popover-foreground',
+          warning: 'group-[.toaster]:border-border/50 group-[.toaster]:bg-popover group-[.toaster]:text-popover-foreground',
         },
       }}
       position="top-center"

@@ -101,7 +101,7 @@
   --font-serif: Merriweather, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --radius: 0.5rem;
+  --radius: 1rem;
 
   /* =========================
      SHADOWS (SOFT SaaS STYLE)

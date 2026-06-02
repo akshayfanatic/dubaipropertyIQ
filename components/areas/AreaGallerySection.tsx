@@ -20,6 +20,7 @@ type AreaGallerySectionProps = {
   description: string;
   imageAltPrefix: string;
   photos: ImageObject[];
+  showIntro?: boolean;
 };
 
 type GalleryNavigationProps = {
@@ -104,7 +105,7 @@ function GallerySlider({
   );
 }
 
-export function AreaGallerySection({ eyebrow, typewriterText, description, imageAltPrefix, photos }: AreaGallerySectionProps) {
+export function AreaGallerySection({ eyebrow, typewriterText, description, imageAltPrefix, photos, showIntro = true }: AreaGallerySectionProps) {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const hasMultiplePhotos = photos.length > 1;
 
@@ -113,8 +114,8 @@ export function AreaGallerySection({ eyebrow, typewriterText, description, image
   }
 
   return (
-    <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-      <GalleryIntro eyebrow={eyebrow} typewriterText={typewriterText} description={description} photoCount={photos.length} />
+    <div className={showIntro ? 'grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]' : ''}>
+      {showIntro && <GalleryIntro eyebrow={eyebrow} typewriterText={typewriterText} description={description} photoCount={photos.length} />}
       <GallerySlider swiper={swiper} imageAltPrefix={imageAltPrefix} photos={photos} hasMultiplePhotos={hasMultiplePhotos} onSwiper={setSwiper} />
     </div>
   );

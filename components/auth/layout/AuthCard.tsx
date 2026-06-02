@@ -38,7 +38,7 @@ export function AuthCard({ title, subtitle, children, footer, showMobileLogo = t
 
         {/* Header */}
         <div className="mb-8 flex items-center gap-4 animate-slide-in-from-bottom animate-duration-500 animate-delay-100">
-          <BackLink href="/" />
+          <BackLink href="/" className="text-black" />
 
           <div className="flex min-w-0 flex-col gap-1">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>

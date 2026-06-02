@@ -7,6 +7,7 @@ import { SliderLayout, PropertySlideItem } from './ImageSlider';
 import { Button } from '@/components/ui/button';
 
 type SliderSectionProps<T = PropertySlideItem> = {
+  eyebrow?: string;
   title?: string;
   description?: string;
   data: T[];
@@ -22,11 +23,18 @@ type SliderSectionProps<T = PropertySlideItem> = {
 
   className?: string;
   showNavigation?: boolean;
+  align?: 'left' | 'center';
 
-  classes?: { title?: string };
+  classes?: {
+    eyebrow?: string;
+    title?: string;
+    description?: string;
+    wrapper?: string;
+  };
 };
 
 export function SliderSection<T>({
+  eyebrow,
   title,
   description,
   data,
@@ -42,16 +50,19 @@ export function SliderSection<T>({
 
   className = '',
   showNavigation = true,
+  align = 'left',
   classes,
 }: SliderSectionProps<T>) {
   const [swiper, setSwiper] = React.useState<Swiper | null>(null);
 
   return (
     <SectionCard
+      eyebrow={eyebrow}
       title={title}
       description={description}
       className={className}
       classes={classes}
+      align={align}
       navigation={
         showNavigation ? (
           <div className="flex gap-1">

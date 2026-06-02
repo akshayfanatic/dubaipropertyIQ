@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, MapPin } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { SelectOption } from '@/types/shared';
 
@@ -22,15 +22,13 @@ export function CitySelectField({ options, value }: CitySelectFieldProps) {
     <Select value={value} onValueChange={handleCityChange}>
       <SelectTrigger
         aria-label="Explore city"
-        className="group h-12 w-auto overflow-hidden rounded-full border-0 bg-background/82 p-0 pr-1 text-base font-semibold text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] transition-colors hover:bg-background/90 focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-0 [&>svg]:hidden"
+        className="group h-[54px] w-[min(340px,calc(100vw-2rem))] rounded-full border border-primary-foreground/25 bg-background/90 px-4 text-base font-bold text-foreground shadow-[0_24px_54px_oklch(0.18_0.05_260.47_/_0.28)] backdrop-blur-xl transition-colors hover:bg-background/95 focus-visible:ring-2 focus-visible:ring-primary-foreground/55 focus-visible:ring-offset-0 [&>svg]:hidden"
       >
-        <span className="flex h-12 items-center rounded-l-full rounded-r-[26px] bg-primary px-5 text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_24px_rgba(15,23,42,0.18)]">
-          Explore
-        </span>
-        <span className="flex h-12 min-w-[104px] items-center px-5 text-foreground">
+        <MapPin className="size-5 text-primary" aria-hidden="true" />
+        <span className="flex min-w-0 flex-1 items-center text-left">
           <SelectValue placeholder={selectedCity?.label ?? 'City'} />
         </span>
-        <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+        <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
           <ChevronDown className="size-5" aria-hidden="true" />
         </span>
       </SelectTrigger>

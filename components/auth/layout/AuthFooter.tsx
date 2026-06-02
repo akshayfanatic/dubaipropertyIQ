@@ -13,11 +13,11 @@ export function AuthFooter({ prefix = 'By continuing, you agree to our' }: AuthF
   return (
     <p className="text-center text-xs text-muted-foreground">
       {prefix}{' '}
-      <Link href="/terms" className="underline-offset-2 transition-colors hover:text-foreground hover:underline">
+      <Link href="/pages/terms-conditions" className="font-semibold underline-offset-2 transition-colors hover:text-foreground hover:underline">
         Terms of Service
       </Link>{' '}
       and{' '}
-      <Link href="/privacy" className="underline-offset-2 transition-colors hover:text-foreground hover:underline">
+      <Link href="/pages/privacy-policy" className="font-semibold underline-offset-2 transition-colors hover:text-foreground hover:underline">
         Privacy Policy
       </Link>
     </p>

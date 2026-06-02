@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Building2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { DesktopNav } from './DesktopNav';
@@ -41,31 +43,57 @@ const defaultNavItems: NavItem[] = [
 
 export default function Header({ logo, navItems = defaultNavItems, menus, sticky = true }: HeaderProps) {
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
+  const [hasScrolledHome, setHasScrolledHome] = useState(false);
 
   const logoSrc = logo?.src;
   const logoAlt = logo?.alt ?? 'Dubai Property IQ';
   const logoHref = logo?.href ?? '/';
+  const isScrolled = !isHomePage || hasScrolledHome;
+  const isHeroHeader = isHomePage && !isScrolled;
+
+  useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
+
+    const updateHeaderState = () => setHasScrolledHome(window.scrollY > 40);
+    const frame = window.requestAnimationFrame(updateHeaderState);
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateHeaderState);
+    };
+  }, [isHomePage]);
 
   return (
-    <header className={cn('w-full border-b border-border bg-background/95 backdrop-blur-sm', sticky && 'sticky top-0 z-50')}>
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
-        {/* Logo - Left */}
-        <Link href={logoHref} className="flex items-center gap-0.5">
+    <header
+      className={cn(
+        'top-0 z-50 w-full border-b transition-all duration-300 ease-out',
+        isHomePage ? 'fixed' : sticky && 'sticky',
+        isHeroHeader ? 'border-transparent bg-transparent' : 'border-border bg-background/92 shadow-sm backdrop-blur-xl',
+      )}
+    >
+      <div className="mx-auto flex h-[74px] w-[min(92%,1440px)] items-center justify-between gap-4">
+        <Link href={logoHref} className={cn('flex items-center gap-2.5 font-semibold tracking-tight transition-colors', isHeroHeader ? 'text-white' : 'text-foreground')}>
           {logoSrc ? (
-            <Image src={logoSrc} alt={logoAlt} width={120} height={32} className="h-8 w-auto" />
+            <Image src={logoSrc} alt={logoAlt} width={132} height={36} className="h-9 w-auto" />
           ) : (
-            <span className="text-base font-normal tracking-wide">
-              <span className="text-foreground">Dubai</span>
-              <span className="text-muted-foreground">PropertyIQ</span>
-            </span>
+            <>
+              <span className="grid size-9 place-items-center rounded-[11px] bg-primary text-primary-foreground shadow-md shadow-primary/25">
+                <Building2 className="size-5" />
+              </span>
+              <span className="text-lg">
+                Dubai<span className="text-primary">Property</span>IQ
+              </span>
+            </>
           )}
         </Link>
 
-        {/* Desktop Navigation */}
-        <DesktopNav navItems={navItems} pathname={pathname} menus={menus} />
+        <DesktopNav navItems={navItems} pathname={pathname} menus={menus} isHeroHeader={isHeroHeader} />
 
-        {/* Mobile Navigation */}
-        <MobileNav navItems={navItems} pathname={pathname} menus={menus} />
+        <MobileNav navItems={navItems} pathname={pathname} menus={menus} isHeroHeader={isHeroHeader} />
       </div>
     </header>
   );

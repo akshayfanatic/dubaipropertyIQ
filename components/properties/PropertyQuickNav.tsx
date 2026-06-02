@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, Building2, KeyRound, MapPin, Sparkles, HelpCircle } from 'lucide-react';
+import { useQuickNav } from '@/hooks/useQuickNav';
 
 const navItems = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -14,73 +14,44 @@ const navItems = [
 ];
 
 export function PropertyQuickNav() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // Show after scrolling 600px (approx when gallery is gone)
-      const scrollY = window.scrollY;
-      setIsVisible(scrollY > 600);
-
-      // Simple active tab detection
-      const offsets = navItems.map((item) => {
-        const el = document.getElementById(item.id);
-        if (!el) return { id: item.id, top: -1 };
-        return { id: item.id, top: el.offsetTop - 120 };
-      });
-
-      const current = offsets.filter((o) => o.top !== -1 && o.top <= scrollY).sort((a, b) => b.top - a.top)[0];
-
-      if (current && current.id !== activeTab) {
-        setActiveTab(current.id);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeTab]);
-
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = el.offsetTop - 100;
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth',
-      });
-    }
-  };
+  const { activeTab, isVisible, scrollToSection, visibleItems } = useQuickNav({
+    items: navItems,
+    initialActiveId: 'overview',
+    stickyOffset: 100,
+    visibilityThreshold: 600,
+  });
 
   return (
     <div
       className={cn(
-        'fixed top-0 left-0 right-0 z-100 transition-all duration-500 transform border-b bg-white/80 backdrop-blur-xl shadow-sm',
+        'fixed left-0 right-0 top-0 z-50 border-b border-border bg-[oklch(0.985_0.008_260.47_/_0.92)] shadow-[0_10px_28px_oklch(0.2_0.03_263.61_/_0.06)] backdrop-blur-[18px] backdrop-saturate-[1.18] transition-all duration-500',
         isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0',
       )}
     >
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-start gap-1 sm:gap-2 h-16 overflow-x-auto no-scrollbar scroll-smooth">
-          {navItems.map((item) => {
+      <div className="mx-auto w-[min(92%,1440px)]">
+        <div className="flex min-h-[76px] items-center justify-start gap-2 overflow-x-auto scroll-smooth py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {visibleItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-
-            // Only show tabs for sections that exist on the page
-            const sectionExists = typeof document !== 'undefined' && !!document.getElementById(item.id);
-            if (!sectionExists && typeof document !== 'undefined') return null;
 
             return (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
+                aria-current={isActive ? 'location' : undefined}
                 className={cn(
-                  'relative flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 h-full text-[11px] sm:text-[13px] uppercase tracking-wider transition-all whitespace-nowrap shrink-0 group border-b-[3px] border-transparent cursor-pointer',
-                  isActive ? 'text-primary font-black border-primary bg-primary/3' : 'text-muted-foreground hover:text-primary hover:bg-primary/2 font-bold',
+                  'group relative flex min-h-10 shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-full border border-transparent py-1 pl-1.5 pr-3 text-[11px] font-extrabold uppercase tracking-[0.07em] transition-[transform,border-color,background-color,box-shadow,color] duration-300 ease-in-out after:absolute after:inset-x-4 after:-bottom-1.5 after:h-0.5 after:origin-center after:scale-x-60 after:rounded-full after:bg-primary after:opacity-0 after:transition-[opacity,transform] after:duration-300 after:ease-in-out hover:-translate-y-px hover:border-primary/15 hover:bg-primary/5 hover:text-primary-800 sm:pr-4 sm:text-xs',
+                  isActive && 'border-primary/20 bg-card text-primary-800 shadow-[0_8px_22px_oklch(0.2_0.03_263.61_/_0.08)] after:scale-x-100 after:opacity-100',
                 )}
               >
-                <Icon className={cn('w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:scale-110', isActive ? 'text-primary' : 'text-primary/60')} />
+                <span
+                  className={cn(
+                    'grid size-7 shrink-0 place-items-center rounded-full bg-primary/8 text-primary transition-[transform,background-color,color] duration-300 ease-in-out group-hover:scale-[1.03] group-hover:bg-primary group-hover:text-primary-foreground sm:size-[30px]',
+                    isActive && 'bg-primary text-primary-foreground',
+                  )}
+                >
+                  <Icon className="size-3.5 sm:size-4" strokeWidth={2.4} />
+                </span>
                 {item.label}
               </button>
             );
