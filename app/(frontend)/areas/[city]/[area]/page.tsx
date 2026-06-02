@@ -5,7 +5,6 @@ import { AreaAmenitiesPills } from '@/components/areas/AreaAmenitiesPills';
 import { AreaGallerySection } from '@/components/areas/AreaGallerySection';
 import { AreaQuickNav } from '@/components/areas/AreaQuickNav';
 import PageLayout from '@/components/layout/PageLayout';
-import PropertyContentCard from '@/components/properties/card/PropertyContentCard';
 import { PropertyCardSlide } from '@/components/properties/card';
 import { SliderSection } from '@/components/sliders/SliderSection';
 import { FAQAccordion } from '@/components/shared/FAQAccordion';
@@ -15,7 +14,6 @@ import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
 
 type AreaDetailPageProps = {
@@ -96,11 +94,20 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
       <AreaQuickNav />
 
       {/* ── General Information Section ── */}
-      <AnimateSection>
-        <SectionCard>
-          <PropertyContentCard id="general-information" title="General Information">
+      <AnimateSection id="general-information">
+        <SectionCard
+          eyebrow="General information"
+          title="Overview"
+          className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+          classes={{
+            wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+            eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+            title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+          }}
+        >
+          <div className="rounded-[18px] border border-border bg-card p-[clamp(1.35rem,3vw,2.2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
             <div className="space-y-6">
-              <p className="max-w-3xl text-base leading-8 text-muted-foreground">
+              <p className="max-w-4xl text-base font-medium leading-8 text-muted-foreground">
                 {areaDetail.description || `${areaDetail.name} is a community in ${areaDetail.city?.name ?? 'the UAE'} with curated local information and available property listings.`}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -114,50 +121,64 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
                 </Badge>
               </div>
             </div>
-          </PropertyContentCard>
+          </div>
         </SectionCard>
       </AnimateSection>
-
-      <Separator />
 
       {/* ── Gallery Section ── */}
       {galleryPhotos.length > 0 && (
         <AnimateSection id="gallery">
-          <SectionCard>
+          <SectionCard
+            eyebrow="Community gallery"
+            title="Gallery"
+            className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+            classes={{
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            }}
+          >
             <AreaGallerySection
               eyebrow="Community Gallery"
               typewriterText={`A closer look at life in ${areaDetail.name}`}
               description="Browse selected views, streetscapes, and community details that help you read the area before comparing properties."
               imageAltPrefix={areaDetail.name}
               photos={galleryPhotos}
+              showIntro={false}
             />
           </SectionCard>
         </AnimateSection>
       )}
 
-      {galleryPhotos.length > 0 && <Separator />}
-
       {/* ── Location Section ── */}
       {areaDetail.location && (
-        <AnimateSection>
-          <SectionCard>
-            <PropertyContentCard id="location" title="Location" className="gap-2">
-              <div className="overflow-hidden rounded-lg border bg-muted">
-                <ReadOnlyMap center={areaDetail.location} />
-              </div>
-            </PropertyContentCard>
+        <AnimateSection id="location">
+          <SectionCard
+            eyebrow="Location"
+            title="Location"
+            className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+            classes={{
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            }}
+          >
+            <div className="overflow-hidden rounded-[18px] border border-border bg-muted shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
+              <ReadOnlyMap center={areaDetail.location} />
+            </div>
           </SectionCard>
         </AnimateSection>
       )}
 
-      {areaDetail.location && <Separator />}
-
       {/* ── Properties Section ── */}
       {areaDetail.properties.length > 0 && (
-        <AnimateSection>
+        <AnimateSection id="properties">
           <SliderSection
-            title={`Properties in ${areaDetail.name}`}
-            description={`Browse available properties linked to ${areaDetail.name}.`}
+            eyebrow="Available properties"
+            title="Properties"
+            description={`Available listings in ${areaDetail.name}.`}
+            align="center"
+            showNavigation={false}
             data={areaDetail.properties}
             SlideComponent={PropertyCardSlide}
             delay={4000}
@@ -168,35 +189,49 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
               768: { slidesPerView: 2, spaceBetween: 20 },
               1024: { slidesPerView: 4, spaceBetween: 20 },
             }}
+            className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
             classes={{
-              title: 'font-bold',
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] font-extrabold leading-tight',
+              description: 'mx-auto max-w-[470px] font-medium',
             }}
           />
         </AnimateSection>
       )}
 
-      {areaDetail.properties.length > 0 && <Separator />}
-
       {/* ── Area FAQs Section ── */}
       {areaDetail.faqs.length > 0 && (
-        <AnimateSection>
-          <SectionCard>
-            <PropertyContentCard id="area-faqs" title="Area FAQs" className="gap-2">
-              <FAQAccordion faqs={areaDetail.faqs} type="multiple" />
-            </PropertyContentCard>
+        <AnimateSection id="area-faqs">
+          <SectionCard
+            eyebrow="Area FAQs"
+            title="Area FAQ"
+            className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+            classes={{
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            }}
+          >
+            <FAQAccordion faqs={areaDetail.faqs} type="multiple" />
           </SectionCard>
         </AnimateSection>
       )}
 
-      {areaDetail.faqs.length > 0 && areaDetail.amenities_faqs.length > 0 && <Separator />}
-
       {/* ── Amenities FAQs Section ── */}
       {areaDetail.amenities_faqs.length > 0 && (
-        <AnimateSection>
-          <SectionCard>
-            <PropertyContentCard id="amenities-faqs" title="Amenities FAQs" className="gap-2">
-              <FAQAccordion faqs={areaDetail.amenities_faqs} type="multiple" />
-            </PropertyContentCard>
+        <AnimateSection id="amenities-faqs">
+          <SectionCard
+            eyebrow="Amenities FAQs"
+            title="Amenity FAQ"
+            className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+            classes={{
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            }}
+          >
+            <FAQAccordion faqs={areaDetail.amenities_faqs} type="multiple" />
           </SectionCard>
         </AnimateSection>
       )}

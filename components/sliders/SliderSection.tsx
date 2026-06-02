@@ -23,6 +23,7 @@ type SliderSectionProps<T = PropertySlideItem> = {
 
   className?: string;
   showNavigation?: boolean;
+  align?: 'left' | 'center';
 
   classes?: {
     eyebrow?: string;
@@ -49,6 +50,7 @@ export function SliderSection<T>({
 
   className = '',
   showNavigation = true,
+  align = 'left',
   classes,
 }: SliderSectionProps<T>) {
   const [swiper, setSwiper] = React.useState<Swiper | null>(null);
@@ -60,6 +62,7 @@ export function SliderSection<T>({
       description={description}
       className={className}
       classes={classes}
+      align={align}
       navigation={
         showNavigation ? (
           <div className="flex gap-1">
