@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Building2, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import type { Area } from '@/types/areas';
 
@@ -12,39 +12,29 @@ export function AreaCard({ name, photos, slug, citySlug }: AreaCardProps) {
 
   return (
     <Link href={`/areas/${citySlug}/${slug}`} className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-      <article className="card-entrance relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-card shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+      <article className="relative min-h-[340px] transform-gpu overflow-hidden rounded-2xl border border-border bg-card shadow-[9px_9px_22px_oklch(0.2_0.03_263.61_/_0.10),-7px_-7px_18px_oklch(0.985_0.008_260.47_/_0.80)] transition-[box-shadow,border-color] duration-700 ease-in-out hover:border-primary/30 hover:shadow-[0_0_0_1px_oklch(0.55_0.20_260.47_/_0.16),0_0_34px_oklch(0.55_0.20_260.47_/_0.22),14px_14px_32px_oklch(0.2_0.03_263.61_/_0.13),-9px_-9px_22px_oklch(0.985_0.008_260.47_/_0.92)] motion-reduce:transition-none">
         <ImageWithFallback
           src={firstImage}
           alt={name}
           fill
           unoptimized
-          className="transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          className="transform-gpu transition-[transform,filter] duration-1000 ease-in-out group-hover:-translate-y-2 group-hover:scale-[1.06] group-hover:brightness-[0.88] group-hover:saturate-[1.05] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100"
           fallbackClassName="absolute inset-0 rounded-none bg-muted text-muted-foreground"
         />
 
-        <div className="absolute inset-0 bg-linear-to-t from-foreground/88 via-foreground/28 to-foreground/5" />
-        <div className="absolute inset-0 bg-primary/0 transition-colors duration-300 group-hover:bg-primary/10 group-focus-visible:bg-primary/10 motion-reduce:transition-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_42%,oklch(0.18_0.05_260.47_/_0.58)_100%),linear-gradient(135deg,oklch(0.55_0.20_260.47_/_0.14),transparent_48%)]" />
 
-        <div className="absolute left-4 top-4">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/12 px-3 py-1 text-xs font-bold leading-none text-primary-foreground/90 shadow-sm backdrop-blur-sm">
-            <MapPin className="h-3.5 w-3.5 shrink-0" strokeWidth={2.4} />
-            Community
+        <div className="absolute inset-x-3 bottom-3 z-10 grid translate-y-[calc(100%_-_96px)] transform-gpu gap-3 overflow-hidden rounded-[18px] border border-primary-foreground/30 bg-background/84 p-4 shadow-[0_14px_30px_oklch(0.18_0.05_260.47_/_0.22)] backdrop-blur-[14px] backdrop-saturate-[1.16] transition-[transform,background,box-shadow] duration-700 ease-in-out will-change-transform before:mx-auto before:-mt-1 before:mb-0.5 before:h-1 before:w-10 before:rounded-full before:bg-muted-foreground/35 before:opacity-0 before:transition-opacity before:duration-500 before:ease-in-out group-hover:translate-y-0 group-hover:bg-[linear-gradient(145deg,oklch(0.985_0.008_260.47_/_0.88),oklch(0.92_0.02_260.47_/_0.72))] group-hover:before:opacity-100 motion-reduce:transition-none">
+          <div className="min-w-0 transition-transform duration-700 ease-in-out group-hover:-translate-y-0.5">
+            <span className="mb-1 block text-xs font-extrabold uppercase tracking-[0.08em] text-primary">Area guide</span>
+            <h2 className="truncate text-xl font-extrabold leading-tight tracking-normal text-foreground">{name}</h2>
           </div>
-        </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-3">
-          <div className="rounded-xl border border-primary-foreground/14 bg-foreground/38 p-3 text-primary-foreground shadow-lg backdrop-blur-md">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h2 className="line-clamp-2 text-xl font-extrabold leading-6 tracking-normal drop-shadow-sm">{name}</h2>
-                <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-primary-foreground/78">
-                  <Building2 className="icon-wiggle-subtle size-4" strokeWidth={2.4} />
-                  <span>Explore area guide</span>
-                </div>
-              </div>
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-foreground text-primary shadow-sm transition-transform duration-300 group-hover:translate-x-0.5">
-                <ArrowRight className="size-4 group-hover:animate-float-x" />
-              </span>
+          <div className="translate-y-2 opacity-0 transition-[opacity,transform] duration-700 delay-75 ease-in-out group-hover:translate-y-0 group-hover:opacity-100">
+            <p className="text-sm font-semibold leading-6 text-muted-foreground">Explore community information, local context, and available properties linked to {name}.</p>
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-extrabold text-primary">
+              Open guide
+              <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
             </div>
           </div>
         </div>

@@ -31,6 +31,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
   const cityImage = cityInformation.data.logo_url as ImageObject | string | null | undefined;
   const cityImageUrl = typeof cityImage === 'string' ? cityImage : cityImage?.url;
   const cityImageAlt = typeof cityImage === 'string' ? `${cityInformation.data.name} area skyline` : cityImage?.alt_tag || `${cityInformation.data.name} area skyline`;
+  const cityDescription = cityInformation.data.description || `Explore communities and neighborhoods in ${cityInformation.data.name}.`;
 
   return (
     <PageLayout wrapperClassName="py-0" contentFullWidth>
@@ -38,29 +39,36 @@ export default async function AreaPage({ params }: AreaPageProps) {
       <PageBanner
         imageUrl={cityImageUrl}
         alt={cityImageAlt}
-        heightClassName="min-h-[320px] sm:min-h-[560px]"
-        overlayClassName="bg-black/45"
-        contentClassName="container mx-auto flex min-h-[320px] flex-col px-4 py-5 sm:min-h-[560px] sm:px-6 sm:py-8 lg:px-8"
+        heightClassName="min-h-[520px] sm:min-h-[620px]"
+        overlayClassName="bg-[linear-gradient(180deg,oklch(0.18_0.05_260.47_/_0.42)_0%,oklch(0.18_0.05_260.47_/_0.42)_34%,oklch(0.18_0.05_260.47_/_0.86)_100%),radial-gradient(70%_54%_at_50%_10%,oklch(0.55_0.20_260.47_/_0.26),transparent_62%)]"
+        contentClassName="container mx-auto flex min-h-[520px] flex-col px-4 py-5 sm:min-h-[620px] sm:px-6 sm:py-8 lg:px-8"
+        className="bg-[oklch(0.2_0.12_260.47)]"
       >
-        <div className="[&_a]:text-white/80 [&_a:hover]:text-white [&_button]:text-white/80 [&_button:hover]:text-white **:data-[slot=breadcrumb-page]:text-white">
+        <div className="[&_a]:text-primary-foreground/75 [&_a:hover]:text-primary-foreground [&_button]:text-primary-foreground/75 [&_button:hover]:text-primary-foreground **:data-[slot=breadcrumb-page]:text-primary-foreground">
           <PublicBreadCrumb />
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
-          <div className="inline-flex rounded-full border border-white/25 bg-white/20 p-1 shadow-[0_22px_60px_rgba(15,23,42,0.24)] backdrop-blur-xl ring-1 ring-white/15">
-            <CitySelectField options={cityOptions} value={city} />
+        <div className="flex flex-1 items-center justify-center py-10 text-center">
+          <div className="mx-auto flex w-full max-w-3xl flex-col items-center">
+            <h1 className="text-4xl font-extrabold leading-[1.06] tracking-normal text-primary-foreground drop-shadow-[0_4px_34px_oklch(0.18_0.05_260.47_/_0.44)] sm:text-5xl lg:text-7xl">
+              {cityInformation.data.name} Areas
+            </h1>
+            <p className="mt-4 max-w-2xl text-base font-medium leading-7 text-primary-foreground/85 sm:text-lg">{cityDescription}</p>
+            <div className="mt-6">
+              <CitySelectField options={cityOptions} value={city} />
+            </div>
           </div>
         </div>
       </PageBanner>
 
-      <AreasSection city={city} />
+      <AreasSection city={city} cityName={cityInformation.data.name} />
 
       <PropertiesSection city={city} />
     </PageLayout>
   );
 }
 
-async function AreasSection({ city }: { city: string }) {
+async function AreasSection({ city, cityName }: { city: string; cityName: string }) {
   const { success, data: areas, message } = await getAreasByCity(city);
 
   if (!success) {
@@ -79,11 +87,16 @@ async function AreasSection({ city }: { city: string }) {
     /* ── Areas Grid Section ── */
     <AnimateSection>
       <SectionCard
-        title="Explore all Areas"
-        description="Explore communities and neighborhoods in this city."
-        classes={{ title: 'text-3xl font-bold text-foreground', description: 'text-muted-foreground' }}
+        eyebrow="Explore by community"
+        title={`Areas in ${cityName}.`}
+        className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+        classes={{
+          wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+          eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+          title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+        }}
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-[1.15rem] sm:grid-cols-2 lg:grid-cols-3">
           {areas.map((area) => (
             <AreaCard key={area.slug} name={area.name} photos={area.photos} slug={area.slug} citySlug={city} />
           ))}
@@ -112,6 +125,7 @@ async function PropertiesSection({ city }: { city: string }) {
     /* ── Properties Section ── */
     <AnimateSection>
       <SliderSection
+        eyebrow="Available properties"
         title="Properties"
         description="Browse available properties in this city."
         data={properties}
@@ -124,8 +138,12 @@ async function PropertiesSection({ city }: { city: string }) {
           768: { slidesPerView: 2, spaceBetween: 20 },
           1024: { slidesPerView: 3, spaceBetween: 20 },
         }}
+        className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
         classes={{
-          title: 'font-bold',
+          wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+          eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+          title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] font-extrabold leading-tight',
+          description: 'max-w-[470px] font-medium',
         }}
       />
     </AnimateSection>

@@ -7,6 +7,7 @@ import { SliderLayout, PropertySlideItem } from './ImageSlider';
 import { Button } from '@/components/ui/button';
 
 type SliderSectionProps<T = PropertySlideItem> = {
+  eyebrow?: string;
   title?: string;
   description?: string;
   data: T[];
@@ -23,10 +24,16 @@ type SliderSectionProps<T = PropertySlideItem> = {
   className?: string;
   showNavigation?: boolean;
 
-  classes?: { title?: string };
+  classes?: {
+    eyebrow?: string;
+    title?: string;
+    description?: string;
+    wrapper?: string;
+  };
 };
 
 export function SliderSection<T>({
+  eyebrow,
   title,
   description,
   data,
@@ -48,6 +55,7 @@ export function SliderSection<T>({
 
   return (
     <SectionCard
+      eyebrow={eyebrow}
       title={title}
       description={description}
       className={className}
