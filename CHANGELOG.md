@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.3...v0.7.4) (2026-06-02)
+
+### Features
+
+- **blog:** added newslettter section in homepage ([d8052c7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d8052c7864cd364420d86c213ed89d0c8acfd55a))
+- **properties:** added to wishlist now user can add properties to wish list ([465a824](https://github.com/akshayfanatic/dubaipropertyIQ/commit/465a8243405ea8ea96859a03bc5a8202bfa64286))
+
+### Code Refactoring
+
+- **footer:** redesign ui of footer ([e0bfeb6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e0bfeb6af67dab016b385350787d35d6673cb151))
+- **home:** remove typewriter effect from home banner ([2bb9282](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2bb92825be9d3dab8d7be5673ebfe11fdacafe52))
+- **hook:** added a resuable hook for quick navigation ([21d6fc7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/21d6fc70a497a77bfc025a99ae483218578033f8))
+
+### Code Style Changes
+
+- **area:** redesign and style dynamic area page and it's component ([67dcf6b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/67dcf6b15ad30d01405efcba647fe06925d8d57b))
+- **auth:** refator ui and give style classes to back button component ([b54cebc](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b54cebcc9e215c8514f8b851076d7a7b7309f612))
+- **blogs:** redesign blog page design ([3eb8298](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3eb82987f9baadb55fba197503c84077bd0a1d48))
+- **developer:** redesign developer page ([3215262](https://github.com/akshayfanatic/dubaipropertyIQ/commit/32152624d88ae57c6a5e07a0729a287301be5099))
+- **header:** redesign home page header ([d45106d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d45106d4991ab0691f0178c0ae26e905d1767c22))
+- **home,banner:** redesign homepage banner and form ([8902068](https://github.com/akshayfanatic/dubaipropertyIQ/commit/89020685c3073a42f61b056abb449252d64d2b9c))
+- **navigation:** redesign navigation on mobile and desktop ([7662225](https://github.com/akshayfanatic/dubaipropertyIQ/commit/7662225abb8dfd0728e51d406ceae1543abfb1ff))
+- **property:** redesign all section of property page ([1e66d23](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1e66d23c4d5facbd827886eca928f98e7d71487a))
+- **toole section:** redesign tools section and city card ([4a70b14](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4a70b14ab34c4d56c3f194d4d7d7833f1f4fe056))
+
 ### [0.7.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.2...v0.7.3) (2026-06-01)
 
 ### Features
