@@ -68,7 +68,7 @@ export const adminRoutes: RouteGroup[] = [
       { title: 'Users', href: '/dashboard/admin/users', icon: Users },
       { title: 'Pages', href: '/dashboard/admin/pages', icon: FileText },
       { title: 'Blogs', href: '/dashboard/admin/blogs', icon: Newspaper },
-      { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack, isComingSoon: true },
+      { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack },
     ],
   },
   {
