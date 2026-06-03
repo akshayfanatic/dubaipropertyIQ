@@ -17,6 +17,7 @@ import SideBarContent from '@/components/properties/tabs/SideBarContent';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
 import { getPropertyStatusBadgeConfig } from '@/config';
 import { SectionCard } from '@/components/shared/SectionCard';
+import { createPropertyMetadata } from '@/lib/utils/seo';
 
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
@@ -39,20 +40,7 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
     };
   }
 
-  const property = response.data;
-  const photos = property.photos as { url?: string }[] | undefined;
-  const firstImage = photos?.[0]?.url;
-
-  return {
-    title: `${property.title} | DubaiPropertyIQ`,
-    description: property.description,
-    openGraph: {
-      title: property.title,
-      description: property.description,
-      images: firstImage ? [{ url: firstImage }] : undefined,
-      type: 'website',
-    },
-  };
+  return createPropertyMetadata(response.data);
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {

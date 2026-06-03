@@ -593,6 +593,44 @@ export type Database = {
           },
         ];
       };
+      properties_seo: {
+        Row: {
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+          property_id: string;
+        };
+        Insert: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          property_id: string;
+        };
+        Update: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          property_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'properties_seo_property_id_fkey';
+            columns: ['property_id'];
+            isOneToOne: true;
+            referencedRelation: 'properties';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       site_settings: {
         Row: {
           group: string;

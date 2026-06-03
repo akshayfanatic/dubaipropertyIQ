@@ -256,7 +256,8 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
           category:categories!inner (id, name, slug),
           city:cities (id, name, slug, logo_url),
           developer:developers (id, name, slug, logo_url),
-          properties_faqs (*)
+          properties_faqs (*),
+          properties_seo (*)
         `,
       )
       .eq('slug', slug)
@@ -628,7 +629,8 @@ export async function getPropertyByIdAdmin(id: string): Promise<ApiResponse<Prop
           question,
           answer,
           created_at
-        )
+        ),
+        properties_seo (*)
       `,
       )
       .eq('id', id)
