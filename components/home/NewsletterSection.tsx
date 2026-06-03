@@ -3,9 +3,9 @@ import { NewsletterLeadForm } from '@/components/leads/NewsletterLeadForm';
 
 export function NewsletterSection() {
   return (
-    <section className="bg-muted/45 py-[clamp(3.5rem,7vw,6.5rem)]">
+    <section className="bg-background py-[clamp(3.5rem,7vw,6.5rem)]">
       <div className="mx-auto w-[min(92%,1440px)]">
-        <div className="card-entrance overflow-hidden rounded-3xl border border-border bg-background shadow-lg shadow-foreground/8">
+        <div className="card-entrance overflow-hidden rounded-3xl border border-border bg-card shadow-lg shadow-foreground/8">
           <div className="grid lg:grid-cols-[minmax(0,1fr)_420px]">
             <div className="p-6 sm:p-8 lg:p-10">
               <span className="inline-flex items-center gap-2 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-primary before:h-0.5 before:w-5.5 before:rounded-full before:bg-primary before:content-['']">

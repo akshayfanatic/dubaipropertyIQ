@@ -30,10 +30,10 @@ export function PageBanner({
   const hasImage = Boolean(imageUrl);
 
   return (
-    <section className={cn('relative flex w-full items-center overflow-hidden', heightClassName, !hasImage && 'bg-white', className)}>
+    <section className={cn('relative flex w-full items-center overflow-visible', heightClassName, !hasImage && 'bg-white', className)}>
       {/* Background Image */}
       {hasImage && (
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <Image src={imageUrl!} alt={alt} fill priority className={cn('object-cover', imageClassName)} />
 
           {/* Overlay */}

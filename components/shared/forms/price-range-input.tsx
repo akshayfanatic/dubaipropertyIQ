@@ -13,9 +13,11 @@ interface PriceRangeInputProps {
   value: { min?: string; max?: string };
   onChange: (value: { min?: string; max?: string }) => void;
   className?: string;
+  minPlaceholder?: string;
+  maxPlaceholder?: string;
 }
 
-export function PriceRangeInput({ value, onChange, className }: PriceRangeInputProps) {
+export function PriceRangeInput({ value, onChange, className, minPlaceholder = 'Min Price', maxPlaceholder = 'Max Price' }: PriceRangeInputProps) {
   const minPrice = value.min ? parseInt(value.min) : 0;
 
   const filteredMaxOptions = PRICE_OPTIONS.filter((opt) => {
@@ -32,13 +34,13 @@ export function PriceRangeInput({ value, onChange, className }: PriceRangeInputP
     <div className={cn('flex items-center gap-2', className)}>
       <SelectField
         options={filteredMinOptions}
-        placeholder="Min Price"
+        placeholder={minPlaceholder}
         value={value.min ?? ''}
         onValueChange={(val) => onChange({ ...value, min: val || undefined, max: value.max && parseInt(value.max) < parseInt(val) ? undefined : value.max })}
         className="h-11 w-full"
       />
       <span className="text-muted-foreground">-</span>
-      <SelectField options={filteredMaxOptions} placeholder="Max Price" value={value.max ?? ''} onValueChange={(val) => onChange({ ...value, max: val || undefined })} className="h-11 w-full" />
+      <SelectField options={filteredMaxOptions} placeholder={maxPlaceholder} value={value.max ?? ''} onValueChange={(val) => onChange({ ...value, max: val || undefined })} className="h-11 w-full" />
     </div>
   );
 }
