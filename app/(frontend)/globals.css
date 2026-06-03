@@ -227,6 +227,21 @@
   animation: floatX 0.9s ease-in-out infinite;
 }
 
+@keyframes heroKenburns {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.animate-hero-kenburns {
+  animation: heroKenburns 22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: 60% 40%;
+  will-change: transform;
+}
+
 /* =========================
    REUSABLE ANIMATIONS (UTILITIES)
 ========================= */

@@ -3,12 +3,18 @@ import { DeveloperCardSkeleton } from '@/components/developers/card/DeveloperCar
 import { PropertyCardSkeleton } from '@/components/properties/card';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { HomeBannerSkeleton } from '@/components/home/HomeBanner';
+import { HomeHeroStats } from '@/components/home/HomeHeroStats';
 import { Separator } from '@/components/ui/separator';
 
 export default function Loading() {
   return (
     <>
-      <PageBanner>
+      <PageBanner
+        className="flex-col"
+        heightClassName="min-h-0 pt-[100px] pb-0 md:min-h-screen md:pt-[104px] md:pb-[132px]"
+        bottomContentClassName="relative mt-8 md:absolute md:mt-0"
+        bottomContent={<HomeHeroStats />}
+      >
         <HomeBannerSkeleton />
       </PageBanner>
 
