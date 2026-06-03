@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2 } from 'lucide-react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PasswordInput, PasswordStrengthMeter, FormField, AuthCard } from '@/components/auth';
 import { browserClient } from '@/lib/supabase/client';
@@ -28,6 +28,7 @@ export function ResetPasswordClient() {
   const [sessionError, setSessionError] = useState<string | null>(null);
   const [isSettingUpSession, setIsSettingUpSession] = useState(true);
   const [isValidSession, setIsValidSession] = useState(false);
+  const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
 
   const {
     register,
@@ -88,7 +89,7 @@ export function ResetPasswordClient() {
       }
 
       await supabase.auth.signOut();
-      router.replace('/auth/login');
+      setIsPasswordUpdated(true);
     } catch {
       setFormError('root', { message: 'Failed to update password. Please try again.' });
     }
@@ -100,6 +101,22 @@ export function ResetPasswordClient() {
         <div className="flex flex-col items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="mt-4 text-muted-foreground">Verifying reset link...</p>
+        </div>
+      </AuthCard>
+    );
+  }
+
+  if (isPasswordUpdated) {
+    return (
+      <AuthCard title="Password changed" subtitle="Your password has been updated successfully.">
+        <div className="text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-primary to-primary/80 shadow-lg shadow-primary/25">
+            <CheckCircle2 className="h-8 w-8 text-primary-foreground" />
+          </div>
+          <p className="mb-8 text-muted-foreground">You can now sign in with your new password.</p>
+          <Button className="h-11 w-full cursor-pointer" onClick={() => router.push('/auth/login')}>
+            Back to login
+          </Button>
         </div>
       </AuthCard>
     );
