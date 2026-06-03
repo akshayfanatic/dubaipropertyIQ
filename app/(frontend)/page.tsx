@@ -40,11 +40,11 @@ export default async function Home() {
         imageUrl="/assets/images/hero-bg-2.jpg"
         alt="Dubai skyline and property search hero"
         className="flex-col"
-        heightClassName="min-h-0 pt-[100px] pb-0 md:min-h-screen md:pt-[104px] md:pb-[132px]"
+        heightClassName="min-h-0 pt-[100px] pb-12 md:min-h-screen md:pt-[104px] md:pb-[132px]"
         imageClassName="animate-hero-kenburns motion-reduce:animate-none"
         overlayClassName="bg-[linear-gradient(90deg,oklch(0.18_0.04_260.47_/_0.86),oklch(0.21_0.03_263.61_/_0.58),oklch(0.21_0.03_263.61_/_0.22))]"
         contentClassName="container mx-auto px-4 md:px-6"
-        bottomContentClassName="relative mt-8 md:absolute md:mt-0"
+        bottomContentClassName="hidden md:absolute md:block md:mt-0"
         bottomContent={<HomeHeroStats />}
       >
         <HomeBanner
