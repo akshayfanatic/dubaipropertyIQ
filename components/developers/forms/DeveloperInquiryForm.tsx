@@ -1,6 +1,7 @@
 'use client';
 
-import { Mail, MessageSquareText, Phone, Send, User } from 'lucide-react';
+import { CheckCircle2, Mail, MessageSquareText, Phone, Send, User } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -13,6 +14,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { SelectField } from '@/components/shared/select-field';
 import { TextArea } from '@/components/shared/forms/text-area';
 import { TextInput } from '@/components/shared/forms/text-input';
+import { createLead } from '@/lib/db/leads/actions';
 import type { SelectOption } from '@/types/shared';
 
 const budgetOptions: SelectOption[] = [
@@ -57,29 +59,109 @@ const getDefaultValues = (): DeveloperInquiryFormData => ({
   consent: false,
 });
 
-export function DeveloperInquiryForm({ developerName }: DeveloperInquiryFormProps) {
-  const onSubmit = async (data: DeveloperInquiryFormData, form: { reset: (values: DeveloperInquiryFormData) => void }) => {
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    toast.success(`Inquiry captured for ${developerName}. Thank you, ${data.name}.`);
-    console.log(data);
+function getTrackingContext() {
+  if (typeof window === 'undefined') {
+    return {
+      source_page: '',
+      utm_source: null,
+      utm_medium: null,
+      utm_campaign: null,
+    };
+  }
 
+  const url = new URL(window.location.href);
+
+  return {
+    source_page: `${url.pathname}${url.search}`,
+    utm_source: url.searchParams.get('utm_source'),
+    utm_medium: url.searchParams.get('utm_medium'),
+    utm_campaign: url.searchParams.get('utm_campaign'),
+  };
+}
+
+function formatDeveloperMessage(data: DeveloperInquiryFormData) {
+  return [`Budget: ${data.budget}`, `Timeline: ${data.timeline}`, data.message ? `Message: ${data.message}` : null].filter(Boolean).join('\n');
+}
+
+export function DeveloperInquiryForm({ developerName }: DeveloperInquiryFormProps) {
+  const [submittedName, setSubmittedName] = useState<string | null>(null);
+
+  const onSubmit = async (data: DeveloperInquiryFormData, form: { reset: (values: DeveloperInquiryFormData) => void }) => {
+    const tracking = getTrackingContext();
+    const result = await createLead({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      source_type: 'developer',
+      source_page: tracking.source_page,
+      area_of_interest: developerName,
+      message: formatDeveloperMessage(data),
+      utm_source: tracking.utm_source,
+      utm_medium: tracking.utm_medium,
+      utm_campaign: tracking.utm_campaign,
+    });
+
+    if (!result.success) {
+      toast.error(result.message || 'Failed to send inquiry');
+      return;
+    }
+
+    setSubmittedName(data.name);
+    toast.success(`Developer information request sent for ${developerName}.`);
     form.reset(getDefaultValues());
   };
 
+  if (submittedName) {
+    return (
+      <div className="overflow-hidden rounded-[22px] border border-primary/20 bg-card shadow-[0_18px_50px_oklch(0.2_0.03_263.61_/_0.12)]">
+        <div className="grid lg:grid-cols-[0.88fr_1.12fr]">
+          <div className="relative hidden min-h-72 overflow-hidden bg-muted sm:block lg:min-h-full">
+            <ImageWithFallback src={inquiryImageUrl} alt={`${developerName} Dubai property inquiry`} fill className="object-cover" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.2_0.03_263.61_/_0.05),oklch(0.2_0.03_263.61_/_0.72))]" />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-primary-foreground">
+              <Badge variant="outline" className="mb-4 rounded-md border-primary-foreground/30 bg-background/15 text-primary-foreground backdrop-blur-sm">
+                Request received
+              </Badge>
+              <h3 className="max-w-sm text-2xl font-semibold tracking-tight">Developer information is on the way.</h3>
+            </div>
+          </div>
+
+          <div className="grid min-h-80 place-items-center p-6 md:p-10">
+            <div className="max-w-md text-center">
+              <span className="mx-auto grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+                <CheckCircle2 className="size-7" />
+              </span>
+              <h3 className="mt-5 text-2xl font-extrabold tracking-tight text-foreground">Thank you, {submittedName}.</h3>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">We captured your request for {developerName}. Our team will share availability, price context, and matching projects.</p>
+              <Button type="button" variant="outline" className="mt-6 h-11 rounded-xl bg-background" onClick={() => setSubmittedName(null)}>
+                Send another request
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <BaseForm schema={developerInquirySchema} onSubmit={onSubmit} defaultValues={getDefaultValues()} className="overflow-hidden rounded-lg border bg-card shadow-xs">
+    <BaseForm
+      schema={developerInquirySchema}
+      onSubmit={onSubmit}
+      defaultValues={getDefaultValues()}
+      className="overflow-hidden rounded-[22px] border border-border bg-card shadow-[0_18px_50px_oklch(0.2_0.03_263.61_/_0.12)]"
+    >
       {(form) => (
         <div className="grid lg:grid-cols-[0.88fr_1.12fr]">
           <div className="hidden sm:block relative min-h-72 overflow-hidden border-b bg-muted lg:min-h-full lg:border-b-0 lg:border-r">
             <ImageWithFallback src={inquiryImageUrl} alt={`${developerName} Dubai property inquiry`} fill className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/25 to-transparent" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.2_0.03_263.61_/_0.08),oklch(0.2_0.03_263.61_/_0.76))]" />
             <div className="absolute inset-x-0 bottom-0 p-5 text-primary-foreground md:p-6">
               <Badge variant="outline" className="mb-4 rounded-md border-primary-foreground/30 bg-background/15 text-primary-foreground backdrop-blur-sm">
-                Developer inquiry
+                Developer information
               </Badge>
               <div className="space-y-2">
-                <h3 className="max-w-sm text-2xl font-semibold tracking-tight">Request availability </h3>
-                <p className="max-w-sm text-sm leading-6 text-primary-foreground/85">Share your buying profile and get a more precise view of matching inventory, pricing, and timing.</p>
+                <h3 className="max-w-sm text-2xl font-semibold tracking-tight">Get developer information</h3>
+                <p className="max-w-sm text-sm leading-6 text-primary-foreground/85">Share your buying profile and get availability, pricing context, and matching projects from {developerName}.</p>
               </div>
             </div>
           </div>
@@ -131,7 +213,7 @@ export function DeveloperInquiryForm({ developerName }: DeveloperInquiryFormProp
                     id="developer-inquiry-phone"
                     label="Phone"
                     required
-                    type="number"
+                    type="tel"
                     placeholder="+971 50 000 0000"
                     className="h-11 bg-background"
                     error={fieldState.error?.message}
@@ -209,10 +291,10 @@ export function DeveloperInquiryForm({ developerName }: DeveloperInquiryFormProp
             />
 
             <div className="mt-6 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground">Your inquiry helps narrow availability before a call. Required fields are marked.</p>
+              <p className="max-w-xl text-sm leading-6 text-muted-foreground">Your request helps narrow availability before a call. Required fields are marked.</p>
               <Button type="submit" disabled={form.formState.isSubmitting} className="h-11 w-full cursor-pointer sm:w-auto">
                 <Send />
-                {form.formState.isSubmitting ? 'Sending...' : 'Send inquiry'}
+                {form.formState.isSubmitting ? 'Sending...' : 'Get developer information'}
               </Button>
             </div>
           </div>

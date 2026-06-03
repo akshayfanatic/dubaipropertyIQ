@@ -1,7 +1,5 @@
-'use client';
-
-import { ArrowRight, Mail, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Mail, ShieldCheck } from 'lucide-react';
+import { NewsletterLeadForm } from '@/components/leads/NewsletterLeadForm';
 
 export function NewsletterSection() {
   return (
@@ -31,23 +29,10 @@ export function NewsletterSection() {
             </div>
 
             <div className="border-t border-border bg-primary/8 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
-              <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
-                <label htmlFor="home-newsletter-email" className="text-sm font-bold text-foreground">
-                  Email address
-                </label>
-                <input
-                  id="home-newsletter-email"
-                  type="email"
-                  aria-label="Email"
-                  placeholder="you@example.com"
-                  className="h-12 min-w-0 rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/35"
-                />
-                <Button type="submit" className="h-12 justify-between rounded-xl px-4 font-bold">
-                  Send weekly insights
-                  <ArrowRight className="size-4" />
-                </Button>
+              <div className="grid gap-3">
+                <NewsletterLeadForm />
                 <p className="text-xs leading-5 text-muted-foreground">Unsubscribe anytime. No broker lists, no paid placements.</p>
-              </form>
+              </div>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ import { PropertyContentLayout } from '@/components/properties/layout/PropertyCo
 import { getPropertyStatusBadgeConfig } from '@/config';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { createPropertyMetadata } from '@/lib/utils/seo';
+import { LeadCaptureForm } from '@/components/leads/LeadCaptureForm';
 
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
@@ -102,6 +103,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <FAQAccordion faqs={property.properties_faqs} />
           </SectionCard>
         ) : null}
+
+        {/* ── Lead Capture Section ── */}
+        <SectionCard
+          id="inquiry"
+          eyebrow="Inquiry"
+          title="Request Property Details"
+          description="Tell us your budget and timeline. Our team will follow up with availability, viewing options, or similar matches."
+          className="py-0"
+          containerClassName="w-full"
+          contentClassName="rounded-[18px] border border-border bg-card p-[clamp(1.25rem,3vw,2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]"
+          classes={propertySectionClasses}
+        >
+          <LeadCaptureForm sourceType="property" areaOfInterest={property.title} showPhone requirePhone showBudget requireBudget showTimeline requireTimeline showMessage idPrefix="property-inquiry" />
+        </SectionCard>
       </PropertyContentLayout>
     </PageLayout>
   );

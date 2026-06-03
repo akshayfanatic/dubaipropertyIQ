@@ -15,6 +15,7 @@ import { AnimateSection } from '@/components/shared/AnimateSection';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { Badge } from '@/components/ui/badge';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
+import { AreaReportLeadForm } from '@/components/leads/AreaReportLeadForm';
 
 type AreaDetailPageProps = {
   params: Promise<{
@@ -121,6 +122,25 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
                 </Badge>
               </div>
             </div>
+          </div>
+        </SectionCard>
+      </AnimateSection>
+
+      <AnimateSection id="area-report">
+        <SectionCard
+          eyebrow="Area report"
+          title={`Download the ${areaDetail.name} area report`}
+          description="Get a focused community snapshot before comparing listings."
+          className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+          classes={{
+            wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+            eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+            title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            description: 'max-w-[560px] font-medium',
+          }}
+        >
+          <div className="rounded-[18px] border border-border bg-card p-[clamp(1.35rem,3vw,2.2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
+            <AreaReportLeadForm areaName={areaDetail.name} />
           </div>
         </SectionCard>
       </AnimateSection>
