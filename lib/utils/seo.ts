@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import type { Property } from '@/types';
 
+const cleanText = (value?: string | null) => value?.trim() || undefined;
+
 export function createPropertyMetadata(property: Property): Metadata {
   const seo = property.properties_seo;
   const firstImage = property.photos?.[0]?.url;
-  const title = seo?.meta_title || `${property.title} | DubaiPropertyIQ`;
-  const description = seo?.meta_description || property.description;
-  const image = seo?.og_image_url || firstImage;
-  const keywords = seo?.keywords
+  const title = cleanText(seo?.meta_title) || `${property.title} | DubaiPropertyIQ`;
+  const description = cleanText(seo?.meta_description) || cleanText(property.description);
+  const image = cleanText(seo?.og_image_url) || firstImage;
+  const canonical = cleanText(seo?.canonical_url);
+  const keywords = cleanText(seo?.keywords)
     ?.split(',')
     .map((keyword) => keyword.trim())
     .filter(Boolean);
@@ -16,9 +19,9 @@ export function createPropertyMetadata(property: Property): Metadata {
     title,
     description,
     keywords: keywords?.length ? keywords : undefined,
-    alternates: seo?.canonical_url
+    alternates: canonical
       ? {
-          canonical: seo.canonical_url,
+          canonical,
         }
       : undefined,
     openGraph: {
@@ -26,6 +29,12 @@ export function createPropertyMetadata(property: Property): Metadata {
       description,
       images: image ? [{ url: image }] : undefined,
       type: 'website',
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images: image ? [image] : undefined,
     },
   };
 }
