@@ -2,17 +2,36 @@
 
 import { useFormContext } from 'react-hook-form';
 import { useQueryStates } from 'nuqs';
-import { BadgeCheck, RotateCcw, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { RotateCcw, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormLabel } from '@/components/ui/form';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { SelectField } from '@/components/shared/select-field';
 import { Switch } from '@/components/ui/switch';
+import { useAreas } from '@/hooks/data/public/useAreas';
 import { useAmenities } from '@/hooks/data/public/useAmenities';
 import { z } from 'zod';
 import { filterValuesToQuery, queryToFilterValues, searchQueryParsers } from './types';
+import { PROPERTY_STATUS_LABELS, type PropertyStatus } from '@/types/enums';
+
+const PUBLIC_STATUS_OPTIONS: Array<{ label: string; value: PropertyStatus }> = [
+  { label: PROPERTY_STATUS_LABELS.available, value: 'available' },
+  { label: PROPERTY_STATUS_LABELS.reserved, value: 'reserved' },
+  { label: PROPERTY_STATUS_LABELS.off_plan, value: 'off_plan' },
+];
+
+const SORT_OPTIONS = [
+  { label: 'Newest', value: 'newest' },
+  { label: 'Price low-high', value: 'price_asc' },
+  { label: 'Price high-low', value: 'price_desc' },
+  { label: 'Most popular', value: 'popular' },
+];
 
 const sidebarFilterSchema = z.object({
+  status: z.string().optional(),
+  sort: z.string().optional(),
+  areas: z.array(z.string()).optional(),
   amenities: z.array(z.string()).optional(),
   goldenVisaEligible: z.boolean().optional(),
 });
@@ -20,6 +39,7 @@ const sidebarFilterSchema = z.object({
 type SidebarFilterValues = z.infer<typeof sidebarFilterSchema>;
 
 export default function SidebarFilters() {
+  const { areas } = useAreas();
   const { amenities } = useAmenities();
   const [query] = useQueryStates(searchQueryParsers, {
     shallow: false,
@@ -28,22 +48,26 @@ export default function SidebarFilters() {
   const filterValues = queryToFilterValues(query);
 
   const defaultValues: SidebarFilterValues = {
+    status: filterValues.status,
+    sort: filterValues.sort,
+    areas: filterValues.areas,
     amenities: filterValues.amenities,
     goldenVisaEligible: filterValues.goldenVisaEligible,
   };
 
   return (
     <BaseForm schema={sidebarFilterSchema} onSubmit={() => {}} defaultValues={defaultValues}>
-      <FilterFields amenities={amenities} />
+      <FilterFields areas={areas} amenities={amenities} />
     </BaseForm>
   );
 }
 
 interface FilterFieldsProps {
+  areas: Array<{ value: string; label: string }>;
   amenities: Array<{ value: string; label: string }>;
 }
 
-function FilterFields({ amenities }: FilterFieldsProps) {
+function FilterFields({ areas, amenities }: FilterFieldsProps) {
   const form = useFormContext<SidebarFilterValues>();
   const [query, setQuery] = useQueryStates(searchQueryParsers, {
     shallow: false,
@@ -55,6 +79,9 @@ function FilterFields({ amenities }: FilterFieldsProps) {
     setQuery(
       filterValuesToQuery({
         ...currentValues,
+        status: data.status,
+        sort: data.sort,
+        areas: data.areas,
         amenities: data.amenities,
         goldenVisaEligible: data.goldenVisaEligible,
       }),
@@ -62,8 +89,8 @@ function FilterFields({ amenities }: FilterFieldsProps) {
   };
 
   const handleReset = () => {
-    form.reset({ amenities: [], goldenVisaEligible: false });
-    setQuery(filterValuesToQuery({ location: '', propertyType: '', priceRange: {}, amenities: [], goldenVisaEligible: false }));
+    form.reset({ status: '', sort: '', areas: [], amenities: [], goldenVisaEligible: false });
+    setQuery(filterValuesToQuery({ location: '', propertyType: '', bedrooms: '', status: '', sort: '', areas: [], priceRange: {}, amenities: [], goldenVisaEligible: false }));
   };
 
   return (
@@ -80,18 +107,76 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         </div>
       </div>
 
+      {/* PROPERTY STATUS */}
+      <FormField
+        control={form.control}
+        name="status"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <SelectField
+                placeholder="Property status"
+                options={PUBLIC_STATUS_OPTIONS}
+                value={field.value}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  updateUrl({ ...form.getValues(), status: value });
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      {/* SORT */}
+      <FormField
+        control={form.control}
+        name="sort"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <SelectField
+                placeholder="Sort by"
+                options={SORT_OPTIONS}
+                value={field.value}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  updateUrl({ ...form.getValues(), sort: value });
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      {/* AREAS */}
+      <FormField
+        control={form.control}
+        name="areas"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <MultiSelect
+                name="areas"
+                placeholder="Any area"
+                options={areas}
+                value={field.value || []}
+                onChange={(val) => {
+                  field.onChange(val);
+                  updateUrl({ ...form.getValues(), areas: val });
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      {/* AMENITIES */}
       <FormField
         control={form.control}
         name="amenities"
         render={({ field }) => (
-          <FormItem className="rounded-2xl border border-border bg-background p-4 shadow-sm">
-            <div className="space-y-1">
-              <FormLabel className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <BadgeCheck className="size-4 text-primary" />
-                Amenities
-              </FormLabel>
-              <p className="text-xs leading-5 text-muted-foreground">Choose nearby lifestyle, commute, or building features.</p>
-            </div>
+          <FormItem>
             <FormControl>
               <MultiSelect
                 name="amenities"
@@ -108,6 +193,7 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         )}
       />
 
+      {/* GOLDEN VISA ELIGIBILITY */}
       <FormField
         control={form.control}
         name="goldenVisaEligible"
@@ -137,6 +223,7 @@ function FilterFields({ amenities }: FilterFieldsProps) {
         )}
       />
 
+      {/* RESET FILTERS */}
       <Button type="button" onClick={handleReset} className="h-11 w-full gap-2 rounded-xl font-bold shadow-sm shadow-primary/20">
         <RotateCcw className="h-4 w-4" />
         Reset filters

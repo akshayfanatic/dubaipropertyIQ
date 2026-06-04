@@ -363,3 +363,44 @@ export async function getAreaOptionsAdmin(): Promise<ApiResponse<AreaOption[]>> 
     });
   }
 }
+
+/**
+ * Get area options for public filters.
+ */
+export async function getAreaOptionsPublic(): Promise<ApiResponse<AreaOption[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('areas').select('id, name, city_id').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const options: AreaOption[] = (data ?? []).map((area) => ({
+      label: area.name,
+      value: area.id,
+      city_id: area.city_id,
+    }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Area options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch area options';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}

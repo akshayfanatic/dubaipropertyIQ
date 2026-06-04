@@ -9,6 +9,10 @@ const priceRangeSchema = z.object({
 export const filterSchema = z.object({
   location: z.string().optional(),
   propertyType: z.string().optional(),
+  bedrooms: z.string().optional(),
+  status: z.string().optional(),
+  sort: z.string().optional(),
+  areas: z.array(z.string()).optional(),
   priceRange: priceRangeSchema,
   amenities: z.array(z.string()).optional(),
   goldenVisaEligible: z.boolean().optional(),
@@ -19,16 +23,35 @@ export type FilterSchema = z.infer<typeof filterSchema>;
 export const searchQueryParsers = {
   q: parseAsString.withDefault(''),
   categories: parseAsString.withDefault(''),
+  bedrooms: parseAsString.withDefault(''),
+  status: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault(''),
+  areas: parseAsArrayOf(parseAsString).withDefault([]),
   minPrice: parseAsString.withDefault(''),
   maxPrice: parseAsString.withDefault(''),
   amenities: parseAsArrayOf(parseAsString).withDefault([]),
   golden_visa_eligible: parseAsBoolean.withDefault(false),
 };
 
-export function queryToFilterValues(query: { q: string; categories: string; minPrice: string; maxPrice: string; amenities: string[]; golden_visa_eligible: boolean }): FilterSchema {
+export function queryToFilterValues(query: {
+  q: string;
+  categories: string;
+  bedrooms: string;
+  status: string;
+  sort: string;
+  areas: string[];
+  minPrice: string;
+  maxPrice: string;
+  amenities: string[];
+  golden_visa_eligible: boolean;
+}): FilterSchema {
   return {
     location: query.q,
     propertyType: query.categories,
+    bedrooms: query.bedrooms,
+    status: query.status,
+    sort: query.sort,
+    areas: query.areas,
     priceRange: {
       min: query.minPrice,
       max: query.maxPrice,
@@ -42,6 +65,10 @@ export function filterValuesToQuery(data: FilterSchema) {
   return {
     q: data.location || null,
     categories: data.propertyType || null,
+    bedrooms: data.bedrooms || null,
+    status: data.status || null,
+    sort: data.sort || null,
+    areas: data.areas?.length ? data.areas : null,
     minPrice: data.priceRange.min || null,
     maxPrice: data.priceRange.max || null,
     amenities: data.amenities?.length ? data.amenities : null,

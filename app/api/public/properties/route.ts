@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProperties } from '@/lib/db/properties/queries';
 import type { PropertySearchFilters } from '@/lib/db/properties/queries';
+import { parsePropertyStatus } from '@/types/enums';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,6 +11,10 @@ export async function GET(request: NextRequest) {
       categories: searchParams.get('categories') || undefined,
       location: searchParams.get('location') || undefined,
       q: searchParams.get('q') || undefined,
+      bedrooms: searchParams.get('bedrooms') || undefined,
+      status: parsePropertyStatus(searchParams.get('status')),
+      sort: searchParams.get('sort') || undefined,
+      areas: searchParams.get('areas') || undefined,
       minPrice: searchParams.get('minPrice') || undefined,
       maxPrice: searchParams.get('maxPrice') || undefined,
       amenities: searchParams.get('amenities') || undefined,

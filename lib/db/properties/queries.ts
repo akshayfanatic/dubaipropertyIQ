@@ -11,6 +11,7 @@ import type { Property, PropertyFilters, PaginatedResult, PropertyListItem, Prop
 import type { Amenity } from '@/types/amenities';
 import { delay } from '@/lib/utils';
 import type { PropertyStatus } from '@/types/enums';
+import { parsePropertyStatus } from '@/types/enums';
 
 // Type for Supabase join result: properties_amenities → amenities
 interface PropertyAmenityWithAmenity {
@@ -25,6 +26,8 @@ type SavedPropertyRow = {
   property: PropertyListItem | PropertyListItem[] | null;
 };
 
+type PropertySearchSort = 'newest' | 'price_asc' | 'price_desc' | 'popular';
+
 /**
  * Search filters for public property search
  */
@@ -33,12 +36,15 @@ export interface PropertySearchFilters {
   city_id?: string; // city ID for direct filtering
   q?: string; // text search
   categories?: string; // category ID
+  bedrooms?: string;
+  areas?: string; // comma-separated area IDs
   minPrice?: string;
   maxPrice?: string;
   amenities?: string; // comma-separated amenity IDs
   developer_id?: string;
   developer_slug?: string;
-  status?: PropertyStatus;
+  status?: PropertyStatus | string;
+  sort?: PropertySearchSort | string;
   page?: number;
   pageSize?: number;
   golden_visa_eligible?: boolean | string;
@@ -100,7 +106,7 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
       { count: 'exact' },
     );
 
-    query = query.eq('status', filters?.status || 'available');
+    query = query.eq('status', parsePropertyStatus(filters?.status) || 'available');
 
     // Find matching city IDs for location search
     let cityIds: string[] = [];
@@ -132,6 +138,51 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
     // Category filter
     if (filters?.categories) {
       query = query.eq('category_id', filters.categories);
+    }
+
+    // Area filter (properties linked through areas_properties)
+    if (filters?.areas) {
+      const areaIds = filters.areas.split(',').filter(Boolean);
+
+      if (areaIds.length > 0) {
+        const { data: areaProperties, error: areaPropertiesError } = await supabase.from('areas_properties').select('property_id').in('area_id', areaIds);
+
+        if (areaPropertiesError) {
+          return ApiResponse({
+            success: false,
+            status: HttpStatus.INTERNAL_ERROR,
+            message: areaPropertiesError.message,
+            error: { code: areaPropertiesError.code || 'QUERY_ERROR' },
+          });
+        }
+
+        const propertyIds = [...new Set(areaProperties?.map((item) => item.property_id).filter(Boolean) ?? [])];
+
+        if (propertyIds.length === 0) {
+          return ApiResponse({
+            success: true,
+            status: HttpStatus.OK,
+            message: 'Properties fetched successfully',
+            data: {
+              data: [],
+              total: 0,
+              page,
+              pageSize,
+              totalPages: 0,
+            },
+          });
+        }
+
+        query = query.in('id', propertyIds);
+      }
+    }
+
+    // Bedrooms filter. A value of 5 means 5+ bedrooms.
+    if (filters?.bedrooms) {
+      const bedrooms = Number(filters.bedrooms);
+      if (!Number.isNaN(bedrooms)) {
+        query = bedrooms >= 5 ? query.gte('bedrooms', 5) : query.eq('bedrooms', bedrooms);
+      }
     }
 
     // Price range
@@ -171,7 +222,21 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
     }
 
     // Apply sorting
-    query = query.order('created_at', { ascending: false });
+    switch (filters?.sort) {
+      case 'price_asc':
+        query = query.order('price_aed', { ascending: true });
+        break;
+      case 'price_desc':
+        query = query.order('price_aed', { ascending: false });
+        break;
+      case 'popular':
+        query = query.order('is_featured', { ascending: false }).order('created_at', { ascending: false });
+        break;
+      case 'newest':
+      default:
+        query = query.order('created_at', { ascending: false });
+        break;
+    }
 
     // Apply pagination
     query = query.range(from, to);
