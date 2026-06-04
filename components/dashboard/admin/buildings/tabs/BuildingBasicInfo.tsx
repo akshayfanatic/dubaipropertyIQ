@@ -129,7 +129,7 @@ function BuildingBasicInfo({ buildingId, area_id, city_id, developer_id, name, s
   };
 
   return (
-    <WidgetCard icon={Building2} title="Basic Information" description="Connect the building to its area, city, developer, and public URL.">
+    <WidgetCard>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <Controller

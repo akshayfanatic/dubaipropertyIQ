@@ -91,7 +91,7 @@ function BuildingInvestment({
   };
 
   return (
-    <WidgetCard icon={DollarSign} title="Investment Intelligence" description="Pricing, yield, service charge, demand, and score data for the report page.">
+    <WidgetCard>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Controller

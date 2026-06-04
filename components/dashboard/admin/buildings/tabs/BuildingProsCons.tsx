@@ -54,7 +54,7 @@ function BuildingProsCons({ buildingId, pros, cons }: BuildingProsConsProps) {
   };
 
   return (
-    <WidgetCard icon={Star} title="Pros & Cons" description="Short comma-separated points for investor decision sections.">
+    <WidgetCard>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <Controller

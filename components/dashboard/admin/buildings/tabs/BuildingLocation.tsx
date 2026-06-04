@@ -48,7 +48,7 @@ function BuildingLocation({ buildingId, location }: BuildingLocationProps) {
   };
 
   return (
-    <WidgetCard icon={MapPin} title="Location" description="Set the building map pin used on public building intelligence pages.">
+    <WidgetCard>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Controller
           name="location"

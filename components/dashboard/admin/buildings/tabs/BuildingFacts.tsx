@@ -79,7 +79,7 @@ function BuildingFacts({ buildingId, building_type, ownership_type, completion_y
   };
 
   return (
-    <WidgetCard icon={MapPin} title="Building Facts" description="Core details used in the building overview and quick facts sections.">
+    <WidgetCard>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Controller

@@ -60,12 +60,12 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
   ({ options = [], placeholder = 'Select...', value, defaultValue, onValueChange, disabled, className, showLogo = false }, ref) => {
     return (
       <Select value={value} defaultValue={defaultValue} onValueChange={onValueChange} disabled={disabled}>
-        <SelectTrigger ref={ref} className={cn('w-full min-w-0', className)}>
+        <SelectTrigger ref={ref} className={cn('w-full min-w-0 bg-background text-foreground hover:bg-background focus-visible:ring-ring/35 dark:bg-background dark:hover:bg-background', className)}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent position="popper" className="max-h-60 bg-primary-foreground">
+        <SelectContent position="popper" className="max-h-60 border-border bg-popover text-popover-foreground shadow-[0_12px_28px_oklch(0.2_0.03_263.61/0.12)]">
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value} className="flex items-center gap-2">
+            <SelectItem key={option.value} value={option.value} className="flex items-center gap-2 text-foreground focus:bg-accent focus:text-accent-foreground">
               {showLogo && <SelectLogo logo_url={option.logo_url} alt={option.label} />}
               <span>{option.label}</span>
             </SelectItem>

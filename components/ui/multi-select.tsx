@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTheme } from 'next-themes';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { SelectOption } from '@/types/shared';
@@ -25,96 +24,103 @@ interface MultiSelectProps {
   isLoading?: boolean;
 }
 
-// Custom styles factory that uses dark mode state
-const createCustomStyles = (isDark: boolean): StylesConfig<MultiSelectOption, true> => ({
+// React Select styles mapped to the same theme tokens used by Input and SelectTrigger.
+const createCustomStyles = (): StylesConfig<MultiSelectOption, true> => ({
   control: (base, state) => ({
     ...base,
-    minHeight: '42px',
-    borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
-    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
-    color: isDark ? 'hsl(var(--foreground))' : base.color,
-    boxShadow: state.isFocused ? `0 0 0 1px hsl(var(--ring))` : base.boxShadow,
+    minHeight: '44px',
+    borderRadius: '0.5rem',
+    borderColor: state.isFocused ? 'var(--ring)' : 'var(--input)',
+    backgroundColor: 'var(--background)',
+    color: 'var(--foreground)',
+    boxShadow: state.isFocused ? '0 0 0 2px var(--ring)' : 'none',
+    transition: 'border-color 150ms ease, box-shadow 150ms ease',
     '&:hover': {
-      borderColor: 'hsl(var(--ring))',
+      borderColor: state.isFocused ? 'var(--ring)' : 'var(--input)',
     },
   }),
   valueContainer: (base) => ({
     ...base,
-    padding: '4px 8px',
+    padding: '4px 10px',
   }),
   multiValue: (base) => ({
     ...base,
-    backgroundColor: 'hsl(var(--primary) / 0.1)',
+    backgroundColor: 'var(--muted)',
     borderRadius: '6px',
   }),
   multiValueLabel: (base) => ({
     ...base,
-    color: 'hsl(var(--primary))',
+    color: 'var(--foreground)',
     fontSize: '0.875rem',
     padding: '4px 8px',
   }),
   multiValueRemove: (base) => ({
     ...base,
-    color: 'hsl(var(--primary))',
+    color: 'var(--muted-foreground)',
     ':hover': {
-      backgroundColor: 'hsl(var(--primary) / 0.2)',
-      color: 'hsl(var(--destructive))',
+      backgroundColor: 'var(--destructive)',
+      color: 'var(--destructive-foreground)',
     },
   }),
   placeholder: (base) => ({
     ...base,
-    color: 'hsl(var(--muted-foreground))',
+    color: 'var(--muted-foreground)',
     fontSize: '0.875rem',
   }),
   option: (base, state) => ({
     ...base,
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: state.isFocused ? (isDark ? 'hsl(var(--accent))' : 'hsl(var(--accent) / 0.5)') : isDark ? 'hsl(var(--background))' : base.backgroundColor,
-    color: state.isFocused ? (isDark ? 'hsl(var(--accent-foreground))' : base.color) : isDark ? 'hsl(var(--foreground))' : base.color,
+    backgroundColor: state.isSelected ? 'var(--primary)' : state.isFocused ? 'var(--accent)' : 'var(--background)',
+    color: state.isSelected ? 'var(--primary-foreground)' : state.isFocused ? 'var(--accent-foreground)' : 'var(--foreground)',
     ':active': {
-      backgroundColor: isDark ? 'hsl(var(--accent) / 0.7)' : 'hsl(var(--accent))',
+      backgroundColor: 'var(--accent)',
     },
   }),
   menu: (base) => ({
     ...base,
-    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
-    borderColor: isDark ? 'hsl(var(--border))' : base.borderColor,
+    backgroundColor: 'var(--background)',
+    border: '1px solid var(--border)',
+    borderRadius: '0.5rem',
+    boxShadow: '0 12px 28px oklch(0.2 0.03 263.61 / 0.12)',
+    overflow: 'hidden',
+    zIndex: 50,
   }),
   menuList: (base) => ({
     ...base,
-    backgroundColor: isDark ? 'hsl(var(--background))' : base.backgroundColor,
-    color: isDark ? 'hsl(var(--foreground))' : base.color,
+    backgroundColor: 'var(--background)',
+    color: 'var(--foreground)',
+    padding: '4px',
   }),
   singleValue: (base) => ({
     ...base,
-    color: isDark ? 'hsl(var(--foreground))' : base.color,
+    color: 'var(--foreground)',
   }),
   input: (base) => ({
     ...base,
-    color: isDark ? 'hsl(var(--foreground))' : base.color,
+    color: 'var(--foreground)',
   }),
   dropdownIndicator: (base) => ({
     ...base,
-    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+    color: 'var(--muted-foreground)',
     ':hover': {
-      color: isDark ? 'hsl(var(--foreground))' : base.color,
+      color: 'var(--foreground)',
     },
   }),
   indicatorSeparator: (base) => ({
     ...base,
-    backgroundColor: isDark ? 'hsl(var(--border))' : base.backgroundColor,
+    backgroundColor: 'var(--border)',
   }),
   clearIndicator: (base) => ({
     ...base,
-    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+    color: 'var(--muted-foreground)',
     ':hover': {
-      color: isDark ? 'hsl(var(--destructive))' : base.color,
+      color: 'var(--destructive)',
     },
   }),
   noOptionsMessage: (base) => ({
     ...base,
-    color: isDark ? 'hsl(var(--muted-foreground))' : base.color,
+    color: 'var(--muted-foreground)',
   }),
 });
 
@@ -153,9 +159,7 @@ const CustomMultiValueLabel = (props: MultiValueGenericProps<MultiSelectOption, 
 };
 
 export function MultiSelect({ name, label, required = false, placeholder = 'Select options...', options, value, onChange, error, disabled = false, isLoading = false }: MultiSelectProps) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-  const customStyles = useMemo(() => createCustomStyles(isDark), [isDark]);
+  const customStyles = useMemo(() => createCustomStyles(), []);
 
   const selectedOptions = options.filter((option) => value?.includes(option.value));
 
