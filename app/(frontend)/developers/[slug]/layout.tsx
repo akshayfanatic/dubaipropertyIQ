@@ -33,7 +33,7 @@ type DeveloperLayoutProps = {
 const developerSectionClasses = {
   wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] items-center text-center',
   eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-  title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+  title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
   description: 'mx-auto max-w-[500px] font-medium',
 };
 

@@ -93,7 +93,7 @@ async function AreasSection({ city, cityName }: { city: string; cityName: string
         classes={{
           wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
           eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-          title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+          title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
         }}
       >
         <div className="grid grid-cols-1 gap-[1.15rem] sm:grid-cols-2 lg:grid-cols-3">
@@ -142,7 +142,7 @@ async function PropertiesSection({ city }: { city: string }) {
         classes={{
           wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
           eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-          title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] font-extrabold leading-tight',
+          title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] font-extrabold leading-tight',
           description: 'max-w-[470px] font-medium',
         }}
       />

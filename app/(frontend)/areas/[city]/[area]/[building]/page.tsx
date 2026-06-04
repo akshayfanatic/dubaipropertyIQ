@@ -120,7 +120,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
           classes={{
             wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
             eyebrow: 'text-xs font-extrabold tracking-[0.15em]',
-            title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             description: 'mx-auto max-w-[620px] font-medium',
           }}
         >
@@ -218,7 +218,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <div className="grid overflow-hidden rounded-[22px] border border-border bg-card shadow-[0_18px_42px_oklch(0.2_0.03_263.61/0.10)] lg:grid-cols-[0.82fr_1.18fr]">
@@ -249,7 +249,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
               description: 'font-medium',
             }}
           >
@@ -271,7 +271,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -301,7 +301,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <div className="grid gap-5 lg:grid-cols-2">
@@ -350,7 +350,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <div className="grid overflow-hidden rounded-[22px] border border-border bg-card shadow-[0_18px_42px_oklch(0.2_0.03_263.61/0.10)] lg:grid-cols-[0.72fr_1.28fr]">
