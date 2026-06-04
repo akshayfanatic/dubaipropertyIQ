@@ -254,6 +254,142 @@ export type Database = {
         };
         Relationships: [];
       };
+      buildings: {
+        Row: {
+          address: string | null;
+          amenities: Json | null;
+          area_avg_price_per_sqft: number | null;
+          area_id: string;
+          avg_price_per_sqft: number | null;
+          building_type: string | null;
+          capital_growth_score: number | null;
+          city_id: string;
+          completion_year: number | null;
+          cons: Json | null;
+          created_at: string | null;
+          demand_level: string | null;
+          description: string | null;
+          developer_id: string | null;
+          id: string;
+          lifestyle_score: number | null;
+          liquidity_score: number | null;
+          location: Json | null;
+          name: string;
+          nearby_places: Json | null;
+          overall_score: number | null;
+          ownership_type: string | null;
+          photos: Json | null;
+          property_types: Json | null;
+          pros: Json | null;
+          rental_ranges: Json | null;
+          rental_yield: number | null;
+          service_charge_aed_per_sqft: number | null;
+          short_term_rental_potential: string | null;
+          slug: string;
+          total_floors: number | null;
+          total_units: number | null;
+          transaction_summary: Json | null;
+          unit_price_ranges: Json | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          address?: string | null;
+          amenities?: Json | null;
+          area_avg_price_per_sqft?: number | null;
+          area_id: string;
+          avg_price_per_sqft?: number | null;
+          building_type?: string | null;
+          capital_growth_score?: number | null;
+          city_id: string;
+          completion_year?: number | null;
+          cons?: Json | null;
+          created_at?: string | null;
+          demand_level?: string | null;
+          description?: string | null;
+          developer_id?: string | null;
+          id?: string;
+          lifestyle_score?: number | null;
+          liquidity_score?: number | null;
+          location?: Json | null;
+          name: string;
+          nearby_places?: Json | null;
+          overall_score?: number | null;
+          ownership_type?: string | null;
+          photos?: Json | null;
+          property_types?: Json | null;
+          pros?: Json | null;
+          rental_ranges?: Json | null;
+          rental_yield?: number | null;
+          service_charge_aed_per_sqft?: number | null;
+          short_term_rental_potential?: string | null;
+          slug: string;
+          total_floors?: number | null;
+          total_units?: number | null;
+          transaction_summary?: Json | null;
+          unit_price_ranges?: Json | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          address?: string | null;
+          amenities?: Json | null;
+          area_avg_price_per_sqft?: number | null;
+          area_id?: string;
+          avg_price_per_sqft?: number | null;
+          building_type?: string | null;
+          capital_growth_score?: number | null;
+          city_id?: string;
+          completion_year?: number | null;
+          cons?: Json | null;
+          created_at?: string | null;
+          demand_level?: string | null;
+          description?: string | null;
+          developer_id?: string | null;
+          id?: string;
+          lifestyle_score?: number | null;
+          liquidity_score?: number | null;
+          location?: Json | null;
+          name?: string;
+          nearby_places?: Json | null;
+          overall_score?: number | null;
+          ownership_type?: string | null;
+          photos?: Json | null;
+          property_types?: Json | null;
+          pros?: Json | null;
+          rental_ranges?: Json | null;
+          rental_yield?: number | null;
+          service_charge_aed_per_sqft?: number | null;
+          short_term_rental_potential?: string | null;
+          slug?: string;
+          total_floors?: number | null;
+          total_units?: number | null;
+          transaction_summary?: Json | null;
+          unit_price_ranges?: Json | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'buildings_area_id_fkey';
+            columns: ['area_id'];
+            isOneToOne: false;
+            referencedRelation: 'areas';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'buildings_city_id_fkey';
+            columns: ['city_id'];
+            isOneToOne: false;
+            referencedRelation: 'cities';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'buildings_developer_id_fkey';
+            columns: ['developer_id'];
+            isOneToOne: false;
+            referencedRelation: 'developers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       categories: {
         Row: {
           created_at: string | null;
