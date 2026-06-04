@@ -8,6 +8,7 @@ const navItems = [
   { id: 'general-information', label: 'General Information', icon: Info },
   { id: 'gallery', label: 'Gallery', icon: Images },
   { id: 'location', label: 'Location', icon: MapPin },
+  { id: 'buildings', label: 'Buildings', icon: Building2 },
   { id: 'properties', label: 'Properties', icon: Building2 },
   { id: 'area-faqs', label: 'Area FAQs', icon: HelpCircle },
   { id: 'amenities-faqs', label: 'Amenities FAQs', icon: HelpCircle },

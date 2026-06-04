@@ -5,8 +5,8 @@ export async function GET() {
   const result = await getAreaOptionsAdmin();
 
   if (!result.success || !result.data) {
-    return NextResponse.json({ success: false, message: result.message }, { status: result.status });
+    return NextResponse.json({ error: result.message }, { status: result.status });
   }
 
-  return NextResponse.json({ success: true, data: result.data });
+  return NextResponse.json(result.data);
 }

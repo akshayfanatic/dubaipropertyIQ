@@ -45,10 +45,11 @@ export interface PropertySearchFilters {
   is_featured?: boolean | string;
 }
 
-const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>) => {
-  const { properties_amenities, ...rest } = data;
+const normalizeProperty = (data: { properties_amenities?: RawAmenityJoin[] | null; properties_seo?: unknown } & Record<string, unknown>) => {
+  const { properties_amenities, properties_seo, ...rest } = data;
   return {
     ...rest,
+    properties_seo: Array.isArray(properties_seo) ? (properties_seo[0] ?? null) : properties_seo,
     amenities:
       properties_amenities
         ?.map((item) => {
@@ -284,7 +285,7 @@ export async function getPropertyBySlug(slug: string): Promise<ApiResponse<Prope
       success: true,
       status: HttpStatus.OK,
       message: 'Property fetched successfully',
-      data: normalizeProperty(data as unknown as { properties_amenities?: RawAmenityJoin[] | null } & Record<string, unknown>),
+      data: normalizeProperty(data as unknown as { properties_amenities?: RawAmenityJoin[] | null; properties_seo?: unknown } & Record<string, unknown>),
     });
   } catch (error) {
     console.error('[getPropertyBySlug] Error:', error);

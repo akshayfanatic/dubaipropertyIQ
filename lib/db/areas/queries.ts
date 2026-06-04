@@ -329,7 +329,7 @@ export async function getAreaOptionsAdmin(): Promise<ApiResponse<AreaOption[]>> 
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('areas').select('name, slug, city_id').order('name', { ascending: true });
+    const { data, error } = await supabase.from('areas').select('id, name, slug, city_id').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -343,7 +343,7 @@ export async function getAreaOptionsAdmin(): Promise<ApiResponse<AreaOption[]>> 
     // Format for select dropdown
     const options: AreaOption[] = data.map((area) => ({
       label: area.name,
-      value: area.slug,
+      value: area.id,
       city_id: area.city_id,
     }));
 

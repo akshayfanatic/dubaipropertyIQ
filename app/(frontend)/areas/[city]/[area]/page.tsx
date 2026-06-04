@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Building2, MapPin, ShieldCheck } from 'lucide-react';
-import { AreaAmenitiesPills } from '@/components/areas/AreaAmenitiesPills';
 import { AreaGallerySection } from '@/components/areas/AreaGallerySection';
 import { AreaQuickNav } from '@/components/areas/AreaQuickNav';
+import { BuildingCard } from '@/components/buildings/BuildingCard';
 import PageLayout from '@/components/layout/PageLayout';
 import { PropertyCardSlide } from '@/components/properties/card';
 import { SliderSection } from '@/components/sliders/SliderSection';
@@ -12,9 +12,11 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
+import { AmenityPills } from '@/components/shared/AmenityPills';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { Badge } from '@/components/ui/badge';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
+import { getBuildingsByArea } from '@/lib/db/buildings/queries';
 import { AreaReportLeadForm } from '@/components/leads/AreaReportLeadForm';
 
 type AreaDetailPageProps = {
@@ -50,7 +52,7 @@ export async function generateMetadata({ params }: AreaDetailPageProps): Promise
 
 export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
   const { city, area } = await params;
-  const response = await getAreaBySlug(area);
+  const [response, buildingsResponse] = await Promise.all([getAreaBySlug(area), getBuildingsByArea(city, area)]);
 
   if (!response.success || !response.data || response.data.city?.slug !== city) {
     notFound();
@@ -59,6 +61,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
   const areaDetail = response.data;
   const galleryPhotos = Array.isArray(areaDetail.photos) ? areaDetail.photos : [];
   const bannerImage = galleryPhotos[0];
+  const buildings = buildingsResponse.success ? (buildingsResponse.data ?? []) : [];
 
   return (
     <PageLayout contentFullWidth wrapperClassName="py-0">
@@ -85,7 +88,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           </div>
           {areaDetail.amenities.length > 0 && (
             <div id="amenities">
-              <AreaAmenitiesPills amenities={areaDetail.amenities} />
+              <AmenityPills amenities={areaDetail.amenities} />
             </div>
           )}
         </div>
@@ -103,7 +106,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           classes={{
             wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
             eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-            title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
           }}
         >
           <div className="rounded-[18px] border border-border bg-card p-[clamp(1.35rem,3vw,2.2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
@@ -135,7 +138,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           classes={{
             wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
             eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-            title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+            title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             description: 'max-w-[560px] font-medium',
           }}
         >
@@ -155,7 +158,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <AreaGallerySection
@@ -180,11 +183,35 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <div className="overflow-hidden rounded-[18px] border border-border bg-muted shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
               <ReadOnlyMap center={areaDetail.location} />
+            </div>
+          </SectionCard>
+        </AnimateSection>
+      )}
+
+      {/* ── Buildings Section ── */}
+      {buildings.length > 0 && (
+        <AnimateSection id="buildings">
+          <SectionCard
+            eyebrow="Building intelligence"
+            title={`Buildings in ${areaDetail.name}`}
+            description={`Explore building-level signals and reports connected to ${areaDetail.name}.`}
+            className="bg-[oklch(0.935_0.018_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
+            classes={{
+              wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
+              eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
+              description: 'max-w-[560px] font-medium',
+            }}
+          >
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {buildings.map((building) => (
+                <BuildingCard key={building.id} building={building} />
+              ))}
             </div>
           </SectionCard>
         </AnimateSection>
@@ -213,7 +240,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] font-extrabold leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] font-extrabold leading-tight',
               description: 'mx-auto max-w-[470px] font-medium',
             }}
           />
@@ -230,7 +257,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <FAQAccordion faqs={areaDetail.faqs} type="multiple" />
@@ -248,7 +275,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
             classes={{
               wrapper: 'mb-[clamp(1.8rem,4vw,3rem)] gap-4 md:gap-8',
               eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
-              title: 'text-[clamp(1.9rem,3.8vw,3.15rem)] leading-tight',
+              title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
             }}
           >
             <FAQAccordion faqs={areaDetail.amenities_faqs} type="multiple" />

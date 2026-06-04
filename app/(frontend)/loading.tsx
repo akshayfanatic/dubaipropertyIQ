@@ -11,8 +11,8 @@ export default function Loading() {
     <>
       <PageBanner
         className="flex-col"
-        heightClassName="min-h-0 pt-[100px] pb-0 md:min-h-screen md:pt-[104px] md:pb-[132px]"
-        bottomContentClassName="relative mt-8 md:absolute md:mt-0"
+        heightClassName="min-h-0 pt-[100px] pb-12 md:min-h-screen md:pt-[104px] md:pb-[132px]"
+        bottomContentClassName="hidden md:absolute md:block md:mt-0"
         bottomContent={<HomeHeroStats />}
       >
         <HomeBannerSkeleton />

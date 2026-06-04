@@ -50,7 +50,7 @@ export function SectionCard({ id, eyebrow, title, description, children, classNa
                 </span>
               )}
 
-              {title && <h2 className={cn('mt-3 text-[clamp(1.9rem,3.6vw,2.9rem)] font-extrabold leading-[1.12] tracking-normal text-foreground', !eyebrow && 'mt-0', classes?.title)}>{title}</h2>}
+              {title && <h2 className={cn('mt-3 text-[clamp(1.75rem,3.2vw,2.65rem)] font-extrabold leading-[1.12] tracking-normal text-foreground', !eyebrow && 'mt-0', classes?.title)}>{title}</h2>}
 
               {description && <p className={cn('mt-3 text-base leading-7 text-muted-foreground sm:text-[1.05rem]', classes?.description)}>{description}</p>}
             </div>

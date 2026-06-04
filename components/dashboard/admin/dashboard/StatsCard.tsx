@@ -2,6 +2,7 @@
 
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatSize } from '@/lib/utils/price';
 
 interface StatsCardProps {
   title: string;
@@ -14,25 +15,46 @@ interface StatsCardProps {
   className?: string;
 }
 
+const toneByTitle: Record<string, string> = {
+  Properties: 'bg-primary/10 text-primary',
+  Areas: 'bg-[oklch(0.92_0.055_176)] text-[oklch(0.38_0.09_176)] dark:bg-[oklch(0.31_0.05_176)] dark:text-[oklch(0.82_0.08_176)]',
+  Developers: 'bg-[oklch(0.93_0.06_78)] text-[oklch(0.45_0.09_78)] dark:bg-[oklch(0.32_0.05_78)] dark:text-[oklch(0.84_0.09_78)]',
+  Users: 'bg-muted text-muted-foreground',
+};
+
 export function StatsCard({ title, value, icon: Icon, trend, className }: StatsCardProps) {
+  const toneClassName = toneByTitle[title] ?? 'bg-primary/10 text-primary';
+  const formattedValue = typeof value === 'number' && Number.isFinite(value) ? formatSize(Math.max(0, value)) : value;
+
   return (
-    <div className={cn('rounded-xl border border-border/60 bg-card p-6 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02]', className)}>
-      <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-          <Icon className="h-6 w-6 text-primary" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
-          <div className="flex items-center gap-2">
-            <p className="text-2xl font-bold tabular-nums">{value}</p>
+    <div
+      className={cn(
+        'group rounded-xl border border-border bg-card p-4 shadow-sm transition-[border-color,background-color,box-shadow] duration-200 hover:border-primary/35 hover:bg-accent/35 hover:shadow-md',
+        className,
+      )}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="truncate text-xs font-extrabold uppercase tracking-[0.12em] text-muted-foreground">{title}</p>
+          <div className="mt-3 flex flex-wrap items-baseline gap-2">
+            <p className="max-w-full truncate text-[2rem] font-extrabold leading-none tracking-tight text-foreground tabular-nums">{formattedValue}</p>
             {trend && (
-              <span className={cn('text-xs font-medium', trend.isPositive ? 'text-green-600' : 'text-red-600')}>
+              <span
+                className={cn(
+                  'rounded-full px-2 py-1 text-xs font-extrabold',
+                  trend.isPositive ? 'bg-[oklch(0.92_0.08_151)] text-[oklch(0.38_0.12_151)]' : 'bg-[oklch(0.92_0.075_24)] text-[oklch(0.46_0.12_24)]',
+                )}
+              >
                 {trend.isPositive ? '+' : ''}
-                {trend.value}%
+                {Number.isFinite(trend.value) ? trend.value : 0}%
               </span>
             )}
           </div>
+          <p className="mt-3 text-xs font-medium text-muted-foreground">Current total</p>
         </div>
+        <span className={cn('grid size-11 shrink-0 place-items-center rounded-lg transition-transform duration-200 group-hover:-translate-y-0.5', toneClassName)}>
+          <Icon className="size-5" />
+        </span>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ function CountUp({ value }: { value: number }) {
 
 export function HomeHeroStats({ className }: { className?: string }) {
   return (
-    <div className={cn('border-t border-primary-foreground/12 bg-[oklch(0.26_0.08_260.47_/_0.92)] shadow-lg shadow-primary/15 animate-in fade-in duration-700', className)}>
+    <div className={cn('hidden border-t border-primary-foreground/12 bg-[oklch(0.26_0.08_260.47_/_0.92)] shadow-lg shadow-primary/15 animate-in fade-in duration-700 md:block', className)}>
       <div className="container mx-auto grid grid-cols-2 gap-0 px-4 py-[clamp(1rem,1.8vw,1.5rem)] sm:px-6 md:grid-cols-4 md:gap-6 lg:px-8">
         {heroStats.map((stat, index) => (
           <div
