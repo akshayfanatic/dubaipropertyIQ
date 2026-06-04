@@ -36,8 +36,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <PageHeader title={`Welcome back, ${displayName}!`} description="Here's your Dubai real estate intelligence overview." showBackButton />
-
       {/* Stats Grid - Suspense boundary for independent loading */}
       <Suspense fallback={<Stats.Skeleton />}>
         <Stats />
