@@ -97,7 +97,7 @@
   /* =========================
      TYPOGRAPHY
      ========================= */
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-serif: Merriweather, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
@@ -225,6 +225,21 @@
 
 .animate-float-x {
   animation: floatX 0.9s ease-in-out infinite;
+}
+
+@keyframes heroKenburns {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.animate-hero-kenburns {
+  animation: heroKenburns 22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: 60% 40%;
+  will-change: transform;
 }
 
 /* =========================

@@ -1,6 +1,11 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: '14.4';
+  };
   public: {
     Tables: {
       amenities: {
@@ -309,6 +314,35 @@ export type Database = {
         };
         Relationships: [];
       };
+      customer_saved_properties: {
+        Row: {
+          created_at: string;
+          id: string;
+          property_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          property_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          property_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'customer_saved_properties_property_id_fkey';
+            columns: ['property_id'];
+            isOneToOne: false;
+            referencedRelation: 'properties';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       developers: {
         Row: {
           after_sales_score: number | null;
@@ -366,6 +400,57 @@ export type Database = {
         };
         Relationships: [];
       };
+      leads: {
+        Row: {
+          area_of_interest: string | null;
+          created_at: string;
+          email: string;
+          id: string;
+          message: string | null;
+          name: string;
+          nationality: string | null;
+          phone: string | null;
+          source_page: string;
+          source_type: string;
+          status: string;
+          utm_campaign: string | null;
+          utm_medium: string | null;
+          utm_source: string | null;
+        };
+        Insert: {
+          area_of_interest?: string | null;
+          created_at?: string;
+          email: string;
+          id?: string;
+          message?: string | null;
+          name: string;
+          nationality?: string | null;
+          phone?: string | null;
+          source_page: string;
+          source_type: string;
+          status?: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+        };
+        Update: {
+          area_of_interest?: string | null;
+          created_at?: string;
+          email?: string;
+          id?: string;
+          message?: string | null;
+          name?: string;
+          nationality?: string | null;
+          phone?: string | null;
+          source_page?: string;
+          source_type?: string;
+          status?: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+        };
+        Relationships: [];
+      };
       pages: {
         Row: {
           content: Json;
@@ -404,35 +489,6 @@ export type Database = {
           updated_at?: string | null;
         };
         Relationships: [];
-      };
-      customer_saved_properties: {
-        Row: {
-          created_at: string;
-          id: string;
-          property_id: string;
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          property_id: string;
-          user_id: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          property_id?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'customer_saved_properties_property_id_fkey';
-            columns: ['property_id'];
-            isOneToOne: false;
-            referencedRelation: 'properties';
-            referencedColumns: ['id'];
-          },
-        ];
       };
       properties: {
         Row: {
@@ -588,6 +644,44 @@ export type Database = {
             foreignKeyName: 'properties_faqs_property_id_fkey';
             columns: ['property_id'];
             isOneToOne: false;
+            referencedRelation: 'properties';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      properties_seo: {
+        Row: {
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+          property_id: string;
+        };
+        Insert: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          property_id: string;
+        };
+        Update: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          property_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'properties_seo_property_id_fkey';
+            columns: ['property_id'];
+            isOneToOne: true;
             referencedRelation: 'properties';
             referencedColumns: ['id'];
           },

@@ -22,6 +22,10 @@ const PropertyFAQs = dynamic(() => import('./tabs/PropertyFAQs'), {
   loading: () => <FormSkelton fields={3} showPageHeader={false} showSubmitButton />,
 });
 
+const PropertySEO = dynamic(() => import('./tabs/PropertySEO'), {
+  loading: () => <FormSkelton fields={5} showPageHeader={false} showSubmitButton />,
+});
+
 export function PropertyForm({ property }: PropertyFormProps) {
   const tabs = [
     {
@@ -38,6 +42,11 @@ export function PropertyForm({ property }: PropertyFormProps) {
       value: 'faqs',
       label: 'FAQs',
       content: <PropertyFAQs propertyId={property?.id} faqs={property?.properties_faqs} />,
+    },
+    {
+      value: 'seo',
+      label: 'SEO',
+      content: <PropertySEO propertyId={property?.id} seo={property?.properties_seo} />,
     },
   ] as const;
 

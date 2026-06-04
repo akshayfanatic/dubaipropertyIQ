@@ -35,18 +35,20 @@ interface StyledTabsProps {
 export function StyledTabs({ tabs, defaultValue, className, onValueChange }: StyledTabsProps) {
   return (
     <Tabs defaultValue={defaultValue ?? tabs[0]?.value} onValueChange={onValueChange} className={cn('space-y-4', className)}>
-      <TabsList variant="line" className="inline-flex gap-3">
-        {tabs.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value} asChild>
-            <Button
-              variant="ghost"
-              className="rounded-md text-lg transition-all duration-200 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:underline-double data-[state=active]:underline-offset-4 data-[state=active]:decoration-2 data-[state=active]:font-semibold hover:bg-transparent"
-            >
-              {tab.label}
-            </Button>
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="-mx-1 overflow-x-auto px-1 pb-1 md:mx-0 md:px-0">
+        <TabsList variant="line" className="inline-flex min-w-max gap-3">
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value} asChild>
+              <Button
+                variant="ghost"
+                className="shrink-0 rounded-md text-lg transition-all duration-200 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:underline-double data-[state=active]:underline-offset-4 data-[state=active]:decoration-2 data-[state=active]:font-semibold hover:bg-transparent"
+              >
+                {tab.label}
+              </Button>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
 
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value}>

@@ -3,14 +3,14 @@
 import { Search } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useFormContext } from 'react-hook-form';
-import { useQueryStates, parseAsString, parseAsArrayOf, parseAsBoolean } from 'nuqs';
+import { useQueryStates } from 'nuqs';
 import BaseForm from '@/components/shared/forms/BaseForm';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { SelectField } from '@/components/shared/select-field';
 import { PriceRangeInput } from '@/components/shared/forms/price-range-input';
 import { TextInput } from '../shared/forms/text-input';
 import { useCategories } from '@/hooks/data/public/useCategories';
-import { filterSchema, type FilterSchema } from './types';
+import { filterSchema, filterValuesToQuery, queryToFilterValues, searchQueryParsers, type FilterSchema } from './types';
 
 export default function SearchFilters() {
   const { categories, isLoading: categoriesLoading } = useCategories();
@@ -18,38 +18,16 @@ export default function SearchFilters() {
   /**
    * URL STATE
    */
-  const [query, setQuery] = useQueryStates(
-    {
-      q: parseAsString.withDefault(''),
-      categories: parseAsString.withDefault(''),
-      minPrice: parseAsString.withDefault(''),
-      maxPrice: parseAsString.withDefault(''),
-      amenities: parseAsArrayOf(parseAsString).withDefault([]),
-      golden_visa_eligible: parseAsBoolean.withDefault(false),
-    },
-    {
-      shallow: false,
-      history: 'replace',
-    },
-  );
+  const [query, setQuery] = useQueryStates(searchQueryParsers, {
+    shallow: false,
+    history: 'replace',
+  });
 
   /**
    * URL UPDATE
    */
   const updateQuery = useDebouncedCallback((data: FilterSchema) => {
-    setQuery({
-      q: data.location || null,
-
-      categories: data.propertyType || null,
-
-      minPrice: data.priceRange.min || null,
-
-      maxPrice: data.priceRange.max || null,
-
-      amenities: (data.amenities?.length ?? 0) > 0 ? data.amenities : null,
-
-      golden_visa_eligible: data.goldenVisaEligible || null,
-    });
+    setQuery(filterValuesToQuery(data));
   }, 500);
 
   return (
@@ -57,16 +35,7 @@ export default function SearchFilters() {
       schema={filterSchema}
       mode="onChange"
       onSubmit={() => {}}
-      defaultValues={{
-        location: query.q,
-        propertyType: query.categories,
-        priceRange: {
-          min: query.minPrice,
-          max: query.maxPrice,
-        },
-        amenities: query.amenities,
-        goldenVisaEligible: query.golden_visa_eligible,
-      }}
+      defaultValues={queryToFilterValues(query)}
       className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)] lg:grid-cols-[minmax(18rem,1fr)_minmax(12rem,15rem)_minmax(20rem,24rem)]"
     >
       <FilterFields categories={categories} categoriesLoading={categoriesLoading} updateQuery={updateQuery} />

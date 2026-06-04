@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.4...v0.8.0) (2026-06-03)
+
+### Features
+
+- **admin:** added lead capture feature to system ([94a00df](https://github.com/akshayfanatic/dubaipropertyIQ/commit/94a00dfc2c3d765d409860437a7854e683971549))
+- **home:** redesign home page banner ([5ca958a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5ca958aaf125d01ee0d180de9858a0ec8f3fd66b))
+- **leads:** added lead capture feature ([912d3db](https://github.com/akshayfanatic/dubaipropertyIQ/commit/912d3dbf37d687251164da1b1cc56bb768f27197))
+- **page:** applied lead capture form to public pages ([51ad5fa](https://github.com/akshayfanatic/dubaipropertyIQ/commit/51ad5fab3a195933c1f920ea9c7d3a4affc3c0ca))
+- **seo:** added seo feature to properties ([424fe26](https://github.com/akshayfanatic/dubaipropertyIQ/commit/424fe263cb8e7ccd268d5bd42b9dee133e4d151c))
+
+### Bug Fixes
+
+- **home:** modify search param name location to q ([d8bf520](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d8bf5203c1f1ca7de20748c62ed705a2b770a85f))
+- **tabs:** fix tabs issue on mobile responsive ([e0c2cc5](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e0c2cc51fde5e39abbd090c9955c8ed39fdb2d7d))
+
+### Code Refactoring
+
+- **fonts:** change font to jakarata ([e9a5e13](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e9a5e1318660f7746fd0e3c5377cff3419c65a3b))
+- **ui:** redesign search page functionlity and ui ([c404a55](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c404a556b866a895a6885ce42758e255208738ef))
+
 ### [0.7.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.3...v0.7.4) (2026-06-02)
 
 ### Features

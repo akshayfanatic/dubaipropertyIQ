@@ -32,6 +32,13 @@ const optionalUuidField = z
 // Required UUID field - handles empty string by rejecting it
 const requiredUuidField = z.string().uuid('Please select a valid option');
 
+const optionalSeoTextField = (max: number, message: string) =>
+  z.union([z.string().trim().max(max, message), z.literal(''), z.null(), z.undefined()]).transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
+const optionalSeoUrlField = z
+  .union([z.string().trim().url('Must be a valid URL').max(2048, 'URL must be less than 2048 characters'), z.literal(''), z.null(), z.undefined()])
+  .transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
 // Property form validation schema
 export const propertyFormSchema = z.object({
   slug: propertySlugSchema, // Auto-generated if not provided
@@ -66,6 +73,33 @@ export type PropertyInsertData = z.infer<typeof propertyInsertSchema>;
 export const propertyUpdateSchema = propertyFormSchema.partial();
 
 export type PropertyUpdateData = z.infer<typeof propertyUpdateSchema>;
+
+// Property SEO validation schema
+export const propertySeoSchema = z.object({
+  property_id: z.string().uuid('Property ID must be valid'),
+  meta_title: optionalSeoTextField(60, 'Meta title must be less than 60 characters'),
+  meta_description: optionalSeoTextField(160, 'Meta description must be less than 160 characters'),
+  keywords: optionalSeoTextField(255, 'Keywords must be less than 255 characters'),
+  og_image_url: optionalSeoUrlField,
+  canonical_url: optionalSeoUrlField,
+});
+
+export type PropertySEOData = z.infer<typeof propertySeoSchema>;
+
+// Property SEO form schema. property_id comes from route/property context.
+export const propertySeoFormSchema = propertySeoSchema.omit({ property_id: true });
+
+export type PropertySEOFormInput = z.input<typeof propertySeoFormSchema>;
+
+export type PropertySEOFormData = z.infer<typeof propertySeoFormSchema>;
+
+export const propertySeoInsertSchema = propertySeoSchema;
+
+export type PropertySEOInsertData = z.infer<typeof propertySeoInsertSchema>;
+
+export const propertySeoUpdateSchema = propertySeoFormSchema.partial();
+
+export type PropertySEOUpdateData = z.infer<typeof propertySeoUpdateSchema>;
 
 // Property filters validation schema
 export const propertyFiltersSchema = z.object({

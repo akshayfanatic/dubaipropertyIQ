@@ -5,6 +5,8 @@ import { PageContentRenderer } from '@/components/pages/PageContent';
 import { PageHeader } from '@/components/shared/page-header';
 import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
+import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
+import { SectionCard } from '@/components/shared/SectionCard';
 
 export const revalidate = 60;
 
@@ -50,6 +52,24 @@ export default async function PagePage({ params }: PageProps) {
     <PageLayout className="space-y-4" breadcrumb={<PublicBreadCrumb />}>
       <PageHeader title={page.title} />
       <PageContentRenderer content={page.content ?? ''} />
+      {slug === 'contact' && (
+        <SectionCard
+          eyebrow="Contact"
+          title="Send Us a Message"
+          description="Share your request and our team will follow up with the right context."
+          className="py-8"
+          containerClassName="w-full"
+          contentClassName="rounded-[18px] border border-border bg-card p-[clamp(1.25rem,3vw,2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]"
+          classes={{
+            wrapper: 'mb-6',
+            eyebrow: 'text-xs font-extrabold tracking-[0.15em] before:w-[22px]',
+            title: 'text-[clamp(1.5rem,2.6vw,2.2rem)] leading-tight',
+            description: 'max-w-[560px]',
+          }}
+        >
+          <ContactLeadForm />
+        </SectionCard>
+      )}
     </PageLayout>
   );
 }

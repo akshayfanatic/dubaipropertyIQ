@@ -7,7 +7,7 @@ import { Category } from './category';
 import type { PaginatedResult, SelectOption, Location, FAQ } from './shared';
 import type { ImageObject } from './images';
 import type { Amenity } from './amenities';
-import { Tables } from './db/supabase-generated';
+import { Tables, TablesInsert, TablesUpdate } from './db/supabase-generated';
 import { Developer } from './developer';
 import type { PropertyStatus } from './enums';
 
@@ -42,6 +42,10 @@ export interface PropertyAmenity {
   created_at: string | null;
 }
 
+export type PropertySEO = Tables<'properties_seo'>;
+export type PropertySEOInsert = TablesInsert<'properties_seo'>;
+export type PropertySEOUpdate = TablesUpdate<'properties_seo'>;
+
 // Override JSON fields with proper types
 export type Property = Omit<Tables<'properties'>, 'location' | 'photos' | 'features'> & {
   location?: Location | null;
@@ -49,6 +53,7 @@ export type Property = Omit<Tables<'properties'>, 'location' | 'photos' | 'featu
   features: string[];
   properties_faqs?: PropertyFAQ[];
   properties_amenities?: PropertyAmenities;
+  properties_seo?: PropertySEO | null;
   amenities?: Amenity[]; // Populated via joins for form display
   developer?: Developer;
 };

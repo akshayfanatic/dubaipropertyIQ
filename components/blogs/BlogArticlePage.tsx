@@ -8,6 +8,7 @@ import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { cn } from '@/lib/utils';
 import type { Blog } from '@/types/blog';
 import type { TiptapContentNode } from '@/types/shared';
+import { BlogLeadForm } from '@/components/leads/BlogLeadForm';
 
 interface BlogArticlePageProps {
   blog: Blog;
@@ -128,7 +129,7 @@ function InContentCta() {
   );
 }
 
-function NewsletterSignup() {
+function NewsletterSignup({ blogTitle }: { blogTitle: string }) {
   return (
     <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
       <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
@@ -140,16 +141,7 @@ function NewsletterSignup() {
           <h2 className="mt-3 text-2xl font-extrabold leading-tight text-foreground">Get Dubai property insights in your inbox.</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">Market guides, area signals, and calculator updates, no noise.</p>
         </div>
-        <form className="flex flex-col gap-2 sm:min-w-90 sm:flex-row">
-          <input
-            type="email"
-            placeholder="Email address"
-            className="h-12 min-w-0 rounded-full border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring/35"
-          />
-          <Button type="submit" className="h-12 rounded-full px-6 font-bold">
-            Subscribe
-          </Button>
-        </form>
+        <BlogLeadForm blogTitle={blogTitle} />
       </div>
     </section>
   );
@@ -217,7 +209,7 @@ export function BlogArticlePage({ blog, relatedPosts }: BlogArticlePageProps) {
 
         <section className="py-14 sm:py-16">
           <div className="mx-auto w-[min(92%,1180px)]">
-            <NewsletterSignup />
+            <NewsletterSignup blogTitle={blog.title} />
           </div>
         </section>
       </main>

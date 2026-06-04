@@ -8,6 +8,7 @@ import { Typewriter } from '@/components/shared/Typewriter';
 import { buttonVariants } from '@/components/ui/button';
 import { getGroupedSettings } from '@/lib/db/settings/queries';
 import { cn } from '@/lib/utils';
+import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
 
 export const metadata: Metadata = {
   title: 'About Dubai Property IQ',
@@ -203,6 +204,21 @@ export default async function AboutPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </AnimateSection>
+      </section>
+
+      {/* Contact form */}
+      <section className="border-t border-border bg-[oklch(0.965_0.012_260.47)] py-16 md:py-20">
+        <AnimateSection className="container mx-auto grid gap-10 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Talk to us</p>
+            <h2 className="mt-4 text-3xl font-bold leading-tight tracking-normal text-foreground">Need help narrowing the next property move?</h2>
+            <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">Share what you are comparing. We will route your request with the context needed for a useful follow-up.</p>
+          </div>
+
+          <div className="rounded-[18px] border border-border bg-card p-[clamp(1.25rem,3vw,2rem)] shadow-[0_14px_34px_oklch(0.2_0.03_263.61_/_0.10)]">
+            <ContactLeadForm />
           </div>
         </AnimateSection>
       </section>

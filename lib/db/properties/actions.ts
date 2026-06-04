@@ -7,8 +7,8 @@
 import { adminClient } from '@/lib/supabase/admin';
 import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { PropertyInsertData } from '@/lib/validations/property';
-import type { Property, PropertyUpdate } from '@/types/property';
+import { PropertyInsertData, PropertySEOFormData } from '@/lib/validations/property';
+import type { Property, PropertySEO, PropertyUpdate } from '@/types/property';
 import type { Location } from '@/types/shared';
 import { revalidatePath } from 'next/cache';
 
@@ -282,6 +282,55 @@ export async function savePropertyFAQs(propertyId: string, faqs: Array<{ questio
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to save property FAQs';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save property SEO metadata.
+ * Upserts by property_id because each property has one SEO record.
+ */
+export async function savePropertySEO(propertyId: string, seo: PropertySEOFormData) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase
+      .from('properties_seo')
+      .upsert(
+        {
+          property_id: propertyId,
+          ...seo,
+        },
+        { onConflict: 'property_id' },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPSERT_ERROR' },
+      });
+    }
+
+    revalidatePath('/dashboard/admin/properties');
+    revalidatePath('/dashboard/admin/properties/[id]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Property SEO saved successfully',
+      data: data as PropertySEO,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save property SEO';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

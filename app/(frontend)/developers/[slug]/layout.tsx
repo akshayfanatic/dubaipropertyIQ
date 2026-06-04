@@ -100,9 +100,9 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
 
       <AnimateSection>
         <SectionCard
-          eyebrow="Developer enquiry"
-          title="Enquire"
-          description={`Contact us about ${developer.name} projects.`}
+          eyebrow="Developer information"
+          title="Get Developer Information"
+          description={`Request availability, pricing context, and matching projects from ${developer.name}.`}
           align="center"
           className="bg-[oklch(0.965_0.012_260.47)] py-[clamp(3.6rem,7vw,6.5rem)]"
           classes={developerSectionClasses}

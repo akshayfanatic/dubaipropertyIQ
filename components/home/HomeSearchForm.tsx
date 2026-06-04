@@ -46,11 +46,8 @@ export default function HomeSearchForm({ className }: HomeSearchFormProps) {
   const handleSubmit = (data: z.infer<typeof searchSchema>) => {
     const params = new URLSearchParams();
 
-    if (selectedLocation?.slug) {
-      params.set('location', selectedLocation.label);
-    } else if (data.location) {
-      params.set('q', data.location);
-    }
+    const searchValue = selectedLocation?.label || data.location;
+    if (searchValue) params.set('q', searchValue);
     if (data.propertyType) params.set('categories', data.propertyType);
     if (data.priceRange.min) params.set('minPrice', data.priceRange.min);
     if (data.priceRange.max) params.set('maxPrice', data.priceRange.max);
@@ -62,9 +59,9 @@ export default function HomeSearchForm({ className }: HomeSearchFormProps) {
   return (
     <div
       className={cn(
-        'mx-auto w-full max-w-[760px] overflow-hidden rounded-[18px] bg-background p-2 shadow-2xl shadow-foreground/30 transition-shadow focus-within:ring-3 focus-within:ring-primary/30 md:rounded-full md:p-[7px]',
-        '[&_input]:h-11 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:px-0 [&_input]:pl-7 [&_input]:text-sm [&_input]:font-medium [&_input]:text-foreground [&_input]:shadow-none [&_input]:placeholder:text-muted-foreground [&_input]:focus-visible:ring-0 [&_input]:focus-visible:ring-offset-0 md:[&_input]:h-12 md:[&_input]:text-base',
-        '[&_svg.absolute]:left-0 [&_svg.absolute]:size-4 **:data-[slot=select-trigger]:h-11 **:data-[slot=select-trigger]:min-w-0 **:data-[slot=select-trigger]:border-0 **:data-[slot=select-trigger]:bg-transparent **:data-[slot=select-trigger]:px-0 **:data-[slot=select-trigger]:text-sm **:data-[slot=select-trigger]:font-semibold **:data-[slot=select-trigger]:shadow-none **:data-[slot=select-trigger]:focus:ring-0 md:**:data-[slot=select-trigger]:h-12',
+        'mx-auto w-full max-w-[900px] overflow-visible rounded-[18px] bg-background p-2 shadow-2xl shadow-foreground/30 transition-shadow focus-within:ring-3 focus-within:ring-primary/30 md:rounded-full md:p-[7px]',
+        '[&_input]:h-11 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:px-0 [&_input]:pl-9 [&_input]:text-sm [&_input]:font-medium [&_input]:text-foreground [&_input]:shadow-none [&_input]:placeholder:text-muted-foreground [&_input]:focus-visible:ring-0 [&_input]:focus-visible:ring-offset-0 md:[&_input]:h-12 md:[&_input]:text-base',
+        '[&_svg.absolute]:size-4 [&_svg.absolute]:text-primary **:data-[slot=select-trigger]:h-11 **:data-[slot=select-trigger]:min-w-0 **:data-[slot=select-trigger]:border-0 **:data-[slot=select-trigger]:bg-transparent **:data-[slot=select-trigger]:px-0 **:data-[slot=select-trigger]:text-sm **:data-[slot=select-trigger]:font-semibold **:data-[slot=select-trigger]:shadow-none **:data-[slot=select-trigger]:focus:ring-0 md:**:data-[slot=select-trigger]:h-12',
         className,
       )}
     >
@@ -83,7 +80,16 @@ export default function HomeSearchForm({ className }: HomeSearchFormProps) {
                 <FormItem className="min-w-0 flex-[1_0_100%] md:flex-1">
                   <div className="flex h-11 min-w-0 items-center rounded-full px-3 transition-colors focus-within:bg-muted/45 hover:bg-muted/35 md:h-12">
                     <FormControl>
-                      <LocationAutocomplete value={field.value} onChange={field.onChange} onSelect={setSelectedLocation} placeholder="Search any area, building or developer" autoComplete="off" />
+                      <LocationAutocomplete
+                        value={field.value}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          setSelectedLocation(undefined);
+                        }}
+                        onSelect={setSelectedLocation}
+                        placeholder="Search any area, building or developer"
+                        autoComplete="off"
+                      />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -111,9 +117,9 @@ export default function HomeSearchForm({ className }: HomeSearchFormProps) {
               name="priceRange"
               render={({ field }) => (
                 <FormItem className="min-w-0 flex-[1_0_100%] sm:flex-[1_0_calc(50%_-_0.25rem)] md:flex-none">
-                  <SearchSegment icon={CircleDollarSign} className="md:w-56 md:border-l md:border-border/80 md:rounded-none">
+                  <SearchSegment icon={CircleDollarSign} className="md:w-64 md:border-l md:border-border/80 md:rounded-none">
                     <FormControl>
-                      <PriceRangeInput value={field.value} onChange={field.onChange} className="min-w-0 gap-1 [&>*]:min-w-0" />
+                      <PriceRangeInput value={field.value} onChange={field.onChange} minPlaceholder="Min" maxPlaceholder="Max" className="min-w-0 gap-1.5 [&>*]:min-w-0" />
                     </FormControl>
                   </SearchSegment>
                   <FormMessage />
@@ -142,7 +148,7 @@ export function HomeSearchFormSkeleton() {
       <div className="flex flex-wrap items-center gap-1 md:flex-nowrap">
         <div className="h-11 flex-[1_0_100%] rounded-full bg-muted md:h-12 md:flex-1" />
         <div className="h-11 flex-[1_0_100%] rounded-full bg-muted sm:flex-[1_0_calc(50%_-_0.25rem)] md:h-12 md:w-38 md:flex-none" />
-        <div className="h-11 flex-[1_0_100%] rounded-full bg-muted sm:flex-[1_0_calc(50%_-_0.25rem)] md:h-12 md:w-56 md:flex-none" />
+        <div className="h-11 flex-[1_0_100%] rounded-full bg-muted sm:flex-[1_0_calc(50%_-_0.25rem)] md:h-12 md:w-64 md:flex-none" />
         <div className="h-11 flex-[1_0_100%] rounded-full bg-primary/20 md:h-12 md:flex-none md:w-30" />
       </div>
     </div>

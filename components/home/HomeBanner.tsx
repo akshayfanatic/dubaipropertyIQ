@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { ShieldCheck } from 'lucide-react';
-import { Typewriter } from '../shared/Typewriter';
 import { HomeSearchFormSkeleton } from './HomeSearchForm';
 
 interface HomeBannerProps {
@@ -12,7 +11,7 @@ interface HomeBannerProps {
 
 export default function HomeBanner({ badge, headline, subtext, searchForm }: HomeBannerProps) {
   return (
-    <div className="relative z-10 flex min-h-[560px] flex-col items-center justify-center py-12 text-center md:min-h-[600px]">
+    <div className="relative z-10 flex min-h-0 flex-col items-center justify-center py-0 text-center md:min-h-[calc(100vh-236px)]">
       {/* Badge */}
       {badge && (
         <span className="animation-ease-out mb-5 inline-flex w-fit items-center gap-2 self-center rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/90 shadow-sm backdrop-blur-sm animate-in fade-in slide-in-from-top-4 animation-duration-700">
@@ -39,7 +38,7 @@ export default function HomeBanner({ badge, headline, subtext, searchForm }: Hom
 
 export function HomeBannerSkeleton() {
   return (
-    <div className="relative z-10 flex min-h-150 flex-col items-center justify-center px-4 py-16 text-center lg:px-8">
+    <div className="relative z-10 flex min-h-0 flex-col items-center justify-center px-4 py-0 text-center md:min-h-[calc(100vh-236px)] lg:px-8">
       {/* Headline Skeleton */}
       <div className="mb-4 flex h-10 w-full max-w-xl animate-pulse justify-center md:h-12 lg:h-16">
         <div className="h-full w-full rounded-md bg-gray-200" />
