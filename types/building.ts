@@ -23,6 +23,12 @@ export type BuildingNearbyPlace = {
   distance?: string | null;
 };
 
+export type BuildingAmenityDetail = {
+  id: string;
+  name: string;
+  logo_url?: ImageObject | null;
+};
+
 export type BuildingTransactionSummary = {
   recent_sales_count?: number | null;
   average_transaction_value?: number | null;
@@ -65,6 +71,7 @@ export type BuildingWithRelations = Building & {
   area?: Pick<Area, 'id' | 'name' | 'slug'> | null;
   city?: Pick<City, 'id' | 'name' | 'slug' | 'logo_url'> | null;
   developer?: Pick<Developer, 'id' | 'name' | 'slug' | 'logo_url'> | null;
+  amenity_details?: BuildingAmenityDetail[];
 };
 
 export interface BuildingFilters extends PaginationFilters, SearchFilters {

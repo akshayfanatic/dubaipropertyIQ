@@ -1,19 +1,21 @@
-import { BarChart3, Building2, MapPin, Percent, Star } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, BarChart3, Building2, MapPin, Percent, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { formatPrice } from '@/lib/utils/price';
 import type { BuildingWithRelations } from '@/types/building';
 
 interface BuildingCardProps {
   building: BuildingWithRelations;
 }
 
-const formatNumber = (value?: number | null) => (typeof value === 'number' ? value.toLocaleString('en-AE') : null);
-
+// Public preview card that links an area page visitor into the full building report.
 export function BuildingCard({ building }: BuildingCardProps) {
   const image = building.photos?.[0];
-  const pricePerSqft = formatNumber(building.avg_price_per_sqft ? Number(building.avg_price_per_sqft) : null);
+  const pricePerSqft = typeof building.avg_price_per_sqft === 'number' ? formatPrice(building.avg_price_per_sqft) : null;
   const rentalYield = typeof building.rental_yield === 'number' ? `${building.rental_yield}%` : null;
   const score = typeof building.overall_score === 'number' ? building.overall_score : null;
+  const href = building.city?.slug && building.area?.slug ? `/areas/${building.city.slug}/${building.area.slug}/${building.slug}` : null;
 
   return (
     <article className="group overflow-hidden rounded-[18px] border border-border bg-card shadow-[0_14px_34px_oklch(0.2_0.03_263.61/0.10)] transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_18px_42px_oklch(0.2_0.03_263.61_/_0.14)]">
@@ -48,7 +50,7 @@ export function BuildingCard({ building }: BuildingCardProps) {
                 <BarChart3 className="h-3.5 w-3.5" />
                 Avg / sqft
               </div>
-              <p className="text-sm font-extrabold text-foreground">AED {pricePerSqft}</p>
+              <p className="text-sm font-extrabold text-foreground">{pricePerSqft}</p>
             </div>
           )}
           {rentalYield && (
@@ -81,6 +83,16 @@ export function BuildingCard({ building }: BuildingCardProps) {
           <Building2 className="h-4 w-4 text-primary" />
           <span>{building.total_units ? `${building.total_units} units` : 'Building intelligence'}</span>
         </div>
+
+        {href && (
+          <Link
+            href={href}
+            className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            View building report
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        )}
       </div>
     </article>
   );

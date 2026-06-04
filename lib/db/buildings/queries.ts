@@ -8,6 +8,7 @@ import { adminClient } from '@/lib/supabase/admin';
 import { serverClient } from '@/lib/supabase/server';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { normalizeBuildingWithRelations } from '@/lib/utils/buildings';
+import { withBuildingAmenityLabels } from '@/lib/utils/building-report';
 import type { BuildingFilters, BuildingOption, BuildingWithRelations } from '@/types/building';
 import type { PaginatedResult } from '@/types/shared';
 
@@ -157,11 +158,13 @@ export async function getBuildingBySlug(citySlug: string, areaSlug: string, buil
       });
     }
 
+    const building = await withBuildingAmenityLabels(normalizeBuildingWithRelations(data as Record<string, unknown>), supabase);
+
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
       message: 'Building fetched successfully',
-      data: normalizeBuildingWithRelations(data as Record<string, unknown>),
+      data: building,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch building';
@@ -198,11 +201,13 @@ export async function getBuildingsByArea(citySlug: string, areaSlug: string): Pr
       });
     }
 
+    const buildings = await Promise.all((data || []).map((building) => withBuildingAmenityLabels(normalizeBuildingWithRelations(building as Record<string, unknown>), supabase)));
+
     return ApiResponse({
       success: true,
       status: HttpStatus.OK,
       message: 'Buildings fetched successfully',
-      data: (data || []).map((building) => normalizeBuildingWithRelations(building as Record<string, unknown>)),
+      data: buildings,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch buildings';
