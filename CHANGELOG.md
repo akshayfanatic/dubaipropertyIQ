@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.8.0...v0.9.0) (2026-06-04)
+
+### Features
+
+- **building:** added components to display dynamic data on public side ([55017a0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/55017a06967c49d7ef7e91832ae2472fe7f6178c))
+- **building:** added form related component for building ([a070d3d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a070d3d64964fbd09a865cf38bf874e3360a2eda))
+- **building:** added migration for suppport of area building ([1276e17](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1276e17c39921feb29bef769f3cdabca58f2525e))
+- **building:** added server function support for building ([d3c4dc6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d3c4dc614d2f684db0b0d5a2caa972dec9d248a7))
+- **building:** added types, validation and helper method supports ([63320a0](https://github.com/akshayfanatic/dubaipropertyIQ/commit/63320a0c8b413fa9f719cb2c91f68bb54ac1df40))
+- **building:** created route and pages to display building data ([9ded23b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9ded23b44b185525adb39c04cb64ae7167eeae1d))
+- **pdf:** added package for creating pdf ([ec2bb56](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ec2bb56e419927a06a2c62b33269b2498fc971d3))
+- **seo:** display meta data of single property ([58c8926](https://github.com/akshayfanatic/dubaipropertyIQ/commit/58c89262968052585c80d7f9b6e08bd40740fbbd))
+- **ui:** fix style issue ([5e666ef](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5e666ef4729b588f55e4f0830f00b3242d5a0369))
+
+### Bug Fixes
+
+- **areas:** display dynamic card for area ([25dc26e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/25dc26e59fa0c42f6c72a32fff46137643979728))
+- **auth:** after reset password display acknowledgement of success ([c2d005a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c2d005a73dc04c66e9beaf9849720d4ea1a46ab0))
+- **home:** hide stats on mobile from home page banner compoennt ([57f0015](https://github.com/akshayfanatic/dubaipropertyIQ/commit/57f0015f4e6bdaff1919f090457652b7c89351f8))
+
+### Code Refactoring
+
+- **amenity:** created a resuable component amenities pills instead of separate ([99bf4af](https://github.com/akshayfanatic/dubaipropertyIQ/commit/99bf4af5b408032b0ef91e832504d8a5e986a2c7))
+
+### Code Style Changes
+
+- **dashboard:** redesign component of dashboards ([dfa3869](https://github.com/akshayfanatic/dubaipropertyIQ/commit/dfa386912f5426aa3f7c25807667ef926a1c9a87))
+
 ## [0.8.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.7.4...v0.8.0) (2026-06-03)
 
 ### Features
