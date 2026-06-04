@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Building2, MapPin, ShieldCheck } from 'lucide-react';
-import { AreaAmenitiesPills } from '@/components/areas/AreaAmenitiesPills';
 import { AreaGallerySection } from '@/components/areas/AreaGallerySection';
 import { AreaQuickNav } from '@/components/areas/AreaQuickNav';
 import PageLayout from '@/components/layout/PageLayout';
@@ -12,6 +11,7 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
+import { AmenityPills } from '@/components/shared/AmenityPills';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { Badge } from '@/components/ui/badge';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
@@ -85,7 +85,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           </div>
           {areaDetail.amenities.length > 0 && (
             <div id="amenities">
-              <AreaAmenitiesPills amenities={areaDetail.amenities} />
+              <AmenityPills amenities={areaDetail.amenities} />
             </div>
           )}
         </div>
