@@ -60,6 +60,7 @@ export const adminRoutes: RouteGroup[] = [
         icon: MapPin,
         children: [
           { title: 'All Areas', href: '/dashboard/admin/areas', icon: MapPin },
+          { title: 'Buildings', href: '/dashboard/admin/buildings', icon: Building2 },
           { title: 'Amenities', href: '/dashboard/admin/amenities', icon: Layers },
         ],
       },
