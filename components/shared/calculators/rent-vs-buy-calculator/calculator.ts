@@ -1,7 +1,7 @@
 // lib/rent-vs-buy-calculator/calculator.ts
 
 import { DUBAI_FEES } from './constants';
-import type { CalculatorInputs, RentCalculation, BuyCalculation, ComparisonResult, PaymentBreakdown } from './types';
+import type { CalculatorInputs, RentCalculation, BuyCalculation, ComparisonResult, PaymentBreakdown, RoiProjection } from './types';
 
 /**
  * Calculate monthly mortgage payment using standard formula
@@ -59,11 +59,16 @@ function calculateBuyCosts(inputs: CalculatorInputs, years: number): BuyCalculat
     downPaymentPercent,
     mortgageYears,
     interestRate,
+    propertySizeSqft,
     dldFeePercent = DUBAI_FEES.DLD_FEE_PERCENT,
     agentBuyFeePercent = DUBAI_FEES.AGENT_BUY_FEE_PERCENT,
     registrationFee = DUBAI_FEES.REGISTRATION_FEE,
     registrationTrusteeFee = DUBAI_FEES.REGISTRATION_TRUSTEE_FEE,
     valuationFee = DUBAI_FEES.VALUATION_FEE,
+    serviceChargePerSqft = DUBAI_FEES.SERVICE_CHARGE_PER_SQFT,
+    insurancePercent = DUBAI_FEES.INSURANCE_PERCENT,
+    maintenancePercent = DUBAI_FEES.MAINTENANCE_PERCENT,
+    appreciationRate = DUBAI_FEES.APPRECIATION_RATE * 100,
   } = inputs;
 
   const mortgageProcessingFeePercent = DUBAI_FEES.MORTGAGE_PROCESSING_FEE_PERCENT;
@@ -73,7 +78,6 @@ function calculateBuyCosts(inputs: CalculatorInputs, years: number): BuyCalculat
   // Mortgage is only for the mortgage term, after that only service charges
   const monthlyMortgage = calculateMonthlyMortgage(loanAmount, interestRate, mortgageYears);
   const monthsWithMortgage = Math.min(mortgageYears * 12, years * 12);
-  const monthsWithoutMortgage = years * 12 - monthsWithMortgage;
 
   const totalMortgagePayments = monthlyMortgage * monthsWithMortgage;
 
@@ -82,14 +86,17 @@ function calculateBuyCosts(inputs: CalculatorInputs, years: number): BuyCalculat
   const agentCommission = purchasePrice * (agentBuyFeePercent / 100);
   const mortgageProcessingFee = loanAmount * (mortgageProcessingFeePercent / 100);
   const mortgageRegistrationFee = loanAmount * (DUBAI_FEES.MORTGAGE_REGISTRATION_FEE_PERCENT / 100);
+  const annualServiceCharges = propertySizeSqft * serviceChargePerSqft;
+  const annualInsurance = purchasePrice * (insurancePercent / 100);
+  const annualMaintenanceReserve = purchasePrice * (maintenancePercent / 100);
 
   const totalInitialCost = downPayment + dldFee + agentCommission + registrationFee + registrationTrusteeFee + valuationFee + mortgageProcessingFee + mortgageRegistrationFee;
 
-  // Recurring costs (mortgage only, service charges excluded for simplicity)
-  const totalRecurringCost = totalMortgagePayments;
+  const annualOwnershipCost = annualServiceCharges + annualInsurance + annualMaintenanceReserve;
+  const totalRecurringCost = totalMortgagePayments + annualOwnershipCost * years;
 
   // Net sale price after appreciation
-  const appreciatedValue = purchasePrice * Math.pow(1 + DUBAI_FEES.APPRECIATION_RATE, years);
+  const appreciatedValue = purchasePrice * Math.pow(1 + appreciationRate / 100, years);
   const remainingLoan = Math.max(0, calculateRemainingLoan(loanAmount, interestRate, mortgageYears, years));
   const netSalePrice = appreciatedValue - remainingLoan;
 
@@ -103,10 +110,47 @@ function calculateBuyCosts(inputs: CalculatorInputs, years: number): BuyCalculat
     registrationTrusteeFee,
     valuationFee,
     mortgageProcessingFee: mortgageProcessingFee + mortgageRegistrationFee,
+    annualServiceCharges,
+    annualInsurance,
+    annualMaintenanceReserve,
     totalInitialCost,
     totalRecurringCost,
     netSalePrice,
     netCostOverPeriod: totalInitialCost + totalRecurringCost - netSalePrice,
+  };
+}
+
+function calculateRoiProjection(inputs: CalculatorInputs, years: number): RoiProjection {
+  const buy = calculateBuyCosts(inputs, years);
+  const {
+    purchasePrice,
+    annualRentalIncome,
+    propertyManagementPercent = DUBAI_FEES.PROPERTY_MANAGEMENT_PERCENT,
+    vacancyPercent = DUBAI_FEES.VACANCY_PERCENT,
+    appreciationRate = DUBAI_FEES.APPRECIATION_RATE * 100,
+  } = inputs;
+
+  const grossRentalIncome = annualRentalIncome * years;
+  const vacancyAllowance = grossRentalIncome * (vacancyPercent / 100);
+  const managementFees = grossRentalIncome * (propertyManagementPercent / 100);
+  const ownershipOperatingCosts = (buy.annualServiceCharges + buy.annualInsurance + buy.annualMaintenanceReserve) * years;
+  const netRentalIncome = grossRentalIncome - vacancyAllowance - managementFees - ownershipOperatingCosts;
+  const estimatedPropertyValue = purchasePrice * Math.pow(1 + appreciationRate / 100, years);
+  const mortgagePayments = buy.totalRecurringCost - ownershipOperatingCosts;
+  const totalOwnershipCosts = buy.totalInitialCost + mortgagePayments;
+  const netProfit = netRentalIncome + buy.netSalePrice - totalOwnershipCosts;
+  const roiPercent = buy.totalInitialCost > 0 ? (netProfit / buy.totalInitialCost) * 100 : 0;
+
+  return {
+    years,
+    grossRentalIncome,
+    netRentalIncome,
+    grossYieldPercent: purchasePrice > 0 ? (annualRentalIncome / purchasePrice) * 100 : 0,
+    netYieldPercent: purchasePrice > 0 ? (netRentalIncome / years / purchasePrice) * 100 : 0,
+    estimatedPropertyValue,
+    totalOwnershipCosts,
+    netProfit,
+    roiPercent,
   };
 }
 
@@ -120,8 +164,6 @@ function calculateRemainingLoan(principal: number, annualRate: number, loanTermY
   const numberOfPayments = loanTermYears * 12;
   const paymentsMade = yearsElapsed * 12;
 
-  const remainingPayments = numberOfPayments - paymentsMade;
-
   // Formula for remaining balance: B = L * [(1+r)^n - (1+r)^p] / [(1+r)^n - 1]
   const numerator = Math.pow(1 + monthlyRate, numberOfPayments) - Math.pow(1 + monthlyRate, paymentsMade);
   const denominator = Math.pow(1 + monthlyRate, numberOfPayments) - 1;
@@ -133,7 +175,7 @@ function calculateRemainingLoan(principal: number, annualRate: number, loanTermY
  * Main comparison function
  */
 export function calculateComparison(inputs: CalculatorInputs, years: number = 25): ComparisonResult {
-  const { annualRent, purchasePrice, agentRentFeePercent = DUBAI_FEES.AGENT_RENT_FEE_PERCENT, ejariFee = DUBAI_FEES.EJARI_FEE } = inputs;
+  const { annualRent, agentRentFeePercent = DUBAI_FEES.AGENT_RENT_FEE_PERCENT, ejariFee = DUBAI_FEES.EJARI_FEE } = inputs;
 
   const rent = calculateRentCosts(annualRent, years, agentRentFeePercent, ejariFee, DUBAI_FEES.RENT_INFLATION_RATE);
 
@@ -179,6 +221,7 @@ export function calculateComparison(inputs: CalculatorInputs, years: number = 25
     savedIfRenting,
     breakevenYear,
     winner,
+    roi: [1, 3, 5, 10].map((period) => calculateRoiProjection(inputs, period)),
   };
 }
 

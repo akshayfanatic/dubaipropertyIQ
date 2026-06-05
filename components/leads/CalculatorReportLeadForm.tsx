@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircle2, FileText, Mail, Send, User } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -21,6 +22,8 @@ type CalculatorReportFormData = z.infer<typeof calculatorReportSchema>;
 
 type CalculatorReportLeadFormProps = {
   calculatorName: string;
+  messageContext?: string;
+  unlockedContent?: ReactNode;
 };
 
 const defaultValues: CalculatorReportFormData = {
@@ -49,7 +52,7 @@ function getTrackingContext() {
   };
 }
 
-export function CalculatorReportLeadForm({ calculatorName }: CalculatorReportLeadFormProps) {
+export function CalculatorReportLeadForm({ calculatorName, messageContext, unlockedContent }: CalculatorReportLeadFormProps) {
   const [unlockedEmail, setUnlockedEmail] = useState<string | null>(null);
 
   const onSubmit = async (data: CalculatorReportFormData, form: { reset: (values: CalculatorReportFormData) => void }) => {
@@ -60,7 +63,7 @@ export function CalculatorReportLeadForm({ calculatorName }: CalculatorReportLea
       source_type: 'calculator',
       source_page: tracking.source_page,
       area_of_interest: calculatorName,
-      message: [`Requested detailed calculator report for ${calculatorName}.`, data.preferences ? `Preferences: ${data.preferences}` : null].filter(Boolean).join('\n'),
+      message: [`Requested detailed calculator report for ${calculatorName}.`, messageContext, data.preferences ? `Preferences: ${data.preferences}` : null].filter(Boolean).join('\n'),
       utm_source: tracking.utm_source,
       utm_medium: tracking.utm_medium,
       utm_campaign: tracking.utm_campaign,
@@ -88,10 +91,12 @@ export function CalculatorReportLeadForm({ calculatorName }: CalculatorReportLea
             <p className="mt-1 text-sm leading-6 text-muted-foreground">We captured {unlockedEmail}. Our team can follow up with context for your numbers.</p>
           </div>
         </div>
-        <div className="grid gap-2 rounded-2xl bg-background p-4 text-sm text-muted-foreground">
-          <p className="font-bold text-foreground">Unlocked report includes:</p>
-          <p>Financing assumptions, risk notes, and next-step property preferences.</p>
-        </div>
+        {unlockedContent ?? (
+          <div className="grid gap-2 rounded-2xl bg-background p-4 text-sm text-muted-foreground">
+            <p className="font-bold text-foreground">Unlocked report includes:</p>
+            <p>Financing assumptions, risk notes, and next-step property preferences.</p>
+          </div>
+        )}
       </div>
     );
   }

@@ -6,6 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { CalculatorCard, CalculatorField } from '@/components/shared/calculators/CalculatorCard';
+import { CalculatorReportLeadForm } from '@/components/leads/CalculatorReportLeadForm';
+import { TrueCostReportPdfDownload, type TrueCostReportData } from '@/components/shared/calculators/rent-vs-buy-calculator/TrueCostReportPdf';
 import { calculateComparison, formatAED, formatNumber } from '@/components/shared/calculators/rent-vs-buy-calculator/calculator';
 import { DUBAI_FEES } from '@/components/shared/calculators/rent-vs-buy-calculator/constants';
 import { calculatorSchema, validateDownPayment, type CalculatorFormData } from '@/components/shared/calculators/rent-vs-buy-calculator/validation';
@@ -13,7 +16,7 @@ import { getPaymentBreakdown } from '@/components/shared/calculators/rent-vs-buy
 import type { ResidencyStatus } from '@/components/shared/calculators/rent-vs-buy-calculator/types';
 import type { CityWithAreaCount } from '@/types/city';
 import { cn } from '@/lib/utils';
-import { TrendingDown, Home } from 'lucide-react';
+import { BarChart3, Home, LockKeyhole, TrendingDown } from 'lucide-react';
 
 interface TrueCostCalculatorProps {
   city?: CityWithAreaCount | null;
@@ -27,16 +30,11 @@ const RESIDENCY_OPTIONS: { value: ResidencyStatus; label: string }[] = [
   { value: 'non_resident', label: 'Non resident' },
 ];
 
-export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCostCalculatorProps) {
+export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalculatorProps) {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showFees, setShowFees] = useState(false);
 
-  const {
-    register,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm<CalculatorFormData>({
+  const { register, control, setValue } = useForm<CalculatorFormData>({
     resolver: zodResolver(calculatorSchema),
     defaultValues: {
       annualRent: initialRent || 80_000,
@@ -48,15 +46,53 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
       dldFeePercent: DUBAI_FEES.DLD_FEE_PERCENT,
       agentBuyFeePercent: DUBAI_FEES.AGENT_BUY_FEE_PERCENT,
       agentRentFeePercent: DUBAI_FEES.AGENT_RENT_FEE_PERCENT,
+      propertySizeSqft: 900,
+      annualRentalIncome: initialRent || 80_000,
+      serviceChargePerSqft: DUBAI_FEES.SERVICE_CHARGE_PER_SQFT,
+      insurancePercent: DUBAI_FEES.INSURANCE_PERCENT,
+      maintenancePercent: DUBAI_FEES.MAINTENANCE_PERCENT,
+      propertyManagementPercent: DUBAI_FEES.PROPERTY_MANAGEMENT_PERCENT,
+      vacancyPercent: DUBAI_FEES.VACANCY_PERCENT,
+      appreciationRate: DUBAI_FEES.APPRECIATION_RATE * 100,
     },
   });
 
   const formValues = useWatch({
     control,
-    name: ['annualRent', 'purchasePrice', 'residencyStatus', 'downPaymentPercent', 'mortgageYears', 'interestRate'],
+    name: [
+      'annualRent',
+      'purchasePrice',
+      'residencyStatus',
+      'downPaymentPercent',
+      'mortgageYears',
+      'interestRate',
+      'propertySizeSqft',
+      'annualRentalIncome',
+      'serviceChargePerSqft',
+      'insurancePercent',
+      'maintenancePercent',
+      'propertyManagementPercent',
+      'vacancyPercent',
+      'appreciationRate',
+    ],
   });
 
-  const [annualRent, purchasePrice, residencyStatus, downPaymentPercent, mortgageYears, interestRate] = formValues;
+  const [
+    annualRent,
+    purchasePrice,
+    residencyStatus,
+    downPaymentPercent,
+    mortgageYears,
+    interestRate,
+    propertySizeSqft,
+    annualRentalIncome,
+    serviceChargePerSqft,
+    insurancePercent,
+    maintenancePercent,
+    propertyManagementPercent,
+    vacancyPercent,
+    appreciationRate,
+  ] = formValues;
 
   const comparison = useMemo(
     () =>
@@ -68,13 +104,36 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
           downPaymentPercent: downPaymentPercent ?? 20,
           mortgageYears: mortgageYears ?? 25,
           interestRate: interestRate ?? DUBAI_FEES.DEFAULT_INTEREST_RATE,
+          propertySizeSqft: propertySizeSqft ?? 900,
+          annualRentalIncome: annualRentalIncome ?? annualRent ?? 80_000,
+          serviceChargePerSqft: serviceChargePerSqft ?? DUBAI_FEES.SERVICE_CHARGE_PER_SQFT,
+          insurancePercent: insurancePercent ?? DUBAI_FEES.INSURANCE_PERCENT,
+          maintenancePercent: maintenancePercent ?? DUBAI_FEES.MAINTENANCE_PERCENT,
+          propertyManagementPercent: propertyManagementPercent ?? DUBAI_FEES.PROPERTY_MANAGEMENT_PERCENT,
+          vacancyPercent: vacancyPercent ?? DUBAI_FEES.VACANCY_PERCENT,
+          appreciationRate: appreciationRate ?? DUBAI_FEES.APPRECIATION_RATE * 100,
           dldFeePercent: DUBAI_FEES.DLD_FEE_PERCENT,
           agentBuyFeePercent: DUBAI_FEES.AGENT_BUY_FEE_PERCENT,
           agentRentFeePercent: DUBAI_FEES.AGENT_RENT_FEE_PERCENT,
         },
         25,
       ),
-    [annualRent, purchasePrice, residencyStatus, downPaymentPercent, mortgageYears, interestRate],
+    [
+      annualRent,
+      purchasePrice,
+      residencyStatus,
+      downPaymentPercent,
+      mortgageYears,
+      interestRate,
+      propertySizeSqft,
+      annualRentalIncome,
+      serviceChargePerSqft,
+      insurancePercent,
+      maintenancePercent,
+      propertyManagementPercent,
+      vacancyPercent,
+      appreciationRate,
+    ],
   );
 
   const breakdown = useMemo(() => getPaymentBreakdown(comparison), [comparison]);
@@ -93,6 +152,32 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
   const rentIsBetter = comparison.winner === 'rent';
 
   const downPaymentAmount = ((purchasePrice ?? 1_200_000) * (downPaymentPercent ?? 20)) / 100;
+  const tenYearRoi = comparison.roi.find((item) => item.years === 10) ?? comparison.roi[comparison.roi.length - 1];
+  const reportContext = [
+    `Purchase price: ${formatAED(purchasePrice ?? 0)}`,
+    `Annual rent: ${formatAED(annualRent ?? 0)}`,
+    `Annual rental income: ${formatAED(annualRentalIncome ?? 0)}`,
+    `Service charge: ${formatAED(comparison.buy.annualServiceCharges)}/year`,
+    `Insurance: ${formatAED(comparison.buy.annualInsurance)}/year`,
+    `Maintenance reserve: ${formatAED(comparison.buy.annualMaintenanceReserve)}/year`,
+    `10-year ROI: ${tenYearRoi.roiPercent.toFixed(1)}%`,
+  ].join('\n');
+  const reportData: TrueCostReportData = {
+    purchasePrice: formatAED(purchasePrice ?? 0),
+    annualRent: formatAED(annualRent ?? 0),
+    annualRentalIncome: formatAED(annualRentalIncome ?? 0),
+    serviceCharge: `${formatAED(comparison.buy.annualServiceCharges)}/year`,
+    insurance: `${formatAED(comparison.buy.annualInsurance)}/year`,
+    maintenanceReserve: `${formatAED(comparison.buy.annualMaintenanceReserve)}/year`,
+    tenYearRoi: `${tenYearRoi.roiPercent.toFixed(1)}%`,
+    tenYearGrossRentalIncome: formatAED(tenYearRoi.grossRentalIncome),
+    rows: comparison.roi.map((item) => ({
+      years: item.years,
+      netRentalIncome: formatAED(item.netRentalIncome),
+      estimatedPropertyValue: formatAED(item.estimatedPropertyValue),
+      roiPercent: `${item.roiPercent.toFixed(1)}%`,
+    })),
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -101,44 +186,58 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
         {/* Input Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Annual Rent Card */}
-          <div className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-            <label className="font-semibold text-foreground block mb-4">Annual rent</label>
-            <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-3xl font-bold text-primary">{formatNumber(annualRent)}</span>
-              <span className="text-muted-foreground">AED</span>
-            </div>
+          <CalculatorCard
+            title="Annual rent"
+            interactive
+            value={
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">{formatNumber(annualRent)}</span>
+                <span className="text-muted-foreground">AED</span>
+              </div>
+            }
+            footer={
+              <>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{formatNumber(20000)} AED</span>
+                  <span>{formatNumber(2000000)} AED</span>
+                </div>
+                <Input type="number" value={annualRent} {...register('annualRent', { valueAsNumber: true })} className="mt-4" />
+              </>
+            }
+          >
             <div className="relative px-2">
               <Slider value={[annualRent]} onValueChange={([v]) => setValue('annualRent', v)} min={20000} max={2000000} step={10000} className="w-full" />
             </div>
-            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-              <span>{formatNumber(20000)} AED</span>
-              <span>{formatNumber(2000000)} AED</span>
-            </div>
-            <Input type="number" value={annualRent} {...register('annualRent', { valueAsNumber: true })} className="mt-4" />
-          </div>
+          </CalculatorCard>
 
           {/* Purchase Price Card */}
-          <div className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-            <label className="font-semibold text-foreground block mb-4">Purchase price</label>
-            <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-3xl font-bold text-primary">{formatNumber(purchasePrice)}</span>
-              <span className="text-muted-foreground">AED</span>
-            </div>
+          <CalculatorCard
+            title="Purchase price"
+            interactive
+            value={
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">{formatNumber(purchasePrice)}</span>
+                <span className="text-muted-foreground">AED</span>
+              </div>
+            }
+            footer={
+              <>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{formatNumber(300000)} AED</span>
+                  <span>{formatNumber(20000000)} AED</span>
+                </div>
+                <Input type="number" value={purchasePrice} {...register('purchasePrice', { valueAsNumber: true })} className="mt-4" />
+              </>
+            }
+          >
             <div className="relative px-2">
               <Slider value={[purchasePrice]} onValueChange={([v]) => setValue('purchasePrice', v)} min={300000} max={20000000} step={50000} className="w-full" />
             </div>
-            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-              <span>{formatNumber(300000)} AED</span>
-              <span>{formatNumber(20000000)} AED</span>
-            </div>
-            <Input type="number" value={purchasePrice} {...register('purchasePrice', { valueAsNumber: true })} className="mt-4" />
-          </div>
+          </CalculatorCard>
         </div>
 
         {/* Residency Status - Full Width */}
-        <div className="p-6 rounded-2xl border border-border bg-card mb-6">
-          <label className="font-semibold text-foreground block mb-2">Residency status</label>
-          <p className="text-sm text-muted-foreground mb-4">It can impact down payment requirements when getting a mortgage.</p>
+        <CalculatorCard title="Residency status" description="It can impact down payment requirements when getting a mortgage." className="mb-6">
           <div className="gap-2 p-1.5 bg-muted rounded-xl inline-flex">
             {RESIDENCY_OPTIONS.map((option) => (
               <button
@@ -154,65 +253,115 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
               </button>
             ))}
           </div>
-        </div>
+        </CalculatorCard>
 
         {/* Down Payment & Mortgage Period */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Down Payment */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-2">Down Payment</label>
-            <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-2xl font-bold text-chart-2">{downPaymentAmount.toLocaleString()}</span>
-              <span className="text-muted-foreground text-sm">AED</span>
-              <span className="ml-2 text-sm font-medium text-chart-2">({downPaymentPercent}%)</span>
-            </div>
+          <CalculatorCard
+            title="Down payment"
+            value={
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-chart-2">{downPaymentAmount.toLocaleString()}</span>
+                <span className="text-muted-foreground text-sm">AED</span>
+                <span className="ml-2 text-sm font-medium text-chart-2">({downPaymentPercent}%)</span>
+              </div>
+            }
+            footer={
+              <>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{formatNumber((purchasePrice * downPaymentValidation.minPercent) / 100)} AED</span>
+                  <span>{formatNumber(purchasePrice * 0.8)} AED</span>
+                </div>
+                {!downPaymentValidation.valid && (
+                  <p className="text-xs text-destructive mt-3">
+                    Must be {downPaymentValidation.minPercent}%-{downPaymentValidation.maxPercent}% for {residencyStatus.replace('_', ' ')}
+                  </p>
+                )}
+              </>
+            }
+          >
             <div className="relative px-2">
               <Slider value={[downPaymentPercent]} onValueChange={([v]) => setValue('downPaymentPercent', v)} min={downPaymentValidation.minPercent} max={80} step={1} className="w-full" />
             </div>
-            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-              <span>{formatNumber((purchasePrice * downPaymentValidation.minPercent) / 100)} AED</span>
-              <span>{formatNumber(purchasePrice * 0.8)} AED</span>
-            </div>
-            {!downPaymentValidation.valid && (
-              <p className="text-xs text-destructive mt-3">
-                Must be {downPaymentValidation.minPercent}%-{downPaymentValidation.maxPercent}% for {residencyStatus.replace('_', ' ')}
-              </p>
-            )}
-          </div>
+          </CalculatorCard>
 
           {/* Mortgage Loan Period */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-2">Mortgage loan period</label>
-            <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-2xl font-bold text-chart-3">{mortgageYears}</span>
-              <span className="text-muted-foreground text-sm">years</span>
-            </div>
+          <CalculatorCard
+            title="Mortgage loan period"
+            value={
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-chart-3">{mortgageYears}</span>
+                <span className="text-muted-foreground text-sm">years</span>
+              </div>
+            }
+            footer={
+              <>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>1 year</span>
+                  <span>25 years</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Monthly payment: <span className="font-medium text-foreground">{formatAED(comparison.buy.monthlyMortgage)}</span>
+                </p>
+              </>
+            }
+          >
             <div className="relative px-2">
               <Slider value={[mortgageYears]} onValueChange={([v]) => setValue('mortgageYears', v)} min={1} max={25} step={1} className="w-full" />
             </div>
-            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-              <span>1 year</span>
-              <span>25 years</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-3">
-              Monthly payment: <span className="font-medium text-foreground">{formatAED(comparison.buy.monthlyMortgage)}</span>
-            </p>
-          </div>
+          </CalculatorCard>
         </div>
 
         {/* More Options - Interest Rate */}
         {showFees && (
-          <div className="p-6 rounded-2xl border border-border bg-card/50 mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
-            <label className="font-semibold text-foreground block mb-4">Interest Rate (%)</label>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="relative px-2 flex-1">
-                <Slider value={[interestRate]} onValueChange={([v]) => setValue('interestRate', v)} min={2} max={12} step={0.25} className="w-full" />
-              </div>
-              <Input type="number" value={interestRate} {...register('interestRate', { valueAsNumber: true })} className="w-24 text-center" step={0.25} />
+          <div className="rounded-2xl border border-border bg-card/50 p-6 mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="mb-5">
+              <h2 className="text-base font-bold text-foreground">Assumptions</h2>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">Adjust ownership costs, rental income, and appreciation for a fuller ROI view.</p>
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>2%</span>
-              <span>12%</span>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <CalculatorField label="Interest rate (%)">
+                <div className="flex items-center gap-4">
+                  <div className="relative flex-1 px-2">
+                    <Slider value={[interestRate]} onValueChange={([v]) => setValue('interestRate', v)} min={2} max={12} step={0.25} className="w-full" />
+                  </div>
+                  <Input type="number" value={interestRate} {...register('interestRate', { valueAsNumber: true })} className="w-24 text-center" step={0.25} />
+                </div>
+              </CalculatorField>
+
+              <CalculatorField label="Property size (sqft)">
+                <Input type="number" value={propertySizeSqft} {...register('propertySizeSqft', { valueAsNumber: true })} />
+              </CalculatorField>
+
+              <CalculatorField label="Annual rental income">
+                <Input type="number" value={annualRentalIncome} {...register('annualRentalIncome', { valueAsNumber: true })} />
+              </CalculatorField>
+
+              <CalculatorField label="Service charge per sqft">
+                <Input type="number" value={serviceChargePerSqft} {...register('serviceChargePerSqft', { valueAsNumber: true })} />
+              </CalculatorField>
+
+              <CalculatorField label="Insurance (% of value)">
+                <Input type="number" value={insurancePercent} {...register('insurancePercent', { valueAsNumber: true })} step={0.1} />
+              </CalculatorField>
+
+              <CalculatorField label="Maintenance reserve (%)">
+                <Input type="number" value={maintenancePercent} {...register('maintenancePercent', { valueAsNumber: true })} step={0.1} />
+              </CalculatorField>
+
+              <CalculatorField label="Management fee (%)">
+                <Input type="number" value={propertyManagementPercent} {...register('propertyManagementPercent', { valueAsNumber: true })} step={0.5} />
+              </CalculatorField>
+
+              <CalculatorField label="Vacancy allowance (%)">
+                <Input type="number" value={vacancyPercent} {...register('vacancyPercent', { valueAsNumber: true })} step={0.5} />
+              </CalculatorField>
+
+              <CalculatorField label="Appreciation assumption (%)">
+                <Input type="number" value={appreciationRate} {...register('appreciationRate', { valueAsNumber: true })} step={0.5} />
+              </CalculatorField>
             </div>
           </div>
         )}
@@ -252,6 +401,37 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
           <div className={cn('p-4 rounded-xl border transition-all duration-300', rentIsBetter ? 'border-chart-4/30 bg-chart-4/5' : 'border-border bg-card')}>
             <p className="text-xs text-muted-foreground mb-1">Lost if rent</p>
             <p className={cn('text-xl font-bold', comparison.savedIfBuying < 0 ? 'text-destructive' : 'text-foreground')}>{formatAED(Math.abs(Math.min(0, comparison.savedIfBuying)))}</p>
+          </div>
+        </div>
+
+        {/* ROI Summary */}
+        <div className="grid gap-3 rounded-xl border border-border bg-card p-4">
+          <div className="flex items-start gap-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <BarChart3 className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-foreground">Investment view</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">Based on rental income, ownership costs, and appreciation.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg bg-muted/45 p-3">
+              <p className="text-xs text-muted-foreground">Gross yield</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{tenYearRoi.grossYieldPercent.toFixed(1)}%</p>
+            </div>
+            <div className="rounded-lg bg-muted/45 p-3">
+              <p className="text-xs text-muted-foreground">Net yield</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{tenYearRoi.netYieldPercent.toFixed(1)}%</p>
+            </div>
+            <div className="rounded-lg bg-muted/45 p-3">
+              <p className="text-xs text-muted-foreground">10y ROI</p>
+              <p className={cn('mt-1 text-lg font-bold', tenYearRoi.roiPercent >= 0 ? 'text-primary' : 'text-destructive')}>{tenYearRoi.roiPercent.toFixed(1)}%</p>
+            </div>
+            <div className="rounded-lg bg-muted/45 p-3">
+              <p className="text-xs text-muted-foreground">10y profit</p>
+              <p className={cn('mt-1 text-lg font-bold', tenYearRoi.netProfit >= 0 ? 'text-primary' : 'text-destructive')}>{formatAED(tenYearRoi.netProfit)}</p>
+            </div>
           </div>
         </div>
 
@@ -300,6 +480,16 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
                   <td className="text-center py-2 px-2">{formatAED(breakdown.buy.recurringPayments)}</td>
                 </tr>
                 <tr className="border-b border-border/50">
+                  <td className="py-2 px-3 text-muted-foreground">Service charges</td>
+                  <td className="text-center py-2 px-2 text-muted-foreground">—</td>
+                  <td className="text-center py-2 px-2">{formatAED(comparison.buy.annualServiceCharges)}/yr</td>
+                </tr>
+                <tr className="border-b border-border/50">
+                  <td className="py-2 px-3 text-muted-foreground">Insurance + maintenance</td>
+                  <td className="text-center py-2 px-2 text-muted-foreground">—</td>
+                  <td className="text-center py-2 px-2">{formatAED(comparison.buy.annualInsurance + comparison.buy.annualMaintenanceReserve)}/yr</td>
+                </tr>
+                <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Net sale</td>
                   <td className="text-center py-2 px-2 text-muted-foreground">—</td>
                   <td className="text-center py-2 px-2 text-emerald-600">+{formatAED(breakdown.buy.netSalePrice)}</td>
@@ -317,6 +507,54 @@ export function TrueCostCalculator({ city, initialRent, initialPrice }: TrueCost
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Email-gated full ROI report */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="mb-4 flex items-start gap-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <LockKeyhole className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-foreground">Full ROI report</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">Unlock the 1, 3, 5, and 10 year table with your email.</p>
+            </div>
+          </div>
+          <CalculatorReportLeadForm
+            calculatorName="True Cost Calculator"
+            messageContext={reportContext}
+            unlockedContent={
+              <div className="overflow-hidden rounded-xl border border-border bg-background">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-muted/60">
+                      <th className="px-3 py-2 text-left font-bold text-foreground">Years</th>
+                      <th className="px-2 py-2 text-right font-bold text-foreground">Net income</th>
+                      <th className="px-2 py-2 text-right font-bold text-foreground">Value</th>
+                      <th className="px-2 py-2 text-right font-bold text-foreground">ROI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comparison.roi.map((item) => (
+                      <tr key={item.years} className="border-t border-border/70">
+                        <td className="px-3 py-2 font-semibold text-foreground">{item.years}y</td>
+                        <td className="px-2 py-2 text-right text-muted-foreground">{formatAED(item.netRentalIncome)}</td>
+                        <td className="px-2 py-2 text-right text-muted-foreground">{formatAED(item.estimatedPropertyValue)}</td>
+                        <td className={cn('px-2 py-2 text-right font-bold', item.roiPercent >= 0 ? 'text-primary' : 'text-destructive')}>{item.roiPercent.toFixed(1)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="grid gap-2 border-t border-border bg-muted/35 p-3 text-xs leading-5 text-muted-foreground">
+                  <p className="font-bold text-foreground">
+                    Gross rental income: {formatAED(tenYearRoi.grossRentalIncome)} over {tenYearRoi.years} years
+                  </p>
+                  <p>Net rental income deducts vacancy, management, service charges, insurance, and maintenance reserve. ROI uses upfront purchase costs as the capital base.</p>
+                  <TrueCostReportPdfDownload data={reportData} />
+                </div>
+              </div>
+            }
+          />
         </div>
       </div>
     </div>

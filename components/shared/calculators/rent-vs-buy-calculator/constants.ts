@@ -49,6 +49,21 @@ export const DUBAI_FEES = {
 
   /** Default rent inflation rate per year */
   RENT_INFLATION_RATE: 0.02, // 2% annually
+
+  /** Indicative annual service charge per sqft */
+  SERVICE_CHARGE_PER_SQFT: 18,
+
+  /** Indicative annual home insurance as % of property value */
+  INSURANCE_PERCENT: 0.1,
+
+  /** Indicative annual maintenance reserve as % of property value */
+  MAINTENANCE_PERCENT: 1.0,
+
+  /** Property management fee as % of rental income */
+  PROPERTY_MANAGEMENT_PERCENT: 5.0,
+
+  /** Vacancy allowance as % of rental income */
+  VACANCY_PERCENT: 5.0,
 } as const;
 
 /**
