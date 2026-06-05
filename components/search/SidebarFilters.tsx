@@ -1,6 +1,7 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
+import { usePathname } from 'next/navigation';
 import { useQueryStates } from 'nuqs';
 import { RotateCcw, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,7 @@ type SidebarFilterValues = z.infer<typeof sidebarFilterSchema>;
 export default function SidebarFilters() {
   const { areas } = useAreas();
   const { amenities } = useAmenities();
+
   const [query] = useQueryStates(searchQueryParsers, {
     shallow: false,
     history: 'replace',
@@ -68,6 +70,8 @@ interface FilterFieldsProps {
 }
 
 function FilterFields({ areas, amenities }: FilterFieldsProps) {
+  const pathname = usePathname();
+  const showGoldenVisaFilter = pathname !== '/golden-visa-properties';
   const form = useFormContext<SidebarFilterValues>();
   const [query, setQuery] = useQueryStates(searchQueryParsers, {
     shallow: false,
@@ -90,7 +94,10 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
 
   const handleReset = () => {
     form.reset({ status: '', sort: '', areas: [], amenities: [], goldenVisaEligible: false });
-    setQuery(filterValuesToQuery({ location: '', propertyType: '', bedrooms: '', status: '', sort: '', areas: [], priceRange: {}, amenities: [], goldenVisaEligible: false }));
+    setQuery({
+      ...filterValuesToQuery({ location: '', propertyType: '', bedrooms: '', status: '', sort: '', areas: [], priceRange: {}, amenities: [], goldenVisaEligible: false }),
+      page: null,
+    });
   };
 
   return (
@@ -102,7 +109,7 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
           </div>
           <div className="min-w-0">
             <h2 className="text-base font-semibold leading-6 text-foreground">Refine search</h2>
-            <p className="text-sm leading-5 text-muted-foreground">Amenities and eligibility</p>
+            <p className="text-sm leading-5 text-muted-foreground">{showGoldenVisaFilter ? 'Amenities and eligibility' : 'Areas and amenities'}</p>
           </div>
         </div>
       </div>
@@ -193,35 +200,36 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
         )}
       />
 
-      {/* GOLDEN VISA ELIGIBILITY */}
-      <FormField
-        control={form.control}
-        name="goldenVisaEligible"
-        render={({ field }) => (
-          <FormItem className="rounded-2xl border border-border bg-background p-4 shadow-sm">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex min-w-0 items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
-                  <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+      {showGoldenVisaFilter && (
+        <FormField
+          control={form.control}
+          name="goldenVisaEligible"
+          render={({ field }) => (
+            <FormItem className="rounded-2xl border border-border bg-background p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
+                    <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div className="min-w-0 space-y-1">
+                    <FormLabel className="cursor-pointer text-sm font-medium leading-5 text-foreground">Golden Visa eligible</FormLabel>
+                    <p className="text-xs leading-5 text-muted-foreground">Show properties qualifying for UAE residency.</p>
+                  </div>
                 </div>
-                <div className="min-w-0 space-y-1">
-                  <FormLabel className="cursor-pointer text-sm font-medium leading-5 text-foreground">Golden Visa eligible</FormLabel>
-                  <p className="text-xs leading-5 text-muted-foreground">Show properties qualifying for UAE residency.</p>
-                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value || false}
+                    onCheckedChange={(val) => {
+                      field.onChange(val);
+                      updateUrl({ ...form.getValues(), goldenVisaEligible: val });
+                    }}
+                  />
+                </FormControl>
               </div>
-              <FormControl>
-                <Switch
-                  checked={field.value || false}
-                  onCheckedChange={(val) => {
-                    field.onChange(val);
-                    updateUrl({ ...form.getValues(), goldenVisaEligible: val });
-                  }}
-                />
-              </FormControl>
-            </div>
-          </FormItem>
-        )}
-      />
+            </FormItem>
+          )}
+        />
+      )}
 
       {/* RESET FILTERS */}
       <Button type="button" onClick={handleReset} className="h-11 w-full gap-2 rounded-xl font-bold shadow-sm shadow-primary/20">

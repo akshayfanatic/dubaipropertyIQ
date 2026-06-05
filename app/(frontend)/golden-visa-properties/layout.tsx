@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { GoldenVisaConsultationContent } from '@/components/golden-visa-properties/GoldenVisaConsultationSection';
+import { GoldenVisaEligibilityChecker } from '@/components/golden-visa-properties/GoldenVisaEligibilityChecker';
 import { GoldenVisaEligibilityGuideContent } from '@/components/golden-visa-properties/GoldenVisaEligibilityGuide';
 import { GoldenVisaHeroSection } from '@/components/golden-visa-properties/GoldenVisaHeroSection';
 import PageLayout from '@/components/layout/PageLayout';
@@ -27,6 +28,18 @@ export default function GoldenVisaPropertiesLayout({ children }: GoldenVisaPrope
         align="center"
       >
         <GoldenVisaEligibilityGuideContent />
+      </SectionCard>
+
+      {/* ELIGIBILITY CHECKER SECTION */}
+      <SectionCard
+        id="eligibility-checker"
+        eyebrow="Quick checker"
+        title="Estimate your Golden Visa eligibility"
+        description="Check property value, ownership share, completion status, and payment position before requesting a document review."
+        className="bg-muted/45"
+        align="center"
+      >
+        <GoldenVisaEligibilityChecker />
       </SectionCard>
 
       {/* FILTERED PROPERTIES SECTION */}

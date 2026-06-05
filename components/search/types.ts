@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseAsArrayOf, parseAsBoolean, parseAsString } from 'nuqs';
+import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString } from 'nuqs';
 
 const priceRangeSchema = z.object({
   min: z.string().optional(),
@@ -31,6 +31,7 @@ export const searchQueryParsers = {
   maxPrice: parseAsString.withDefault(''),
   amenities: parseAsArrayOf(parseAsString).withDefault([]),
   golden_visa_eligible: parseAsBoolean.withDefault(false),
+  page: parseAsInteger.withDefault(1),
 };
 
 export function queryToFilterValues(query: {
