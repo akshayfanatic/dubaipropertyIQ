@@ -33,7 +33,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
     <Card className="card-entrance group overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
         <div className="relative min-h-64 overflow-hidden bg-muted lg:min-h-full">
-          <Link href={propertyHref} className="absolute inset-0">
+          <Link href={propertyHref} scroll={true} className="absolute inset-0">
             <ImageWithFallback src={firstImage} alt={property.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" fallbackClassName="bg-muted" />
             <div className="absolute inset-0 bg-linear-to-t from-foreground/50 via-foreground/10 to-transparent" />
           </Link>
@@ -56,7 +56,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
                 {developer && <span className="text-xs leading-5 text-muted-foreground sm:pt-1">{developer}</span>}
               </div>
 
-              <Link href={propertyHref} className="block">
+              <Link href={propertyHref} scroll={true} className="block">
                 <h3 className="line-clamp-2 text-lg font-semibold leading-6 text-foreground transition-colors group-hover:text-primary">{property.title}</h3>
               </Link>
 
@@ -100,7 +100,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
               variant="outline"
               className="h-11 rounded-lg border-primary/20 bg-card font-semibold text-primary shadow-none transition-all hover:border-primary/35 hover:bg-primary/10 hover:text-primary hover:shadow-sm"
             >
-              <Link href={propertyHref}>
+              <Link href={propertyHref} scroll={true}>
                 <Eye className="h-4 w-4 group-hover:animate-float-x" />
                 Details
               </Link>

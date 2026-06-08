@@ -5,6 +5,10 @@ export type SearchParams = {
   location?: string;
   q?: string;
   categories?: string;
+  bedrooms?: string;
+  status?: string;
+  sort?: string;
+  areas?: string | string[];
   minPrice?: string;
   maxPrice?: string;
   amenities?: string | string[];

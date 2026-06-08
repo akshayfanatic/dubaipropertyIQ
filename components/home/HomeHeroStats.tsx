@@ -94,3 +94,26 @@ export function HomeHeroStats({ className }: { className?: string }) {
     </div>
   );
 }
+
+export function HomeHeroStatsSkeleton({ className }: { className?: string }) {
+  return (
+    <div className={cn('hidden border-t border-primary-foreground/12 bg-[oklch(0.26_0.08_260.47_/_0.92)] shadow-lg shadow-primary/15 md:block', className)}>
+      <div className="container mx-auto grid grid-cols-2 gap-0 px-4 py-[clamp(1rem,1.8vw,1.5rem)] sm:px-6 md:grid-cols-4 md:gap-6 lg:px-8">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className={cn(
+              'px-2 text-center',
+              index % 2 === 1 && 'border-l border-primary-foreground/10 md:border-l',
+              index > 1 && 'border-t border-primary-foreground/10 md:border-t-0',
+              index > 0 && 'md:border-l md:border-primary-foreground/10',
+            )}
+          >
+            <div className="mx-auto h-[clamp(1.9rem,3.4vw,2.8rem)] w-24 animate-pulse rounded-md bg-primary-foreground/18" />
+            <div className="mx-auto mt-2 h-4 w-28 animate-pulse rounded bg-primary-foreground/14" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

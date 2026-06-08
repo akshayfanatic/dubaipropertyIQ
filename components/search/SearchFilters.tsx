@@ -12,6 +12,15 @@ import { TextInput } from '../shared/forms/text-input';
 import { useCategories } from '@/hooks/data/public/useCategories';
 import { filterSchema, filterValuesToQuery, queryToFilterValues, searchQueryParsers, type FilterSchema } from './types';
 
+const BEDROOM_OPTIONS = [
+  { label: 'Studio', value: '0' },
+  { label: '1 Bedroom', value: '1' },
+  { label: '2 Bedrooms', value: '2' },
+  { label: '3 Bedrooms', value: '3' },
+  { label: '4 Bedrooms', value: '4' },
+  { label: '5+ Bedrooms', value: '5' },
+];
+
 export default function SearchFilters() {
   const { categories, isLoading: categoriesLoading } = useCategories();
 
@@ -36,7 +45,7 @@ export default function SearchFilters() {
       mode="onChange"
       onSubmit={() => {}}
       defaultValues={queryToFilterValues(query)}
-      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)] lg:grid-cols-[minmax(18rem,1fr)_minmax(12rem,15rem)_minmax(20rem,24rem)]"
+      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(16rem,1fr)_minmax(12rem,14rem)] lg:grid-cols-[minmax(18rem,1fr)_minmax(12rem,15rem)_minmax(10rem,12rem)_minmax(20rem,24rem)]"
     >
       <FilterFields categories={categories} categoriesLoading={categoriesLoading} updateQuery={updateQuery} />
     </BaseForm>
@@ -105,6 +114,34 @@ function FilterFields({ categories, categoriesLoading, updateQuery }: FilterFiel
                   updateQuery({
                     ...form.getValues(),
                     propertyType: value,
+                  });
+                }}
+              />
+            </FormControl>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* BEDROOMS */}
+      <FormField
+        control={form.control}
+        name="bedrooms"
+        render={({ field }) => (
+          <FormItem className="min-w-0">
+            <FormControl>
+              <SelectField
+                value={field.value}
+                options={BEDROOM_OPTIONS}
+                placeholder="Bedrooms"
+                className="h-11 bg-background text-foreground"
+                onValueChange={(value) => {
+                  field.onChange(value);
+
+                  updateQuery({
+                    ...form.getValues(),
+                    bedrooms: value,
                   });
                 }}
               />

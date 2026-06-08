@@ -5,12 +5,15 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { CalculatorCard } from '@/components/shared/calculators/CalculatorCard';
+import { CalculatorReportLeadForm } from '@/components/leads/CalculatorReportLeadForm';
 import { calculateMortgage, generateAmortizationSchedule, formatAED, formatNumber } from '@/components/shared/calculators/mortgage-calculator/calculator';
 import { MORTGAGE_CONSTANTS } from '@/components/shared/calculators/mortgage-calculator/constants';
 import { mortgageSchema, type MortgageFormData } from '@/components/shared/calculators/mortgage-calculator/validation';
+import { MortgageReportPdfDownload, type MortgageReportData } from '@/components/shared/calculators/mortgage-calculator/MortgageReportPdf';
 import type { CityWithAreaCount } from '@/types/city';
 import { cn } from '@/lib/utils';
-import { Calculator } from 'lucide-react';
+import { Calculator, LockKeyhole } from 'lucide-react';
 
 interface MortgageCalculatorProps {
   city?: CityWithAreaCount | null;
@@ -22,9 +25,8 @@ const RESIDENCY_OPTIONS = [
   { value: 25, label: 'Non-resident (25%)' },
 ] as const;
 
-export function MortgageCalculator({ city, initialValue }: MortgageCalculatorProps) {
+export function MortgageCalculator({ initialValue }: MortgageCalculatorProps) {
   const [showAmortization, setShowAmortization] = useState(false);
-  const [showFees, setShowFees] = useState(false);
 
   const { register, control, setValue } = useForm<MortgageFormData>({
     resolver: zodResolver(mortgageSchema),
@@ -66,6 +68,32 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
   );
 
   const downPaymentAmount = ((propertyValue ?? 2_000_000) * (downPaymentPercent ?? 20)) / 100;
+  const reportData: MortgageReportData = {
+    propertyValue: formatAED(propertyValue ?? 0),
+    downPayment: formatAED(results.downPayment),
+    downPaymentPercent: `${downPaymentPercent ?? 20}%`,
+    loanAmount: formatAED(results.loanAmount),
+    interestRate: `${interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE}%`,
+    loanTerm: `${loanTerm ?? 25} years`,
+    monthlyPayment: formatAED(results.monthlyPayment),
+    totalInterest: formatAED(results.totalInterest),
+    totalPayment: formatAED(results.totalAmount),
+    rows: amortizationSchedule.map((row) => ({
+      year: row.year,
+      principal: formatAED(row.principal),
+      interest: formatAED(row.interest),
+      balance: formatAED(row.balance),
+    })),
+  };
+  const reportContext = [
+    `Property value: ${reportData.propertyValue}`,
+    `Down payment: ${reportData.downPayment} (${reportData.downPaymentPercent})`,
+    `Loan amount: ${reportData.loanAmount}`,
+    `Interest rate: ${reportData.interestRate}`,
+    `Loan term: ${reportData.loanTerm}`,
+    `Monthly payment: ${reportData.monthlyPayment}`,
+    `Total interest: ${reportData.totalInterest}`,
+  ].join('\n');
 
   const handleResidencyChange = (percent: number) => {
     setValue('downPaymentPercent', percent);
@@ -76,12 +104,25 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
       {/* Left - Inputs */}
       <div className="lg:col-span-7 xl:col-span-8 space-y-6">
         {/* Property Value Card */}
-        <div className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-          <label className="font-semibold text-foreground block mb-4">Property value</label>
-          <div className="flex items-baseline gap-1 mb-4">
-            <span className="text-3xl font-bold text-primary">{formatNumber(propertyValue ?? 2_000_000)}</span>
-            <span className="text-muted-foreground">AED</span>
-          </div>
+        <CalculatorCard
+          title="Property value"
+          interactive
+          value={
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-bold text-primary">{formatNumber(propertyValue ?? 2_000_000)}</span>
+              <span className="text-muted-foreground">AED</span>
+            </div>
+          }
+          footer={
+            <>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{formatNumber(MORTGAGE_CONSTANTS.MIN_PROPERTY_VALUE)} AED</span>
+                <span>{formatNumber(MORTGAGE_CONSTANTS.MAX_PROPERTY_VALUE)} AED</span>
+              </div>
+              <Input type="number" value={propertyValue} {...register('propertyValue', { valueAsNumber: true })} className="mt-4" />
+            </>
+          }
+        >
           <div className="relative px-2">
             <Slider
               value={[propertyValue ?? 2_000_000]}
@@ -92,19 +133,12 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
               className="w-full"
             />
           </div>
-          <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-            <span>{formatNumber(MORTGAGE_CONSTANTS.MIN_PROPERTY_VALUE)} AED</span>
-            <span>{formatNumber(MORTGAGE_CONSTANTS.MAX_PROPERTY_VALUE)} AED</span>
-          </div>
-          <Input type="number" value={propertyValue} {...register('propertyValue', { valueAsNumber: true })} className="mt-4" />
-        </div>
+        </CalculatorCard>
 
         {/* Residency / Down Payment */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Residency Status */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-3">Down payment</label>
-            <p className="text-xs text-muted-foreground mb-4">Select based on residency status</p>
+          <CalculatorCard title="Down payment" description="Select based on residency status">
             <div className="space-y-2">
               {RESIDENCY_OPTIONS.map((option) => (
                 <button
@@ -120,16 +154,25 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
                 </button>
               ))}
             </div>
-          </div>
+          </CalculatorCard>
 
           {/* Custom Down Payment */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-2">Custom amount</label>
-            <div className="flex items-baseline gap-1 mb-4">
-              <span className="text-2xl font-bold text-chart-2">{formatNumber(downPaymentAmount)}</span>
-              <span className="text-muted-foreground text-sm">AED</span>
-              <span className="ml-2 text-sm font-medium text-chart-2">({downPaymentPercent ?? 20}%)</span>
-            </div>
+          <CalculatorCard
+            title="Custom amount"
+            value={
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-chart-2">{formatNumber(downPaymentAmount)}</span>
+                <span className="text-muted-foreground text-sm">AED</span>
+                <span className="ml-2 text-sm font-medium text-chart-2">({downPaymentPercent ?? 20}%)</span>
+              </div>
+            }
+            footer={
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{MORTGAGE_CONSTANTS.MIN_DOWN_PAYMENT}%</span>
+                <span>{MORTGAGE_CONSTANTS.MAX_DOWN_PAYMENT}%</span>
+              </div>
+            }
+          >
             <div className="relative px-2">
               <Slider
                 value={[downPaymentPercent ?? 20]}
@@ -140,33 +183,39 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
                 className="w-full"
               />
             </div>
-            <div className="flex justify-between mt-3 text-xs text-muted-foreground">
-              <span>{MORTGAGE_CONSTANTS.MIN_DOWN_PAYMENT}%</span>
-              <span>{MORTGAGE_CONSTANTS.MAX_DOWN_PAYMENT}%</span>
-            </div>
-          </div>
+          </CalculatorCard>
         </div>
 
         {/* Interest Rate & Loan Term */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Interest Rate */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-4">Interest rate %</label>
+          <CalculatorCard
+            title="Interest rate %"
+            footer={
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>0.5%</span>
+                <span>15%</span>
+              </div>
+            }
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="relative px-2 flex-1">
                 <Slider value={[interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE]} onValueChange={([v]) => setValue('interestRate', v)} min={0.5} max={15} step={0.25} className="w-full" />
               </div>
               <Input type="number" value={interestRate} {...register('interestRate', { valueAsNumber: true })} className="w-20 text-center" step={0.25} />
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>0.5%</span>
-              <span>15%</span>
-            </div>
-          </div>
+          </CalculatorCard>
 
           {/* Loan Term */}
-          <div className="p-6 rounded-2xl border border-border bg-card">
-            <label className="font-semibold text-foreground block mb-4">Loan term</label>
+          <CalculatorCard
+            title="Loan term"
+            footer={
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{MORTGAGE_CONSTANTS.MIN_LOAN_TERM} years</span>
+                <span>{MORTGAGE_CONSTANTS.MAX_LOAN_TERM} years</span>
+              </div>
+            }
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="relative px-2 flex-1">
                 <Slider
@@ -183,11 +232,7 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
                 <span className="text-sm text-muted-foreground">years</span>
               </div>
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{MORTGAGE_CONSTANTS.MIN_LOAN_TERM} years</span>
-              <span>{MORTGAGE_CONSTANTS.MAX_LOAN_TERM} years</span>
-            </div>
-          </div>
+          </CalculatorCard>
         </div>
       </div>
 
@@ -278,6 +323,30 @@ export function MortgageCalculator({ city, initialValue }: MortgageCalculatorPro
             </div>
           </div>
         )}
+
+        {/* Email-gated mortgage report */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="mb-4 flex items-start gap-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <LockKeyhole className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-foreground">Full mortgage report</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">Unlock the amortization PDF with your email.</p>
+            </div>
+          </div>
+          <CalculatorReportLeadForm
+            calculatorName="Mortgage Calculator"
+            messageContext={reportContext}
+            unlockedContent={
+              <div className="grid gap-3 rounded-xl border border-border bg-background p-4 text-sm text-muted-foreground">
+                <p className="font-bold text-foreground">Mortgage PDF ready.</p>
+                <p>Includes monthly payment, total interest, total payment, loan amount, down payment, and yearly amortization schedule.</p>
+                <MortgageReportPdfDownload data={reportData} />
+              </div>
+            }
+          />
+        </div>
       </div>
     </div>
   );

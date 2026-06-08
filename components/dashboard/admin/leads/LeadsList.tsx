@@ -28,6 +28,8 @@ export async function LeadsList({ filters }: LeadsListProps) {
     );
   }
 
+  console.log(data);
+
   return (
     <div className="space-y-4">
       <DataTable columns={columns} data={data.data} />

@@ -13,6 +13,14 @@ export interface CalculatorInputs {
   downPaymentPercent: number;
   mortgageYears: number;
   interestRate: number;
+  propertySizeSqft: number;
+  annualRentalIncome: number;
+  serviceChargePerSqft: number;
+  insurancePercent: number;
+  maintenancePercent: number;
+  propertyManagementPercent: number;
+  vacancyPercent: number;
+  appreciationRate: number;
 
   // Property fees (optional overrides)
   dldFeePercent?: number;
@@ -44,6 +52,9 @@ export interface BuyCalculation {
   registrationTrusteeFee: number;
   valuationFee: number;
   mortgageProcessingFee: number;
+  annualServiceCharges: number;
+  annualInsurance: number;
+  annualMaintenanceReserve: number;
   totalInitialCost: number;
   totalRecurringCost: number;
   netSalePrice: number; // After assumed appreciation
@@ -58,6 +69,7 @@ export interface ComparisonResult {
   savedIfRenting: number; // Positive = renting cheaper
   breakevenYear: number | null; // Year when buy becomes better
   winner: 'rent' | 'buy' | 'tie';
+  roi: RoiProjection[];
 }
 
 export interface PaymentBreakdown {
@@ -65,4 +77,16 @@ export interface PaymentBreakdown {
   recurringPayments: number;
   netSalePrice: number;
   netCost: number;
+}
+
+export interface RoiProjection {
+  years: number;
+  grossRentalIncome: number;
+  netRentalIncome: number;
+  grossYieldPercent: number;
+  netYieldPercent: number;
+  estimatedPropertyValue: number;
+  totalOwnershipCosts: number;
+  netProfit: number;
+  roiPercent: number;
 }

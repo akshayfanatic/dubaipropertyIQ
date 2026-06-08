@@ -3,7 +3,7 @@ import { DeveloperCardSkeleton } from '@/components/developers/card/DeveloperCar
 import { PropertyCardSkeleton } from '@/components/properties/card';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { HomeBannerSkeleton } from '@/components/home/HomeBanner';
-import { HomeHeroStats } from '@/components/home/HomeHeroStats';
+import { HomeHeroStatsSkeleton } from '@/components/home/HomeHeroStats';
 import { Separator } from '@/components/ui/separator';
 
 export default function Loading() {
@@ -13,7 +13,7 @@ export default function Loading() {
         className="flex-col"
         heightClassName="min-h-0 pt-[100px] pb-12 md:min-h-screen md:pt-[104px] md:pb-[132px]"
         bottomContentClassName="hidden md:absolute md:block md:mt-0"
-        bottomContent={<HomeHeroStats />}
+        bottomContent={<HomeHeroStatsSkeleton />}
       >
         <HomeBannerSkeleton />
       </PageBanner>

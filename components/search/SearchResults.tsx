@@ -11,6 +11,10 @@ interface SearchResultsProps {
   location?: string;
   q?: string;
   categories?: string;
+  bedrooms?: string;
+  status?: string;
+  sort?: string;
+  areas?: string | string[];
   minPrice?: string;
   maxPrice?: string;
   amenities?: string | string[];
@@ -33,13 +37,17 @@ function PropertyGrid({ children, pagination }: PropertyGridProps) {
   );
 }
 
-export async function SearchResults({ location, q, categories, minPrice, maxPrice, amenities, golden_visa_eligible, is_featured, page }: SearchResultsProps) {
+export async function SearchResults({ location, q, categories, bedrooms, status, sort, areas, minPrice, maxPrice, amenities, golden_visa_eligible, is_featured, page }: SearchResultsProps) {
   const currentPage = parseInt(page || '1', 10);
 
   const response = await getProperties({
     location,
     q,
     categories,
+    bedrooms,
+    status,
+    sort,
+    areas: Array.isArray(areas) ? areas.join(',') : areas,
     minPrice,
     maxPrice,
     amenities: Array.isArray(amenities) ? amenities.join(',') : amenities,

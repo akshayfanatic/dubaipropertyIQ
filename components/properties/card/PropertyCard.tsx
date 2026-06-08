@@ -66,7 +66,11 @@ export function PropertyCard({ property, className, wishlistSlot }: PropertyCard
               )}
             </div>
 
-            <Link href={propertyHref} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
+            <Link
+              href={propertyHref}
+              scroll={true}
+              className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
               <h3 className="line-clamp-1 text-[20px] font-bold leading-6 drop-shadow-sm transition-colors group-hover:text-primary-100">{property.title}</h3>
             </Link>
 
