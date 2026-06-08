@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.0...v0.9.1) (2026-06-08)
+
+### Features
+
+- **email:** integrate thirdy party email api resent ([ba1bdf8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/ba1bdf87414a69c3ab7578d7f1cce785fe9ed481))
+- **golden visa page:** added dedicated golden visa page with server side filter ([025f4ca](https://github.com/akshayfanatic/dubaipropertyIQ/commit/025f4ca8f3a07bdc6337738a04cdbfd7f4d58063))
+- **search:** added search filters fields in filter page ([2fe3985](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2fe3985996d7c255a3ff5373f7c956678624bedc))
+
+### Bug Fixes
+
+- **favicon:** change favicon and title ([9f840a3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9f840a3723336933556735b6609927c22922bbbd))
+- **suspense:** fix issue regarding loading suspense skelton issue ([b927373](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b92737368879136005b13011bb1cb8dbc87eaf6c))
+
+### Code Refactoring
+
+- **calculator:** fix calculatore page design ([21747bc](https://github.com/akshayfanatic/dubaipropertyIQ/commit/21747bc33184a6588f3d94f782d6debdf9cf36bf))
+- **developer:** display dynamic search filters on developer page ([f11443a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f11443a92938b61aee916d0132faa3a0ef22c912))
+- **leads:** fix usse regarding lead filter on admin ([769ade9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/769ade9bd4da3b31fbc48e5db3071ad9e46e20c8))
+- **search:** golden visa field prevent display on golden visa page ([225b585](https://github.com/akshayfanatic/dubaipropertyIQ/commit/225b5850dffe00c16ca5cad94bb1985f06d19b85))
+
 ## [0.9.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.8.0...v0.9.0) (2026-06-04)
 
 ### Features
