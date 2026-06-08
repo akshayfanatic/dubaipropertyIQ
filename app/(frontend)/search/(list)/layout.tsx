@@ -44,6 +44,7 @@ export default async function SearchPageLayout({ children }: SearchPageLayoutPro
         </PageBanner>
       </div>
 
+      {/* Display Floating Search */}
       <FloatingSearchFilters targetId="search-banner" />
 
       <div className="max-w-294 mx-auto flex w-full flex-col gap-6 px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8 lg:pb-10 pt-10">

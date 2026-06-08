@@ -7,11 +7,12 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import { DeveloperStats } from '@/components/developers/profile/DeveloperStats';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
-import DeveloperQueryForm from '@/components/developers/forms/DeveloperQueryForm';
 import { DeveloperInquiryForm } from '@/components/developers/forms/DeveloperInquiryForm';
 import { PropertyCardSkeleton } from '@/components/properties/card';
 import { getDeveloperBySlug } from '@/lib/db/developers/queries';
 import { ImageObject } from '@/types/images';
+import SearchFilters from '@/components/search/SearchFilters';
+import SidebarFilters from '@/components/search/SidebarFilters';
 
 export function PropertiesSkeleton() {
   return (
@@ -92,10 +93,19 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
         contentClassName="space-y-8"
         classes={developerSectionClasses}
       >
-        <div className="flex w-full justify-end">
-          <DeveloperQueryForm />
+        <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm sm:p-5">
+          <SearchFilters />
         </div>
-        {children}
+
+        <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start xl:grid-cols-[19rem_minmax(0,1fr)]">
+          {/* FILTER SIDEBAR */}
+          <aside className="rounded-xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-28">
+            <SidebarFilters />
+          </aside>
+
+          {/* SERVER PROPERTY RESULTS */}
+          <div className="min-w-0">{children}</div>
+        </div>
       </SectionCard>
 
       <AnimateSection>
