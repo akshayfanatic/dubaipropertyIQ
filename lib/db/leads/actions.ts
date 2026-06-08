@@ -1,6 +1,7 @@
 'use server';
 
 import { adminClient } from '@/lib/supabase/admin';
+import { sendLeadNotificationEmail } from '@/lib/email/send-lead-notification';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { leadSchema, leadStatusSchema, type LeadInput } from '@/lib/validations/lead';
 import type { Lead, LeadStatus } from '@/types/lead';
@@ -30,11 +31,19 @@ export async function createLead(input: LeadInput) {
       });
     }
 
+    const lead = data as Lead;
+
+    try {
+      await sendLeadNotificationEmail(lead);
+    } catch (emailError) {
+      console.error('Lead email notification failed:', emailError);
+    }
+
     return ApiResponse({
       success: true,
       status: HttpStatus.CREATED,
       message: 'Lead captured successfully',
-      data: data as Lead,
+      data: lead,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to capture lead';
