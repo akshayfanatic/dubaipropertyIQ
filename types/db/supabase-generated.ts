@@ -212,6 +212,44 @@ export type Database = {
           },
         ];
       };
+      areas_seo: {
+        Row: {
+          area_id: string;
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+        };
+        Insert: {
+          area_id: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Update: {
+          area_id?: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'areas_seo_area_id_fkey';
+            columns: ['area_id'];
+            isOneToOne: true;
+            referencedRelation: 'areas';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       blogs: {
         Row: {
           content: Json;
@@ -220,8 +258,6 @@ export type Database = {
           feature_image_url: Json | null;
           id: string;
           is_published: boolean | null;
-          meta_description: string | null;
-          meta_title: string | null;
           slug: string;
           title: string;
           updated_at: string | null;
@@ -233,8 +269,6 @@ export type Database = {
           feature_image_url?: Json | null;
           id?: string;
           is_published?: boolean | null;
-          meta_description?: string | null;
-          meta_title?: string | null;
           slug: string;
           title: string;
           updated_at?: string | null;
@@ -246,13 +280,49 @@ export type Database = {
           feature_image_url?: Json | null;
           id?: string;
           is_published?: boolean | null;
-          meta_description?: string | null;
-          meta_title?: string | null;
           slug?: string;
           title?: string;
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      blogs_seo: {
+        Row: {
+          blog_id: string;
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+        };
+        Insert: {
+          blog_id: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Update: {
+          blog_id?: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'blogs_seo_blog_id_fkey';
+            columns: ['blog_id'];
+            isOneToOne: true;
+            referencedRelation: 'blogs';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       buildings: {
         Row: {
@@ -390,6 +460,44 @@ export type Database = {
           },
         ];
       };
+      buildings_seo: {
+        Row: {
+          building_id: string;
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+        };
+        Insert: {
+          building_id: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Update: {
+          building_id?: string;
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'buildings_seo_building_id_fkey';
+            columns: ['building_id'];
+            isOneToOne: true;
+            referencedRelation: 'buildings';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       categories: {
         Row: {
           created_at: string | null;
@@ -449,6 +557,44 @@ export type Database = {
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      cities_seo: {
+        Row: {
+          canonical_url: string | null;
+          city_id: string;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+        };
+        Insert: {
+          canonical_url?: string | null;
+          city_id: string;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Update: {
+          canonical_url?: string | null;
+          city_id?: string;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'cities_seo_city_id_fkey';
+            columns: ['city_id'];
+            isOneToOne: true;
+            referencedRelation: 'cities';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       customer_saved_properties: {
         Row: {
@@ -536,6 +682,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      developers_seo: {
+        Row: {
+          canonical_url: string | null;
+          developer_id: string;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+        };
+        Insert: {
+          canonical_url?: string | null;
+          developer_id: string;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Update: {
+          canonical_url?: string | null;
+          developer_id?: string;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'developers_seo_developer_id_fkey';
+            columns: ['developer_id'];
+            isOneToOne: true;
+            referencedRelation: 'developers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       leads: {
         Row: {
           area_of_interest: string | null;
@@ -594,8 +778,6 @@ export type Database = {
           excerpt: string | null;
           id: string;
           is_published: boolean | null;
-          meta_description: string | null;
-          meta_title: string | null;
           slug: string;
           title: string;
           updated_at: string | null;
@@ -606,8 +788,6 @@ export type Database = {
           excerpt?: string | null;
           id?: string;
           is_published?: boolean | null;
-          meta_description?: string | null;
-          meta_title?: string | null;
           slug: string;
           title: string;
           updated_at?: string | null;
@@ -618,13 +798,49 @@ export type Database = {
           excerpt?: string | null;
           id?: string;
           is_published?: boolean | null;
-          meta_description?: string | null;
-          meta_title?: string | null;
           slug?: string;
           title?: string;
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      pages_seo: {
+        Row: {
+          canonical_url: string | null;
+          id: string;
+          keywords: string | null;
+          meta_description: string | null;
+          meta_title: string | null;
+          og_image_url: string | null;
+          page_id: string;
+        };
+        Insert: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          page_id: string;
+        };
+        Update: {
+          canonical_url?: string | null;
+          id?: string;
+          keywords?: string | null;
+          meta_description?: string | null;
+          meta_title?: string | null;
+          og_image_url?: string | null;
+          page_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'pages_seo_page_id_fkey';
+            columns: ['page_id'];
+            isOneToOne: true;
+            referencedRelation: 'pages';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       properties: {
         Row: {

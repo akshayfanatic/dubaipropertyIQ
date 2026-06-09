@@ -51,9 +51,9 @@ export function PageForm({ id = '', page }: PageFormProps) {
         slug: page.slug,
         content: page.content as PageFormData['content'],
         excerpt: page.excerpt || '',
-        meta_title: page.meta_title || '',
-        meta_description: page.meta_description || '',
-        is_published: page.is_published,
+        meta_title: page.pages_seo?.meta_title || '',
+        meta_description: page.pages_seo?.meta_description || '',
+        is_published: page.is_published ?? false,
       });
     }
   }, [page, reset]);

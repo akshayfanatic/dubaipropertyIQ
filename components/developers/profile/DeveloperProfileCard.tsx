@@ -26,7 +26,7 @@ export function DeveloperProfileCard({ name, logoUrl, description, email, websit
 
         {/* Info Area */}
         <div className="space-y-4 mb-8">
-          <h2 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">{name}</h2>
+          <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">{name}</h1>
           {description && <p className="text-sm leading-relaxed text-white/80 font-medium line-clamp-4">{description}</p>}
         </div>
 

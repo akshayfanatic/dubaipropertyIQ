@@ -9,6 +9,13 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Blog, BlogFilters } from '@/types/blog';
 import type { PaginatedResult } from '@/types/shared';
 
+const BLOG_SELECT = '*, blogs_seo(*)';
+
+const normalizeBlog = (data: { blogs_seo?: unknown } & Record<string, unknown>) => ({
+  ...data,
+  blogs_seo: Array.isArray(data.blogs_seo) ? (data.blogs_seo[0] ?? null) : (data.blogs_seo ?? null),
+});
+
 /**
  * Get all blogs with optional search and pagination
  * - No pageSize -> returns all blogs (no pagination limit)
@@ -22,7 +29,7 @@ export async function getBlogsAdmin(filters?: BlogFilters): Promise<ApiResponse<
     const pageSize = filters?.pageSize;
     const from = pageSize ? (page - 1) * pageSize : 0;
 
-    let query = supabase.from('blogs').select('*', { count: 'exact' });
+    let query = supabase.from('blogs').select(BLOG_SELECT, { count: 'exact' });
 
     // Apply search filter
     if (filters?.search) {
@@ -52,7 +59,7 @@ export async function getBlogsAdmin(filters?: BlogFilters): Promise<ApiResponse<
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<Blog> = {
-      data: (data as Blog[]) ?? [],
+      data: ((data ?? []).map((blog) => normalizeBlog(blog)) as Blog[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,
@@ -83,7 +90,7 @@ export async function getPublishedBlogs(): Promise<ApiResponse<Blog[]>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('blogs').select('*').eq('is_published', true).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('blogs').select(BLOG_SELECT).eq('is_published', true).order('created_at', { ascending: false });
 
     if (error) {
       return ApiResponse({
@@ -98,7 +105,7 @@ export async function getPublishedBlogs(): Promise<ApiResponse<Blog[]>> {
       success: true,
       status: HttpStatus.OK,
       message: 'Published blogs fetched successfully',
-      data: data as Blog[],
+      data: (data ?? []).map((blog) => normalizeBlog(blog)) as Blog[],
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch published blogs';
@@ -118,7 +125,7 @@ export async function getBlogById(id: string): Promise<ApiResponse<Blog | null>>
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('blogs').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('blogs').select(BLOG_SELECT).eq('id', id).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -141,7 +148,7 @@ export async function getBlogById(id: string): Promise<ApiResponse<Blog | null>>
       success: true,
       status: HttpStatus.OK,
       message: 'Blog fetched successfully',
-      data: data as Blog,
+      data: normalizeBlog(data) as Blog,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch blog';
@@ -161,7 +168,7 @@ export async function getBlogBySlug(slug: string): Promise<ApiResponse<Blog | nu
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('blogs').select('*').eq('slug', slug).eq('is_published', true).single();
+    const { data, error } = await supabase.from('blogs').select(BLOG_SELECT).eq('slug', slug).eq('is_published', true).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -184,7 +191,7 @@ export async function getBlogBySlug(slug: string): Promise<ApiResponse<Blog | nu
       success: true,
       status: HttpStatus.OK,
       message: 'Blog fetched successfully',
-      data: data as Blog,
+      data: normalizeBlog(data) as Blog,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch blog';

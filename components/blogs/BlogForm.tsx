@@ -54,8 +54,8 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
         feature_image_url: blog.feature_image_url || { url: '', alt_tag: '' },
         content: blog.content as BlogFormData['content'],
         excerpt: blog.excerpt || '',
-        meta_title: blog.meta_title || '',
-        meta_description: blog.meta_description || '',
+        meta_title: blog.blogs_seo?.meta_title || '',
+        meta_description: blog.blogs_seo?.meta_description || '',
         is_published: blog.is_published ?? false,
       });
     }

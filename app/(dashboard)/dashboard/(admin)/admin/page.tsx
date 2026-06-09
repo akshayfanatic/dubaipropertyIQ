@@ -6,15 +6,9 @@ import { RecentProperties } from '@/components/dashboard/admin/dashboard/RecentP
 import { adminRoutes } from '@/config/routes';
 import { Suspense } from 'react';
 import { QuickAction } from '@/types/dashboard';
-import { PageHeader } from '@/components/shared/page-header';
 
 export default async function DashboardPage() {
   const supabase = await serverClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
 
   // Quick Actions - Add Property + first 4 Management routes from config/routes.ts
   const managementItems = adminRoutes.find((g) => g.title === 'Management')?.items || [];

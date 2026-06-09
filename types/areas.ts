@@ -7,8 +7,13 @@ import type { PaginationFilters, SearchFilters, SelectOption, FAQ } from './shar
 import type { Tables, TablesInsert, TablesUpdate } from './db/supabase-generated';
 import type { ImageObject } from './images';
 
+export type AreaSEO = Tables<'areas_seo'>;
+export type AreaSEOInsert = TablesInsert<'areas_seo'>;
+export type AreaSEOUpdate = TablesUpdate<'areas_seo'>;
+
 export type Area = Omit<Tables<'areas'>, 'photos'> & {
   photos: ImageObject[];
+  areas_seo?: AreaSEO | null;
 };
 export type AreaInsert = Omit<TablesInsert<'areas'>, 'photos'> & {
   photos?: ImageObject[] | null;
@@ -54,5 +59,6 @@ export interface AreaFormProps {
     areas_properties?: Array<{ property_id: string }>;
     areas_faqs?: Array<{ id: string; question: string; answer: string }>;
     areas_amenities_faqs?: Array<{ id: string; question: string; answer: string }>;
+    areas_seo?: AreaSEO | null;
   };
 }

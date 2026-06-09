@@ -5,19 +5,15 @@
  */
 
 import type { PaginationFilters, SearchFilters, TiptapContent } from './shared';
+import type { Tables } from './db/supabase-generated';
 
-export interface Page {
-  id: string;
-  title: string;
-  slug: string;
+type PageRow = Tables<'pages'>;
+export type PageSEO = Tables<'pages_seo'>;
+
+export type Page = Omit<PageRow, 'content'> & {
   content: PageContent;
-  excerpt?: string | null;
-  meta_title?: string | null;
-  meta_description?: string | null;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
-}
+  pages_seo?: PageSEO | null;
+};
 
 export type PageContent = TiptapContent;
 

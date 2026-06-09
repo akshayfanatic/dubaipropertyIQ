@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
@@ -37,6 +38,50 @@ const developerSectionClasses = {
   title: 'text-[clamp(1.75rem,3.2vw,2.75rem)] leading-tight',
   description: 'mx-auto max-w-[500px] font-medium',
 };
+
+export async function generateMetadata({ params }: DeveloperLayoutProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: developer, success } = await getDeveloperBySlug(slug);
+
+  if (!success || !developer) {
+    return {
+      title: 'Developer Not Found',
+    };
+  }
+
+  const seo = developer.developers_seo;
+  const logoUrl = typeof developer.logo_url === 'string' ? developer.logo_url : (developer.logo_url as ImageObject | null)?.url;
+  const title = seo?.meta_title || `${developer.name} Properties & Projects in Dubai`;
+  const description = seo?.meta_description || developer.description || `Browse Dubai properties and projects by ${developer.name}.`;
+  const image = seo?.og_image_url || logoUrl;
+  const canonical = seo?.canonical_url || `/developers/${developer.slug}`;
+  const keywords = seo?.keywords
+    ?.split(',')
+    .map((keyword) => keyword.trim())
+    .filter(Boolean);
+
+  return {
+    title,
+    description,
+    keywords: keywords?.length ? keywords : undefined,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      images: image ? [{ url: image }] : undefined,
+      type: 'website',
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 export default async function DeveloperLayout({ children, params }: DeveloperLayoutProps) {
   const { slug } = await params;

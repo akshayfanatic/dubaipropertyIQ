@@ -84,14 +84,6 @@ export function generateAmortizationSchedule(inputs: MortgageInputs): Amortizati
   return schedule;
 }
 
-export function formatAED(amount: number): string {
-  return new Intl.NumberFormat('en-AE', {
-    style: 'currency',
-    currency: 'AED',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
 export function formatNumber(num: number): string {
   return new Intl.NumberFormat('en-AE').format(num);
 }

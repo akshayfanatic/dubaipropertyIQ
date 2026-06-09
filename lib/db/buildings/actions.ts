@@ -7,8 +7,8 @@
 import { revalidatePath } from 'next/cache';
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { buildingInsertSchema, buildingUpdateSchema, type BuildingInsertData, type BuildingUpdateData } from '@/lib/validations/building';
-import type { Building } from '@/types/building';
+import { buildingInsertSchema, buildingUpdateSchema, type BuildingInsertData, type BuildingSEOFormData, type BuildingUpdateData } from '@/lib/validations/building';
+import type { Building, BuildingSEO } from '@/types/building';
 
 const revalidateBuildingPaths = () => {
   revalidatePath('/dashboard/admin/buildings');
@@ -110,6 +110,56 @@ export async function updateBuilding(id: string, updates: BuildingUpdateData) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update building';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save building SEO metadata.
+ * Upserts by building_id because each building has one SEO record.
+ */
+export async function saveBuildingSEO(buildingId: string, seo: BuildingSEOFormData) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase
+      .from('buildings_seo')
+      .upsert(
+        {
+          building_id: buildingId,
+          ...seo,
+        },
+        { onConflict: 'building_id' },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPSERT_ERROR' },
+      });
+    }
+
+    revalidateBuildingPaths();
+    revalidatePath('/dashboard/admin/buildings/[id]');
+    revalidatePath('/areas/[city]/[area]/[building]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Building SEO saved successfully',
+      data: data as BuildingSEO,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save building SEO';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

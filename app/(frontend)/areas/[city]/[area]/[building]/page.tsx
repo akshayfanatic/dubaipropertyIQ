@@ -33,17 +33,36 @@ export async function generateMetadata({ params }: BuildingDetailPageProps): Pro
   if (!response.success || !response.data) return {};
 
   const buildingDetail = response.data;
-  const title = `${buildingDetail.name}, ${buildingDetail.area?.name ?? 'UAE'} Building Report`;
-  const description = buildingDetail.description || `Review ${buildingDetail.name} pricing, yields, amenities, and investment context.`;
+  const seo = buildingDetail.buildings_seo;
+  const title = seo?.meta_title || `${buildingDetail.name}, ${buildingDetail.area?.name ?? 'UAE'} Building Report`;
+  const description = seo?.meta_description || buildingDetail.description || `Review ${buildingDetail.name} pricing, yields, amenities, and investment context.`;
   const image = buildingDetail.photos?.[0];
+  const imageUrl = seo?.og_image_url || image?.url;
+  const canonical = seo?.canonical_url || `/areas/${city}/${area}/${building}`;
+  const keywords = seo?.keywords
+    ?.split(',')
+    .map((keyword) => keyword.trim())
+    .filter(Boolean);
 
   return {
     title,
     description,
+    keywords: keywords?.length ? keywords : undefined,
+    alternates: {
+      canonical,
+    },
     openGraph: {
       title,
       description,
-      images: image ? [{ url: image.url, alt: image.alt_tag || buildingDetail.name }] : undefined,
+      url: canonical,
+      images: imageUrl ? [{ url: imageUrl, alt: image?.alt_tag || buildingDetail.name }] : undefined,
+      type: 'website',
+    },
+    twitter: {
+      card: imageUrl ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   };
 }

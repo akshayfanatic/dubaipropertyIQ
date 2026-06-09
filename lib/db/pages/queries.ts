@@ -9,6 +9,13 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Page, PageFilters } from '@/types/page';
 import type { PaginatedResult } from '@/types/shared';
 
+const PAGE_SELECT = '*, pages_seo(*)';
+
+const normalizePage = (data: { pages_seo?: unknown } & Record<string, unknown>) => ({
+  ...data,
+  pages_seo: Array.isArray(data.pages_seo) ? (data.pages_seo[0] ?? null) : (data.pages_seo ?? null),
+});
+
 /**
  * Get all pages with optional search and pagination
  * - No pageSize → returns all pages (no pagination limit)
@@ -22,7 +29,7 @@ export async function getPagesAdmin(filters?: PageFilters): Promise<ApiResponse<
     const pageSize = filters?.pageSize;
     const from = pageSize ? (page - 1) * pageSize : 0;
 
-    let query = supabase.from('pages').select('*', { count: 'exact' });
+    let query = supabase.from('pages').select(PAGE_SELECT, { count: 'exact' });
 
     // Apply search filter
     if (filters?.search) {
@@ -52,7 +59,7 @@ export async function getPagesAdmin(filters?: PageFilters): Promise<ApiResponse<
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<Page> = {
-      data: (data as Page[]) ?? [],
+      data: ((data ?? []).map((page) => normalizePage(page)) as Page[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,
@@ -83,7 +90,7 @@ export async function getPublishedPages(): Promise<ApiResponse<Page[]>> {
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('pages').select('*').eq('is_published', true).order('title', { ascending: true });
+    const { data, error } = await supabase.from('pages').select(PAGE_SELECT).eq('is_published', true).order('title', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -98,7 +105,7 @@ export async function getPublishedPages(): Promise<ApiResponse<Page[]>> {
       success: true,
       status: HttpStatus.OK,
       message: 'Published pages fetched successfully',
-      data: data as Page[],
+      data: (data ?? []).map((page) => normalizePage(page)) as Page[],
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch published pages';
@@ -118,7 +125,7 @@ export async function getPageById(id: string): Promise<ApiResponse<Page | null>>
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('pages').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('pages').select(PAGE_SELECT).eq('id', id).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -141,7 +148,7 @@ export async function getPageById(id: string): Promise<ApiResponse<Page | null>>
       success: true,
       status: HttpStatus.OK,
       message: 'Page fetched successfully',
-      data: data as Page,
+      data: normalizePage(data) as Page,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch page';
@@ -161,7 +168,7 @@ export async function getPageBySlug(slug: string): Promise<ApiResponse<Page | nu
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('pages').select('*').eq('slug', slug).eq('is_published', true).single();
+    const { data, error } = await supabase.from('pages').select(PAGE_SELECT).eq('slug', slug).eq('is_published', true).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -184,7 +191,7 @@ export async function getPageBySlug(slug: string): Promise<ApiResponse<Page | nu
       success: true,
       status: HttpStatus.OK,
       message: 'Page fetched successfully',
-      data: data as Page,
+      data: normalizePage(data) as Page,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch page';

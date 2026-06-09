@@ -249,17 +249,6 @@ export function getPaymentBreakdown(comparison: ComparisonResult): {
 }
 
 /**
- * Format currency in AED
- */
-export function formatAED(amount: number): string {
-  return new Intl.NumberFormat('en-AE', {
-    style: 'currency',
-    currency: 'AED',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-/**
  * Format number with commas
  */
 export function formatNumber(amount: number): string {

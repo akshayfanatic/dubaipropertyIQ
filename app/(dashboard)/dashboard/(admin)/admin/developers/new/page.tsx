@@ -12,9 +12,7 @@ export default function NewDeveloperPage() {
     <div className="space-y-6">
       <PageHeader title="Add New Developer" description="Create a new property developer" showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <DeveloperForm />
-      </div>
+      <DeveloperForm />
     </div>
   );
 }

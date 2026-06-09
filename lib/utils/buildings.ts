@@ -32,5 +32,6 @@ export function normalizeBuildingWithRelations(data: Record<string, unknown>): B
     area: firstOrValue(data.area as BuildingWithRelations['area'] | BuildingWithRelations['area'][] | null),
     city: firstOrValue(data.city as BuildingWithRelations['city'] | BuildingWithRelations['city'][] | null),
     developer: firstOrValue(data.developer as BuildingWithRelations['developer'] | BuildingWithRelations['developer'][] | null),
+    buildings_seo: firstOrValue(data.buildings_seo as BuildingWithRelations['buildings_seo'] | BuildingWithRelations['buildings_seo'][] | null),
   };
 }

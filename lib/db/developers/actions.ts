@@ -6,7 +6,8 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { Developer, DeveloperInsert, DeveloperUpdate } from '@/types/developer';
+import { Developer, DeveloperInsert, DeveloperSEO, DeveloperUpdate } from '@/types/developer';
+import type { DeveloperSEOFormData } from '@/lib/validations/developer';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -102,6 +103,56 @@ export async function updateDeveloper(id: string, updates: DeveloperUpdate) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update developer';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save developer SEO metadata.
+ * Upserts by developer_id because each developer has one SEO record.
+ */
+export async function saveDeveloperSEO(developerId: string, seo: DeveloperSEOFormData) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase
+      .from('developers_seo')
+      .upsert(
+        {
+          developer_id: developerId,
+          ...seo,
+        },
+        { onConflict: 'developer_id' },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPSERT_ERROR' },
+      });
+    }
+
+    revalidatePath('/dashboard/admin/developers');
+    revalidatePath('/dashboard/admin/developers/[id]');
+    revalidatePath('/developers/[slug]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Developer SEO saved successfully',
+      data: data as DeveloperSEO,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save developer SEO';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

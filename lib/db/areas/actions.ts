@@ -6,8 +6,8 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { Area } from '@/types/areas';
-import { AreaInsertData, AreaUpdateData } from '@/lib/validations/area';
+import { Area, AreaSEO } from '@/types/areas';
+import { AreaInsertData, AreaSEOFormData, AreaUpdateData } from '@/lib/validations/area';
 
 import { revalidatePath } from 'next/cache';
 
@@ -106,6 +106,56 @@ export async function updateArea(id: string, updates: AreaUpdate) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update area';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save area SEO metadata.
+ * Upserts by area_id because each area has one SEO record.
+ */
+export async function saveAreaSEO(areaId: string, seo: AreaSEOFormData) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase
+      .from('areas_seo')
+      .upsert(
+        {
+          area_id: areaId,
+          ...seo,
+        },
+        { onConflict: 'area_id' },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPSERT_ERROR' },
+      });
+    }
+
+    revalidatePath('/dashboard/admin/areas');
+    revalidatePath('/dashboard/admin/areas/[id]');
+    revalidatePath('/areas/[city]/[area]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Area SEO saved successfully',
+      data: data as AreaSEO,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save area SEO';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

@@ -14,14 +14,27 @@ import { revalidatePath } from 'next/cache';
 export type BlogInsertAction = BlogInsertData;
 export type BlogUpdateAction = BlogUpdateData;
 
+function splitBlogSEO<T extends BlogInsertAction | BlogUpdateAction>(blog: T) {
+  const { meta_title, meta_description, ...blogData } = blog;
+
+  return {
+    blogData,
+    seoData: {
+      meta_title: meta_title || null,
+      meta_description: meta_description || null,
+    },
+  };
+}
+
 /**
  * Create a new blog
  */
 export async function createBlog(blog: BlogInsertAction) {
   try {
     const supabase = adminClient();
+    const { blogData, seoData } = splitBlogSEO(blog);
 
-    const { data, error } = await supabase.from('blogs').insert(blog).select().single();
+    const { data, error } = await supabase.from('blogs').insert(blogData).select().single();
 
     if (error) {
       return ApiResponse({
@@ -29,6 +42,23 @@ export async function createBlog(blog: BlogInsertAction) {
         status: HttpStatus.INTERNAL_ERROR,
         message: error.message,
         error: { code: error.code || 'CREATE_ERROR' },
+      });
+    }
+
+    const { error: seoError } = await supabase.from('blogs_seo').upsert(
+      {
+        blog_id: data.id,
+        ...seoData,
+      },
+      { onConflict: 'blog_id' },
+    );
+
+    if (seoError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: seoError.message,
+        error: { code: seoError.code || 'SEO_UPSERT_ERROR' },
       });
     }
 
@@ -59,8 +89,9 @@ export async function createBlog(blog: BlogInsertAction) {
 export async function updateBlog(id: string, updates: BlogUpdateAction) {
   try {
     const supabase = adminClient();
+    const { blogData, seoData } = splitBlogSEO(updates);
 
-    const { data, error } = await supabase.from('blogs').update(updates).eq('id', id).select().single();
+    const { data, error } = await supabase.from('blogs').update(blogData).eq('id', id).select().single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -76,6 +107,23 @@ export async function updateBlog(id: string, updates: BlogUpdateAction) {
         status: HttpStatus.INTERNAL_ERROR,
         message: error.message,
         error: { code: error.code || 'UPDATE_ERROR' },
+      });
+    }
+
+    const { error: seoError } = await supabase.from('blogs_seo').upsert(
+      {
+        blog_id: id,
+        ...seoData,
+      },
+      { onConflict: 'blog_id' },
+    );
+
+    if (seoError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: seoError.message,
+        error: { code: seoError.code || 'SEO_UPSERT_ERROR' },
       });
     }
 

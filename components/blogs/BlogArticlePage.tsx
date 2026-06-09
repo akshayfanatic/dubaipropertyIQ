@@ -3,7 +3,7 @@ import { ArrowRight, CalendarDays, Clock3, Mail, UserRound } from 'lucide-react'
 
 import { BlogContentRenderer } from '@/components/blogs/BlogContent';
 import { BlogGuidesSection } from '@/components/home/BlogGuidesSection';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { cn } from '@/lib/utils';
 import type { Blog } from '@/types/blog';

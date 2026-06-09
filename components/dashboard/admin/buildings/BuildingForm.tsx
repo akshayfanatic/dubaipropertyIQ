@@ -29,6 +29,10 @@ const BuildingProsCons = dynamic(() => import('./tabs/BuildingProsCons'), {
   loading: () => <FormSkelton fields={2} showPageHeader={false} showSubmitButton={false} />,
 });
 
+const BuildingSEO = dynamic(() => import('./tabs/BuildingSEO'), {
+  loading: () => <FormSkelton fields={5} showPageHeader={false} showSubmitButton />,
+});
+
 export function BuildingForm({ building }: BuildingFormProps) {
   const buildingId = building?.id;
 
@@ -94,6 +98,11 @@ export function BuildingForm({ building }: BuildingFormProps) {
       value: 'pros-cons',
       label: 'Pros & Cons',
       content: <BuildingProsCons buildingId={buildingId} pros={building?.pros} cons={building?.cons} />,
+    },
+    {
+      value: 'seo',
+      label: 'SEO',
+      content: <BuildingSEO buildingId={buildingId} seo={building?.buildings_seo} />,
     },
   ] as const;
 

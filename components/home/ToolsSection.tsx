@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, BarChart3, Calculator, Clock3, FileText, Home, ShieldCheck, TrendingUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/price';
 
 type ToolItem = {
   title: string;
@@ -51,10 +52,6 @@ const tools: ToolItem[] = [
     icon: BarChart3,
   },
 ];
-
-function formatAed(value: number) {
-  return `AED ${new Intl.NumberFormat('en-AE').format(value)}`;
-}
 
 function ToolLink({ tool, index }: { tool: ToolItem; index: number }) {
   const Icon = tool.icon;
@@ -120,7 +117,7 @@ export function ToolsSection() {
             <div>
               <label htmlFor="purchase-price" className="flex justify-between gap-3 text-xs font-bold text-primary-foreground/78">
                 <span>Purchase price</span>
-                <b className="font-bold text-primary-foreground">{formatAed(purchasePrice)}</b>
+                <b className="font-bold text-primary-foreground">{formatPrice(purchasePrice)}</b>
               </label>
               <input
                 id="purchase-price"
@@ -137,7 +134,7 @@ export function ToolsSection() {
             <div>
               <label htmlFor="annual-rent" className="flex justify-between gap-3 text-xs font-bold text-primary-foreground/78">
                 <span>Expected annual rent</span>
-                <b className="font-bold text-primary-foreground">{formatAed(annualRent)}</b>
+                <b className="font-bold text-primary-foreground">{formatPrice(annualRent)}</b>
               </label>
               <input
                 id="annual-rent"
@@ -159,7 +156,7 @@ export function ToolsSection() {
             </div>
             <div className="card-entrance rounded-xl border border-primary-foreground/14 bg-primary-foreground/8 p-4" style={{ animationDelay: `${tools.length * 90 + 180}ms` }}>
               <span className="block text-xs text-primary-foreground/66">Monthly income</span>
-              <b className="mt-1 block text-xl font-extrabold tabular-nums text-primary-foreground">{formatAed(Math.round(monthlyIncome))}</b>
+              <b className="mt-1 block text-xl font-extrabold tabular-nums text-primary-foreground">{formatPrice(Math.round(monthlyIncome))}</b>
             </div>
           </div>
 

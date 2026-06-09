@@ -12,9 +12,7 @@ export default function NewCityPage() {
     <div className="space-y-6">
       <PageHeader title="Add New City" description="Create a new city" showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <CityForm />
-      </div>
+      <CityForm />
     </div>
   );
 }

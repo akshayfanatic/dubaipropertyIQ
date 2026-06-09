@@ -61,7 +61,7 @@ export function ImageWithFallback({
         </div>
       );
     }
-    return <img src={svgFallback} alt={alt} width={width} height={height} className={cn('object-cover', className)} style={fill ? style : { ...style, width, height }} />;
+    return <Image src={svgFallback} alt={alt} width={width} height={height} className={cn('object-cover', className)} style={fill ? style : { ...style, width, height }} />;
   }
 
   if (fill) {

@@ -22,6 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   await requireAuth();
 
   const supabase = await serverClient();
+  await requireAuth();
   const {
     data: { user },
   } = await supabase.auth.getUser();

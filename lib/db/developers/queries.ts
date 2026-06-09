@@ -10,6 +10,11 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Developer, DeveloperFilters, DeveloperOption } from '@/types/developer';
 import type { PaginatedResult } from '@/types/shared';
 
+const normalizeDeveloper = (data: { developers_seo?: unknown } & Record<string, unknown>) => ({
+  ...data,
+  developers_seo: Array.isArray(data.developers_seo) ? (data.developers_seo[0] ?? null) : (data.developers_seo ?? null),
+});
+
 /**
  * Get developers with optional search and pagination
  */
@@ -20,7 +25,7 @@ export async function getDevelopersAdmin(filters?: DeveloperFilters): Promise<Ap
     const pageSize = filters?.pageSize || 10;
     const from = (page - 1) * pageSize;
 
-    let query = supabase.from('developers').select('*', { count: 'exact' });
+    let query = supabase.from('developers').select('*, developers_seo(*)', { count: 'exact' });
 
     // Apply search filter
     if (filters?.search) {
@@ -46,7 +51,7 @@ export async function getDevelopersAdmin(filters?: DeveloperFilters): Promise<Ap
     }
 
     const result: PaginatedResult<Developer> = {
-      data: (data as Developer[]) ?? [],
+      data: ((data ?? []).map((developer) => normalizeDeveloper(developer)) as Developer[]) ?? [],
       total: count || 0,
       page,
       pageSize,
@@ -77,7 +82,7 @@ export async function getDeveloperById(id: string): Promise<ApiResponse<Develope
   try {
     const supabase = await serverClient();
 
-    const { data, error } = await supabase.from('developers').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('developers').select('*, developers_seo(*)').eq('id', id).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -100,7 +105,7 @@ export async function getDeveloperById(id: string): Promise<ApiResponse<Develope
       success: true,
       status: HttpStatus.OK,
       message: 'Developer fetched successfully',
-      data: data as Developer,
+      data: normalizeDeveloper(data) as Developer,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch developer';
@@ -120,7 +125,7 @@ export async function getDeveloperBySlug(slug: string): Promise<ApiResponse<Deve
   try {
     const supabase = await serverClient();
 
-    const { data, error } = await supabase.from('developers').select('*').eq('slug', slug).single();
+    const { data, error } = await supabase.from('developers').select('*, developers_seo(*)').eq('slug', slug).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -143,7 +148,7 @@ export async function getDeveloperBySlug(slug: string): Promise<ApiResponse<Deve
       success: true,
       status: HttpStatus.OK,
       message: 'Developer fetched successfully',
-      data: data as Developer,
+      data: normalizeDeveloper(data) as Developer,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch developer';
@@ -201,7 +206,7 @@ export async function getDevelopers(): Promise<ApiResponse<Developer[]>> {
   try {
     const supabase = await serverClient();
 
-    const { data, error } = await supabase.from('developers').select('*').order('name', { ascending: true });
+    const { data, error } = await supabase.from('developers').select('*, developers_seo(*)').order('name', { ascending: true });
 
     if (error) {
       return ApiResponse({
@@ -216,7 +221,7 @@ export async function getDevelopers(): Promise<ApiResponse<Developer[]>> {
       success: true,
       status: HttpStatus.OK,
       message: 'Developers fetched successfully',
-      data: (data as Developer[]) ?? [],
+      data: ((data ?? []).map((developer) => normalizeDeveloper(developer)) as Developer[]) ?? [],
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch developers';
