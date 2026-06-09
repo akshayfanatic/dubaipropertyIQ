@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/price';
 
 const AED_TWO_MILLION = 2_000_000;
 
@@ -49,14 +50,6 @@ function parseAmount(value: string) {
   return amount;
 }
 
-function formatAed(value: number) {
-  return new Intl.NumberFormat('en-AE', {
-    style: 'currency',
-    currency: 'AED',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
 function assessEligibility(propertyValue: number, ownershipPercent: number, propertyStatus: PropertyStatus, financeStatus: FinanceStatus): ResultState {
   const ownedValue = propertyValue * (ownershipPercent / 100);
   const valueShortfall = AED_TWO_MILLION - ownedValue;
@@ -66,9 +59,9 @@ function assessEligibility(propertyValue: number, ownershipPercent: number, prop
     return {
       label: 'Not eligible yet',
       tone: 'notEligible',
-      summary: `Owned value is ${formatAed(ownedValue)}, below the AED 2M property route threshold.`,
+      summary: `Owned value is ${formatPrice(ownedValue)}, below the AED 2M property route threshold.`,
       reasons: [
-        `${formatAed(valueShortfall)} more owned property value is needed to reach AED 2M.`,
+        `${formatPrice(valueShortfall)} more owned property value is needed to reach AED 2M.`,
         ownershipPercent < 100 ? 'Joint ownership can reduce the applicant-owned value used for review.' : 'The entered property value is below the common threshold.',
       ],
       nextSteps: ['Increase the qualifying property value or combine eligible properties under the applicant name.', 'Request a review before relying on valuation or joint ownership assumptions.'],
@@ -79,7 +72,7 @@ function assessEligibility(propertyValue: number, ownershipPercent: number, prop
     return {
       label: 'May be eligible',
       tone: 'review',
-      summary: `Owned value reaches ${formatAed(ownedValue)}, but documents need review before applying.`,
+      summary: `Owned value reaches ${formatPrice(ownedValue)}, but documents need review before applying.`,
       reasons: [
         propertyStatus === 'off_plan' ? 'Off-plan properties usually need payment and project documentation checks.' : 'Ready property route looks stronger from a documentation angle.',
         financeStatus === 'mortgaged' ? 'Mortgaged property usually needs bank/NOC and ownership evidence review.' : 'Payment position must be clear in the application file.',
@@ -92,7 +85,7 @@ function assessEligibility(propertyValue: number, ownershipPercent: number, prop
   return {
     label: 'Likely eligible',
     tone: 'eligible',
-    summary: `Owned value reaches ${formatAed(ownedValue)} with a ready, fully paid property profile.`,
+    summary: `Owned value reaches ${formatPrice(ownedValue)} with a ready, fully paid property profile.`,
     reasons: ['Owned property value meets or exceeds AED 2M.', 'Ready and fully paid property profile is simpler to document.'],
     nextSteps: ['Prepare passport copy, property proof, payment evidence, and medical insurance.', 'Confirm current authority requirements before submission.'],
   };
@@ -173,10 +166,10 @@ export function GoldenVisaEligibilityChecker() {
 
           <div className="mt-4 grid gap-3 rounded-lg border border-border bg-background p-4 text-sm leading-6 text-muted-foreground sm:grid-cols-2">
             <p id="property-value-help">
-              Entered property value: <span className="font-semibold text-foreground">{formatAed(propertyValue)}</span>
+              Entered property value: <span className="font-semibold text-foreground">{formatPrice(propertyValue)}</span>
             </p>
             <p id="ownership-help">
-              Applicant-owned value: <span className="font-semibold text-foreground">{formatAed(ownedValue)}</span>
+              Applicant-owned value: <span className="font-semibold text-foreground">{formatPrice(ownedValue)}</span>
             </p>
           </div>
         </div>

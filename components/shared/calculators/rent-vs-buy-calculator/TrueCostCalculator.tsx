@@ -9,13 +9,13 @@ import { Slider } from '@/components/ui/slider';
 import { CalculatorCard, CalculatorField } from '@/components/shared/calculators/CalculatorCard';
 import { CalculatorReportLeadForm } from '@/components/leads/CalculatorReportLeadForm';
 import { TrueCostReportPdfDownload, type TrueCostReportData } from '@/components/shared/calculators/rent-vs-buy-calculator/TrueCostReportPdf';
-import { calculateComparison, formatAED, formatNumber } from '@/components/shared/calculators/rent-vs-buy-calculator/calculator';
+import { calculateComparison, formatNumber, getPaymentBreakdown } from '@/components/shared/calculators/rent-vs-buy-calculator/calculator';
 import { DUBAI_FEES } from '@/components/shared/calculators/rent-vs-buy-calculator/constants';
 import { calculatorSchema, validateDownPayment, type CalculatorFormData } from '@/components/shared/calculators/rent-vs-buy-calculator/validation';
-import { getPaymentBreakdown } from '@/components/shared/calculators/rent-vs-buy-calculator/calculator';
 import type { ResidencyStatus } from '@/components/shared/calculators/rent-vs-buy-calculator/types';
 import type { CityWithAreaCount } from '@/types/city';
 import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/price';
 import { BarChart3, Home, LockKeyhole, TrendingDown } from 'lucide-react';
 
 interface TrueCostCalculatorProps {
@@ -154,27 +154,27 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
   const downPaymentAmount = ((purchasePrice ?? 1_200_000) * (downPaymentPercent ?? 20)) / 100;
   const tenYearRoi = comparison.roi.find((item) => item.years === 10) ?? comparison.roi[comparison.roi.length - 1];
   const reportContext = [
-    `Purchase price: ${formatAED(purchasePrice ?? 0)}`,
-    `Annual rent: ${formatAED(annualRent ?? 0)}`,
-    `Annual rental income: ${formatAED(annualRentalIncome ?? 0)}`,
-    `Service charge: ${formatAED(comparison.buy.annualServiceCharges)}/year`,
-    `Insurance: ${formatAED(comparison.buy.annualInsurance)}/year`,
-    `Maintenance reserve: ${formatAED(comparison.buy.annualMaintenanceReserve)}/year`,
+    `Purchase price: ${formatPrice(purchasePrice ?? 0)}`,
+    `Annual rent: ${formatPrice(annualRent ?? 0)}`,
+    `Annual rental income: ${formatPrice(annualRentalIncome ?? 0)}`,
+    `Service charge: ${formatPrice(comparison.buy.annualServiceCharges)}/year`,
+    `Insurance: ${formatPrice(comparison.buy.annualInsurance)}/year`,
+    `Maintenance reserve: ${formatPrice(comparison.buy.annualMaintenanceReserve)}/year`,
     `10-year ROI: ${tenYearRoi.roiPercent.toFixed(1)}%`,
   ].join('\n');
   const reportData: TrueCostReportData = {
-    purchasePrice: formatAED(purchasePrice ?? 0),
-    annualRent: formatAED(annualRent ?? 0),
-    annualRentalIncome: formatAED(annualRentalIncome ?? 0),
-    serviceCharge: `${formatAED(comparison.buy.annualServiceCharges)}/year`,
-    insurance: `${formatAED(comparison.buy.annualInsurance)}/year`,
-    maintenanceReserve: `${formatAED(comparison.buy.annualMaintenanceReserve)}/year`,
+    purchasePrice: formatPrice(purchasePrice ?? 0),
+    annualRent: formatPrice(annualRent ?? 0),
+    annualRentalIncome: formatPrice(annualRentalIncome ?? 0),
+    serviceCharge: `${formatPrice(comparison.buy.annualServiceCharges)}/year`,
+    insurance: `${formatPrice(comparison.buy.annualInsurance)}/year`,
+    maintenanceReserve: `${formatPrice(comparison.buy.annualMaintenanceReserve)}/year`,
     tenYearRoi: `${tenYearRoi.roiPercent.toFixed(1)}%`,
-    tenYearGrossRentalIncome: formatAED(tenYearRoi.grossRentalIncome),
+    tenYearGrossRentalIncome: formatPrice(tenYearRoi.grossRentalIncome),
     rows: comparison.roi.map((item) => ({
       years: item.years,
-      netRentalIncome: formatAED(item.netRentalIncome),
-      estimatedPropertyValue: formatAED(item.estimatedPropertyValue),
+      netRentalIncome: formatPrice(item.netRentalIncome),
+      estimatedPropertyValue: formatPrice(item.estimatedPropertyValue),
       roiPercent: `${item.roiPercent.toFixed(1)}%`,
     })),
   };
@@ -302,7 +302,7 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
                   <span>25 years</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-3">
-                  Monthly payment: <span className="font-medium text-foreground">{formatAED(comparison.buy.monthlyMortgage)}</span>
+                  Monthly payment: <span className="font-medium text-foreground">{formatPrice(comparison.buy.monthlyMortgage)}</span>
                 </p>
               </>
             }
@@ -388,7 +388,7 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
             )}
           </div>
           <p className="text-xs text-muted-foreground mb-1">{buyingIsBetter ? 'Save by buying' : 'Renting wins'}</p>
-          <p className="text-3xl font-bold text-foreground mb-1">{formatAED(Math.abs(comparison.savedIfBuying))}</p>
+          <p className="text-3xl font-bold text-foreground mb-1">{formatPrice(Math.abs(comparison.savedIfBuying))}</p>
           <p className="text-xs text-muted-foreground">over {comparison.years} years</p>
         </div>
 
@@ -396,11 +396,11 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
         <div className="grid grid-cols-2 gap-3">
           <div className={cn('p-4 rounded-xl border transition-all duration-300', buyingIsBetter ? 'border-primary/30 bg-primary/5' : 'border-border bg-card')}>
             <p className="text-xs text-muted-foreground mb-1">Saved if buy</p>
-            <p className="text-xl font-bold text-foreground">{formatAED(Math.max(0, comparison.savedIfBuying))}</p>
+            <p className="text-xl font-bold text-foreground">{formatPrice(Math.max(0, comparison.savedIfBuying))}</p>
           </div>
           <div className={cn('p-4 rounded-xl border transition-all duration-300', rentIsBetter ? 'border-chart-4/30 bg-chart-4/5' : 'border-border bg-card')}>
             <p className="text-xs text-muted-foreground mb-1">Lost if rent</p>
-            <p className={cn('text-xl font-bold', comparison.savedIfBuying < 0 ? 'text-destructive' : 'text-foreground')}>{formatAED(Math.abs(Math.min(0, comparison.savedIfBuying)))}</p>
+            <p className={cn('text-xl font-bold', comparison.savedIfBuying < 0 ? 'text-destructive' : 'text-foreground')}>{formatPrice(Math.abs(Math.min(0, comparison.savedIfBuying)))}</p>
           </div>
         </div>
 
@@ -430,7 +430,7 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
             </div>
             <div className="rounded-lg bg-muted/45 p-3">
               <p className="text-xs text-muted-foreground">10y profit</p>
-              <p className={cn('mt-1 text-lg font-bold', tenYearRoi.netProfit >= 0 ? 'text-primary' : 'text-destructive')}>{formatAED(tenYearRoi.netProfit)}</p>
+              <p className={cn('mt-1 text-lg font-bold', tenYearRoi.netProfit >= 0 ? 'text-primary' : 'text-destructive')}>{formatPrice(tenYearRoi.netProfit)}</p>
             </div>
           </div>
         </div>
@@ -471,28 +471,28 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
               <tbody>
                 <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Initial</td>
-                  <td className="text-center py-2 px-2">{formatAED(breakdown.rent.initialPayments)}</td>
-                  <td className="text-center py-2 px-2">{formatAED(breakdown.buy.initialPayments)}</td>
+                  <td className="text-center py-2 px-2">{formatPrice(breakdown.rent.initialPayments)}</td>
+                  <td className="text-center py-2 px-2">{formatPrice(breakdown.buy.initialPayments)}</td>
                 </tr>
                 <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Recurring</td>
-                  <td className="text-center py-2 px-2">{formatAED(breakdown.rent.recurringPayments)}</td>
-                  <td className="text-center py-2 px-2">{formatAED(breakdown.buy.recurringPayments)}</td>
+                  <td className="text-center py-2 px-2">{formatPrice(breakdown.rent.recurringPayments)}</td>
+                  <td className="text-center py-2 px-2">{formatPrice(breakdown.buy.recurringPayments)}</td>
                 </tr>
                 <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Service charges</td>
                   <td className="text-center py-2 px-2 text-muted-foreground">—</td>
-                  <td className="text-center py-2 px-2">{formatAED(comparison.buy.annualServiceCharges)}/yr</td>
+                  <td className="text-center py-2 px-2">{formatPrice(comparison.buy.annualServiceCharges)}/yr</td>
                 </tr>
                 <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Insurance + maintenance</td>
                   <td className="text-center py-2 px-2 text-muted-foreground">—</td>
-                  <td className="text-center py-2 px-2">{formatAED(comparison.buy.annualInsurance + comparison.buy.annualMaintenanceReserve)}/yr</td>
+                  <td className="text-center py-2 px-2">{formatPrice(comparison.buy.annualInsurance + comparison.buy.annualMaintenanceReserve)}/yr</td>
                 </tr>
                 <tr className="border-b border-border/50">
                   <td className="py-2 px-3 text-muted-foreground">Net sale</td>
                   <td className="text-center py-2 px-2 text-muted-foreground">—</td>
-                  <td className="text-center py-2 px-2 text-emerald-600">+{formatAED(breakdown.buy.netSalePrice)}</td>
+                  <td className="text-center py-2 px-2 text-emerald-600">+{formatPrice(breakdown.buy.netSalePrice)}</td>
                 </tr>
                 <tr className={cn('border-b-2', buyingIsBetter ? 'border-primary/30 bg-primary/5' : 'border-chart-4/30 bg-chart-4/5')}>
                   <td className="py-2 px-3"></td>
@@ -501,8 +501,8 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
                 </tr>
                 <tr>
                   <td className="py-3 px-3 font-bold text-foreground">Net cost</td>
-                  <td className={cn('text-center py-3 px-2 font-bold', rentIsBetter ? 'text-chart-4' : 'text-foreground')}>{formatAED(breakdown.rent.netCost)}</td>
-                  <td className={cn('text-center py-3 px-2 font-bold', buyingIsBetter ? 'text-primary' : 'text-foreground')}>{formatAED(breakdown.buy.netCost)}</td>
+                  <td className={cn('text-center py-3 px-2 font-bold', rentIsBetter ? 'text-chart-4' : 'text-foreground')}>{formatPrice(breakdown.rent.netCost)}</td>
+                  <td className={cn('text-center py-3 px-2 font-bold', buyingIsBetter ? 'text-primary' : 'text-foreground')}>{formatPrice(breakdown.buy.netCost)}</td>
                 </tr>
               </tbody>
             </table>
@@ -538,8 +538,8 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
                     {comparison.roi.map((item) => (
                       <tr key={item.years} className="border-t border-border/70">
                         <td className="px-3 py-2 font-semibold text-foreground">{item.years}y</td>
-                        <td className="px-2 py-2 text-right text-muted-foreground">{formatAED(item.netRentalIncome)}</td>
-                        <td className="px-2 py-2 text-right text-muted-foreground">{formatAED(item.estimatedPropertyValue)}</td>
+                        <td className="px-2 py-2 text-right text-muted-foreground">{formatPrice(item.netRentalIncome)}</td>
+                        <td className="px-2 py-2 text-right text-muted-foreground">{formatPrice(item.estimatedPropertyValue)}</td>
                         <td className={cn('px-2 py-2 text-right font-bold', item.roiPercent >= 0 ? 'text-primary' : 'text-destructive')}>{item.roiPercent.toFixed(1)}%</td>
                       </tr>
                     ))}
@@ -547,7 +547,7 @@ export function TrueCostCalculator({ initialRent, initialPrice }: TrueCostCalcul
                 </table>
                 <div className="grid gap-2 border-t border-border bg-muted/35 p-3 text-xs leading-5 text-muted-foreground">
                   <p className="font-bold text-foreground">
-                    Gross rental income: {formatAED(tenYearRoi.grossRentalIncome)} over {tenYearRoi.years} years
+                    Gross rental income: {formatPrice(tenYearRoi.grossRentalIncome)} over {tenYearRoi.years} years
                   </p>
                   <p>Net rental income deducts vacancy, management, service charges, insurance, and maintenance reserve. ROI uses upfront purchase costs as the capital base.</p>
                   <TrueCostReportPdfDownload data={reportData} />

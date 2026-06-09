@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { CalculatorCard } from '@/components/shared/calculators/CalculatorCard';
 import { CalculatorReportLeadForm } from '@/components/leads/CalculatorReportLeadForm';
-import { calculateMortgage, generateAmortizationSchedule, formatAED, formatNumber } from '@/components/shared/calculators/mortgage-calculator/calculator';
+import { calculateMortgage, generateAmortizationSchedule, formatNumber } from '@/components/shared/calculators/mortgage-calculator/calculator';
 import { MORTGAGE_CONSTANTS } from '@/components/shared/calculators/mortgage-calculator/constants';
 import { mortgageSchema, type MortgageFormData } from '@/components/shared/calculators/mortgage-calculator/validation';
 import { MortgageReportPdfDownload, type MortgageReportData } from '@/components/shared/calculators/mortgage-calculator/MortgageReportPdf';
 import type { CityWithAreaCount } from '@/types/city';
 import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/price';
 import { Calculator, LockKeyhole } from 'lucide-react';
 
 interface MortgageCalculatorProps {
@@ -69,20 +70,20 @@ export function MortgageCalculator({ initialValue }: MortgageCalculatorProps) {
 
   const downPaymentAmount = ((propertyValue ?? 2_000_000) * (downPaymentPercent ?? 20)) / 100;
   const reportData: MortgageReportData = {
-    propertyValue: formatAED(propertyValue ?? 0),
-    downPayment: formatAED(results.downPayment),
+    propertyValue: formatPrice(propertyValue ?? 0),
+    downPayment: formatPrice(results.downPayment),
     downPaymentPercent: `${downPaymentPercent ?? 20}%`,
-    loanAmount: formatAED(results.loanAmount),
+    loanAmount: formatPrice(results.loanAmount),
     interestRate: `${interestRate ?? MORTGAGE_CONSTANTS.DEFAULT_INTEREST_RATE}%`,
     loanTerm: `${loanTerm ?? 25} years`,
-    monthlyPayment: formatAED(results.monthlyPayment),
-    totalInterest: formatAED(results.totalInterest),
-    totalPayment: formatAED(results.totalAmount),
+    monthlyPayment: formatPrice(results.monthlyPayment),
+    totalInterest: formatPrice(results.totalInterest),
+    totalPayment: formatPrice(results.totalAmount),
     rows: amortizationSchedule.map((row) => ({
       year: row.year,
-      principal: formatAED(row.principal),
-      interest: formatAED(row.interest),
-      balance: formatAED(row.balance),
+      principal: formatPrice(row.principal),
+      interest: formatPrice(row.interest),
+      balance: formatPrice(row.balance),
     })),
   };
   const reportContext = [
@@ -246,32 +247,32 @@ export function MortgageCalculator({ initialValue }: MortgageCalculatorProps) {
             </div>
           </div>
           <p className="text-xs text-muted-foreground mb-1">Monthly payment</p>
-          <p className="text-3xl font-bold text-foreground">{formatAED(results.monthlyPayment)}</p>
+          <p className="text-3xl font-bold text-foreground">{formatPrice(results.monthlyPayment)}</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <div className="p-4 rounded-xl border border-border bg-card">
             <p className="text-xs text-muted-foreground mb-1">Loan amount</p>
-            <p className="text-lg font-bold text-foreground">{formatAED(results.loanAmount)}</p>
+            <p className="text-lg font-bold text-foreground">{formatPrice(results.loanAmount)}</p>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card">
             <p className="text-xs text-muted-foreground mb-1">Down payment</p>
-            <p className="text-lg font-bold text-foreground">{formatAED(results.downPayment)}</p>
+            <p className="text-lg font-bold text-foreground">{formatPrice(results.downPayment)}</p>
           </div>
         </div>
 
         {/* Total Interest Card */}
         <div className="p-4 rounded-xl border border-chart-3/30 bg-chart-3/5">
           <p className="text-xs text-muted-foreground mb-1">Total interest</p>
-          <p className="text-xl font-bold text-chart-3">{formatAED(results.totalInterest)}</p>
+          <p className="text-xl font-bold text-chart-3">{formatPrice(results.totalInterest)}</p>
           <p className="text-xs text-muted-foreground mt-1">over {loanTerm ?? 25} years</p>
         </div>
 
         {/* Total Amount */}
         <div className="p-4 rounded-xl border border-border bg-card">
           <p className="text-xs text-muted-foreground mb-1">Total payment</p>
-          <p className="text-lg font-bold text-foreground">{formatAED(results.totalAmount)}</p>
+          <p className="text-lg font-bold text-foreground">{formatPrice(results.totalAmount)}</p>
         </div>
 
         {/* Tabs */}
@@ -313,9 +314,9 @@ export function MortgageCalculator({ initialValue }: MortgageCalculatorProps) {
                   {amortizationSchedule.map((row) => (
                     <tr key={row.year} className="border-b border-border/50">
                       <td className="py-2 px-3 text-foreground">{row.year}</td>
-                      <td className="text-right py-2 px-2 text-chart-4">{formatAED(row.interest)}</td>
-                      <td className="text-right py-2 px-2 text-primary">{formatAED(row.principal)}</td>
-                      <td className="text-right py-2 px-2 text-muted-foreground">{formatAED(row.balance)}</td>
+                      <td className="text-right py-2 px-2 text-chart-4">{formatPrice(row.interest)}</td>
+                      <td className="text-right py-2 px-2 text-primary">{formatPrice(row.principal)}</td>
+                      <td className="text-right py-2 px-2 text-muted-foreground">{formatPrice(row.balance)}</td>
                     </tr>
                   ))}
                 </tbody>
