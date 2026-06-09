@@ -6,6 +6,13 @@
 import { z } from 'zod';
 import { imageObjectSchema } from './shared';
 
+const optionalSeoTextField = (max: number, message: string) =>
+  z.union([z.string().trim().max(max, message), z.literal(''), z.null(), z.undefined()]).transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
+const optionalSeoUrlField = z
+  .union([z.string().trim().url('Must be a valid URL').max(2048, 'URL must be less than 2048 characters'), z.literal(''), z.null(), z.undefined()])
+  .transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
 // Developer form validation schema
 export const developerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -45,3 +52,28 @@ export type DeveloperInsertData = z.output<typeof developerInsertSchema>;
 export const developerUpdateSchema = developerSchema.partial();
 
 export type DeveloperUpdateData = z.output<typeof developerUpdateSchema>;
+
+export const developerSeoSchema = z.object({
+  developer_id: z.string().uuid('Developer ID must be valid'),
+  meta_title: optionalSeoTextField(60, 'Meta title must be less than 60 characters'),
+  meta_description: optionalSeoTextField(160, 'Meta description must be less than 160 characters'),
+  keywords: optionalSeoTextField(255, 'Keywords must be less than 255 characters'),
+  og_image_url: optionalSeoUrlField,
+  canonical_url: optionalSeoUrlField,
+});
+
+export type DeveloperSEOData = z.infer<typeof developerSeoSchema>;
+
+export const developerSeoFormSchema = developerSeoSchema.omit({ developer_id: true });
+
+export type DeveloperSEOFormInput = z.input<typeof developerSeoFormSchema>;
+
+export type DeveloperSEOFormData = z.infer<typeof developerSeoFormSchema>;
+
+export const developerSeoInsertSchema = developerSeoSchema;
+
+export type DeveloperSEOInsertData = z.infer<typeof developerSeoInsertSchema>;
+
+export const developerSeoUpdateSchema = developerSeoFormSchema.partial();
+
+export type DeveloperSEOUpdateData = z.infer<typeof developerSeoUpdateSchema>;

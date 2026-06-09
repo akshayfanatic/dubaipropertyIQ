@@ -5,10 +5,15 @@
 
 import type { PaginationFilters, SearchFilters } from './shared';
 import type { ImageObject } from './images';
-import { Tables } from './db/supabase-generated';
+import { Tables, TablesInsert, TablesUpdate } from './db/supabase-generated';
+
+export type DeveloperSEO = Tables<'developers_seo'>;
+export type DeveloperSEOInsert = TablesInsert<'developers_seo'>;
+export type DeveloperSEOUpdate = TablesUpdate<'developers_seo'>;
 
 export type Developer = Omit<Tables<'developers'>, 'logo_url'> & {
   logo_url: ImageObject | null;
+  developers_seo?: DeveloperSEO | null;
 };
 
 // Computed trust score (average of all components)
