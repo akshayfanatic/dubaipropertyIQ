@@ -3,7 +3,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { MapPin } from 'lucide-react';
 import { WidgetCard } from '@/components/shared/WidgetCard';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { LocationPicker } from '@/components/shared/location/LocationPicker';

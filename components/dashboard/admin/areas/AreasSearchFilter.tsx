@@ -9,7 +9,6 @@ import { SearchInput } from '@/components/shared/forms/search-input';
 import { ResetButton } from '@/components/shared/forms/reset-button';
 import { FilterFieldSet } from '@/components/shared/forms/filter-fieldset';
 import useSWR from 'swr';
-import { fetcher } from '@/lib/swr-config';
 import { CityOption } from '@/types/city';
 
 interface AreasSearchForm {
