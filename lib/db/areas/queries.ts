@@ -65,6 +65,7 @@ type AreaDetailRow = Omit<Area, 'location'> & {
   areas_faqs?: AreaFAQ[] | null;
   areas_amenities_faqs?: AreaAmenityFAQ[] | null;
   areas_properties?: Array<{ property_id: string }> | null;
+  areas_seo?: Area['areas_seo'] | Area['areas_seo'][] | null;
 };
 
 function parseAreaLocation(location: unknown): Location | null {
@@ -84,6 +85,11 @@ function firstOrValue<T>(value: T | T[] | null | undefined): T | null {
   return value ?? null;
 }
 
+const normalizeAreaSEO = <T extends { areas_seo?: unknown } & Record<string, unknown>>(area: T) => ({
+  ...area,
+  areas_seo: firstOrValue(area.areas_seo),
+});
+
 /**
  * Get areas with city information joined
  */
@@ -94,7 +100,7 @@ export async function getAreasWithCityAdmin(filters?: AreaFilters): Promise<ApiR
     const pageSize = filters?.pageSize;
     const from = pageSize ? (page - 1) * pageSize : 0;
 
-    let query = supabase.from('areas').select('*, cities(name, slug)', { count: 'exact' });
+    let query = supabase.from('areas').select('*, cities(name, slug), areas_seo(*)', { count: 'exact' });
 
     // Apply city filter (only if value is truthy and not empty string)
     if (filters?.city_id && filters.city_id !== '') {
@@ -129,7 +135,7 @@ export async function getAreasWithCityAdmin(filters?: AreaFilters): Promise<ApiR
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<AreaWithCity> = {
-      data: (data || []) as AreaWithCity[],
+      data: ((data ?? []).map((area) => normalizeAreaSEO(area)) as AreaWithCity[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,
@@ -208,7 +214,8 @@ export async function getAreaBySlug(slug: string): Promise<ApiResponse<AreaDetai
           areas_amenities(amenities(id, name, slug, description, logo_url)),
           areas_faqs(id, area_id, question, answer, created_at),
           areas_amenities_faqs(id, area_id, question, answer, created_at),
-          areas_properties(property_id)
+          areas_properties(property_id),
+          areas_seo(*)
         `,
       )
       .eq('slug', slug)
@@ -255,6 +262,7 @@ export async function getAreaBySlug(slug: string): Promise<ApiResponse<AreaDetai
       amenities_faqs: row.areas_amenities_faqs ?? [],
       property_ids: row.areas_properties?.map((item) => item.property_id) ?? [],
       properties: propertiesResponse.data ?? [],
+      areas_seo: firstOrValue(row.areas_seo),
     };
 
     return ApiResponse({
@@ -283,7 +291,7 @@ export async function getAreaByIdAdmin(id: string): Promise<ApiResponse<AreaWith
 
     const { data, error } = await supabase
       .from('areas')
-      .select('*, cities(name, slug), areas_amenities(amenity_id), areas_properties(property_id), areas_faqs(id, question, answer), areas_amenities_faqs(id, question, answer)')
+      .select('*, cities(name, slug), areas_amenities(amenity_id), areas_properties(property_id), areas_faqs(id, question, answer), areas_amenities_faqs(id, question, answer), areas_seo(*)')
       .eq('id', id)
       .single();
 
@@ -308,7 +316,7 @@ export async function getAreaByIdAdmin(id: string): Promise<ApiResponse<AreaWith
       success: true,
       status: HttpStatus.OK,
       message: 'Area fetched successfully',
-      data: data as AreaWithCity | null,
+      data: normalizeAreaSEO(data) as AreaWithCity | null,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch area';

@@ -6,6 +6,13 @@
 import { z } from 'zod';
 import { imageObjectSchema } from './shared';
 
+const optionalSeoTextField = (max: number, message: string) =>
+  z.union([z.string().trim().max(max, message), z.literal(''), z.null(), z.undefined()]).transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
+const optionalSeoUrlField = z
+  .union([z.string().trim().url('Must be a valid URL').max(2048, 'URL must be less than 2048 characters'), z.literal(''), z.null(), z.undefined()])
+  .transform((val) => (val === '' || val === null || val === undefined ? null : val));
+
 // Area form validation schema
 export const areaSchema = z.object({
   city_id: z.string().uuid('Invalid city ID'),
@@ -73,3 +80,28 @@ export type AreaFAQInsertData = z.infer<typeof areaFAQInsertSchema>;
 export const areaAmenityFAQInsertSchema = areaFAQInsertSchema;
 
 export type AreaAmenityFAQInsertData = z.infer<typeof areaAmenityFAQInsertSchema>;
+
+export const areaSeoSchema = z.object({
+  area_id: z.string().uuid('Area ID must be valid'),
+  meta_title: optionalSeoTextField(60, 'Meta title must be less than 60 characters'),
+  meta_description: optionalSeoTextField(160, 'Meta description must be less than 160 characters'),
+  keywords: optionalSeoTextField(255, 'Keywords must be less than 255 characters'),
+  og_image_url: optionalSeoUrlField,
+  canonical_url: optionalSeoUrlField,
+});
+
+export type AreaSEOData = z.infer<typeof areaSeoSchema>;
+
+export const areaSeoFormSchema = areaSeoSchema.omit({ area_id: true });
+
+export type AreaSEOFormInput = z.input<typeof areaSeoFormSchema>;
+
+export type AreaSEOFormData = z.infer<typeof areaSeoFormSchema>;
+
+export const areaSeoInsertSchema = areaSeoSchema;
+
+export type AreaSEOInsertData = z.infer<typeof areaSeoInsertSchema>;
+
+export const areaSeoUpdateSchema = areaSeoFormSchema.partial();
+
+export type AreaSEOUpdateData = z.infer<typeof areaSeoUpdateSchema>;

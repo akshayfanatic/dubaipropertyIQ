@@ -24,6 +24,10 @@ const AreaLocation = dynamic(() => import('./tabs/AreaLocation'), {
   loading: () => <FormSkelton fields={1} showPageHeader={false} showSubmitButton />,
 });
 
+const AreaSEO = dynamic(() => import('./tabs/AreaSEO'), {
+  loading: () => <FormSkelton fields={5} showPageHeader={false} showSubmitButton />,
+});
+
 function parseLocation(location: Json | null | undefined): LocationValue | null {
   if (!location || typeof location !== 'object' || Array.isArray(location)) {
     return null;
@@ -58,6 +62,11 @@ export function AreaForm({ area }: AreaFormProps) {
       value: 'amenities-faqs',
       label: 'Amenities',
       content: <AreaAmenitiesFAQs areaId={area?.id} faqs={area?.areas_amenities_faqs} />,
+    },
+    {
+      value: 'seo',
+      label: 'SEO',
+      content: <AreaSEO areaId={area?.id} seo={area?.areas_seo} />,
     },
   ] as const;
 
