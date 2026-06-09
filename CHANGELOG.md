@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.1...v0.9.2) (2026-06-09)
+
+### Features
+
+- **areas:** added support of seo on dynamic areas ([c8ba71a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c8ba71a024e8f430f06aca660625bea9f584fb11))
+- **building:** added support of seo on dynamic building ([4884a52](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4884a5214d2b785cf500a2bdb4475f821662b36d))
+- **eslint:** addded eslint suport eslint-plugin-unused-imports ([1c60df1](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1c60df1f8d20143c6a251c743542bb0c848a3347))
+- **migration:** created migration for seo specific data for all entity ([9831543](https://github.com/akshayfanatic/dubaipropertyIQ/commit/983154355c30ecabd5f3d3fb300f7abc1a0086ad))
+
+### Code Refactoring
+
+- **blogs:** added support of seo field separately ([8b24b73](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8b24b73f0ec504544080410f47f04c1e8c9aa743))
+- **city:** reorganize file structure , seo support ([15d00ac](https://github.com/akshayfanatic/dubaipropertyIQ/commit/15d00ac2468f5e7d98de5586f31f4bd8f39dea95))
+- **developer:** reorganize file structure , seo support ([667d106](https://github.com/akshayfanatic/dubaipropertyIQ/commit/667d106c1b0015efa08465efe8b62855c0e5c09b))
+- **page:** reorganize file structure , seo support ([3475d23](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3475d2370dc73a5e7ced09353cc9fa20b7861180))
+- **price:** fix helper funciton resuablility issue ([0b6d9f6](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0b6d9f6edd7119ea0f431148157dbc2bd14f7dfd))
+
 ### [0.9.1](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.0...v0.9.1) (2026-06-08)
 
 ### Features
