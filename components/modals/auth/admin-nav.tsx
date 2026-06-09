@@ -1,20 +1,18 @@
 'use client';
 
 import { LayoutDashboard, User } from 'lucide-react';
-import { UserProfile } from '@/types/user';
 import { ProfileDropdown } from '@/components/dashboard/admin/profile-dropdown';
 import { AccountMenuList } from './account-menu-list';
+import { useAuth } from '@/providers/auth-provider';
 
-interface AdminNavProps {
-  user?: UserProfile | null;
-}
+export function AdminNav() {
+  const { user } = useAuth();
 
-export function AdminNav({ user }: AdminNavProps) {
   return (
     <>
       {/* Desktop: Dropdown Menu */}
       <div className="hidden md:block">
-        <ProfileDropdown user={user} />
+        <ProfileDropdown />
       </div>
 
       {/* Mobile: Direct account list */}

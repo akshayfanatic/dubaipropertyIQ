@@ -40,13 +40,14 @@ function getUserDisplay(user: UserProfile | null | undefined, fallbackName: stri
 
 export function AccountMenuList({ user, fallbackName, items, badge, avatarClassName, fallbackClassName }: AccountMenuListProps) {
   const { displayName, initials } = getUserDisplay(user, fallbackName);
+  const avatarUrl = user?.user_metadata?.avatar_url ?? undefined;
 
   return (
     <section className="rounded-2xl border border-border/80 bg-card p-3 shadow-sm">
       {/* Account identity stays visible on mobile instead of hiding actions behind an avatar dropdown. */}
       <div className="flex min-w-0 items-center gap-3 px-1 pb-3">
         <Avatar className={cn('h-11 w-11 ring-2 ring-primary/20', avatarClassName)}>
-          <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
+          <AvatarImage src={avatarUrl} alt={displayName} />
           <AvatarFallback className={cn('bg-primary/10 text-sm font-semibold text-primary', fallbackClassName)}>{initials}</AvatarFallback>
         </Avatar>
 

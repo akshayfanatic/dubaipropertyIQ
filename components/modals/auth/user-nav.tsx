@@ -6,15 +6,13 @@ import { logout } from '@/app/(auth)/auth/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
 import { AccountMenuList } from './account-menu-list';
+import { useAuth } from '@/providers/auth-provider';
 
-interface UserNavProps {
-  user?: UserProfile | null;
-}
-
-export function UserNav({ user }: UserNavProps) {
+export function UserNav() {
+  const { user } = useAuth();
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
+  const avatarUrl = user?.user_metadata?.avatar_url ?? undefined;
   const initials = displayName
     .split(' ')
     .map((n) => n[0])
@@ -30,7 +28,7 @@ export function UserNav({ user }: UserNavProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/50">
               <Avatar className="h-8 w-8 ring-2 ring-primary/20 transition-all hover:ring-primary/40">
-                <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
+                <AvatarImage src={avatarUrl} alt={displayName} />
                 <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">{initials}</AvatarFallback>
               </Avatar>
             </Button>

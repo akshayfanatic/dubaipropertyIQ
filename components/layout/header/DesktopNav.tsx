@@ -255,6 +255,8 @@ export function DesktopNav({ navItems, pathname, menus, isHeroHeader }: DesktopN
             <Search className="size-4" />
           </Link>
         </Button>
+
+        {/* Auth */}
         <AuthSection />
       </div>
     </>
