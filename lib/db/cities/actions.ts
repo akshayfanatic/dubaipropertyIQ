@@ -2,7 +2,8 @@
 
 import { adminClient } from '@/lib/supabase/admin';
 import { ApiResponse, HttpStatus } from '@/lib/utils/response';
-import { City, CityInsert, CityUpdate } from '@/types/city';
+import { City, CityInsert, CitySEO, CityUpdate } from '@/types/city';
+import type { CitySEOFormData } from '@/lib/validations/city';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -100,6 +101,56 @@ export async function updateCity(id: string, updates: CityUpdate) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update city';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Save city SEO metadata.
+ * Upserts by city_id because each city has one SEO record.
+ */
+export async function saveCitySEO(cityId: string, seo: CitySEOFormData) {
+  try {
+    const supabase = adminClient();
+
+    const { data, error } = await supabase
+      .from('cities_seo')
+      .upsert(
+        {
+          city_id: cityId,
+          ...seo,
+        },
+        { onConflict: 'city_id' },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'UPSERT_ERROR' },
+      });
+    }
+
+    revalidatePath('/dashboard/admin/cities');
+    revalidatePath('/dashboard/admin/cities/[id]');
+    revalidatePath('/areas/[city]');
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'City SEO saved successfully',
+      data: data as CitySEO,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save city SEO';
     return ApiResponse({
       success: false,
       status: HttpStatus.INTERNAL_ERROR,

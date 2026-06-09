@@ -25,9 +25,7 @@ export default async function EditCityPage({ params }: EditCityPageProps) {
     <div className="space-y-6">
       <PageHeader title="Edit City" description={`Editing: ${city.name}`} showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
-        <CityForm city={city} />
-      </div>
+      <CityForm city={city} />
     </div>
   );
 }

@@ -13,6 +13,11 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { City, CityOption, CityFilters, CityWithAreaCount } from '@/types/city';
 import type { PaginatedResult } from '@/types/shared';
 
+const normalizeCity = (data: { cities_seo?: unknown } & Record<string, unknown>) => ({
+  ...data,
+  cities_seo: Array.isArray(data.cities_seo) ? (data.cities_seo[0] ?? null) : (data.cities_seo ?? null),
+});
+
 /**
  * Get cities with optional search and pagination
  *
@@ -38,7 +43,7 @@ export async function getCitiesAdmin(filters?: CityFilters): Promise<ApiResponse
     const pageSize = filters?.pageSize; // undefined means "all"
     const from = pageSize ? (page - 1) * pageSize : 0;
 
-    let query = supabase.from('cities').select('*', { count: 'exact' });
+    let query = supabase.from('cities').select('*, cities_seo(*)', { count: 'exact' });
 
     // Apply search filter
     if (filters?.search) {
@@ -68,7 +73,7 @@ export async function getCitiesAdmin(filters?: CityFilters): Promise<ApiResponse
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<City> = {
-      data: (data as City[]) ?? [],
+      data: ((data ?? []).map((city) => normalizeCity(city)) as City[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,
@@ -105,7 +110,7 @@ export async function getCityById(id: string): Promise<ApiResponse<City | null>>
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('cities').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('cities').select('*, cities_seo(*)').eq('id', id).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -128,7 +133,7 @@ export async function getCityById(id: string): Promise<ApiResponse<City | null>>
       success: true,
       status: HttpStatus.OK,
       message: 'City fetched successfully',
-      data: data as City,
+      data: normalizeCity(data) as City,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch city';
@@ -154,7 +159,7 @@ export async function getCityBySlug(slug: string): Promise<ApiResponse<City | nu
   try {
     const supabase = adminClient();
 
-    const { data, error } = await supabase.from('cities').select('*').eq('slug', slug).single();
+    const { data, error } = await supabase.from('cities').select('*, cities_seo(*)').eq('slug', slug).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -177,7 +182,7 @@ export async function getCityBySlug(slug: string): Promise<ApiResponse<City | nu
       success: true,
       status: HttpStatus.OK,
       message: 'City fetched successfully',
-      data: data as City,
+      data: normalizeCity(data) as City,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch city';
@@ -262,7 +267,7 @@ export async function getCities(filters?: CityFilters & { limit?: number }): Pro
     const pageSize = filters?.limit || filters?.pageSize;
     const from = pageSize ? (page - 1) * pageSize : 0;
 
-    let query = supabase.from('cities').select('*', { count: 'exact' });
+    let query = supabase.from('cities').select('*, cities_seo(*)', { count: 'exact' });
 
     // Apply search filter
     if (filters?.search) {
@@ -292,7 +297,7 @@ export async function getCities(filters?: CityFilters & { limit?: number }): Pro
     const effectivePageSize = pageSize || count || 0;
 
     const result: PaginatedResult<City> = {
-      data: (data as City[]) ?? [],
+      data: ((data ?? []).map((city) => normalizeCity(city)) as City[]) ?? [],
       total: count || 0,
       page,
       pageSize: effectivePageSize,

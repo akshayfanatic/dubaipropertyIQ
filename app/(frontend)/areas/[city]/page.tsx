@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AreaCard } from '@/components/areas/card/AreaCard';
 import { CitySelectField } from '@/components/city/CitySelectField';
@@ -18,6 +19,51 @@ type AreaPageProps = {
     city: string;
   }>;
 };
+
+export async function generateMetadata({ params }: AreaPageProps): Promise<Metadata> {
+  const { city } = await params;
+  const response = await getCityBySlug(city);
+
+  if (!response.success || !response.data) {
+    return {
+      title: 'City Not Found',
+    };
+  }
+
+  const cityInformation = response.data;
+  const seo = cityInformation.cities_seo;
+  const cityImage = cityInformation.logo_url as ImageObject | string | null | undefined;
+  const cityImageUrl = seo?.og_image_url || (typeof cityImage === 'string' ? cityImage : cityImage?.url);
+  const title = seo?.meta_title || `${cityInformation.name} Areas & Communities`;
+  const description = seo?.meta_description || cityInformation.description || `Explore communities, areas, and available properties in ${cityInformation.name}.`;
+  const canonical = seo?.canonical_url || `/areas/${cityInformation.slug}`;
+  const keywords = seo?.keywords
+    ?.split(',')
+    .map((keyword) => keyword.trim())
+    .filter(Boolean);
+
+  return {
+    title,
+    description,
+    keywords: keywords?.length ? keywords : undefined,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      images: cityImageUrl ? [{ url: cityImageUrl }] : undefined,
+      type: 'website',
+    },
+    twitter: {
+      card: cityImageUrl ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images: cityImageUrl ? [cityImageUrl] : undefined,
+    },
+  };
+}
 
 export default async function AreaPage({ params }: AreaPageProps) {
   const { city } = await params;

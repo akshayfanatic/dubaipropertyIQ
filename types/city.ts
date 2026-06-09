@@ -5,9 +5,15 @@
 
 import type { PaginationFilters, SearchFilters, SelectOption } from './shared';
 import type { ImageObject } from './images';
-import { Tables } from './db/supabase-generated';
+import { Tables, TablesInsert, TablesUpdate } from './db/supabase-generated';
 
-export type City = Tables<'cities'>;
+export type CitySEO = Tables<'cities_seo'>;
+export type CitySEOInsert = TablesInsert<'cities_seo'>;
+export type CitySEOUpdate = TablesUpdate<'cities_seo'>;
+
+export type City = Tables<'cities'> & {
+  cities_seo?: CitySEO | null;
+};
 
 export type CityInsert = Omit<City, 'id' | 'created_at' | 'updated_at'>;
 
