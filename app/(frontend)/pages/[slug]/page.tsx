@@ -33,9 +33,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const seo = page.pages_seo;
+
   return {
-    title: page.meta_title || page.title,
-    description: page.meta_description || page.excerpt || '',
+    title: seo?.meta_title || page.title,
+    description: seo?.meta_description || page.excerpt || '',
   };
 }
 
