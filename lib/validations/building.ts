@@ -9,6 +9,11 @@ import { imageObjectSchema } from './shared';
 const nullableTextSchema = z.string().trim().nullable().or(z.literal(''));
 const nullableNumberSchema = z.number().nullable().optional();
 const scoreSchema = z.number().int().min(0).max(100).nullable().optional();
+const optionalSeoTextField = (max: number, message: string) =>
+  z.union([z.string().trim().max(max, message), z.literal(''), z.null(), z.undefined()]).transform((val) => (val === '' || val === null || val === undefined ? null : val));
+const optionalSeoUrlField = z
+  .union([z.string().trim().url('Must be a valid URL').max(2048, 'URL must be less than 2048 characters'), z.literal(''), z.null(), z.undefined()])
+  .transform((val) => (val === '' || val === null || val === undefined ? null : val));
 
 export const buildingUnitRangeSchema = z.object({
   unit_type: z.string().trim().min(1, 'Unit type is required'),
@@ -89,3 +94,28 @@ export type BuildingInsertData = z.output<typeof buildingInsertSchema>;
 
 export const buildingUpdateSchema = buildingSchema.partial();
 export type BuildingUpdateData = z.output<typeof buildingUpdateSchema>;
+
+export const buildingSeoSchema = z.object({
+  building_id: z.string().uuid('Building ID must be valid'),
+  meta_title: optionalSeoTextField(60, 'Meta title must be less than 60 characters'),
+  meta_description: optionalSeoTextField(160, 'Meta description must be less than 160 characters'),
+  keywords: optionalSeoTextField(255, 'Keywords must be less than 255 characters'),
+  og_image_url: optionalSeoUrlField,
+  canonical_url: optionalSeoUrlField,
+});
+
+export type BuildingSEOData = z.infer<typeof buildingSeoSchema>;
+
+export const buildingSeoFormSchema = buildingSeoSchema.omit({ building_id: true });
+
+export type BuildingSEOFormInput = z.input<typeof buildingSeoFormSchema>;
+
+export type BuildingSEOFormData = z.infer<typeof buildingSeoFormSchema>;
+
+export const buildingSeoInsertSchema = buildingSeoSchema;
+
+export type BuildingSEOInsertData = z.infer<typeof buildingSeoInsertSchema>;
+
+export const buildingSeoUpdateSchema = buildingSeoFormSchema.partial();
+
+export type BuildingSEOUpdateData = z.infer<typeof buildingSeoUpdateSchema>;

@@ -23,7 +23,9 @@ export async function getBuildingsAdmin(filters?: BuildingFilters): Promise<ApiR
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    let query = supabase.from('buildings').select('*, area:areas(id, name, slug), city:cities(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url)', { count: 'exact' });
+    let query = supabase
+      .from('buildings')
+      .select('*, area:areas(id, name, slug), city:cities(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url), buildings_seo(*)', { count: 'exact' });
 
     if (filters?.search) {
       query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,address.ilike.%${filters.search}%`);
@@ -86,7 +88,7 @@ export async function getBuildingByIdAdmin(id: string): Promise<ApiResponse<Buil
 
     const { data, error } = await supabase
       .from('buildings')
-      .select('*, area:areas(id, name, slug), city:cities(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url)')
+      .select('*, area:areas(id, name, slug), city:cities(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url), buildings_seo(*)')
       .eq('id', id)
       .single();
 
@@ -134,7 +136,7 @@ export async function getBuildingBySlug(citySlug: string, areaSlug: string, buil
 
     const { data, error } = await supabase
       .from('buildings')
-      .select('*, area:areas!inner(id, name, slug), city:cities!inner(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url)')
+      .select('*, area:areas!inner(id, name, slug), city:cities!inner(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url), buildings_seo(*)')
       .eq('slug', buildingSlug)
       .eq('areas.slug', areaSlug)
       .eq('cities.slug', citySlug)
@@ -186,7 +188,7 @@ export async function getBuildingsByArea(citySlug: string, areaSlug: string): Pr
 
     const { data, error } = await supabase
       .from('buildings')
-      .select('*, area:areas!inner(id, name, slug), city:cities!inner(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url)')
+      .select('*, area:areas!inner(id, name, slug), city:cities!inner(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url), buildings_seo(*)')
       .eq('areas.slug', areaSlug)
       .eq('cities.slug', citySlug)
       .order('overall_score', { ascending: false, nullsFirst: false })

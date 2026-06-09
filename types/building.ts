@@ -10,6 +10,10 @@ import type { Area } from './areas';
 import type { City } from './city';
 import type { Developer } from './developer';
 
+export type BuildingSEO = Tables<'buildings_seo'>;
+export type BuildingSEOInsert = TablesInsert<'buildings_seo'>;
+export type BuildingSEOUpdate = TablesUpdate<'buildings_seo'>;
+
 export type BuildingUnitRange = {
   unit_type: string;
   min?: number | null;
@@ -72,6 +76,7 @@ export type BuildingWithRelations = Building & {
   city?: Pick<City, 'id' | 'name' | 'slug' | 'logo_url'> | null;
   developer?: Pick<Developer, 'id' | 'name' | 'slug' | 'logo_url'> | null;
   amenity_details?: BuildingAmenityDetail[];
+  buildings_seo?: BuildingSEO | null;
 };
 
 export interface BuildingFilters extends PaginationFilters, SearchFilters {
