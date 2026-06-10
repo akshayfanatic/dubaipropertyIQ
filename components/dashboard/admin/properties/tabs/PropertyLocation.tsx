@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { LocationPicker } from '@/components/shared/location/LocationPicker';
@@ -21,6 +21,10 @@ export function PropertyLocation({ propertyId, location }: PropertyLocationProps
   const form = useForm<Location>({
     resolver: zodResolver(locationSchema),
     defaultValues: location || DEFAULT_LOCATION,
+  });
+  const lng = useWatch({
+    control: form.control,
+    name: 'lng',
   });
 
   const onSubmit = async (data: Location) => {
@@ -52,7 +56,7 @@ export function PropertyLocation({ propertyId, location }: PropertyLocationProps
           control={form.control}
           render={({ field }) => (
             <LocationPicker
-              value={{ lat: field.value, lng: form.watch('lng') }}
+              value={{ lat: field.value, lng }}
               onPositionChange={(pos) => {
                 field.onChange(pos.lat);
                 form.setValue('lng', pos.lng);

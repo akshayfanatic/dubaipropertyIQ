@@ -10,6 +10,8 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   'use no memo';
+  // TanStack Table returns non-memoizable helper functions; this component is intentionally opted out of React Compiler memoization.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
