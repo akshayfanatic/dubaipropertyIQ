@@ -9,11 +9,15 @@ import { buttonVariants } from '@/components/ui/button';
 import { getGroupedSettings } from '@/lib/db/settings/queries';
 import { cn } from '@/lib/utils';
 import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
+import { createPageMetadata } from '@/lib/utils/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'About Dubai Property IQ',
   description: 'Learn how Dubai Property IQ helps buyers and investors research Dubai properties, communities, developers, and ownership decisions.',
-};
+  path: '/about',
+  keywords: ['Dubai Property IQ', 'Dubai property research', 'Dubai real estate intelligence'],
+  image: '/assets/images/property-home.jpg',
+});
 
 const principles = [
   {

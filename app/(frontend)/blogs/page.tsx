@@ -3,11 +3,14 @@ import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { getPublishedBlogs } from '@/lib/db/blogs/queries';
+import { createPageMetadata } from '@/lib/utils/seo';
 
-export const metadata = {
+export const metadata = createPageMetadata({
   title: 'Dubai Property Guides',
   description: 'Read Dubai property market guides, investor insights, and area research.',
-};
+  path: '/blogs',
+  keywords: ['Dubai property guides', 'Dubai real estate market', 'Dubai investor insights', 'Dubai area research'],
+});
 
 export const revalidate = 60;
 

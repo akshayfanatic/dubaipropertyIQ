@@ -17,6 +17,7 @@ import { AnimatedCounter } from '@/components/shared/AnimatedCounter';
 import { AmenityPills } from '@/components/shared/AmenityPills';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { getBuildingBySlug } from '@/lib/db/buildings/queries';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 type BuildingDetailPageProps = {
   params: Promise<{
@@ -39,32 +40,14 @@ export async function generateMetadata({ params }: BuildingDetailPageProps): Pro
   const image = buildingDetail.photos?.[0];
   const imageUrl = seo?.og_image_url || image?.url;
   const canonical = seo?.canonical_url || `/areas/${city}/${area}/${building}`;
-  const keywords = seo?.keywords
-    ?.split(',')
-    .map((keyword) => keyword.trim())
-    .filter(Boolean);
-
-  return {
+  return createPageMetadata({
     title,
     description,
-    keywords: keywords?.length ? keywords : undefined,
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: imageUrl ? [{ url: imageUrl, alt: image?.alt_tag || buildingDetail.name }] : undefined,
-      type: 'website',
-    },
-    twitter: {
-      card: imageUrl ? 'summary_large_image' : 'summary',
-      title,
-      description,
-      images: imageUrl ? [imageUrl] : undefined,
-    },
-  };
+    path: canonical,
+    keywords: seo?.keywords,
+    image: imageUrl,
+    imageAlt: image?.alt_tag || buildingDetail.name,
+  });
 }
 
 export default async function BuildingDetailPage({ params }: BuildingDetailPageProps) {

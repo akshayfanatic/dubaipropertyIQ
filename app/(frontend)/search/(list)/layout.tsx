@@ -1,9 +1,19 @@
+import type { Metadata } from 'next';
 import React from 'react';
 import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { FloatingSearchFilters } from '@/components/search/FloatingSearchFilters';
+import { createPageMetadata } from '@/lib/utils/seo';
+
+export const metadata: Metadata = createPageMetadata({
+  title: 'Search Dubai Properties',
+  description: 'Search Dubai properties by location, budget, bedrooms, property type, amenities, and Golden Visa eligibility.',
+  path: '/search',
+  keywords: ['Dubai property search', 'Dubai properties for sale', 'search Dubai real estate', 'Dubai Golden Visa properties'],
+  image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop',
+});
 
 interface SearchPageLayoutProps {
   children: React.ReactNode;

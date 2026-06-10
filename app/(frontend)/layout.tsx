@@ -5,6 +5,7 @@ import Footer from '@/components/layout/footer/Footer';
 import './globals.css';
 import { FrontEndProvider } from '@/providers/frontend-provider';
 import { getHeaderMenus } from '@/lib/db/menus/queries';
+import { defaultOpenGraphImage, metadataBase } from '@/lib/utils/seo';
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: '--font-plus-jakarta',
@@ -19,8 +20,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
+  metadataBase,
+  title: {
+    default: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
+    template: '%s | Dubai Property IQ',
+  },
   description: 'Explore Dubai properties, communities, developers, and investment tools with clearer market context.',
+  applicationName: 'Dubai Property IQ',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
+    description: 'Explore Dubai properties, communities, developers, and investment tools with clearer market context.',
+    url: '/',
+    siteName: 'Dubai Property IQ',
+    images: [{ url: defaultOpenGraphImage, alt: 'Dubai skyline and property search' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dubai Property IQ',
+    description: 'Dubai real estate, community, developer, and investment intelligence.',
+    images: [defaultOpenGraphImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({

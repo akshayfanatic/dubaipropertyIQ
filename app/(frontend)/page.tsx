@@ -18,6 +18,15 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
 import { HomeHeroStats } from '@/components/home/HomeHeroStats';
 import { ArrowRight } from 'lucide-react';
+import { createPageMetadata } from '@/lib/utils/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
+  description: 'Search Dubai properties, compare communities and developers, and use investor tools for clearer real estate decisions.',
+  path: '/',
+  keywords: ['Dubai property', 'Dubai real estate', 'Dubai property investment', 'Dubai communities', 'Dubai developers'],
+  image: '/assets/images/hero-bg-2.jpg',
+});
 
 async function getHomeData() {
   const [citiesResult, featuredCitiesResult, developersResult, blogsResult] = await Promise.all([getCities({ limit: 5 }), getFeaturedCitiesAreas(), getDevelopers(), getPublishedBlogs()]);

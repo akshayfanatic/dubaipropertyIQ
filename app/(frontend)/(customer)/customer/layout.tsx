@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import { requireAuth } from '@/lib/auth/guards';
 import { CustomerAccountShell } from '@/components/customer/CustomerAccountShell';
 import React from 'react';
+import { noIndexMetadata } from '@/lib/utils/seo';
+
+export const metadata: Metadata = {
+  title: 'Customer Account',
+  ...noIndexMetadata,
+};
 
 const CustomerLayout = async ({ children }: React.PropsWithChildren) => {
   await requireAuth();

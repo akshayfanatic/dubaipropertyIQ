@@ -14,6 +14,7 @@ import { getDeveloperBySlug } from '@/lib/db/developers/queries';
 import { ImageObject } from '@/types/images';
 import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 export function PropertiesSkeleton() {
   return (
@@ -55,32 +56,14 @@ export async function generateMetadata({ params }: DeveloperLayoutProps): Promis
   const description = seo?.meta_description || developer.description || `Browse Dubai properties and projects by ${developer.name}.`;
   const image = seo?.og_image_url || logoUrl;
   const canonical = seo?.canonical_url || `/developers/${developer.slug}`;
-  const keywords = seo?.keywords
-    ?.split(',')
-    .map((keyword) => keyword.trim())
-    .filter(Boolean);
-
-  return {
+  return createPageMetadata({
     title,
     description,
-    keywords: keywords?.length ? keywords : undefined,
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: image ? [{ url: image }] : undefined,
-      type: 'website',
-    },
-    twitter: {
-      card: image ? 'summary_large_image' : 'summary',
-      title,
-      description,
-      images: image ? [image] : undefined,
-    },
-  };
+    path: canonical,
+    keywords: seo?.keywords,
+    image,
+    imageAlt: `${developer.name} logo`,
+  });
 }
 
 export default async function DeveloperLayout({ children, params }: DeveloperLayoutProps) {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/(dashboard)/dashboard/globals.css';
 import { requireAuth } from '@/lib/auth/guards';
@@ -6,6 +7,12 @@ import { AdminSidebar } from '@/components/dashboard/admin/admin-sidebar';
 import { AdminHeader } from '@/components/dashboard/admin/admin-header';
 import { AdminProvider } from '@/providers/admin-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { noIndexMetadata } from '@/lib/utils/seo';
+
+export const metadata: Metadata = {
+  title: 'Dubai Property IQ Admin',
+  ...noIndexMetadata,
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
