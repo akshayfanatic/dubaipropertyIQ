@@ -6,6 +6,8 @@ import './globals.css';
 import { FrontEndProvider } from '@/providers/frontend-provider';
 import { getHeaderMenus } from '@/lib/db/menus/queries';
 import { defaultOpenGraphImage, metadataBase } from '@/lib/utils/seo';
+import { JsonLd } from '@/components/shared/JsonLd';
+import { createOrganizationSchema, createWebsiteSchema } from '@/lib/utils/structured-data';
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: '--font-plus-jakarta',
@@ -66,6 +68,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <Footer />
         </FrontEndProvider>
+        <JsonLd id="site-structured-data" data={[createOrganizationSchema(), createWebsiteSchema()]} />
       </body>
     </html>
   );
