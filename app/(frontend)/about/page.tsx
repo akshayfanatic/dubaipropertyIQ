@@ -9,13 +9,19 @@ import { buttonVariants } from '@/components/ui/button';
 import { getGroupedSettings } from '@/lib/db/settings/queries';
 import { cn } from '@/lib/utils';
 import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createAboutPageSchema, createBreadcrumbSchema } from '@/lib/utils/structured-data';
 import { staticImages } from '@/config';
 
+const pageTitle = 'About Dubai Property IQ';
+const pageDescription = 'Learn how Dubai Property IQ helps buyers and investors research Dubai properties, communities, developers, and ownership decisions.';
+const pagePath = '/about';
+
 export const metadata: Metadata = createPageMetadata({
-  title: 'About Dubai Property IQ',
-  description: 'Learn how Dubai Property IQ helps buyers and investors research Dubai properties, communities, developers, and ownership decisions.',
-  path: '/about',
+  title: pageTitle,
+  description: pageDescription,
+  path: pagePath,
   keywords: ['Dubai Property IQ', 'Dubai property research', 'Dubai real estate intelligence'],
   image: staticImages.home.propertyInterior,
 });
@@ -241,6 +247,21 @@ export default async function AboutPage() {
           </Link>
         </AnimateSection>
       </section>
+      <JsonLd
+        id="about-page-structured-data"
+        data={[
+          createAboutPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            path: pagePath,
+            image: staticImages.home.propertyInterior,
+          }),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'About Dubai Property IQ', path: pagePath },
+          ]),
+        ]}
+      />
     </main>
   );
 }

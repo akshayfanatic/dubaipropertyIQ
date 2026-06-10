@@ -51,6 +51,31 @@ export function createBreadcrumbSchema(items: Array<{ name: string; path: string
   };
 }
 
+export function createAboutPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }) {
+  const url = absoluteUrl(path);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    '@id': `${url}#about`,
+    name: title,
+    description,
+    url,
+    isPartOf: {
+      '@id': websiteId,
+    },
+    publisher: {
+      '@id': organizationId,
+    },
+    primaryImageOfPage: image
+      ? {
+          '@type': 'ImageObject',
+          url: absoluteUrl(image),
+        }
+      : undefined,
+  };
+}
+
 export function createCalculatorSchema({ name, description, path }: { name: string; description: string; path: string }) {
   const url = absoluteUrl(path);
 

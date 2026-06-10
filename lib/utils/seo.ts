@@ -5,7 +5,7 @@ import { staticImages } from '@/config';
 const cleanText = (value?: string | null) => value?.trim() || undefined;
 const siteName = 'Dubai Property IQ';
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dubaipropertyiq.com';
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dubaiproperty-iq.vercel.app/';
 
 export const metadataBase = new URL(siteUrl);
 
