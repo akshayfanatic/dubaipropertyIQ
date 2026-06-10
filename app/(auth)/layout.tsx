@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import '@/app/(frontend)/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { noIndexMetadata } from '@/lib/utils/seo';
 
 export const metadata: Metadata = {
   title: 'Dubai Property IQ - Auth',
   description: 'Sign in to your Dubai Property IQ account',
+  ...noIndexMetadata,
 };
 
 const geistSans = Geist({

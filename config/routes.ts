@@ -53,7 +53,6 @@ export const adminRoutes: RouteGroup[] = [
           { title: 'Categories', href: '/dashboard/admin/categories', icon: Layers },
         ],
       },
-
       {
         title: 'Areas',
         href: '/dashboard/admin/areas',
@@ -61,16 +60,24 @@ export const adminRoutes: RouteGroup[] = [
         children: [
           { title: 'All Areas', href: '/dashboard/admin/areas', icon: MapPin },
           { title: 'Buildings', href: '/dashboard/admin/buildings', icon: Building2 },
-          { title: 'Amenities', href: '/dashboard/admin/amenities', icon: Layers },
         ],
       },
       { title: 'Cities', href: '/dashboard/admin/cities', icon: Building2 },
       { title: 'Developers', href: '/dashboard/admin/developers', icon: Briefcase },
-      { title: 'Users', href: '/dashboard/admin/users', icon: Users },
+      { title: 'Amenities', href: '/dashboard/admin/amenities', icon: Layers },
+    ],
+  },
+  {
+    title: 'Marketing',
+    items: [
       { title: 'Pages', href: '/dashboard/admin/pages', icon: FileText },
       { title: 'Blogs', href: '/dashboard/admin/blogs', icon: Newspaper },
       { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack },
     ],
+  },
+  {
+    title: 'Users',
+    items: [{ title: 'Users', href: '/dashboard/admin/users', icon: Users }],
   },
   {
     title: 'System',

@@ -22,6 +22,11 @@ const eslintConfig = defineConfig([
           argsIgnorePattern: '^_',
         },
       ],
+      '@next/next/no-html-link-for-pages': 'error',
+      '@next/next/no-img-element': 'error',
+      '@next/next/no-css-tags': 'error',
+      '@next/next/no-page-custom-font': 'error',
+      '@next/next/no-typos': 'error',
     },
   },
   // Override default ignores of eslint-config-next.

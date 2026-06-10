@@ -5,13 +5,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminBreadcrumb } from './admin-breadcrumb';
 import { ProfileDropdown } from './profile-dropdown';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { UserProfile } from '@/types/user';
 
-interface AdminHeaderProps {
-  user?: UserProfile | null;
-}
-
-export function AdminHeader({ user }: AdminHeaderProps) {
+export function AdminHeader() {
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center gap-2 border-b bg-primary-foreground! dark:bg-background! px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
       <SidebarTrigger className="-ml-1" />
@@ -19,7 +14,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
       <AdminBreadcrumb />
       <div className="ml-auto flex items-center gap-2">
         <ThemeToggle />
-        <ProfileDropdown user={user} />
+        <ProfileDropdown />
       </div>
     </header>
   );

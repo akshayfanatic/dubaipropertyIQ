@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +13,7 @@ import { toast } from 'sonner';
 import { FormActions } from '@/components/shared/forms/FormActions';
 import { cn } from '@/lib/utils';
 import { WidgetCard } from '@/components/shared/WidgetCard';
+import { useAuth } from '@/providers/auth-provider';
 
 const profileSchema = z.object({
   displayName: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
@@ -29,6 +31,8 @@ interface ProfileBasicInfoFormProps {
 }
 
 export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps) {
+  const router = useRouter();
+  const { updateProfileState } = useAuth();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initialData?.avatarUrl || null);
 
   const form = useForm<ProfileFormData>({
@@ -58,6 +62,8 @@ export function ProfileBasicInfoForm({ initialData }: ProfileBasicInfoFormProps)
       if (result?.error) {
         form.setError('root', { message: result.error });
       } else {
+        updateProfileState({ displayName: data.displayName, avatarUrl });
+        router.refresh();
         toast.success('Profile updated successfully!');
       }
     } catch {

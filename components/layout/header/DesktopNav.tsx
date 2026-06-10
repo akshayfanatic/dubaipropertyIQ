@@ -7,6 +7,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import type { HeaderMenus, NavigationSection } from '@/lib/db/menus/queries';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import { staticImages } from '@/config';
 
 interface NavItem {
   label: string;
@@ -134,7 +135,7 @@ function SearchImageSlot() {
         aria-label="Search properties"
         className="group relative hidden min-h-[180px] overflow-hidden rounded-xl border border-primary/15 bg-muted shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 xl:block"
       >
-        <Image src="/assets/images/property-home.jpg" alt="Dubai property search" fill sizes="230px" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
+        <Image src={staticImages.home.propertyInterior} alt="Dubai property search" fill sizes="230px" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
         <span className="absolute inset-0 bg-linear-to-t from-foreground/75 via-foreground/20 to-transparent" />
         <span className="absolute inset-x-0 bottom-0 p-4">
           <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-primary-foreground/80">Property search</span>
@@ -255,6 +256,8 @@ export function DesktopNav({ navItems, pathname, menus, isHeroHeader }: DesktopN
             <Search className="size-4" />
           </Link>
         </Button>
+
+        {/* Auth */}
         <AuthSection />
       </div>
     </>

@@ -13,6 +13,7 @@ import { getPropertiesByCity } from '@/lib/db/properties/queries';
 import { SliderSection } from '@/components/sliders/SliderSection';
 import type { ImageObject } from '@/types/images';
 import { AnimateSection } from '@/components/shared/AnimateSection';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 type AreaPageProps = {
   params: Promise<{
@@ -37,32 +38,14 @@ export async function generateMetadata({ params }: AreaPageProps): Promise<Metad
   const title = seo?.meta_title || `${cityInformation.name} Areas & Communities`;
   const description = seo?.meta_description || cityInformation.description || `Explore communities, areas, and available properties in ${cityInformation.name}.`;
   const canonical = seo?.canonical_url || `/areas/${cityInformation.slug}`;
-  const keywords = seo?.keywords
-    ?.split(',')
-    .map((keyword) => keyword.trim())
-    .filter(Boolean);
-
-  return {
+  return createPageMetadata({
     title,
     description,
-    keywords: keywords?.length ? keywords : undefined,
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: cityImageUrl ? [{ url: cityImageUrl }] : undefined,
-      type: 'website',
-    },
-    twitter: {
-      card: cityImageUrl ? 'summary_large_image' : 'summary',
-      title,
-      description,
-      images: cityImageUrl ? [cityImageUrl] : undefined,
-    },
-  };
+    path: canonical,
+    keywords: seo?.keywords,
+    image: cityImageUrl,
+    imageAlt: `${cityInformation.name} areas and communities`,
+  });
 }
 
 export default async function AreaPage({ params }: AreaPageProps) {

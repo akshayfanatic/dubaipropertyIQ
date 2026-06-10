@@ -1,12 +1,18 @@
+import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/(dashboard)/dashboard/globals.css';
 import { requireAuth } from '@/lib/auth/guards';
-import { serverClient } from '@/lib/supabase/server';
 import { SidebarInset } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/dashboard/admin/admin-sidebar';
 import { AdminHeader } from '@/components/dashboard/admin/admin-header';
 import { AdminProvider } from '@/providers/admin-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { noIndexMetadata } from '@/lib/utils/seo';
+
+export const metadata: Metadata = {
+  title: 'Dubai Property IQ Admin',
+  ...noIndexMetadata,
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -21,19 +27,13 @@ const geistMono = Geist_Mono({
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   await requireAuth();
 
-  const supabase = await serverClient();
-  await requireAuth();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
         <AdminProvider>
           <AdminSidebar />
           <SidebarInset>
-            <AdminHeader user={user} />
+            <AdminHeader />
             <main className="flex-1 p-6">{children}</main>
             <Toaster />
           </SidebarInset>

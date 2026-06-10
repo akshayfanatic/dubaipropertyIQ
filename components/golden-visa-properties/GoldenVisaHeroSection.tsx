@@ -3,12 +3,13 @@ import { ArrowRight } from 'lucide-react';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { buttonVariants } from '@/components/ui/button';
+import { staticImages } from '@/config';
 import { cn } from '@/lib/utils';
 
 export function GoldenVisaHeroSection() {
   return (
     <PageBanner
-      imageUrl="/assets/images/hero-bg-2.jpg"
+      imageUrl={staticImages.home.hero}
       alt="Dubai skyline for Golden Visa eligible property search"
       heightClassName="min-h-[560px] md:min-h-[590px]"
       imageClassName="scale-[1.02]"

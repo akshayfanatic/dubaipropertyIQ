@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
 import { getBuildingsByArea } from '@/lib/db/buildings/queries';
 import { AreaReportLeadForm } from '@/components/leads/AreaReportLeadForm';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 type AreaDetailPageProps = {
   params: Promise<{
@@ -41,32 +42,14 @@ export async function generateMetadata({ params }: AreaDetailPageProps): Promise
   const image = Array.isArray(areaDetail.photos) && areaDetail.photos.length > 0 ? areaDetail.photos[0] : null;
   const imageUrl = seo?.og_image_url || image?.url;
   const canonical = seo?.canonical_url || `/areas/${city}/${area}`;
-  const keywords = seo?.keywords
-    ?.split(',')
-    .map((keyword) => keyword.trim())
-    .filter(Boolean);
-
-  return {
+  return createPageMetadata({
     title,
     description,
-    keywords: keywords?.length ? keywords : undefined,
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: imageUrl ? [{ url: imageUrl, alt: image?.alt_tag || `${areaDetail.name} community photo` }] : undefined,
-      type: 'website',
-    },
-    twitter: {
-      card: imageUrl ? 'summary_large_image' : 'summary',
-      title,
-      description,
-      images: imageUrl ? [imageUrl] : undefined,
-    },
-  };
+    path: canonical,
+    keywords: seo?.keywords,
+    image: imageUrl,
+    imageAlt: image?.alt_tag || `${areaDetail.name} community photo`,
+  });
 }
 
 export default async function AreaDetailPage({ params }: AreaDetailPageProps) {

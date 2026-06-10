@@ -4,6 +4,7 @@ import { getBlogBySlug, getPublishedBlogs } from '@/lib/db/blogs/queries';
 import { BlogArticlePage } from '@/components/blogs/BlogArticlePage';
 import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 export const revalidate = 60;
 
@@ -33,16 +34,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const seo = blog.blogs_seo;
   const title = seo?.meta_title || blog.title;
   const description = seo?.meta_description || blog.excerpt || '';
+  const image = seo?.og_image_url || blog.feature_image_url?.url;
 
-  return {
+  return createPageMetadata({
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      images: blog.feature_image_url?.url ? [{ url: blog.feature_image_url.url, alt: blog.feature_image_url.alt_tag || blog.title }] : undefined,
-    },
-  };
+    path: seo?.canonical_url || `/blogs/${blog.slug}`,
+    keywords: seo?.keywords,
+    image,
+    imageAlt: blog.feature_image_url?.alt_tag || blog.title,
+    type: 'article',
+  });
 }
 
 export default async function BlogPage({ params }: PageProps) {

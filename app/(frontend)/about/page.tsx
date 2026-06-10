@@ -9,11 +9,22 @@ import { buttonVariants } from '@/components/ui/button';
 import { getGroupedSettings } from '@/lib/db/settings/queries';
 import { cn } from '@/lib/utils';
 import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
+import { JsonLd } from '@/components/shared/JsonLd';
+import { createPageMetadata } from '@/lib/utils/seo';
+import { createAboutPageSchema, createBreadcrumbSchema } from '@/lib/utils/structured-data';
+import { staticImages } from '@/config';
 
-export const metadata: Metadata = {
-  title: 'About Dubai Property IQ',
-  description: 'Learn how Dubai Property IQ helps buyers and investors research Dubai properties, communities, developers, and ownership decisions.',
-};
+const pageTitle = 'About Dubai Property IQ';
+const pageDescription = 'Learn how Dubai Property IQ helps buyers and investors research Dubai properties, communities, developers, and ownership decisions.';
+const pagePath = '/about';
+
+export const metadata: Metadata = createPageMetadata({
+  title: pageTitle,
+  description: pageDescription,
+  path: pagePath,
+  keywords: ['Dubai Property IQ', 'Dubai property research', 'Dubai real estate intelligence'],
+  image: staticImages.home.propertyInterior,
+});
 
 const principles = [
   {
@@ -129,7 +140,7 @@ export default async function AboutPage() {
           </div>
 
           <div className="relative min-h-[420px] overflow-hidden rounded-2xl border border-border bg-muted">
-            <Image src="/assets/images/property-home.jpg" alt="Dubai property interior" fill priority className="object-cover" />
+            <Image src={staticImages.home.propertyInterior} alt="Dubai property interior" fill priority className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/65 via-foreground/10 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
               <div className="card-entrance max-w-md rounded-xl border border-background/40 bg-background/95 p-5 shadow-lg">
@@ -236,6 +247,21 @@ export default async function AboutPage() {
           </Link>
         </AnimateSection>
       </section>
+      <JsonLd
+        id="about-page-structured-data"
+        data={[
+          createAboutPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            path: pagePath,
+            image: staticImages.home.propertyInterior,
+          }),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'About Dubai Property IQ', path: pagePath },
+          ]),
+        ]}
+      />
     </main>
   );
 }

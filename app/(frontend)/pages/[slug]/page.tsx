@@ -7,6 +7,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
 import { SectionCard } from '@/components/shared/SectionCard';
+import { createPageMetadata } from '@/lib/utils/seo';
 
 export const revalidate = 60;
 
@@ -35,10 +36,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const seo = page.pages_seo;
 
-  return {
+  return createPageMetadata({
     title: seo?.meta_title || page.title,
     description: seo?.meta_description || page.excerpt || '',
-  };
+    path: seo?.canonical_url || `/pages/${page.slug}`,
+    keywords: seo?.keywords,
+    image: seo?.og_image_url,
+  });
 }
 
 export default async function PagePage({ params }: PageProps) {

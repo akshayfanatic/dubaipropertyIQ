@@ -18,6 +18,22 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
 import { HomeHeroStats } from '@/components/home/HomeHeroStats';
 import { ArrowRight } from 'lucide-react';
+import { JsonLd } from '@/components/shared/JsonLd';
+import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createWebPageSchema } from '@/lib/utils/structured-data';
+import { staticImages } from '@/config';
+
+const pageTitle = 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence';
+const pageDescription = 'Search Dubai properties, compare communities and developers, and use investor tools for clearer real estate decisions.';
+const pagePath = '/';
+
+export const metadata = createPageMetadata({
+  title: pageTitle,
+  description: pageDescription,
+  path: pagePath,
+  keywords: ['Dubai property', 'Dubai real estate', 'Dubai property investment', 'Dubai communities', 'Dubai developers'],
+  image: staticImages.home.hero,
+});
 
 async function getHomeData() {
   const [citiesResult, featuredCitiesResult, developersResult, blogsResult] = await Promise.all([getCities({ limit: 5 }), getFeaturedCitiesAreas(), getDevelopers(), getPublishedBlogs()]);
@@ -37,7 +53,7 @@ export default async function Home() {
     <>
       {/* Hero: search-first homepage banner */}
       <PageBanner
-        imageUrl="/assets/images/hero-bg-2.jpg"
+        imageUrl={staticImages.home.hero}
         alt="Dubai skyline and property search hero"
         className="flex-col"
         heightClassName="min-h-0 pt-[100px] pb-12 md:min-h-screen md:pt-[104px] md:pb-[132px]"
@@ -138,6 +154,18 @@ export default async function Home() {
       <AnimateSection>
         <NewsletterSection />
       </AnimateSection>
+      <JsonLd
+        id="home-page-structured-data"
+        data={[
+          createWebPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            path: pagePath,
+            image: staticImages.home.hero,
+          }),
+          createBreadcrumbSchema([{ name: 'Home', path: pagePath }]),
+        ]}
+      />
     </>
   );
 }

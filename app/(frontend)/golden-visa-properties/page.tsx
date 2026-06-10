@@ -8,41 +8,27 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getProperties } from '@/lib/db/properties/queries';
 import type { PropertyListItem } from '@/types/property';
 import type { PaginatedResult } from '@/types/shared';
+import { createPageMetadata } from '@/lib/utils/seo';
+import { staticImages } from '@/config';
 
 const GOLDEN_VISA_PAGE_SIZE = 6;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dubaipropertyiq.com'),
+  ...createPageMetadata({
+    title: 'Golden Visa Properties in Dubai | AED 2M+ Eligible Listings',
+    description: 'Browse AED 2M+ Dubai properties eligible for the UAE Golden Visa and request guidance on property value, documents, application steps, and next moves.',
+    path: '/golden-visa-properties',
+    keywords: [
+      'Golden Visa properties Dubai',
+      'Dubai Golden Visa property',
+      'AED 2M property Dubai',
+      'UAE Golden Visa real estate',
+      'Golden Visa eligible properties',
+      'buy property in Dubai Golden Visa',
+    ],
+    image: staticImages.home.hero,
+  }),
   title: 'Golden Visa Properties in Dubai | AED 2M+ Eligible Listings',
-  description: 'Browse AED 2M+ Dubai properties eligible for the UAE Golden Visa and request guidance on property value, documents, application steps, and next moves.',
-  keywords: [
-    'Golden Visa properties Dubai',
-    'Dubai Golden Visa property',
-    'AED 2M property Dubai',
-    'UAE Golden Visa real estate',
-    'Golden Visa eligible properties',
-    'buy property in Dubai Golden Visa',
-  ],
-  alternates: {
-    canonical: '/golden-visa-properties',
-  },
-  openGraph: {
-    title: 'Golden Visa Properties in Dubai',
-    description: 'Shortlist AED 2M+ Dubai properties and request Golden Visa property guidance.',
-    url: '/golden-visa-properties',
-    siteName: 'Dubai Property IQ',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Golden Visa Properties in Dubai',
-    description: 'Browse AED 2M+ Dubai properties eligible for the UAE Golden Visa.',
-    images: ['/assets/images/hero-bg-2.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 export const revalidate = 60;

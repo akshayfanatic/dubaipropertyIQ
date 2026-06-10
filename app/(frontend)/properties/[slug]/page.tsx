@@ -17,7 +17,9 @@ import SideBarContent from '@/components/properties/tabs/SideBarContent';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
 import { getPropertyStatusBadgeConfig } from '@/config';
 import { SectionCard } from '@/components/shared/SectionCard';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { createPropertyMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createFaqPageSchema, createPropertyDetailSchema } from '@/lib/utils/structured-data';
 import { LeadCaptureForm } from '@/components/leads/LeadCaptureForm';
 
 interface PropertyPageProps {
@@ -55,6 +57,15 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const property = response.data;
   const photos = property.photos as ImageObject[];
+  const propertySchemas = [
+    createPropertyDetailSchema(property),
+    createBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Properties', path: '/search' },
+      { name: property.title, path: `/properties/${property.slug}` },
+    ]),
+    ...(property.properties_faqs?.length ? [createFaqPageSchema(property.properties_faqs)] : []),
+  ];
 
   const status = getPropertyStatusBadgeConfig(property.status);
 
@@ -118,6 +129,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           <LeadCaptureForm sourceType="property" areaOfInterest={property.title} showPhone requirePhone showBudget requireBudget showTimeline requireTimeline showMessage idPrefix="property-inquiry" />
         </SectionCard>
       </PropertyContentLayout>
+      <JsonLd id="property-detail-structured-data" data={propertySchemas} />
     </PageLayout>
   );
 }
