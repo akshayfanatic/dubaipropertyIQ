@@ -18,13 +18,19 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
 import { HomeHeroStats } from '@/components/home/HomeHeroStats';
 import { ArrowRight } from 'lucide-react';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createWebPageSchema } from '@/lib/utils/structured-data';
 import { staticImages } from '@/config';
 
+const pageTitle = 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence';
+const pageDescription = 'Search Dubai properties, compare communities and developers, and use investor tools for clearer real estate decisions.';
+const pagePath = '/';
+
 export const metadata = createPageMetadata({
-  title: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
-  description: 'Search Dubai properties, compare communities and developers, and use investor tools for clearer real estate decisions.',
-  path: '/',
+  title: pageTitle,
+  description: pageDescription,
+  path: pagePath,
   keywords: ['Dubai property', 'Dubai real estate', 'Dubai property investment', 'Dubai communities', 'Dubai developers'],
   image: staticImages.home.hero,
 });
@@ -148,6 +154,18 @@ export default async function Home() {
       <AnimateSection>
         <NewsletterSection />
       </AnimateSection>
+      <JsonLd
+        id="home-page-structured-data"
+        data={[
+          createWebPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            path: pagePath,
+            image: staticImages.home.hero,
+          }),
+          createBreadcrumbSchema([{ name: 'Home', path: pagePath }]),
+        ]}
+      />
     </>
   );
 }

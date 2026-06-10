@@ -1,5 +1,3 @@
-import Script from 'next/script';
-
 export type JsonLdValue = string | number | boolean | null | JsonLdObject | JsonLdValue[];
 
 export type JsonLdObject = {
@@ -16,5 +14,5 @@ function serializeJsonLd(data: JsonLdProps['data']) {
 }
 
 export function JsonLd({ id, data }: JsonLdProps) {
-  return <Script id={id} type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }} />;
+  return <script id={id} type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }} />;
 }
