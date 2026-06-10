@@ -1,5 +1,6 @@
 import { siteUrl } from '@/lib/utils/seo';
 import { staticImages } from '@/config';
+import type { JsonLdObject } from '@/components/shared/JsonLd';
 
 const normalizedSiteUrl = siteUrl.replace(/\/$/, '');
 
@@ -10,7 +11,7 @@ function absoluteUrl(path: string) {
   return new URL(path, normalizedSiteUrl).toString();
 }
 
-export function createOrganizationSchema() {
+export function createOrganizationSchema(): JsonLdObject {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
@@ -25,7 +26,7 @@ export function createOrganizationSchema() {
   };
 }
 
-export function createWebsiteSchema() {
+export function createWebsiteSchema(): JsonLdObject {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -38,7 +39,7 @@ export function createWebsiteSchema() {
   };
 }
 
-export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>) {
+export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>): JsonLdObject {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -51,10 +52,10 @@ export function createBreadcrumbSchema(items: Array<{ name: string; path: string
   };
 }
 
-export function createAboutPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }) {
+export function createAboutPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): JsonLdObject {
   const url = absoluteUrl(path);
 
-  return {
+  const schema = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
     '@id': `${url}#about`,
@@ -67,16 +68,22 @@ export function createAboutPageSchema({ title, description, path, image }: { tit
     publisher: {
       '@id': organizationId,
     },
-    primaryImageOfPage: image
-      ? {
-          '@type': 'ImageObject',
-          url: absoluteUrl(image),
-        }
-      : undefined,
+  };
+
+  if (!image) {
+    return schema;
+  }
+
+  return {
+    ...schema,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: absoluteUrl(image),
+    },
   };
 }
 
-export function createCalculatorSchema({ name, description, path }: { name: string; description: string; path: string }) {
+export function createCalculatorSchema({ name, description, path }: { name: string; description: string; path: string }): JsonLdObject {
   const url = absoluteUrl(path);
 
   return {

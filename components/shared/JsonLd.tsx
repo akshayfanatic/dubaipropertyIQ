@@ -1,8 +1,8 @@
 import Script from 'next/script';
 
-type JsonLdValue = string | number | boolean | null | JsonLdObject | JsonLdValue[];
+export type JsonLdValue = string | number | boolean | null | JsonLdObject | JsonLdValue[];
 
-type JsonLdObject = {
+export type JsonLdObject = {
   [key: string]: JsonLdValue;
 };
 
