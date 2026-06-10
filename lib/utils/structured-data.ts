@@ -1,7 +1,21 @@
 import { siteUrl } from '@/lib/utils/seo';
 import { staticImages } from '@/config';
-import type { JsonLdObject } from '@/components/shared/JsonLd';
 import type { Property, PropertyFAQ } from '@/types/property';
+import type {
+  AboutPage,
+  AccommodationLeaf,
+  BreadcrumbList,
+  FAQPage,
+  IdReference,
+  Offer,
+  Organization,
+  RealEstateAgent,
+  RealEstateListing,
+  WebApplication,
+  WebPage,
+  WebSite,
+  WithContext,
+} from 'schema-dts';
 
 const normalizedSiteUrl = siteUrl.replace(/\/$/, '');
 
@@ -16,7 +30,36 @@ function hasText(value?: string | null): value is string {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
-export function createOrganizationSchema(): JsonLdObject {
+function organizationReference(): IdReference {
+  return {
+    '@id': organizationId,
+  };
+}
+
+function websiteReference(): IdReference {
+  return {
+    '@id': websiteId,
+  };
+}
+
+function createDeveloperOrganization(property: Property): Organization | IdReference {
+  if (!property.developer?.name) {
+    return organizationReference();
+  }
+
+  const developer: Organization = {
+    '@type': 'Organization',
+    name: property.developer.name,
+  };
+
+  if (hasText(property.developer.website_url)) {
+    developer.url = property.developer.website_url;
+  }
+
+  return developer;
+}
+
+export function createOrganizationSchema(): WithContext<RealEstateAgent> {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
@@ -31,20 +74,18 @@ export function createOrganizationSchema(): JsonLdObject {
   };
 }
 
-export function createWebsiteSchema(): JsonLdObject {
+export function createWebsiteSchema(): WithContext<WebSite> {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     '@id': websiteId,
     name: 'Dubai Property IQ',
     url: normalizedSiteUrl,
-    publisher: {
-      '@id': organizationId,
-    },
+    publisher: organizationReference(),
   };
 }
 
-export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>): JsonLdObject {
+export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>): WithContext<BreadcrumbList> {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -57,22 +98,18 @@ export function createBreadcrumbSchema(items: Array<{ name: string; path: string
   };
 }
 
-export function createWebPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): JsonLdObject {
+export function createWebPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): WithContext<WebPage> {
   const url = absoluteUrl(path);
 
-  const schema = {
+  const schema: WithContext<WebPage> = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': `${url}#webpage`,
     name: title,
     description,
     url,
-    isPartOf: {
-      '@id': websiteId,
-    },
-    publisher: {
-      '@id': organizationId,
-    },
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
   };
 
   if (!image) {
@@ -88,22 +125,18 @@ export function createWebPageSchema({ title, description, path, image }: { title
   };
 }
 
-export function createAboutPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): JsonLdObject {
+export function createAboutPageSchema({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): WithContext<AboutPage> {
   const url = absoluteUrl(path);
 
-  const schema = {
+  const schema: WithContext<AboutPage> = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
     '@id': `${url}#about`,
     name: title,
     description,
     url,
-    isPartOf: {
-      '@id': websiteId,
-    },
-    publisher: {
-      '@id': organizationId,
-    },
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
   };
 
   if (!image) {
@@ -119,34 +152,37 @@ export function createAboutPageSchema({ title, description, path, image }: { tit
   };
 }
 
-export function createFaqPageSchema(faqs: PropertyFAQ[]): JsonLdObject {
+export function createFaqPageSchema(faqs: PropertyFAQ[]): WithContext<FAQPage> {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqs
-      .filter((faq) => hasText(faq.question) && hasText(faq.answer))
-      .map((faq) => ({
-        '@type': 'Question',
-        name: faq.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: faq.answer,
-        },
-      })),
+    mainEntity: getSchemaFaqs(faqs).map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
   };
 }
 
-export function createPropertyDetailSchema(property: Property): JsonLdObject {
+export function getSchemaFaqs(faqs: PropertyFAQ[] = []) {
+  return faqs.filter((faq) => hasText(faq.question) && hasText(faq.answer));
+}
+
+export function createPropertyDetailSchema(property: Property): WithContext<RealEstateListing> {
   const url = absoluteUrl(`/properties/${property.slug}`);
+  const accommodationId = `${url}#accommodation`;
   const images =
     property.photos
       ?.map((photo) => photo.url)
       .filter(hasText)
       .map(absoluteUrl) ?? [];
-  const schema: JsonLdObject = {
-    '@context': 'https://schema.org',
-    '@type': 'Residence',
-    '@id': `${url}#property`,
+
+  const accommodation: AccommodationLeaf = {
+    '@type': 'Accommodation',
+    '@id': accommodationId,
     name: property.title,
     description: property.description,
     url,
@@ -157,47 +193,55 @@ export function createPropertyDetailSchema(property: Property): JsonLdObject {
       value: property.size_sqft,
       unitCode: 'FTK',
     },
-    offers: {
-      '@type': 'Offer',
-      price: property.price_aed,
-      priceCurrency: 'AED',
-      availability: property.status === 'sold' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
-      url,
-    },
-    provider: {
-      '@id': organizationId,
-    },
   };
 
   if (images.length > 0) {
-    schema.image = images;
+    accommodation.image = images;
   }
 
   if (property.location) {
-    schema.geo = {
+    accommodation.geo = {
       '@type': 'GeoCoordinates',
       latitude: property.location.lat,
       longitude: property.location.lng,
     };
   }
 
-  if (property.developer?.name) {
-    const brand: JsonLdObject = {
-      '@type': 'Organization',
-      name: property.developer.name,
-    };
+  const offer: Offer = {
+    '@type': 'Offer',
+    '@id': `${url}#offer`,
+    price: property.price_aed,
+    priceCurrency: 'AED',
+    availability: property.status === 'sold' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+    url,
+    itemOffered: {
+      '@id': accommodationId,
+    },
+    offeredBy: createDeveloperOrganization(property),
+    seller: organizationReference(),
+  };
 
-    if (hasText(property.developer.website_url)) {
-      brand.url = property.developer.website_url;
-    }
+  const listing: WithContext<RealEstateListing> = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    '@id': `${url}#listing`,
+    name: property.title,
+    description: property.description,
+    url,
+    isPartOf: websiteReference(),
+    about: accommodation,
+    mainEntity: offer,
+    publisher: organizationReference(),
+  };
 
-    schema.brand = brand;
+  if (property.created_at) {
+    listing.datePosted = property.created_at;
   }
 
-  return schema;
+  return listing;
 }
 
-export function createCalculatorSchema({ name, description, path }: { name: string; description: string; path: string }): JsonLdObject {
+export function createCalculatorSchema({ name, description, path }: { name: string; description: string; path: string }): WithContext<WebApplication> {
   const url = absoluteUrl(path);
 
   return {
@@ -215,8 +259,6 @@ export function createCalculatorSchema({ name, description, path }: { name: stri
       price: '0',
       priceCurrency: 'AED',
     },
-    publisher: {
-      '@id': organizationId,
-    },
+    publisher: organizationReference(),
   };
 }
