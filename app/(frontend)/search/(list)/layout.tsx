@@ -6,13 +6,14 @@ import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { FloatingSearchFilters } from '@/components/search/FloatingSearchFilters';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { staticImages } from '@/config';
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Search Dubai Properties',
   description: 'Search Dubai properties by location, budget, bedrooms, property type, amenities, and Golden Visa eligibility.',
   path: '/search',
   keywords: ['Dubai property search', 'Dubai properties for sale', 'search Dubai real estate', 'Dubai Golden Visa properties'],
-  image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop',
+  image: staticImages.search.banner,
 });
 
 interface SearchPageLayoutProps {
@@ -24,7 +25,7 @@ export default async function SearchPageLayout({ children }: SearchPageLayoutPro
     <div className="min-h-screen bg-background">
       <div id="search-banner">
         <PageBanner
-          imageUrl="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop"
+          imageUrl={staticImages.search.banner}
           alt="Modern luxury property exterior"
           heightClassName="min-h-[540px] sm:min-h-[460px] lg:min-h-[420px]"
           overlayClassName="bg-foreground/55"

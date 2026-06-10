@@ -9,6 +9,7 @@ import { getProperties } from '@/lib/db/properties/queries';
 import type { PropertyListItem } from '@/types/property';
 import type { PaginatedResult } from '@/types/shared';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { staticImages } from '@/config';
 
 const GOLDEN_VISA_PAGE_SIZE = 6;
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
       'Golden Visa eligible properties',
       'buy property in Dubai Golden Visa',
     ],
-    image: '/assets/images/hero-bg-2.jpg',
+    image: staticImages.home.hero,
   }),
   title: 'Golden Visa Properties in Dubai | AED 2M+ Eligible Listings',
 };

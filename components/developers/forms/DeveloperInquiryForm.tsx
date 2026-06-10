@@ -14,6 +14,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { SelectField } from '@/components/shared/select-field';
 import { TextArea } from '@/components/shared/forms/text-area';
 import { TextInput } from '@/components/shared/forms/text-input';
+import { staticImages } from '@/config';
 import { createLead } from '@/lib/db/leads/actions';
 import type { SelectOption } from '@/types/shared';
 
@@ -31,7 +32,7 @@ const timelineOptions: SelectOption[] = [
   { label: 'Researching only', value: 'researching' },
 ];
 
-const inquiryImageUrl = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop';
+const inquiryImageUrl = staticImages.developer.inquiryForm;
 
 const developerInquirySchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters'),

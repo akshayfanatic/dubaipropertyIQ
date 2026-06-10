@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 import type { ImageObject } from '@/types/images';
 import { cn } from '@/lib/utils';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
+import { staticImages } from '@/config';
 
 interface PropertyGalleryProps {
   photos: ImageObject[];
@@ -26,7 +27,7 @@ export function PropertyGallery({ photos, title, statusLabel, statusClassName, g
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
-  const images = photos?.length ? photos : [{ url: '/assets/images/placeholder.jpg', alt_tag: title }];
+  const images = photos?.length ? photos : [{ url: staticImages.fallback.property, alt_tag: title }];
 
   return (
     <Dialog

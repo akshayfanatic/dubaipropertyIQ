@@ -11,7 +11,7 @@ import { formatPrice, formatSize } from '@/lib/utils/price';
 import { cn } from '@/lib/utils';
 import type { ImageObject } from '@/types/images';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
-import { getPropertyStatusBadgeConfig } from '@/config';
+import { getPropertyStatusBadgeConfig, staticImages } from '@/config';
 import { PropertySaveButton } from '@/components/properties/PropertySaveButton';
 
 interface PropertyCardTileProps {
@@ -21,7 +21,7 @@ interface PropertyCardTileProps {
 
 export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTileProps) {
   const photos = property.photos as ImageObject[];
-  const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
+  const firstImage = photos?.[0]?.url || staticImages.fallback.property;
   const city = Array.isArray(property.city) ? property.city[0] : (property.city as { name: string; slug: string } | undefined);
   const cityName = city?.name || 'Location';
   const category = property.category?.[0]?.name || 'Property';

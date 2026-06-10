@@ -19,13 +19,14 @@ import HomeBanner from '@/components/home/HomeBanner';
 import { HomeHeroStats } from '@/components/home/HomeHeroStats';
 import { ArrowRight } from 'lucide-react';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { staticImages } from '@/config';
 
 export const metadata = createPageMetadata({
   title: 'Dubai Property IQ | Dubai Real Estate & Investment Intelligence',
   description: 'Search Dubai properties, compare communities and developers, and use investor tools for clearer real estate decisions.',
   path: '/',
   keywords: ['Dubai property', 'Dubai real estate', 'Dubai property investment', 'Dubai communities', 'Dubai developers'],
-  image: '/assets/images/hero-bg-2.jpg',
+  image: staticImages.home.hero,
 });
 
 async function getHomeData() {
@@ -46,7 +47,7 @@ export default async function Home() {
     <>
       {/* Hero: search-first homepage banner */}
       <PageBanner
-        imageUrl="/assets/images/hero-bg-2.jpg"
+        imageUrl={staticImages.home.hero}
         alt="Dubai skyline and property search hero"
         className="flex-col"
         heightClassName="min-h-0 pt-[100px] pb-12 md:min-h-screen md:pt-[104px] md:pb-[132px]"

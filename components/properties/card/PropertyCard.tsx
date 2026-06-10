@@ -12,7 +12,7 @@ import { PropertyWhatsAppButton } from '@/components/properties/PropertyWhatsApp
 import type { PropertyListItem } from '@/types/property';
 import type { ImageObject } from '@/types/images';
 import { GoldenVisaBadge } from '@/components/shared/GoldenVisaBadge';
-import { getPropertyStatusBadgeConfig } from '@/config';
+import { getPropertyStatusBadgeConfig, staticImages } from '@/config';
 import { PropertySaveButton } from '@/components/properties/PropertySaveButton';
 
 interface PropertyCardProps {
@@ -23,7 +23,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property, className, wishlistSlot }: PropertyCardProps) {
   const photos = property.photos as ImageObject[];
-  const firstImage = photos?.[0]?.url || '/assets/images/placeholder.jpg';
+  const firstImage = photos?.[0]?.url || staticImages.fallback.property;
   const status = getPropertyStatusBadgeConfig(property.status);
   const city = Array.isArray(property.city) ? property.city[0] : (property.city as { name: string; slug: string } | undefined);
   const cityName = city?.name || 'Dubai';

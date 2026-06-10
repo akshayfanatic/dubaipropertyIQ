@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { staticImages } from '@/config';
 import { cn } from '@/lib/utils';
 
-const DEFAULT_FALLBACK_SRC = '/assets/images/placeholder.svg';
+const DEFAULT_FALLBACK_SRC = staticImages.fallback.image;
 
 interface ImageWithFallbackProps {
   src?: string | null;

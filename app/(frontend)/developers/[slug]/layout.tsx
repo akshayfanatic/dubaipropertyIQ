@@ -15,6 +15,7 @@ import { ImageObject } from '@/types/images';
 import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { staticImages } from '@/config';
 
 export function PropertiesSkeleton() {
   return (
@@ -87,7 +88,7 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
   return (
     <PageLayout contentFullWidth={true} breadcrumb={<PublicBreadCrumb />}>
       {/* Developer Banner */}
-      <PageBanner contentClassName="container sm:max-w-full mx-auto px-4 sm:px-16  h-112" imageUrl="https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?q=80&w=1600&auto=format&fit=crop">
+      <PageBanner contentClassName="container sm:max-w-full mx-auto px-4 sm:px-16  h-112" imageUrl={staticImages.developer.banner} alt={`${developer.name} developer profile`}>
         <DeveloperProfileCard
           name={developer.name}
           logoUrl={logoUrl}

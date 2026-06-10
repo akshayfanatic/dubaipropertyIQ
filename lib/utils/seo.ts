@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { Property } from '@/types';
+import { staticImages } from '@/config';
 
 const cleanText = (value?: string | null) => value?.trim() || undefined;
 const siteName = 'Dubai Property IQ';
@@ -8,7 +9,7 @@ export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dubaipro
 
 export const metadataBase = new URL(siteUrl);
 
-export const defaultOpenGraphImage = '/assets/images/hero-bg-2.jpg';
+export const defaultOpenGraphImage = staticImages.home.hero;
 
 export function splitKeywords(value?: string | null) {
   return cleanText(value)
