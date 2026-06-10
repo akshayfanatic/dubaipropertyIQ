@@ -1,5 +1,4 @@
 import { PlusCircle } from 'lucide-react';
-import { serverClient } from '@/lib/supabase/server';
 import { Stats } from '@/components/dashboard/admin/dashboard/Stats';
 import { QuickActions } from '@/components/dashboard/admin/dashboard/QuickActions';
 import { RecentProperties } from '@/components/dashboard/admin/dashboard/RecentProperties';
@@ -8,10 +7,9 @@ import { Suspense } from 'react';
 import { QuickAction } from '@/types/dashboard';
 
 export default async function DashboardPage() {
-  const supabase = await serverClient();
-
-  // Quick Actions - Add Property + first 4 Management routes from config/routes.ts
-  const managementItems = adminRoutes.find((g) => g.title === 'Management')?.items || [];
+  // Quick Actions - Add Property + first core operating routes from config/routes.ts
+  const quickActionGroups = ['Management', 'Marketing', 'Users'];
+  const quickActionItems = adminRoutes.filter((group) => quickActionGroups.includes(group.title)).flatMap((group) => group.items);
 
   const quickActions: QuickAction[] = [
     {
@@ -20,7 +18,7 @@ export default async function DashboardPage() {
       href: '/dashboard/admin/properties/new',
       icon: PlusCircle,
     },
-    ...managementItems.slice(0, 4).map((item) => ({
+    ...quickActionItems.slice(0, 4).map((item) => ({
       title: item.title,
       description: `Manage ${item.title.toLowerCase()}`,
       href: item.href,
