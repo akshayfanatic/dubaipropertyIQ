@@ -17,9 +17,9 @@ import SideBarContent from '@/components/properties/tabs/SideBarContent';
 import { PropertyContentLayout } from '@/components/properties/layout/PropertyContent';
 import { getPropertyStatusBadgeConfig } from '@/config';
 import { SectionCard } from '@/components/shared/SectionCard';
-import { JsonLd } from '@/components/shared/JsonLd';
+import { JsonLd, type SchemaJsonLd } from '@/components/shared/JsonLd';
 import { createPropertyMetadata } from '@/lib/utils/seo';
-import { createBreadcrumbSchema, createFaqPageSchema, createPropertyDetailSchema } from '@/lib/utils/structured-data';
+import { createBreadcrumbSchema, createFaqPageSchema, createPropertyDetailSchema, getSchemaFaqs } from '@/lib/utils/structured-data';
 import { LeadCaptureForm } from '@/components/leads/LeadCaptureForm';
 
 interface PropertyPageProps {
@@ -57,15 +57,19 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const property = response.data;
   const photos = property.photos as ImageObject[];
-  const propertySchemas = [
+  const schemaFaqs = getSchemaFaqs(property.properties_faqs ?? []);
+  const propertySchemas: SchemaJsonLd[] = [
     createPropertyDetailSchema(property),
     createBreadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'Properties', path: '/search' },
       { name: property.title, path: `/properties/${property.slug}` },
     ]),
-    ...(property.properties_faqs?.length ? [createFaqPageSchema(property.properties_faqs)] : []),
   ];
+
+  if (schemaFaqs.length > 0) {
+    propertySchemas.push(createFaqPageSchema(schemaFaqs));
+  }
 
   const status = getPropertyStatusBadgeConfig(property.status);
 
