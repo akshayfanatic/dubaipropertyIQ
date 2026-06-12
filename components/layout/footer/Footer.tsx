@@ -9,8 +9,8 @@ const footerColumns = [
     title: 'Properties',
     links: [
       { label: 'Buy', href: '/search' },
-      { label: 'Off-Plan Projects', href: '/search?property_status=off_plan' },
-      { label: 'Golden Visa Homes', href: '/search?golden_visa=true' },
+      { label: 'Off-Plan Projects', href: '/search?status=off_plan' },
+      { label: 'Golden Visa Homes', href: '/golden-visa-properties' },
       { label: 'Advanced Search', href: '/search' },
     ],
   },
@@ -20,7 +20,6 @@ const footerColumns = [
       { label: 'True Cost Calculator', href: '/calculators/rent-vs-buy-calculator' },
       { label: 'Rental Yield', href: '/calculators/rent-vs-buy-calculator' },
       { label: 'Mortgage', href: '/calculators/mortgage-calculator' },
-      { label: 'Service Charges', href: '/blogs' },
     ],
   },
 ];
@@ -29,7 +28,6 @@ const pageLinks = [
   { label: 'About', href: '/about' },
   { label: 'List Your Property', href: '/pages/list-your-property' },
   { label: 'Guides', href: '/blogs' },
-  { label: 'Contact', href: '/pages/contact' },
 ];
 
 const legalLinks = [
