@@ -119,6 +119,7 @@ export interface PropertyListItem {
   city_id?: string | null;
   created_at: string;
   updated_at: string;
+  is_saved?: boolean;
 }
 
 /**
