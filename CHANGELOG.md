@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.2...v0.9.3) (2026-06-12)
+
+### Features
+
+- **auth:** added dedicated provider for auth ([76f21c7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/76f21c789dbd0301b93c33cda8d345e00e5dde55))
+- **schema:** added about page JSON schema ([7963020](https://github.com/akshayfanatic/dubaipropertyIQ/commit/79630207b491b3600c7a5351e3b80f182005ebcd))
+- **schema:** added blogs, pages, golden-visa-properties,search page schema ([398199b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/398199b81661c225d46b98cf2440489b20670aa8))
+- **schema:** added pacakge for schema interface , and update structure data helper functions using types ([d95197e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d95197e740e78ee486968eab398e620067a9a2db))
+- **schema:** added schema for city ,areas , buildings ([0fe7a6e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0fe7a6e7ffbbfb35ae8ea4b5f39e8e263586b2c4))
+- **schema:** added schema for developer page ([afbad94](https://github.com/akshayfanatic/dubaipropertyIQ/commit/afbad941c2fb84db53ba949c696d08ebc6d2ff81))
+- **schema:** added schema to calculators pages ,home page ([5a4f3f7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/5a4f3f711245610529369c695b3d5bfecd763fc7))
+- **schema:** added schema to property page and home page testing ([691b1f9](https://github.com/akshayfanatic/dubaipropertyIQ/commit/691b1f9bae3084e1c779e56884171d14d1b7efdb))
+
+### Bug Fixes
+
+- **schema:** fix type issue regarding schema structure ([1078c52](https://github.com/akshayfanatic/dubaipropertyIQ/commit/1078c5294d641169dab4cf1a8165f4a6fa70bf61))
+- **seo:** added reusable function for seo page meta data ([206ad47](https://github.com/akshayfanatic/dubaipropertyIQ/commit/206ad4704927a7987791cb6a4e4e0317fa2adab1))
+
+### Code Refactoring
+
+- **customer:** enhance customer dashboard ([d8ce49e](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d8ce49eb69649bafa67ca8c830330f3855d649f9))
+- **lint:** added new linting rule and fix linting issue ([3b35292](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3b352923e96612f3ff9d747b20ede2bcf344cc3d))
+- **property:** remove spread operator and display component oreinted data ([e052535](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e05253576b835bdab1b0b763a56bb90e3e05e97a))
+- **routes:** reorganize admin routes and navigations ([027df94](https://github.com/akshayfanatic/dubaipropertyIQ/commit/027df9471767c95fb15c6bce60de84cee98e63a4))
+- **static:** remove third party url and added static images ([13809e4](https://github.com/akshayfanatic/dubaipropertyIQ/commit/13809e4acdbef8e660b028314e0121f68559912b))
+
 ### [0.9.2](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.1...v0.9.2) (2026-06-09)
 
 ### Features
