@@ -1,14 +1,18 @@
 import { siteUrl } from '@/lib/utils/seo';
 import { staticImages } from '@/config';
 import type { AreaDetail } from '@/lib/db/areas/queries';
+import type { Blog } from '@/types/blog';
 import type { BuildingWithRelations } from '@/types/building';
 import type { City as CityType } from '@/types/city';
 import type { Developer } from '@/types/developer';
 import type { FAQ } from '@/types/shared';
+import type { Page } from '@/types/page';
 import type { Property, PropertyFAQ } from '@/types/property';
+import type { PropertyListItem } from '@/types/property';
 import type {
   AboutPage,
   AccommodationLeaf,
+  BlogPosting,
   BreadcrumbList,
   CollectionPage,
   FAQPage,
@@ -19,6 +23,7 @@ import type {
   Place,
   RealEstateAgent,
   RealEstateListing,
+  SearchResultsPage,
   WebApplication,
   WebPage,
   WebSite,
@@ -425,6 +430,187 @@ export function createBuildingWebPageSchema(building: BuildingWithRelations): Wi
       '@type': 'ImageObject',
       url: absoluteUrl(image),
     },
+  };
+}
+
+export function createBlogsCollectionSchema(blogs: Array<Pick<Blog, 'title' | 'slug' | 'excerpt' | 'feature_image_url'>>): WithContext<CollectionPage> {
+  const path = '/blogs';
+  const url = absoluteUrl(path);
+  const itemList: ItemList = {
+    '@type': 'ItemList',
+    itemListElement: blogs.map((blog, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: blog.title,
+      url: absoluteUrl(`/blogs/${blog.slug}`),
+    })),
+  };
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${url}#webpage`,
+    name: 'Dubai Property Guides',
+    description: 'Read Dubai property market guides, investor insights, and area research.',
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+    mainEntity: itemList,
+  };
+}
+
+export function createBlogPostingSchema(blog: Blog): WithContext<BlogPosting> {
+  const url = absoluteUrl(`/blogs/${blog.slug}`);
+  const image = getImageUrl(blog.blogs_seo?.og_image_url || blog.feature_image_url);
+  const schema: WithContext<BlogPosting> = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#blogposting`,
+    headline: blog.title,
+    name: blog.title,
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+    author: organizationReference(),
+  };
+
+  if (hasText(blog.blogs_seo?.meta_description || blog.excerpt)) {
+    schema.description = blog.blogs_seo?.meta_description || blog.excerpt || undefined;
+  }
+
+  if (hasText(blog.created_at)) {
+    schema.datePublished = blog.created_at;
+  }
+
+  if (hasText(blog.updated_at)) {
+    schema.dateModified = blog.updated_at;
+  }
+
+  if (image) {
+    schema.image = absoluteUrl(image);
+  }
+
+  return schema;
+}
+
+export function createBlogWebPageSchema(blog: Blog): WithContext<WebPage> {
+  const path = `/blogs/${blog.slug}`;
+  const url = absoluteUrl(path);
+  const description = blog.blogs_seo?.meta_description || blog.excerpt || `Read ${blog.title} on Dubai Property IQ.`;
+  const image = getImageUrl(blog.blogs_seo?.og_image_url || blog.feature_image_url);
+
+  const schema: WithContext<WebPage> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    name: blog.blogs_seo?.meta_title || blog.title,
+    description,
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+    mainEntity: {
+      '@id': `${url}#blogposting`,
+    },
+  };
+
+  if (!image) {
+    return schema;
+  }
+
+  return {
+    ...schema,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: absoluteUrl(image),
+    },
+  };
+}
+
+export function createContentPageSchema(page: Page): WithContext<WebPage> {
+  const path = `/pages/${page.slug}`;
+  const url = absoluteUrl(path);
+  const description = page.pages_seo?.meta_description || page.excerpt || `Read ${page.title} on Dubai Property IQ.`;
+  const image = getImageUrl(page.pages_seo?.og_image_url);
+
+  const schema: WithContext<WebPage> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    name: page.pages_seo?.meta_title || page.title,
+    description,
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+  };
+
+  if (!image) {
+    return schema;
+  }
+
+  return {
+    ...schema,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: absoluteUrl(image),
+    },
+  };
+}
+
+export function createSearchResultsPageSchema(): WithContext<SearchResultsPage> {
+  const path = '/search';
+  const url = absoluteUrl(path);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SearchResultsPage',
+    '@id': `${url}#webpage`,
+    name: 'Search Dubai Properties',
+    description: 'Search Dubai properties by location, budget, bedrooms, property type, amenities, and Golden Visa eligibility.',
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+  };
+}
+
+function createPropertyItemList({ name, path, properties }: { name: string; path: string; properties: PropertyListItem[] }): ItemList {
+  return {
+    '@type': 'ItemList',
+    name,
+    url: absoluteUrl(path),
+    itemListElement: properties.map((property, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: property.title,
+      url: absoluteUrl(`/properties/${property.slug}`),
+    })),
+  };
+}
+
+export function createPropertyItemListSchema({ name, path, properties }: { name: string; path: string; properties: PropertyListItem[] }): WithContext<ItemList> {
+  return {
+    '@context': 'https://schema.org',
+    ...createPropertyItemList({ name, path, properties }),
+  };
+}
+
+export function createGoldenVisaPropertiesCollectionSchema(properties: PropertyListItem[]): WithContext<CollectionPage> {
+  const path = '/golden-visa-properties';
+  const url = absoluteUrl(path);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${url}#webpage`,
+    name: 'Golden Visa Properties in Dubai',
+    description: 'Browse AED 2M+ Dubai properties eligible for the UAE Golden Visa and request guidance on property value, documents, application steps, and next moves.',
+    url,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+    mainEntity: createPropertyItemList({
+      name: 'Golden Visa eligible properties',
+      path,
+      properties,
+    }),
   };
 }
 

@@ -4,11 +4,13 @@ import { AlertCircle, Building } from 'lucide-react';
 import { EmptyState } from '@/components/shared/no-item-found';
 import { Pagination } from '@/components/shared/pagination';
 import { PropertyCard, PropertyCardSkeleton } from '@/components/properties/card';
+import { JsonLd, type SchemaJsonLd } from '@/components/shared/JsonLd';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getProperties } from '@/lib/db/properties/queries';
 import type { PropertyListItem } from '@/types/property';
 import type { PaginatedResult } from '@/types/shared';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createGoldenVisaPropertiesCollectionSchema } from '@/lib/utils/structured-data';
 import { staticImages } from '@/config';
 
 const GOLDEN_VISA_PAGE_SIZE = 6;
@@ -88,6 +90,13 @@ async function GoldenVisaPropertyResults({ params }: { params: GoldenVisaSearchP
   const { data: properties, total, page, pageSize } = paginatedResult;
   const firstResult = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const lastResult = Math.min(page * pageSize, total);
+  const goldenVisaSchemas: SchemaJsonLd[] = [
+    createGoldenVisaPropertiesCollectionSchema(properties),
+    createBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Golden Visa Properties', path: '/golden-visa-properties' },
+    ]),
+  ];
 
   if (properties.length === 0) {
     return (
@@ -122,6 +131,7 @@ async function GoldenVisaPropertyResults({ params }: { params: GoldenVisaSearchP
           <Pagination total={total} page={page} pageSize={pageSize} />
         </div>
       )}
+      <JsonLd id="golden-visa-properties-structured-data" data={goldenVisaSchemas} />
     </div>
   );
 }
