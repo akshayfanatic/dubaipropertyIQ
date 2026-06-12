@@ -95,7 +95,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
         {/* ── Key Information Section ── */}
         <SectionCard id="key-info" eyebrow="Key facts" title="Key Information" className="py-0" containerClassName="w-full" classes={propertySectionClasses}>
-          <PropertyAttributes {...property} />
+          <PropertyAttributes bathrooms={property?.bathrooms} bedrooms={property?.bedrooms} size_sqft={property?.size_sqft} />
         </SectionCard>
 
         {/* ── Location Section ── */}

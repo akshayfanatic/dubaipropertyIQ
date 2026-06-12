@@ -13,7 +13,9 @@ import { getPropertiesByCity } from '@/lib/db/properties/queries';
 import { SliderSection } from '@/components/sliders/SliderSection';
 import type { ImageObject } from '@/types/images';
 import { AnimateSection } from '@/components/shared/AnimateSection';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createCityAreasCollectionSchema } from '@/lib/utils/structured-data';
 
 type AreaPageProps = {
   params: Promise<{
@@ -61,6 +63,8 @@ export default async function AreaPage({ params }: AreaPageProps) {
   const cityImageUrl = typeof cityImage === 'string' ? cityImage : cityImage?.url;
   const cityImageAlt = typeof cityImage === 'string' ? `${cityInformation.data.name} area skyline` : cityImage?.alt_tag || `${cityInformation.data.name} area skyline`;
   const cityDescription = cityInformation.data.description || `Explore communities and neighborhoods in ${cityInformation.data.name}.`;
+  const areasResponse = await getAreasByCity(city);
+  const areas = areasResponse.success ? (areasResponse.data ?? []) : [];
 
   return (
     <PageLayout wrapperClassName="py-0" contentFullWidth>
@@ -90,15 +94,25 @@ export default async function AreaPage({ params }: AreaPageProps) {
         </div>
       </PageBanner>
 
-      <AreasSection city={city} cityName={cityInformation.data.name} />
+      <AreasSection city={city} cityName={cityInformation.data.name} areasResponse={areasResponse} />
 
       <PropertiesSection city={city} />
+      <JsonLd
+        id="city-areas-structured-data"
+        data={[
+          createCityAreasCollectionSchema(cityInformation.data, areas),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: `${cityInformation.data.name} Areas`, path: `/areas/${cityInformation.data.slug}` },
+          ]),
+        ]}
+      />
     </PageLayout>
   );
 }
 
-async function AreasSection({ city, cityName }: { city: string; cityName: string }) {
-  const { success, data: areas, message } = await getAreasByCity(city);
+async function AreasSection({ city, cityName, areasResponse }: { city: string; cityName: string; areasResponse: Awaited<ReturnType<typeof getAreasByCity>> }) {
+  const { success, data: areas, message } = areasResponse;
 
   if (!success) {
     return (

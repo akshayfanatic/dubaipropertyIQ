@@ -14,7 +14,9 @@ import { getDeveloperBySlug } from '@/lib/db/developers/queries';
 import { ImageObject } from '@/types/images';
 import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createDeveloperOrganizationSchema, createDeveloperWebPageSchema } from '@/lib/utils/structured-data';
 import { staticImages } from '@/config';
 
 export function PropertiesSkeleton() {
@@ -149,6 +151,17 @@ export default async function DeveloperLayout({ children, params }: DeveloperLay
           <DeveloperInquiryForm developerName={developer.name} />
         </SectionCard>
       </AnimateSection>
+      <JsonLd
+        id="developer-page-structured-data"
+        data={[
+          createDeveloperOrganizationSchema(developer),
+          createDeveloperWebPageSchema(developer),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: developer.name, path: `/developers/${developer.slug}` },
+          ]),
+        ]}
+      />
     </PageLayout>
   );
 }

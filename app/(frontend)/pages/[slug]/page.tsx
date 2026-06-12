@@ -4,10 +4,12 @@ import { getPageBySlug, getPublishedPages } from '@/lib/db/pages/queries';
 import { PageContentRenderer } from '@/components/pages/PageContent';
 import { PageHeader } from '@/components/shared/page-header';
 import PageLayout from '@/components/layout/PageLayout';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { ContactLeadForm } from '@/components/leads/ContactLeadForm';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createContentPageSchema } from '@/lib/utils/structured-data';
 
 export const revalidate = 60;
 
@@ -76,6 +78,16 @@ export default async function PagePage({ params }: PageProps) {
           <ContactLeadForm />
         </SectionCard>
       )}
+      <JsonLd
+        id="content-page-structured-data"
+        data={[
+          createContentPageSchema(page),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: page.title, path: `/pages/${page.slug}` },
+          ]),
+        ]}
+      />
     </PageLayout>
   );
 }

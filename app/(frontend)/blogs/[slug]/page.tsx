@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation';
 import { getBlogBySlug, getPublishedBlogs } from '@/lib/db/blogs/queries';
 import { BlogArticlePage } from '@/components/blogs/BlogArticlePage';
 import PageLayout from '@/components/layout/PageLayout';
+import { JsonLd, type SchemaJsonLd } from '@/components/shared/JsonLd';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBlogPostingSchema, createBlogWebPageSchema, createBreadcrumbSchema } from '@/lib/utils/structured-data';
 
 export const revalidate = 60;
 
@@ -57,6 +59,15 @@ export default async function BlogPage({ params }: PageProps) {
   }
 
   const relatedPosts = (publishedResult.success ? (publishedResult.data ?? []) : []).filter((item) => item.id !== blog.id).slice(0, 3);
+  const blogSchemas: SchemaJsonLd[] = [
+    createBlogPostingSchema(blog),
+    createBlogWebPageSchema(blog),
+    createBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Dubai Property Guides', path: '/blogs' },
+      { name: blog.title, path: `/blogs/${blog.slug}` },
+    ]),
+  ];
 
   return (
     <PageLayout contentFullWidth wrapperClassName="py-0">
@@ -65,6 +76,7 @@ export default async function BlogPage({ params }: PageProps) {
       </div>
 
       <BlogArticlePage blog={blog} relatedPosts={relatedPosts} />
+      <JsonLd id="blog-detail-structured-data" data={blogSchemas} />
     </PageLayout>
   );
 }

@@ -6,6 +6,8 @@ import { Pagination } from '@/components/shared/pagination';
 import { EmptyState } from '@/components/shared/no-item-found';
 import { PropertyCardTile, PropertyCardTileSkeleton } from '@/components/properties/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { JsonLd } from '@/components/shared/JsonLd';
+import { createPropertyItemListSchema } from '@/lib/utils/structured-data';
 
 interface SearchResultsProps {
   location?: string;
@@ -90,6 +92,7 @@ export async function SearchResults({ location, q, categories, bedrooms, status,
           <PropertyCardTile key={property.id} property={property} />
         ))}
       </div>
+      <JsonLd id="search-results-item-list-structured-data" data={createPropertyItemListSchema({ name: 'Available Dubai properties', path: '/search', properties })} />
     </PropertyGrid>
   );
 }

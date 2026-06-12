@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import React from 'react';
 import SearchFilters from '@/components/search/SearchFilters';
 import SidebarFilters from '@/components/search/SidebarFilters';
+import { JsonLd } from '@/components/shared/JsonLd';
 import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { FloatingSearchFilters } from '@/components/search/FloatingSearchFilters';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createSearchResultsPageSchema } from '@/lib/utils/structured-data';
 import { staticImages } from '@/config';
 
 export const metadata: Metadata = createPageMetadata({
@@ -67,6 +69,16 @@ export default async function SearchPageLayout({ children }: SearchPageLayoutPro
           <main className="min-w-0">{children}</main>
         </div>
       </div>
+      <JsonLd
+        id="search-page-structured-data"
+        data={[
+          createSearchResultsPageSchema(),
+          createBreadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Search Dubai Properties', path: '/search' },
+          ]),
+        ]}
+      />
     </div>
   );
 }
