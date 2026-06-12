@@ -1,5 +1,6 @@
 import { siteUrl } from '@/lib/utils/seo';
 import { staticImages } from '@/config';
+import type { Developer } from '@/types/developer';
 import type { Property, PropertyFAQ } from '@/types/property';
 import type {
   AboutPage,
@@ -57,6 +58,16 @@ function createDeveloperOrganization(property: Property): Organization | IdRefer
   }
 
   return developer;
+}
+
+function getDeveloperLogoUrl(developer: Developer) {
+  const logo = developer.logo_url;
+
+  if (typeof logo === 'string') {
+    return hasText(logo) ? logo : undefined;
+  }
+
+  return hasText(logo?.url) ? logo.url : undefined;
 }
 
 export function createOrganizationSchema(): WithContext<RealEstateAgent> {
@@ -148,6 +159,66 @@ export function createAboutPageSchema({ title, description, path, image }: { tit
     primaryImageOfPage: {
       '@type': 'ImageObject',
       url: absoluteUrl(image),
+    },
+  };
+}
+
+export function createDeveloperOrganizationSchema(developer: Developer): WithContext<Organization> {
+  const pageUrl = absoluteUrl(`/developers/${developer.slug}`);
+  const logoUrl = getDeveloperLogoUrl(developer);
+
+  const schema: WithContext<Organization> = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${pageUrl}#organization`,
+    name: developer.name,
+    url: hasText(developer.website_url) ? developer.website_url : pageUrl,
+  };
+
+  if (hasText(developer.description)) {
+    schema.description = developer.description;
+  }
+
+  if (logoUrl) {
+    schema.logo = absoluteUrl(logoUrl);
+  }
+
+  if (hasText(developer.website_url)) {
+    schema.sameAs = [developer.website_url];
+  }
+
+  return schema;
+}
+
+export function createDeveloperWebPageSchema(developer: Developer): WithContext<WebPage> {
+  const path = `/developers/${developer.slug}`;
+  const pageUrl = absoluteUrl(path);
+  const description = developer.developers_seo?.meta_description || developer.description || `Browse Dubai properties and projects by ${developer.name}.`;
+  const logoUrl = developer.developers_seo?.og_image_url || getDeveloperLogoUrl(developer);
+
+  const schema: WithContext<WebPage> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${pageUrl}#webpage`,
+    name: developer.developers_seo?.meta_title || `${developer.name} Properties & Projects in Dubai`,
+    description,
+    url: pageUrl,
+    isPartOf: websiteReference(),
+    publisher: organizationReference(),
+    mainEntity: {
+      '@id': `${pageUrl}#organization`,
+    },
+  };
+
+  if (!logoUrl) {
+    return schema;
+  }
+
+  return {
+    ...schema,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: absoluteUrl(logoUrl),
     },
   };
 }
