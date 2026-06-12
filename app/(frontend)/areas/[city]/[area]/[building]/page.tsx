@@ -15,9 +15,11 @@ import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimatedCounter } from '@/components/shared/AnimatedCounter';
 import { AmenityPills } from '@/components/shared/AmenityPills';
+import { JsonLd, type SchemaJsonLd } from '@/components/shared/JsonLd';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { getBuildingBySlug } from '@/lib/db/buildings/queries';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createBreadcrumbSchema, createBuildingAccommodationSchema, createBuildingWebPageSchema } from '@/lib/utils/structured-data';
 
 type BuildingDetailPageProps = {
   params: Promise<{
@@ -69,6 +71,16 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
       logo_url: null,
     }));
   const locationLine = [buildingDetail.area?.name, buildingDetail.city?.name, buildingDetail.developer?.name].filter(Boolean).join(' • ');
+  const buildingSchemas: SchemaJsonLd[] = [
+    createBuildingAccommodationSchema(buildingDetail),
+    createBuildingWebPageSchema(buildingDetail),
+    createBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: `${buildingDetail.city?.name ?? 'UAE'} Areas`, path: `/areas/${city}` },
+      { name: buildingDetail.area?.name ?? 'Area', path: `/areas/${city}/${area}` },
+      { name: buildingDetail.name, path: `/areas/${city}/${area}/${building}` },
+    ]),
+  ];
 
   return (
     <PageLayout contentFullWidth wrapperClassName="py-0">
@@ -364,6 +376,7 @@ export default async function BuildingDetailPage({ params }: BuildingDetailPageP
           </SectionCard>
         </AnimateSection>
       )}
+      <JsonLd id="building-detail-structured-data" data={buildingSchemas} />
     </PageLayout>
   );
 }

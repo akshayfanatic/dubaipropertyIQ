@@ -13,12 +13,14 @@ import { PublicBreadCrumb } from '@/components/shared/PublicBreadCrumb';
 import { SectionCard } from '@/components/shared/SectionCard';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { AmenityPills } from '@/components/shared/AmenityPills';
+import { JsonLd, type SchemaJsonLd } from '@/components/shared/JsonLd';
 import { ReadOnlyMap } from '@/components/shared/location/ReadOnlyMap';
 import { Badge } from '@/components/ui/badge';
 import { getAreaBySlug } from '@/lib/db/areas/queries';
 import { getBuildingsByArea } from '@/lib/db/buildings/queries';
 import { AreaReportLeadForm } from '@/components/leads/AreaReportLeadForm';
 import { createPageMetadata } from '@/lib/utils/seo';
+import { createAreaPlaceSchema, createAreaWebPageSchema, createBreadcrumbSchema, createFaqPageSchema, getFaqSchemaItems } from '@/lib/utils/structured-data';
 
 type AreaDetailPageProps = {
   params: Promise<{
@@ -64,6 +66,20 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
   const galleryPhotos = Array.isArray(areaDetail.photos) ? areaDetail.photos : [];
   const bannerImage = galleryPhotos[0];
   const buildings = buildingsResponse.success ? (buildingsResponse.data ?? []) : [];
+  const schemaFaqs = getFaqSchemaItems([...areaDetail.faqs, ...areaDetail.amenities_faqs]);
+  const areaSchemas: SchemaJsonLd[] = [
+    createAreaPlaceSchema(areaDetail),
+    createAreaWebPageSchema(areaDetail),
+    createBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: `${areaDetail.city?.name ?? 'UAE'} Areas`, path: `/areas/${city}` },
+      { name: areaDetail.name, path: `/areas/${city}/${area}` },
+    ]),
+  ];
+
+  if (schemaFaqs.length > 0) {
+    areaSchemas.push(createFaqPageSchema(schemaFaqs));
+  }
 
   return (
     <PageLayout contentFullWidth wrapperClassName="py-0">
@@ -284,6 +300,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           </SectionCard>
         </AnimateSection>
       )}
+      <JsonLd id="area-detail-structured-data" data={areaSchemas} />
     </PageLayout>
   );
 }
