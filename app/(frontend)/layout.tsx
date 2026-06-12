@@ -62,10 +62,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${plusJakarta.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${plusJakarta.variable} ${geistMono.variable} flex min-h-screen flex-col bg-background antialiased`}>
         <FrontEndProvider>
           <Header menus={menus ?? undefined} />
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
         </FrontEndProvider>
         <JsonLd id="site-structured-data" data={[createOrganizationSchema(), createWebsiteSchema()]} />
