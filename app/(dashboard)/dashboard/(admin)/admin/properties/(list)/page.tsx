@@ -24,10 +24,17 @@ interface PageProps {
   }>;
 }
 
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
 function buildFilters(params: Awaited<PageProps['searchParams']>): PropertyFilters {
+  const propertyType = params.property_type && params.property_type !== 'all' ? params.property_type : undefined;
+
   return {
     search: params.search || undefined,
-    property_type: params.property_type && params.property_type !== 'all' ? (params.property_type as PropertyFilters['property_type']) : undefined,
+    property_type: propertyType && !isUuid(propertyType) ? (propertyType as PropertyFilters['property_type']) : undefined,
+    category_id: propertyType && isUuid(propertyType) ? propertyType : undefined,
     city_id: params.city_id && params.city_id !== 'all' ? params.city_id : undefined,
     city_slug: params.city_slug,
     status: params.status && params.status !== 'all' ? (params.status as PropertyFilters['status']) : undefined,
