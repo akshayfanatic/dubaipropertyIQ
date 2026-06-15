@@ -13,6 +13,7 @@ export const filterSchema = z.object({
   status: z.string().optional(),
   sort: z.string().optional(),
   areas: z.array(z.string()).optional(),
+  developerId: z.string().optional(),
   priceRange: priceRangeSchema,
   amenities: z.array(z.string()).optional(),
   goldenVisaEligible: z.boolean().optional(),
@@ -27,6 +28,7 @@ export const searchQueryParsers = {
   status: parseAsString.withDefault(''),
   sort: parseAsString.withDefault(''),
   areas: parseAsArrayOf(parseAsString).withDefault([]),
+  developer_id: parseAsString.withDefault(''),
   minPrice: parseAsString.withDefault(''),
   maxPrice: parseAsString.withDefault(''),
   amenities: parseAsArrayOf(parseAsString).withDefault([]),
@@ -41,6 +43,7 @@ export function queryToFilterValues(query: {
   status: string;
   sort: string;
   areas: string[];
+  developer_id: string;
   minPrice: string;
   maxPrice: string;
   amenities: string[];
@@ -53,6 +56,7 @@ export function queryToFilterValues(query: {
     status: query.status,
     sort: query.sort,
     areas: query.areas,
+    developerId: query.developer_id,
     priceRange: {
       min: query.minPrice,
       max: query.maxPrice,
@@ -70,6 +74,7 @@ export function filterValuesToQuery(data: FilterSchema) {
     status: data.status || null,
     sort: data.sort || null,
     areas: data.areas?.length ? data.areas : null,
+    developer_id: data.developerId || null,
     minPrice: data.priceRange.min || null,
     maxPrice: data.priceRange.max || null,
     amenities: data.amenities?.length ? data.amenities : null,

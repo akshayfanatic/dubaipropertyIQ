@@ -12,6 +12,7 @@ export type SearchParams = {
   minPrice?: string;
   maxPrice?: string;
   amenities?: string | string[];
+  developer_id?: string;
   golden_visa_eligible?: string;
   is_featured?: string;
   page?: string;

@@ -199,6 +199,43 @@ export async function getDeveloperOptionsAdmin(): Promise<ApiResponse<DeveloperO
 }
 
 /**
+ * Get developer options for public filters
+ */
+export async function getDeveloperOptions(): Promise<ApiResponse<DeveloperOption[]>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase.from('developers').select('id, name, logo_url').order('name', { ascending: true });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    const options: DeveloperOption[] = (data ?? []).map((dev) => ({ label: dev.name, value: dev.id, logo_url: dev.logo_url }));
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Developer options fetched successfully',
+      data: options,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch developer options';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
  * Get developers for public-facing pages
  * Uses server client (respects RLS) - suitable for frontend components
  */
