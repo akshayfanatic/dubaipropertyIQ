@@ -180,6 +180,59 @@ export async function getBuildingBySlug(citySlug: string, areaSlug: string, buil
 }
 
 /**
+ * Get a public building by building slug only.
+ * Used by short programmatic URLs such as /burj-khalifa-review.
+ */
+export async function getBuildingBySlugOnly(buildingSlug: string): Promise<ApiResponse<BuildingWithRelations | null>> {
+  try {
+    const supabase = await serverClient();
+
+    const { data, error } = await supabase
+      .from('buildings')
+      .select('*, area:areas!inner(id, name, slug), city:cities!inner(id, name, slug, logo_url), developer:developers(id, name, slug, logo_url), buildings_seo(*)')
+      .eq('slug', buildingSlug)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    if (!data) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.NOT_FOUND,
+        message: 'Building not found',
+        error: { code: 'NOT_FOUND' },
+      });
+    }
+
+    const building = await withBuildingAmenityLabels(normalizeBuildingWithRelations(data as Record<string, unknown>), supabase);
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Building fetched successfully',
+      data: building,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch building';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
  * Get public buildings for an area.
  */
 export async function getBuildingsByArea(citySlug: string, areaSlug: string): Promise<ApiResponse<BuildingWithRelations[]>> {

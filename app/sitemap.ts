@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { getProgrammaticSitemapEntries } from '@/lib/programmatic-seo/sitemap';
 import { adminClient } from '@/lib/supabase/admin';
 import { siteUrl } from '@/lib/utils/seo';
 
@@ -41,7 +42,7 @@ function entry(path: string, row?: Pick<SitemapRow, 'updated_at' | 'created_at'>
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = adminClient();
 
-  const [citiesResult, areasResult, buildingsResult, propertiesResult, developersResult, blogsResult, pagesResult] = await Promise.all([
+  const [citiesResult, areasResult, buildingsResult, propertiesResult, developersResult, blogsResult, pagesResult, programmaticEntries] = await Promise.all([
     supabase.from('cities').select('slug, updated_at, created_at').order('name', { ascending: true }),
     supabase.from('areas').select('slug, updated_at, created_at, cities!inner(slug)').order('name', { ascending: true }),
     supabase.from('buildings').select('slug, updated_at, created_at, cities!inner(slug), areas!inner(slug)').order('name', { ascending: true }),
@@ -49,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     supabase.from('developers').select('slug, updated_at, created_at').order('name', { ascending: true }),
     supabase.from('blogs').select('slug, updated_at, created_at').eq('is_published', true).order('created_at', { ascending: false }),
     supabase.from('pages').select('slug, updated_at, created_at').eq('is_published', true).order('title', { ascending: true }),
+    getProgrammaticSitemapEntries(),
   ]);
 
   const staticEntries = [
@@ -88,5 +90,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const pageEntries = (pagesResult.data as SitemapRow[] | null)?.map((page) => entry(`/pages/${page.slug}`, page, 0.6)) ?? [];
 
-  return [...staticEntries, ...cityEntries, ...areaEntries, ...buildingEntries, ...propertyEntries, ...developerEntries, ...blogEntries, ...pageEntries];
+  return [...staticEntries, ...cityEntries, ...areaEntries, ...buildingEntries, ...propertyEntries, ...developerEntries, ...blogEntries, ...pageEntries, ...programmaticEntries];
 }
