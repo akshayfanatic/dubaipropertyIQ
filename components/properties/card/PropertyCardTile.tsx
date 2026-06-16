@@ -41,7 +41,7 @@ export function PropertyCardTile({ property, wishlistSlot }: PropertyCardTilePro
             <Badge className={cn('rounded-lg px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur-sm', status.className)}>{status.label}</Badge>
             {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" />}
           </div>
-          <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} />}</div>
+          <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} initialSaved={property.is_saved} />}</div>
           <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-3 text-xs font-medium text-primary-foreground">
             <span className="rounded-md bg-foreground/55 px-2 py-1 backdrop-blur-sm">{category}</span>
             {photos?.length > 1 && <span className="rounded-md bg-foreground/55 px-2 py-1 backdrop-blur-sm">{photos.length} photos</span>}

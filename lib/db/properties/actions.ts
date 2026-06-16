@@ -382,7 +382,7 @@ export async function toggleSavedProperty(propertyId: string) {
         });
       }
 
-      revalidatePath('/customer');
+      revalidatePath('/customer/saved-properties', 'page');
       return ApiResponse({ success: true, status: HttpStatus.OK, message: 'Property removed from saved properties', data: { saved: false } });
     }
 
@@ -398,7 +398,7 @@ export async function toggleSavedProperty(propertyId: string) {
       });
     }
 
-    revalidatePath('/customer', 'page');
+    revalidatePath('/customer/saved-properties', 'page');
     return ApiResponse({ success: true, status: HttpStatus.OK, message: 'Property added to saved properties', data: { saved: true } });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to update saved property';

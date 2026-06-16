@@ -55,6 +55,8 @@ export type Property = Omit<Tables<'properties'>, 'location' | 'photos' | 'featu
   properties_amenities?: PropertyAmenities;
   properties_seo?: PropertySEO | null;
   amenities?: Amenity[]; // Populated via joins for form display
+  category?: Pick<Category, 'id' | 'name' | 'slug'>;
+  city?: { id: string; name: string; slug: string; logo_url?: ImageObject | null };
   developer?: Developer;
 };
 
@@ -119,6 +121,7 @@ export interface PropertyListItem {
   city_id?: string | null;
   created_at: string;
   updated_at: string;
+  is_saved?: boolean;
 }
 
 /**

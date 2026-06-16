@@ -22,6 +22,7 @@ interface MultiSelectProps {
   error?: string;
   disabled?: boolean;
   isLoading?: boolean;
+  className?: string;
 }
 
 // React Select styles mapped to the same theme tokens used by Input and SelectTrigger.
@@ -158,7 +159,7 @@ const CustomMultiValueLabel = (props: MultiValueGenericProps<MultiSelectOption, 
   );
 };
 
-export function MultiSelect({ name, label, required = false, placeholder = 'Select options...', options, value, onChange, error, disabled = false, isLoading = false }: MultiSelectProps) {
+export function MultiSelect({ name, label, required = false, placeholder = 'Select options...', options, value, onChange, error, disabled = false, isLoading = false, className }: MultiSelectProps) {
   const customStyles = useMemo(() => createCustomStyles(), []);
 
   const selectedOptions = options.filter((option) => value?.includes(option.value));
@@ -168,7 +169,7 @@ export function MultiSelect({ name, label, required = false, placeholder = 'Sele
   };
 
   return (
-    <div className="grid gap-2">
+    <div className={cn('grid gap-2', className)}>
       {label && (
         <Label htmlFor={name} className={cn(error && 'text-destructive')}>
           {label} {required && <span className="text-destructive">*</span>}

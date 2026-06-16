@@ -1,12 +1,17 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import useSWR, { mutate } from 'swr';
 import { toggleSavedProperty } from '@/lib/db/properties/actions';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/providers/auth-provider';
+import type { ApiResponse } from '@/lib/utils/response';
+import type { PropertyListItem } from '@/types/property';
+import { savedPropertiesKey } from '../customer/CustomerSavedPropertiesList';
 
 interface PropertySaveButtonProps {
   propertyId: string;
@@ -15,21 +20,36 @@ interface PropertySaveButtonProps {
   iconClassName?: string;
 }
 
-export function PropertySaveButton({ propertyId, initialSaved = false, className, iconClassName }: PropertySaveButtonProps) {
+export function PropertySaveButton(props: PropertySaveButtonProps) {
+  return <PropertySaveButtonInner key={`${props.propertyId}-${props.initialSaved ? 'saved' : 'unsaved'}`} {...props} />;
+}
+
+function PropertySaveButtonInner({ propertyId, initialSaved = false, className, iconClassName }: PropertySaveButtonProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [saved, setSaved] = useState(initialSaved);
+  const { user } = useAuth();
+  const { data: savedPropertiesResponse } = useSWR<ApiResponse<PropertyListItem[]>>(user ? savedPropertiesKey : null, {
+    dedupingInterval: 1000,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+  });
+  const cachedSaved = useMemo(() => {
+    if (!savedPropertiesResponse?.success) return undefined;
+    return (savedPropertiesResponse.data ?? []).some((property) => property.id === propertyId);
+  }, [propertyId, savedPropertiesResponse]);
+  const [optimisticSaved, setOptimisticSaved] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
+  const saved = optimisticSaved ?? cachedSaved ?? initialSaved;
 
   const handleClick = () => {
     startTransition(async () => {
       const previousSaved = saved;
-      setSaved(!previousSaved);
+      setOptimisticSaved(!previousSaved);
 
       const result = await toggleSavedProperty(propertyId);
 
       if (!result.success) {
-        setSaved(previousSaved);
+        setOptimisticSaved(previousSaved);
 
         if (result.error?.code === 'UNAUTHENTICATED') {
           toast.info('Log in to save properties');
@@ -42,7 +62,8 @@ export function PropertySaveButton({ propertyId, initialSaved = false, className
       }
 
       const nextSaved = result.data?.saved ?? !previousSaved;
-      setSaved(nextSaved);
+      setOptimisticSaved(nextSaved);
+      mutate(savedPropertiesKey, undefined, { revalidate: true });
       toast.success(nextSaved ? 'Property saved' : 'Property removed');
     });
   };

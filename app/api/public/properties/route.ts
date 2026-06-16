@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
       minPrice: searchParams.get('minPrice') || undefined,
       maxPrice: searchParams.get('maxPrice') || undefined,
       amenities: searchParams.get('amenities') || undefined,
+      developer_id: searchParams.get('developer_id') || undefined,
       golden_visa_eligible: searchParams.get('golden_visa_eligible') || undefined,
       is_featured: searchParams.get('is_featured') || undefined,
       page: searchParams.get('page') ? Number(searchParams.get('page')) : 1,

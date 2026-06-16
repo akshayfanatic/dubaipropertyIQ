@@ -12,6 +12,7 @@ import { SelectField } from '@/components/shared/select-field';
 import { Switch } from '@/components/ui/switch';
 import { useAreas } from '@/hooks/data/public/useAreas';
 import { useAmenities } from '@/hooks/data/public/useAmenities';
+import { useDevelopers } from '@/hooks/data/public/useDevelopers';
 import { z } from 'zod';
 import { filterValuesToQuery, queryToFilterValues, searchQueryParsers } from './types';
 import { PROPERTY_STATUS_LABELS, type PropertyStatus } from '@/types/enums';
@@ -33,6 +34,7 @@ const sidebarFilterSchema = z.object({
   status: z.string().optional(),
   sort: z.string().optional(),
   areas: z.array(z.string()).optional(),
+  developerId: z.string().optional(),
   amenities: z.array(z.string()).optional(),
   goldenVisaEligible: z.boolean().optional(),
 });
@@ -42,6 +44,7 @@ type SidebarFilterValues = z.infer<typeof sidebarFilterSchema>;
 export default function SidebarFilters() {
   const { areas } = useAreas();
   const { amenities } = useAmenities();
+  const { developers, isLoading: developersLoading } = useDevelopers();
 
   const [query] = useQueryStates(searchQueryParsers, {
     shallow: false,
@@ -53,13 +56,14 @@ export default function SidebarFilters() {
     status: filterValues.status,
     sort: filterValues.sort,
     areas: filterValues.areas,
+    developerId: filterValues.developerId,
     amenities: filterValues.amenities,
     goldenVisaEligible: filterValues.goldenVisaEligible,
   };
 
   return (
     <BaseForm schema={sidebarFilterSchema} onSubmit={() => {}} defaultValues={defaultValues}>
-      <FilterFields areas={areas} amenities={amenities} />
+      <FilterFields areas={areas} amenities={amenities} developers={developers} developersLoading={developersLoading} />
     </BaseForm>
   );
 }
@@ -67,9 +71,11 @@ export default function SidebarFilters() {
 interface FilterFieldsProps {
   areas: Array<{ value: string; label: string }>;
   amenities: Array<{ value: string; label: string }>;
+  developers: Array<{ value: string; label: string }>;
+  developersLoading: boolean;
 }
 
-function FilterFields({ areas, amenities }: FilterFieldsProps) {
+function FilterFields({ areas, amenities, developers, developersLoading }: FilterFieldsProps) {
   const pathname = usePathname();
   const showGoldenVisaFilter = pathname !== '/golden-visa-properties';
   const form = useFormContext<SidebarFilterValues>();
@@ -86,6 +92,7 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
         status: data.status,
         sort: data.sort,
         areas: data.areas,
+        developerId: data.developerId,
         amenities: data.amenities,
         goldenVisaEligible: data.goldenVisaEligible,
       }),
@@ -93,9 +100,9 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
   };
 
   const handleReset = () => {
-    form.reset({ status: '', sort: '', areas: [], amenities: [], goldenVisaEligible: false });
+    form.reset({ status: '', sort: '', areas: [], developerId: '', amenities: [], goldenVisaEligible: false });
     setQuery({
-      ...filterValuesToQuery({ location: '', propertyType: '', bedrooms: '', status: '', sort: '', areas: [], priceRange: {}, amenities: [], goldenVisaEligible: false }),
+      ...filterValuesToQuery({ location: '', propertyType: '', bedrooms: '', status: '', sort: '', areas: [], developerId: '', priceRange: {}, amenities: [], goldenVisaEligible: false }),
       page: null,
     });
   };
@@ -171,6 +178,28 @@ function FilterFields({ areas, amenities }: FilterFieldsProps) {
                 onChange={(val) => {
                   field.onChange(val);
                   updateUrl({ ...form.getValues(), areas: val });
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      {/* DEVELOPERS */}
+      <FormField
+        control={form.control}
+        name="developerId"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <SelectField
+                placeholder="Any developer"
+                options={developers}
+                value={field.value}
+                disabled={developersLoading}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  updateUrl({ ...form.getValues(), developerId: value });
                 }}
               />
             </FormControl>

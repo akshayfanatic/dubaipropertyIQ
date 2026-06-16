@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.3...v0.9.4) (2026-06-16)
+
+### Features
+
+- **blog_categores:** added server function for managing blog categories ([f12f739](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f12f739541cd54916ddbee3c71c073fe706bcae1))
+- **blog_categories:** add new migration in db for blog_categories ([4a5319f](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4a5319f55c76944fae7b2ffa69c53219f7d125d9))
+- **blog-tag:** added blog tag form for manaing write operations ([8a9a793](https://github.com/akshayfanatic/dubaipropertyIQ/commit/8a9a793f55b55651417fe05fc42c02a87218614e))
+- **blog:** added category option in blog ([70e94c8](https://github.com/akshayfanatic/dubaipropertyIQ/commit/70e94c81bf77ca80fee00a9e3e45e95df896ef2c))
+- **blogs:** added blog tags options to add tags and add new server functions for creating blog tags ([c768676](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c768676f978144ca595008aacfa1640d9274201c))
+- **filter:** added blog tag filter page with components ([b1be4cf](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b1be4cfbdbe8ba1a95c709d526d9a5aaa3342b0b))
+- **filter:** added filter page for blog categories ([f02ad3b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f02ad3be776bd199f6a0ae1e0c25efaa255be4d3))
+- **form:** added form for managin blog categories ([4484a6b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4484a6b4b9d07660e5d76a88d122b741659f1126))
+- **programatic pages:** added programattic pages , nextjs configuration ([e0356f3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/e0356f3dbbb397b613f66baeb0f03781389840db))
+- **search:** added developer options in search ([c33aa8d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c33aa8d1319b5b6007b7adcd563874a35338068f))
+- **seed:** added seed function for dummy blog tags ([b4e0e3b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b4e0e3bc1a025988b7e823ca52d5583ce95e8460))
+- **types:** add types for blog categories and zod validations ([4befbe2](https://github.com/akshayfanatic/dubaipropertyIQ/commit/4befbe2b27e25170b625ac709beadca9be8f87b8))
+- **types:** added types for blog-tag and blog ([9489332](https://github.com/akshayfanatic/dubaipropertyIQ/commit/9489332cf8831ca62178500e8e8fd2061befe855))
+
+### Bug Fixes
+
+- **layout:** fix issue reagarding layout not loading properly on (frontend/) route group pages ([3e86da7](https://github.com/akshayfanatic/dubaipropertyIQ/commit/3e86da753c70e217e6603999f5e3f23bd1d4fc2d))
+- **propertes:** fix query param issue in filters admin properties (property_type) ([743dafb](https://github.com/akshayfanatic/dubaipropertyIQ/commit/743dafb59803cd13aef0c950c22932571862b155))
+
+### Code Refactoring
+
+- **api routes:** reorganize proxy api routes for blog options ([a8e0d9a](https://github.com/akshayfanatic/dubaipropertyIQ/commit/a8e0d9a7771493da47a18f85c2e85698586fbfff))
+- **blog:** remove uncessary code from blog form and make it simple and redable ([57542ba](https://github.com/akshayfanatic/dubaipropertyIQ/commit/57542baaad68d8aea92c9cb1c05ff6fbefd628b1))
+- **customer:** added hook based fetching and realtime validation with swr in customer account ([2f094ea](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2f094eaadd14916bd5bce2d9ee5315ffa631a9e2))
+- **seed:** reorganize folder structure of seeding ([f6edffe](https://github.com/akshayfanatic/dubaipropertyIQ/commit/f6edffe49ec8f69f4103dd9cf2e053e1ab59907f))
+
 ### [0.9.3](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.2...v0.9.3) (2026-06-12)
 
 ### Features

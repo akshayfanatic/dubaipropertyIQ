@@ -45,6 +45,15 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async rewrites() {
+    return [
+      {
+        source: '/:slug((?:[a-z0-9]+(?:-[a-z0-9]+)*)-for-sale-in-(?:[a-z0-9]+(?:-[a-z0-9]+)*))',
+        destination: '/programmatic/:slug',
+      },
+    ];
+  },
+
   experimental: {
     globalNotFound: true,
     serverActions: {

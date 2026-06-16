@@ -27,6 +27,25 @@ type SavedPropertyRow = {
 };
 
 type PropertySearchSort = 'newest' | 'price_asc' | 'price_desc' | 'popular';
+type ServerSupabaseClient = Awaited<ReturnType<typeof serverClient>>;
+
+async function addSavedStateToProperties(supabase: ServerSupabaseClient, properties: PropertyListItem[]): Promise<PropertyListItem[]> {
+  if (properties.length === 0) return properties;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return properties;
+
+  const propertyIds = properties.map((property) => property.id);
+  const { data, error } = await supabase.from('customer_saved_properties').select('property_id').eq('user_id', user.id).in('property_id', propertyIds);
+
+  if (error) return properties;
+
+  const savedPropertyIds = new Set((data ?? []).map((item) => item.property_id).filter(Boolean));
+  return properties.map((property) => ({ ...property, is_saved: savedPropertyIds.has(property.id) }));
+}
 
 /**
  * Search filters for public property search
@@ -261,8 +280,10 @@ export async function getProperties(filters?: PropertySearchFilters): Promise<Ap
       filteredData = filteredData.filter((property) => propertyIdsWithAmenities.has(property.id));
     }
 
+    const propertiesWithSavedState = await addSavedStateToProperties(supabase, filteredData);
+
     const result: PaginatedResult<PropertyListItem> = {
-      data: filteredData,
+      data: propertiesWithSavedState,
       total: count || 0,
       page,
       pageSize,
@@ -414,7 +435,7 @@ export async function getPropertiesByCity(citySlug: string): Promise<ApiResponse
       success: true,
       status: HttpStatus.OK,
       message: 'Properties fetched successfully',
-      data: data as PropertyListItem[],
+      data: await addSavedStateToProperties(supabase, data as PropertyListItem[]),
     });
   } catch (error) {
     console.error('[getPropertiesByCity] Error:', error);
@@ -526,7 +547,7 @@ export async function getPropertiesByArea(areaSlug: string, citySlug?: string): 
       success: true,
       status: HttpStatus.OK,
       message: 'Properties fetched successfully',
-      data: data as PropertyListItem[],
+      data: await addSavedStateToProperties(supabase, data as PropertyListItem[]),
     });
   } catch (error) {
     console.error('[getPropertiesByArea] Error:', error);

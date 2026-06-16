@@ -250,8 +250,102 @@ export type Database = {
           },
         ];
       };
+      blog_categories: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          is_active: boolean;
+          name: string;
+          slug: string;
+          sort_order: number;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean;
+          name: string;
+          slug: string;
+          sort_order?: number;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean;
+          name?: string;
+          slug?: string;
+          sort_order?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      blog_post_tags: {
+        Row: {
+          blog_id: string;
+          created_at: string;
+          tag_id: string;
+        };
+        Insert: {
+          blog_id: string;
+          created_at?: string;
+          tag_id: string;
+        };
+        Update: {
+          blog_id?: string;
+          created_at?: string;
+          tag_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'blog_post_tags_blog_id_fkey';
+            columns: ['blog_id'];
+            isOneToOne: false;
+            referencedRelation: 'blogs';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'blog_post_tags_tag_id_fkey';
+            columns: ['tag_id'];
+            isOneToOne: false;
+            referencedRelation: 'blog_tags';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      blog_tags: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          name: string;
+          slug: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          slug: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          slug?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       blogs: {
         Row: {
+          category_id: string | null;
           content: Json;
           created_at: string | null;
           excerpt: string | null;
@@ -263,6 +357,7 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
+          category_id?: string | null;
           content?: Json;
           created_at?: string | null;
           excerpt?: string | null;
@@ -274,6 +369,7 @@ export type Database = {
           updated_at?: string | null;
         };
         Update: {
+          category_id?: string | null;
           content?: Json;
           created_at?: string | null;
           excerpt?: string | null;
@@ -284,7 +380,15 @@ export type Database = {
           title?: string;
           updated_at?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'blogs_category_id_fkey';
+            columns: ['category_id'];
+            isOneToOne: false;
+            referencedRelation: 'blog_categories';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       blogs_seo: {
         Row: {

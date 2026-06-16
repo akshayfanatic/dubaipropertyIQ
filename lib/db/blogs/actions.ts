@@ -15,15 +15,34 @@ export type BlogInsertAction = BlogInsertData;
 export type BlogUpdateAction = BlogUpdateData;
 
 function splitBlogSEO<T extends BlogInsertAction | BlogUpdateAction>(blog: T) {
-  const { meta_title, meta_description, ...blogData } = blog;
+  const { meta_title, meta_description, tag_ids, ...blogData } = blog;
 
   return {
     blogData,
+    tagIds: tag_ids,
     seoData: {
       meta_title: meta_title || null,
       meta_description: meta_description || null,
     },
   };
+}
+
+async function replaceBlogTags(blogId: string, tagIds: string[]) {
+  const supabase = adminClient();
+
+  const { error: deleteError } = await supabase.from('blog_post_tags').delete().eq('blog_id', blogId);
+
+  if (deleteError) {
+    return deleteError;
+  }
+
+  if (!tagIds.length) {
+    return null;
+  }
+
+  const { error: insertError } = await supabase.from('blog_post_tags').insert(tagIds.map((tagId) => ({ blog_id: blogId, tag_id: tagId })));
+
+  return insertError;
 }
 
 /**
@@ -32,7 +51,7 @@ function splitBlogSEO<T extends BlogInsertAction | BlogUpdateAction>(blog: T) {
 export async function createBlog(blog: BlogInsertAction) {
   try {
     const supabase = adminClient();
-    const { blogData, seoData } = splitBlogSEO(blog);
+    const { blogData, seoData, tagIds } = splitBlogSEO(blog);
 
     const { data, error } = await supabase.from('blogs').insert(blogData).select().single();
 
@@ -59,6 +78,17 @@ export async function createBlog(blog: BlogInsertAction) {
         status: HttpStatus.INTERNAL_ERROR,
         message: seoError.message,
         error: { code: seoError.code || 'SEO_UPSERT_ERROR' },
+      });
+    }
+
+    const tagError = await replaceBlogTags(data.id, tagIds ?? []);
+
+    if (tagError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: tagError.message,
+        error: { code: tagError.code || 'TAG_LINK_ERROR' },
       });
     }
 
@@ -89,7 +119,7 @@ export async function createBlog(blog: BlogInsertAction) {
 export async function updateBlog(id: string, updates: BlogUpdateAction) {
   try {
     const supabase = adminClient();
-    const { blogData, seoData } = splitBlogSEO(updates);
+    const { blogData, seoData, tagIds } = splitBlogSEO(updates);
 
     const { data, error } = await supabase.from('blogs').update(blogData).eq('id', id).select().single();
 
@@ -124,6 +154,17 @@ export async function updateBlog(id: string, updates: BlogUpdateAction) {
         status: HttpStatus.INTERNAL_ERROR,
         message: seoError.message,
         error: { code: seoError.code || 'SEO_UPSERT_ERROR' },
+      });
+    }
+
+    const tagError = tagIds ? await replaceBlogTags(id, tagIds) : null;
+
+    if (tagError) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: tagError.message,
+        error: { code: tagError.code || 'TAG_LINK_ERROR' },
       });
     }
 

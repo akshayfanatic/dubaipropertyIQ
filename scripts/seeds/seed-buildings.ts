@@ -2,7 +2,7 @@
  * Building Seeder
  * Seeds realistic building intelligence records using real foreign keys from the current Supabase data.
  *
- * Run: npx tsx scripts/seed-buildings.ts
+ * Run: npx tsx scripts/seeds/seed-buildings.ts
  */
 
 import { createClient } from '@supabase/supabase-js';

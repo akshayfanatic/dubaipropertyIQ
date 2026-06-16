@@ -54,7 +54,7 @@ export function PropertyCard({ property, className, wishlistSlot }: PropertyCard
           {property.golden_visa_eligible && <GoldenVisaBadge variant="gradient-soft" className="bg-background/92 px-2.5 py-1 shadow-sm" />}
         </div>
 
-        <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} />}</div>
+        <div className="absolute right-3 top-3 z-10">{wishlistSlot ?? <PropertySaveButton propertyId={property.id} initialSaved={property.is_saved} />}</div>
 
         <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-primary-foreground">
           <div className="mb-2 space-y-1">
