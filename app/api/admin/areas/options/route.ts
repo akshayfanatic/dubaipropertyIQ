@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAreaOptionsAdmin } from '@/lib/db/areas/queries';
+import { withAdminApi } from '@/lib/auth/api-wrappers';
 
-export async function GET() {
+export const GET = withAdminApi(async () => {
   const result = await getAreaOptionsAdmin();
 
   if (!result.success || !result.data) {
@@ -9,4 +10,4 @@ export async function GET() {
   }
 
   return NextResponse.json(result.data);
-}
+});
