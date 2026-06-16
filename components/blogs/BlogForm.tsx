@@ -19,6 +19,8 @@ import { ImageUploader } from '@/components/ui/image-uploader';
 import useSWR from 'swr';
 import { SelectField } from '@/components/shared/select-field';
 import type { BlogCategoryOption } from '@/types/blog-category';
+import type { BlogTagOption } from '@/types/blog-tag';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 interface BlogFormProps {
   id?: string;
@@ -28,7 +30,9 @@ interface BlogFormProps {
 export function BlogForm({ id = '', blog }: BlogFormProps) {
   const router = useRouter();
   const isEditMode = !!id;
-  const { data: blogCategories = [], isLoading: isLoadingBlogCategories } = useSWR<BlogCategoryOption[]>('/api/admin/blog-categories/options');
+  const { data: blogCategories = [], isLoading: isLoadingBlogCategories } = useSWR<BlogCategoryOption[]>('/api/admin/blogs/categories/options');
+  const { data: blogTags = [], isLoading: isLoadingBlogTags } = useSWR<BlogTagOption[]>('/api/admin/blogs/tags/options');
+  const blogTagOptions = blogTags.map((tag) => ({ label: tag.label, value: tag.value }));
 
   const {
     handleSubmit,
@@ -42,6 +46,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
       title: '',
       slug: '',
       category_id: null,
+      tag_ids: [],
       feature_image_url: { url: '', alt_tag: '' },
       content: { type: 'doc', content: [] },
       excerpt: '',
@@ -57,6 +62,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
         title: blog.title,
         slug: blog.slug,
         category_id: blog.category_id ?? null,
+        tag_ids: blog.blog_post_tags?.map((tag) => tag.tag_id) ?? [],
         feature_image_url: blog.feature_image_url || { url: '', alt_tag: '' },
         content: blog.content as BlogFormData['content'],
         excerpt: blog.excerpt || '',
@@ -142,6 +148,25 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
             />
             {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
           </div>
+        )}
+      />
+
+      {/* Tags */}
+      <Controller
+        name="tag_ids"
+        control={control}
+        render={({ field }) => (
+          <MultiSelect
+            name="tag_ids"
+            label="Tags"
+            options={blogTagOptions}
+            value={field.value ?? []}
+            onChange={field.onChange}
+            placeholder="Select tags"
+            disabled={isLoadingBlogTags}
+            isLoading={isLoadingBlogTags}
+            error={errors.tag_ids?.message}
+          />
         )}
       />
 
