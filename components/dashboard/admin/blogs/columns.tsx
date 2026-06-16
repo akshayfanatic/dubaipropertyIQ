@@ -39,6 +39,14 @@ export const columns: ColumnDef<Blog>[] = [
     cell: ({ row }) => <code className="rounded bg-muted px-2 py-1 text-xs">/blogs/{row.getValue('slug')}</code>,
   },
   {
+    accessorKey: 'blog_categories',
+    header: 'Category',
+    cell: ({ row }) => {
+      const category = row.original.blog_categories;
+      return category ? <Badge variant="outline">{category.name}</Badge> : <span className="text-muted-foreground">-</span>;
+    },
+  },
+  {
     accessorKey: 'is_published',
     header: 'Status',
     cell: ({ row }) => {

@@ -17,6 +17,7 @@ export const blogSchema = z.object({
     .min(2, 'Slug must be at least 2 characters')
     .max(100, 'Slug must be less than 100 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  category_id: z.string().uuid('Select a valid category').nullable().optional(),
   feature_image_url: imageObjectSchema,
   content: blogContentSchema,
   excerpt: z.string().max(500, 'Excerpt must be less than 500 characters').optional(),

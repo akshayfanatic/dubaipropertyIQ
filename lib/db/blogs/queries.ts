@@ -9,7 +9,7 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Blog, BlogFilters } from '@/types/blog';
 import type { PaginatedResult } from '@/types/shared';
 
-const BLOG_SELECT = '*, blogs_seo(*)';
+const BLOG_SELECT = '*, blogs_seo(*), blog_categories(id, name, slug)';
 
 const normalizeBlog = (data: { blogs_seo?: unknown } & Record<string, unknown>) => ({
   ...data,
@@ -34,6 +34,18 @@ export async function getBlogsAdmin(filters?: BlogFilters): Promise<ApiResponse<
     // Apply search filter
     if (filters?.search) {
       query = query.or(`title.ilike.%${filters.search}%,slug.ilike.%${filters.search}%`);
+    }
+
+    if (filters?.category_id) {
+      query = query.eq('category_id', filters.category_id);
+    }
+
+    if (filters?.status === 'published') {
+      query = query.eq('is_published', true);
+    }
+
+    if (filters?.status === 'draft') {
+      query = query.eq('is_published', false);
     }
 
     // Apply ordering

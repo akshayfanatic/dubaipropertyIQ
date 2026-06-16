@@ -16,6 +16,9 @@ import { TiptapEditor } from '@/components/shared/editor/TiptapEditor';
 import { TextArea } from '@/components/shared/forms/text-area';
 import { useEffect } from 'react';
 import { ImageUploader } from '@/components/ui/image-uploader';
+import useSWR from 'swr';
+import { SelectField } from '@/components/shared/select-field';
+import type { BlogCategoryOption } from '@/types/blog-category';
 
 interface BlogFormProps {
   id?: string;
@@ -25,6 +28,7 @@ interface BlogFormProps {
 export function BlogForm({ id = '', blog }: BlogFormProps) {
   const router = useRouter();
   const isEditMode = !!id;
+  const { data: blogCategories = [], isLoading: isLoadingBlogCategories } = useSWR<BlogCategoryOption[]>('/api/admin/blog-categories/options');
 
   const {
     handleSubmit,
@@ -37,6 +41,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
     defaultValues: {
       title: '',
       slug: '',
+      category_id: null,
       feature_image_url: { url: '', alt_tag: '' },
       content: { type: 'doc', content: [] },
       excerpt: '',
@@ -51,6 +56,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
       reset({
         title: blog.title,
         slug: blog.slug,
+        category_id: blog.category_id ?? null,
         feature_image_url: blog.feature_image_url || { url: '', alt_tag: '' },
         content: blog.content as BlogFormData['content'],
         excerpt: blog.excerpt || '',
@@ -115,6 +121,26 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
           <div className="grid gap-2">
             <TextInput id="slug" label="Slug" required placeholder="e.g., dubai-property-market-outlook" error={errors.slug?.message} {...field} disabled={isEditMode} />
             <p className="text-xs text-muted-foreground">Auto-generated from title while creating a blog.</p>
+          </div>
+        )}
+      />
+
+      {/* Category */}
+      <Controller
+        name="category_id"
+        control={control}
+        render={({ field }) => (
+          <div className="grid gap-2">
+            <Label htmlFor="category_id">Category</Label>
+            <SelectField
+              options={blogCategories}
+              placeholder={isLoadingBlogCategories ? 'Loading categories...' : 'Select a category'}
+              value={field.value ?? ''}
+              onValueChange={(value) => field.onChange(value || null)}
+              className="w-full"
+              disabled={isLoadingBlogCategories}
+            />
+            {errors.category_id && <p className="text-sm text-destructive">{errors.category_id.message}</p>}
           </div>
         )}
       />
