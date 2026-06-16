@@ -16,7 +16,14 @@ interface PageProps {
     search?: string;
     category_id?: string;
     status?: BlogPublishStatusFilter;
+    tag_ids?: string | string[];
   }>;
+}
+
+function normalizeTagIds(tagIds?: string | string[]): string[] | undefined {
+  const values = Array.isArray(tagIds) ? tagIds : tagIds?.split(',');
+  const normalized = values?.map((value) => value.trim()).filter(Boolean);
+  return normalized?.length ? normalized : undefined;
 }
 
 function buildFilters(params: Awaited<PageProps['searchParams']>): BlogFilters {
@@ -26,6 +33,7 @@ function buildFilters(params: Awaited<PageProps['searchParams']>): BlogFilters {
     search: params.search || undefined,
     category_id: params.category_id || undefined,
     status: params.status && params.status !== 'all' ? params.status : undefined,
+    tag_ids: normalizeTagIds(params.tag_ids),
   };
 }
 
