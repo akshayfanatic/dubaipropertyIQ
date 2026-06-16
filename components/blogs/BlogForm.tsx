@@ -14,7 +14,6 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { TiptapEditor } from '@/components/shared/editor/TiptapEditor';
 import { TextArea } from '@/components/shared/forms/text-area';
-import { useEffect } from 'react';
 import { ImageUploader } from '@/components/ui/image-uploader';
 import useSWR from 'swr';
 import { SelectField } from '@/components/shared/select-field';
@@ -39,39 +38,21 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
     setValue,
     control,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: '',
-      slug: '',
-      category_id: null,
-      tag_ids: [],
-      feature_image_url: { url: '', alt_tag: '' },
-      content: { type: 'doc', content: [] },
-      excerpt: '',
-      meta_title: '',
-      meta_description: '',
-      is_published: false,
+      title: blog?.title ?? '',
+      slug: blog?.slug ?? '',
+      category_id: blog?.category_id ?? null,
+      tag_ids: blog?.blog_post_tags?.map((tag) => tag.tag_id) ?? [],
+      feature_image_url: blog?.feature_image_url ?? { url: '', alt_tag: '' },
+      content: (blog?.content as BlogFormData['content'] | undefined) ?? { type: 'doc', content: [] },
+      excerpt: blog?.excerpt ?? '',
+      meta_title: blog?.blogs_seo?.meta_title ?? '',
+      meta_description: blog?.blogs_seo?.meta_description ?? '',
+      is_published: blog?.is_published ?? false,
     },
   });
-
-  useEffect(() => {
-    if (blog) {
-      reset({
-        title: blog.title,
-        slug: blog.slug,
-        category_id: blog.category_id ?? null,
-        tag_ids: blog.blog_post_tags?.map((tag) => tag.tag_id) ?? [],
-        feature_image_url: blog.feature_image_url || { url: '', alt_tag: '' },
-        content: blog.content as BlogFormData['content'],
-        excerpt: blog.excerpt || '',
-        meta_title: blog.blogs_seo?.meta_title || '',
-        meta_description: blog.blogs_seo?.meta_description || '',
-        is_published: blog.is_published ?? false,
-      });
-    }
-  }, [blog, reset]);
 
   const onSubmit = async (data: BlogFormData) => {
     try {
@@ -139,7 +120,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
           <div className="grid gap-2">
             <Label htmlFor="category_id">Category</Label>
             <SelectField
-              options={blogCategories}
+              options={blogCategories ?? []}
               placeholder={isLoadingBlogCategories ? 'Loading categories...' : 'Select a category'}
               value={field.value ?? ''}
               onValueChange={(value) => field.onChange(value || null)}

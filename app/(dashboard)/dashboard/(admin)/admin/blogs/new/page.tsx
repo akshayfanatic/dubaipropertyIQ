@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { BlogForm } from '@/components/blogs/BlogForm';
 import { PageHeader } from '@/components/shared/page-header';
+import { WidgetCard } from '@/components/shared/WidgetCard';
 
 export const metadata: Metadata = {
   title: 'Add New Blog | Admin Dashboard',
@@ -12,9 +13,9 @@ export default function NewBlogPage() {
     <div className="space-y-6">
       <PageHeader title="Add New Blog" description="Create a new blog post or article" showBackButton />
 
-      <div className="rounded-lg border bg-card p-6">
+      <WidgetCard>
         <BlogForm />
-      </div>
+      </WidgetCard>
     </div>
   );
 }
