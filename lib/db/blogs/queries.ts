@@ -9,7 +9,7 @@ import { ApiResponse, HttpStatus } from '@/lib/utils/response';
 import { Blog, BlogFilters } from '@/types/blog';
 import type { PaginatedResult } from '@/types/shared';
 
-const BLOG_SELECT = '*, blogs_seo(*), blog_categories(id, name, slug)';
+const BLOG_SELECT = '*, blogs_seo(*), blog_categories(id, name, slug), blog_post_tags(tag_id, blog_tags(id, name, slug))';
 
 const normalizeBlog = (data: { blogs_seo?: unknown } & Record<string, unknown>) => ({
   ...data,
@@ -38,6 +38,40 @@ export async function getBlogsAdmin(filters?: BlogFilters): Promise<ApiResponse<
 
     if (filters?.category_id) {
       query = query.eq('category_id', filters.category_id);
+    }
+
+    if (filters?.tag_ids?.length) {
+      const { data: taggedRows, error: tagError } = await supabase.from('blog_post_tags').select('blog_id').in('tag_id', filters.tag_ids);
+
+      if (tagError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: tagError.message,
+          error: { code: tagError.code || 'TAG_FILTER_ERROR' },
+        });
+      }
+
+      const blogIds = Array.from(new Set((taggedRows ?? []).map((row) => row.blog_id)));
+
+      if (!blogIds.length) {
+        const emptyResult: PaginatedResult<Blog> = {
+          data: [],
+          total: 0,
+          page,
+          pageSize: pageSize || 0,
+          totalPages: 0,
+        };
+
+        return ApiResponse({
+          success: true,
+          status: HttpStatus.OK,
+          message: 'Blogs fetched successfully',
+          data: emptyResult,
+        });
+      }
+
+      query = query.in('id', blogIds);
     }
 
     if (filters?.status === 'published') {
