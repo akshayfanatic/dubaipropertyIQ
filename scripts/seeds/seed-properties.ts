@@ -2,7 +2,7 @@
  * Property Seeder
  * Seeds the database with realistic Dubai property listings
  *
- * Usage: npx tsx scripts/seed-properties.ts
+ * Usage: npx tsx scripts/seeds/seed-properties.ts
  */
 
 import { createClient } from '@supabase/supabase-js';
