@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCityOptionsAdmin } from '@/lib/db/cities/queries';
+import { withAdminApi } from '@/lib/auth/api-wrappers';
 
-export async function GET() {
+export const GET = withAdminApi(async () => {
   try {
     const response = await getCityOptionsAdmin();
 
@@ -13,4 +14,4 @@ export async function GET() {
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+});

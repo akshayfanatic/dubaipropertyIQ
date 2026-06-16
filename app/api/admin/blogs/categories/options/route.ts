@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
-import { requireRoleApi } from '@/lib/auth/api-guards';
+import { withAdminApi } from '@/lib/auth/api-wrappers';
 import { getBlogCategoryOptionsAdmin } from '@/lib/db/blog-categories/queries';
 
-export async function GET() {
-  const authError = await requireRoleApi('admin');
-  if (authError) return authError;
-
+export const GET = withAdminApi(async () => {
   try {
     const response = await getBlogCategoryOptionsAdmin();
 
@@ -17,4 +14,4 @@ export async function GET() {
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
+});
