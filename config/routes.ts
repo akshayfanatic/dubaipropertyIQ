@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, FileStack, MapPin, Briefcase, Layers, FileText, Newspaper, FolderOpen, Tags } from 'lucide-react';
+import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, FileStack, MapPin, Briefcase, Layers, FileText, Newspaper, FolderOpen, Tags, BriefcaseBusiness } from 'lucide-react';
 
 // ============================================
 // Types
@@ -83,6 +83,10 @@ export const adminRoutes: RouteGroup[] = [
       },
       { title: 'Leads', href: '/dashboard/admin/leads', icon: FileStack },
     ],
+  },
+  {
+    title: 'Applications',
+    items: [{ title: 'Applications', href: '/dashboard/admin/applications', icon: BriefcaseBusiness }],
   },
   {
     title: 'Users',
