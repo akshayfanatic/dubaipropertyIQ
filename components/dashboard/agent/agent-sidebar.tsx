@@ -107,8 +107,8 @@ export function AgentSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <form action={logout}>
-              <SidebarMenuButton tooltip="Logout" className="w-full cursor-pointer">
-                <LogOut />
+              <SidebarMenuButton tooltip="Logout" className="w-full cursor-pointer text-destructive transition-all duration-200 hover:text-destructive">
+                <LogOut className="text-destructive" />
                 <span>Logout</span>
               </SidebarMenuButton>
             </form>
