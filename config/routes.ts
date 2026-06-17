@@ -108,13 +108,13 @@ export const adminRoutes: RouteGroup[] = [
 export const agentRoutes: RouteGroup[] = [
   {
     title: 'Overview',
-    items: [{ title: 'Dashboard', href: '/dashboard/agent', icon: LayoutDashboard, isComingSoon: true }],
+    items: [{ title: 'Dashboard', href: '/dashboard/agent', icon: LayoutDashboard }],
   },
   {
     title: 'Listings',
     items: [
-      { title: 'My Properties', href: '/dashboard/agent/properties', icon: Building2, isComingSoon: true },
-      { title: 'Profile', href: '/dashboard/agent/profile', icon: User, isComingSoon: true },
+      { title: 'My Properties', href: '/dashboard/agent/properties', icon: Building2 },
+      { title: 'Profile', href: '/dashboard/agent/profile', icon: User },
     ],
   },
 ];
