@@ -215,7 +215,7 @@ export function AdminSidebar() {
       </SidebarContent>
 
       {/* Footer with Logout */}
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/70 pt-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <form action={logout}>

@@ -33,12 +33,12 @@ export default async function AgentLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} h-svh overflow-hidden antialiased`} suppressHydrationWarning>
         <AgentProvider>
           <AgentSidebar />
           <SidebarInset>
             <AgentHeader />
-            <main className="flex-1 p-6">{children}</main>
+            <main className="min-h-0 flex-1 overflow-y-auto p-6">{children}</main>
             <Toaster />
           </SidebarInset>
         </AgentProvider>
