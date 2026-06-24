@@ -24,10 +24,16 @@ function getRenderedHeadings(): BlogTocItem[] {
 
 export function BlogTableOfContents({ content }: BlogTableOfContentsProps) {
   const [items, setItems] = useState<BlogTocItem[]>(() => getBlogTableOfContents(content));
+  const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
+    function syncActiveHash() {
+      setActiveId(window.location.hash.slice(1));
+    }
+
     function syncRenderedHeadings() {
       const renderedItems = getRenderedHeadings();
+      syncActiveHash();
 
       if (renderedItems.length > 0) {
         setItems(renderedItems);
@@ -36,10 +42,12 @@ export function BlogTableOfContents({ content }: BlogTableOfContentsProps) {
 
     const frame = requestAnimationFrame(syncRenderedHeadings);
     window.addEventListener('blog-content-headings-ready', syncRenderedHeadings);
+    window.addEventListener('hashchange', syncActiveHash);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('blog-content-headings-ready', syncRenderedHeadings);
+      window.removeEventListener('hashchange', syncActiveHash);
     };
   }, []);
 
@@ -50,6 +58,7 @@ export function BlogTableOfContents({ content }: BlogTableOfContentsProps) {
 
     heading.scrollIntoView({ behavior: 'smooth', block: 'center' });
     window.history.replaceState(null, '', `#${id}`);
+    setActiveId(id);
   }
 
   if (items.length === 0) {
@@ -69,11 +78,12 @@ export function BlogTableOfContents({ content }: BlogTableOfContentsProps) {
           <a
             key={item.id}
             href={`#${item.id}`}
+            aria-current={activeId === item.id ? 'location' : undefined}
             onClick={(event) => {
               event.preventDefault();
               scrollToHeading(item.id);
             }}
-            className={cn('rounded-md py-1.5 text-sm leading-5 text-muted-foreground transition-colors hover:text-primary', item.level > 2 && 'pl-3')}
+            className={cn('rounded-md py-1.5 text-sm leading-5 text-muted-foreground transition-colors hover:text-primary', item.level > 2 && 'pl-3', activeId === item.id && 'font-bold text-primary')}
           >
             {item.text}
           </a>

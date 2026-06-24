@@ -100,6 +100,7 @@ export default async function BlogPage({ params }: PageProps) {
         alt={blog.feature_image_url?.alt_tag || blog.title}
         heightClassName={hasFeatureImage ? 'min-h-[460px]' : 'min-h-0'}
         overlayClassName="bg-[linear-gradient(90deg,oklch(0.18_0.04_260.47_/_0.58),oklch(0.18_0.04_260.47_/_0.34),oklch(0.18_0.04_260.47_/_0.14))]"
+        imageClassName="animate-hero-kenburns motion-reduce:animate-none"
         contentClassName={cn('mx-auto w-[min(92%,960px)] py-14 sm:py-18', hasFeatureImage && 'w-[min(92%,1080px)]')}
         className={cn(!hasFeatureImage && 'bg-background')}
       >
