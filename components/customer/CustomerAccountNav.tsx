@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Heart, LogOut, UserRound } from 'lucide-react';
+import { BriefcaseBusiness, Heart, LogOut, UserRound } from 'lucide-react';
 
 import { logout } from '@/app/(auth)/auth/actions';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,11 @@ const customerSections = [
     href: '/customer/saved-properties',
     label: 'Saved properties',
     icon: Heart,
+  },
+  {
+    href: '/become-partner/application-status',
+    label: 'Partner application',
+    icon: BriefcaseBusiness,
   },
 ] as const;
 

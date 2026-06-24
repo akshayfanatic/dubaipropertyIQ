@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.4...v0.10.0) (2026-06-24)
+
+### Features
+
+- **agent:** added scaffolding structure of agent dashboard ([414a5e3](https://github.com/akshayfanatic/dubaipropertyIQ/commit/414a5e32e05b9f021ad4670844c0ed460b6c5b2b))
+- **parnter application components:** added partner application components on bfrontend and backend side ([145738b](https://github.com/akshayfanatic/dubaipropertyIQ/commit/145738bfc66e6d183f2f3b6464ab01bff1736fa4))
+- **partner-application:** added db migrations for adding support of partner_application ([326c4ed](https://github.com/akshayfanatic/dubaipropertyIQ/commit/326c4ed664e4141eb0736e9b964aa473fe8b36ae))
+
+### Bug Fixes
+
+- **auth:** prevent admin access to acess business partner page ([85148fc](https://github.com/akshayfanatic/dubaipropertyIQ/commit/85148fc1e227b74f05cc0c8ea01973ce9e7c1d2a))
+- **blog:** slug is not updating with title ([06c5c4d](https://github.com/akshayfanatic/dubaipropertyIQ/commit/06c5c4d4c40046263dcf59fc241d55a96e7aa8e4))
+- **dashboard:** removed scroller from footer of dashboard sidebar ([0184aee](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0184aee4ee18e07b7c7bcd39a5ab79bf83bcae86))
+- **profile:** fix agent profile image issue ([0771778](https://github.com/akshayfanatic/dubaipropertyIQ/commit/0771778fb6f7fd0770b2c7aa7486df1b415a29a6))
+
+### Code Style Changes
+
+- **area:** added transition smooth on area card ([bc45941](https://github.com/akshayfanatic/dubaipropertyIQ/commit/bc45941374de4994faf674512b6415cb19c80e98))
+- **logout:** on dashboard sidebar footer give text color red to logout actions ([25216be](https://github.com/akshayfanatic/dubaipropertyIQ/commit/25216bee8dd0e8909f069ca40291b04420a02c7f))
+- **profile-dropdown:** fix agent stle profile dropdown ([c1d3931](https://github.com/akshayfanatic/dubaipropertyIQ/commit/c1d393177fddb1c1545672db4b3cfab5588e5e1a))
+- **tiptap:** fix tiptap editor styling inconsistency of every node ([d59e160](https://github.com/akshayfanatic/dubaipropertyIQ/commit/d59e160945c139bfd449ad4759d87562bb450cde))
+
+### Code Refactoring
+
+- **blog:** reorganize component structure of single blog page ([2b8b7bc](https://github.com/akshayfanatic/dubaipropertyIQ/commit/2b8b7bcda719c6f397459eaaf489c54595756ae6))
+- **blogs-public:** redesign blog page ([b2f12ff](https://github.com/akshayfanatic/dubaipropertyIQ/commit/b2f12ffc96844adbf3fb2abdf7f81915207025f1))
+
 ### [0.9.4](https://github.com/akshayfanatic/dubaipropertyIQ/compare/v0.9.3...v0.9.4) (2026-06-16)
 
 ### Features

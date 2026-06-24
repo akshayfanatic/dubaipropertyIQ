@@ -66,6 +66,12 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
+    // Admins already have back-office access; keep them out of partner onboarding.
+    if (pathname.startsWith('/become-partner') && role === 'admin') {
+      url.pathname = ROLE_DASHBOARDS.admin;
+      return NextResponse.redirect(url);
+    }
+
     // Dispatcher: /dashboard redirects to role-specific dashboard
     if (pathname === '/dashboard') {
       url.pathname = ROLE_DASHBOARDS[role];

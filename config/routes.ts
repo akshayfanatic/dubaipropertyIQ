@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, FileStack, MapPin, Briefcase, Layers, FileText, Newspaper, FolderOpen, Tags } from 'lucide-react';
+import { Home, User, Lock, LayoutDashboard, Settings, Users, Building2, FileStack, MapPin, Briefcase, Layers, FileText, Newspaper, FolderOpen, Tags, BriefcaseBusiness } from 'lucide-react';
 
 // ============================================
 // Types
@@ -85,6 +85,10 @@ export const adminRoutes: RouteGroup[] = [
     ],
   },
   {
+    title: 'Applications',
+    items: [{ title: 'Applications', href: '/dashboard/admin/applications', icon: BriefcaseBusiness }],
+  },
+  {
     title: 'Users',
     items: [{ title: 'Users', href: '/dashboard/admin/users', icon: Users }],
   },
@@ -104,13 +108,13 @@ export const adminRoutes: RouteGroup[] = [
 export const agentRoutes: RouteGroup[] = [
   {
     title: 'Overview',
-    items: [{ title: 'Dashboard', href: '/dashboard/agent', icon: LayoutDashboard, isComingSoon: true }],
+    items: [{ title: 'Dashboard', href: '/dashboard/agent', icon: LayoutDashboard }],
   },
   {
     title: 'Listings',
     items: [
-      { title: 'My Properties', href: '/dashboard/agent/properties', icon: Building2, isComingSoon: true },
-      { title: 'Profile', href: '/dashboard/agent/profile', icon: User, isComingSoon: true },
+      { title: 'My Properties', href: '/dashboard/agent/properties', icon: Building2 },
+      { title: 'Profile', href: '/dashboard/agent/profile', icon: User },
     ],
   },
 ];

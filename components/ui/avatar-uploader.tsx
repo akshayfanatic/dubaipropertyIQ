@@ -17,9 +17,10 @@ interface AvatarUploaderProps {
   disabled?: boolean;
   displayName?: string;
   className?: string;
+  label?: string;
 }
 
-export function AvatarUploader({ bucket, value, onChange, disabled = false, displayName = '', className }: AvatarUploaderProps) {
+export function AvatarUploader({ bucket, value, onChange, disabled = false, displayName = '', className, label = 'Profile Photo' }: AvatarUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -157,7 +158,7 @@ export function AvatarUploader({ bucket, value, onChange, disabled = false, disp
 
       {/* Labels */}
       <div className="space-y-1">
-        <p className="text-sm font-medium">Profile Photo</p>
+        <p className="text-sm font-medium">{label}</p>
         <p className="text-xs text-muted-foreground">Click to {value ? 'change' : 'upload'} • JPG, Max 5MB</p>
         {value && (
           <button type="button" onClick={handleRemove} disabled={deleting || disabled} className="text-xs text-destructive hover:underline disabled:opacity-50 disabled:cursor-not-allowed">

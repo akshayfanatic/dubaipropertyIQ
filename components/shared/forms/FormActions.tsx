@@ -7,9 +7,10 @@ interface FormActionsProps {
   isSubmitting?: boolean;
   isEditMode?: boolean;
   submitLabel?: string;
+  submitText?: string;
 }
 
-export function FormActions({ isSubmitting, isEditMode, submitLabel = 'Save' }: FormActionsProps) {
+export function FormActions({ isSubmitting, isEditMode, submitLabel = 'Save', submitText }: FormActionsProps) {
   return (
     <div className="flex justify-end gap-3 pt-6">
       <Button type="submit" disabled={isSubmitting} className="cursor-pointer min-w-30">
@@ -21,7 +22,7 @@ export function FormActions({ isSubmitting, isEditMode, submitLabel = 'Save' }: 
         ) : (
           <>
             <Save className="mr-2 h-4 w-4" />
-            {isEditMode ? `Update ${submitLabel}` : `Create ${submitLabel}`}
+            {submitText ?? (isEditMode ? `Update ${submitLabel}` : `Create ${submitLabel}`)}
           </>
         )}
       </Button>

@@ -8,6 +8,118 @@ export type Database = {
   };
   public: {
     Tables: {
+      agent_application_details: {
+        Row: {
+          agency_name: string | null;
+          application_id: string;
+          areas_of_focus: string | null;
+          broker_id: string | null;
+          company_name: string | null;
+          created_at: string;
+          experience_years: number | null;
+          logo_url: Json | null;
+          message: string | null;
+          rera_number: string;
+          updated_at: string;
+        };
+        Insert: {
+          agency_name?: string | null;
+          application_id: string;
+          areas_of_focus?: string | null;
+          broker_id?: string | null;
+          company_name?: string | null;
+          created_at?: string;
+          experience_years?: number | null;
+          logo_url?: Json | null;
+          message?: string | null;
+          rera_number: string;
+          updated_at?: string;
+        };
+        Update: {
+          agency_name?: string | null;
+          application_id?: string;
+          areas_of_focus?: string | null;
+          broker_id?: string | null;
+          company_name?: string | null;
+          created_at?: string;
+          experience_years?: number | null;
+          logo_url?: Json | null;
+          message?: string | null;
+          rera_number?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'agent_application_details_application_id_fkey';
+            columns: ['application_id'];
+            isOneToOne: true;
+            referencedRelation: 'partner_applications';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      agent_profiles: {
+        Row: {
+          agency_name: string | null;
+          application_id: string | null;
+          broker_id: string | null;
+          company_name: string | null;
+          contact_name: string | null;
+          created_at: string;
+          email: string;
+          id: string;
+          logo_url: Json | null;
+          phone: string | null;
+          rera_number: string;
+          status: Database['public']['Enums']['partner_account_status'];
+          updated_at: string;
+          user_id: string;
+          whatsapp: string | null;
+        };
+        Insert: {
+          agency_name?: string | null;
+          application_id?: string | null;
+          broker_id?: string | null;
+          company_name?: string | null;
+          contact_name?: string | null;
+          created_at?: string;
+          email: string;
+          id?: string;
+          logo_url?: Json | null;
+          phone?: string | null;
+          rera_number: string;
+          status?: Database['public']['Enums']['partner_account_status'];
+          updated_at?: string;
+          user_id: string;
+          whatsapp?: string | null;
+        };
+        Update: {
+          agency_name?: string | null;
+          application_id?: string | null;
+          broker_id?: string | null;
+          company_name?: string | null;
+          contact_name?: string | null;
+          created_at?: string;
+          email?: string;
+          id?: string;
+          logo_url?: Json | null;
+          phone?: string | null;
+          rera_number?: string;
+          status?: Database['public']['Enums']['partner_account_status'];
+          updated_at?: string;
+          user_id?: string;
+          whatsapp?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'agent_profiles_application_id_fkey';
+            columns: ['application_id'];
+            isOneToOne: true;
+            referencedRelation: 'partner_applications';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       amenities: {
         Row: {
           created_at: string | null;
@@ -729,6 +841,128 @@ export type Database = {
           },
         ];
       };
+      developer_accounts: {
+        Row: {
+          application_id: string | null;
+          authorized_contact_name: string | null;
+          company_name: string;
+          created_at: string;
+          developer_id: string | null;
+          email: string;
+          id: string;
+          logo_url: Json | null;
+          phone: string | null;
+          status: Database['public']['Enums']['partner_account_status'];
+          trade_license_number: string | null;
+          updated_at: string;
+          user_id: string;
+          website_url: string | null;
+        };
+        Insert: {
+          application_id?: string | null;
+          authorized_contact_name?: string | null;
+          company_name: string;
+          created_at?: string;
+          developer_id?: string | null;
+          email: string;
+          id?: string;
+          logo_url?: Json | null;
+          phone?: string | null;
+          status?: Database['public']['Enums']['partner_account_status'];
+          trade_license_number?: string | null;
+          updated_at?: string;
+          user_id: string;
+          website_url?: string | null;
+        };
+        Update: {
+          application_id?: string | null;
+          authorized_contact_name?: string | null;
+          company_name?: string;
+          created_at?: string;
+          developer_id?: string | null;
+          email?: string;
+          id?: string;
+          logo_url?: Json | null;
+          phone?: string | null;
+          status?: Database['public']['Enums']['partner_account_status'];
+          trade_license_number?: string | null;
+          updated_at?: string;
+          user_id?: string;
+          website_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'developer_accounts_application_id_fkey';
+            columns: ['application_id'];
+            isOneToOne: true;
+            referencedRelation: 'partner_applications';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'developer_accounts_developer_id_fkey';
+            columns: ['developer_id'];
+            isOneToOne: false;
+            referencedRelation: 'developers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      developer_application_details: {
+        Row: {
+          active_project_details: string | null;
+          application_id: string;
+          authorized_contact_name: string | null;
+          bulk_upload_required: boolean;
+          company_name: string;
+          contact_email: string | null;
+          contact_phone: string | null;
+          created_at: string;
+          logo_url: Json | null;
+          message: string | null;
+          trade_license_number: string | null;
+          updated_at: string;
+          website_url: string | null;
+        };
+        Insert: {
+          active_project_details?: string | null;
+          application_id: string;
+          authorized_contact_name?: string | null;
+          bulk_upload_required?: boolean;
+          company_name: string;
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          created_at?: string;
+          logo_url?: Json | null;
+          message?: string | null;
+          trade_license_number?: string | null;
+          updated_at?: string;
+          website_url?: string | null;
+        };
+        Update: {
+          active_project_details?: string | null;
+          application_id?: string;
+          authorized_contact_name?: string | null;
+          bulk_upload_required?: boolean;
+          company_name?: string;
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          created_at?: string;
+          logo_url?: Json | null;
+          message?: string | null;
+          trade_license_number?: string | null;
+          updated_at?: string;
+          website_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'developer_application_details_application_id_fkey';
+            columns: ['application_id'];
+            isOneToOne: true;
+            referencedRelation: 'partner_applications';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       developers: {
         Row: {
           after_sales_score: number | null;
@@ -945,6 +1179,54 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      partner_applications: {
+        Row: {
+          admin_notes: string | null;
+          created_at: string;
+          email: string;
+          full_name: string;
+          id: string;
+          phone: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: Database['public']['Enums']['partner_application_status'];
+          target_role: Database['public']['Enums']['app_role'];
+          updated_at: string;
+          user_id: string;
+          whatsapp: string | null;
+        };
+        Insert: {
+          admin_notes?: string | null;
+          created_at?: string;
+          email: string;
+          full_name: string;
+          id?: string;
+          phone?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database['public']['Enums']['partner_application_status'];
+          target_role: Database['public']['Enums']['app_role'];
+          updated_at?: string;
+          user_id: string;
+          whatsapp?: string | null;
+        };
+        Update: {
+          admin_notes?: string | null;
+          created_at?: string;
+          email?: string;
+          full_name?: string;
+          id?: string;
+          phone?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database['public']['Enums']['partner_application_status'];
+          target_role?: Database['public']['Enums']['app_role'];
+          updated_at?: string;
+          user_id?: string;
+          whatsapp?: string | null;
+        };
+        Relationships: [];
       };
       properties: {
         Row: {
@@ -1208,7 +1490,9 @@ export type Database = {
       };
     };
     Enums: {
-      app_role: 'admin' | 'agent' | 'customer';
+      app_role: 'admin' | 'agent' | 'customer' | 'developer';
+      partner_account_status: 'pending' | 'active' | 'suspended' | 'rejected';
+      partner_application_status: 'pending' | 'reviewing' | 'approved' | 'rejected';
       property_status_enum: 'available' | 'sold' | 'reserved' | 'off_plan' | 'draft';
     };
     CompositeTypes: {
@@ -1323,7 +1607,9 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ['admin', 'agent', 'customer'],
+      app_role: ['admin', 'agent', 'customer', 'developer'],
+      partner_account_status: ['pending', 'active', 'suspended', 'rejected'],
+      partner_application_status: ['pending', 'reviewing', 'approved', 'rejected'],
       property_status_enum: ['available', 'sold', 'reserved', 'off_plan', 'draft'],
     },
   },
