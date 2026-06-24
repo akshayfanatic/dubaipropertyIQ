@@ -1,12 +1,15 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
+import { Bold, Italic, Link2, Link2Off, List, ListOrdered, Strikethrough } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import styles from './TiptapEditor.module.css';
 
 interface TiptapEditorProps {
   content?: object;
@@ -19,20 +22,63 @@ interface TiptapEditorProps {
 interface ToolbarButtonProps {
   onClick: () => void;
   active?: boolean;
-  children: React.ReactNode;
+  disabled?: boolean;
+  label: string;
+  children: ReactNode;
 }
 
-function ToolbarButton({ onClick, active, children }: ToolbarButtonProps) {
+function ToolbarButton({ onClick, active, disabled, label, children }: ToolbarButtonProps) {
   return (
-    <button
+    <Button
       type="button"
+      variant={active ? 'default' : 'ghost'}
+      size="icon-sm"
       onClick={onClick}
-      className={cn('rounded-md px-2 py-1 text-sm font-medium transition-colors', active ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground')}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      className={cn(
+        'size-8 rounded-md border border-transparent text-muted-foreground shadow-none',
+        'hover:border-border hover:bg-background hover:text-foreground',
+        active && 'border-primary bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
+      )}
     >
       {children}
-    </button>
+    </Button>
   );
 }
+
+function ToolbarDivider() {
+  return <div className="mx-1 hidden h-6 w-px bg-border sm:block" aria-hidden="true" />;
+}
+
+type BlockStyle = 'paragraph' | 'heading-1' | 'heading-2' | 'heading-3';
+type ToolbarState = {
+  blockStyle: BlockStyle;
+  bold: boolean;
+  italic: boolean;
+  strike: boolean;
+  bulletList: boolean;
+  orderedList: boolean;
+  link: boolean;
+};
+
+function getBlockStyle(editor: NonNullable<ReturnType<typeof useEditor>>): BlockStyle {
+  if (editor.isActive('heading', { level: 1 })) return 'heading-1';
+  if (editor.isActive('heading', { level: 2 })) return 'heading-2';
+  if (editor.isActive('heading', { level: 3 })) return 'heading-3';
+  return 'paragraph';
+}
+
+const defaultToolbarState: ToolbarState = {
+  blockStyle: 'paragraph',
+  bold: false,
+  italic: false,
+  strike: false,
+  bulletList: false,
+  orderedList: false,
+  link: false,
+};
 
 /**
  * Reusable Tiptap Editor Component
@@ -59,19 +105,28 @@ export function TiptapEditor({ content, onChange, placeholder = 'Start writing..
     onUpdate: ({ editor }) => onChange(editor.getJSON()),
     editorProps: {
       attributes: {
-        class: cn(
-          'prose prose-sm max-w-none focus:outline-none px-4 py-3',
-          editable ? 'min-h-[300px]' : 'min-h-0',
-          'prose-headings:font-bold prose-headings:tracking-tight',
-          'prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg',
-          'prose-p:leading-relaxed',
-          'prose-ul:list-disc prose-ol:list-decimal',
-          'prose-strong:font-semibold prose-em:italic',
-          'prose-a:text-primary prose-a:no-underline hover:prose-a:underline',
-        ),
+        class: cn('tiptap focus:outline-none', styles.editorContent, editable ? styles.editable : styles.readOnly),
       },
     },
   });
+
+  const editorState =
+    useEditorState({
+      editor,
+      selector: ({ editor }): ToolbarState => {
+        if (!editor) return defaultToolbarState;
+
+        return {
+          blockStyle: getBlockStyle(editor),
+          bold: editor.isActive('bold'),
+          italic: editor.isActive('italic'),
+          strike: editor.isActive('strike'),
+          bulletList: editor.isActive('bulletList'),
+          orderedList: editor.isActive('orderedList'),
+          link: editor.isActive('link'),
+        };
+      },
+    }) ?? defaultToolbarState;
 
   useEffect(() => {
     if (editor && content && JSON.stringify(editor.getJSON()) !== JSON.stringify(content)) {
@@ -81,49 +136,66 @@ export function TiptapEditor({ content, onChange, placeholder = 'Start writing..
 
   if (!editor) return null;
 
+  const applyBlockStyle = (value: BlockStyle) => {
+    const chain = editor.chain().focus();
+
+    if (value === 'paragraph') {
+      chain.setParagraph().run();
+      return;
+    }
+
+    const level = Number(value.replace('heading-', '')) as 1 | 2 | 3;
+    chain.setHeading({ level }).run();
+  };
+
   return (
-    <div className={cn('rounded-md bg-background', className)}>
+    <div className={cn('overflow-hidden rounded-lg border border-border bg-background shadow-sm', !editable && 'border-0 bg-transparent shadow-none', className)}>
       {editable && (
-        <div className="flex flex-wrap items-center gap-1 border-b border-border p-2">
-          <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')}>
-            <strong>B</strong>
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive('italic')}>
-            <em>I</em>
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive('strike')}>
-            <s>S</s>
-          </ToolbarButton>
-          <div className="mx-1 h-6 w-px bg-border" />
-          <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive('heading', { level: 1 })}>
-            H1
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive('heading', { level: 2 })}>
-            H2
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive('heading', { level: 3 })}>
-            H3
-          </ToolbarButton>
-          <div className="mx-1 h-6 w-px bg-border" />
-          <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive('bulletList')}>
-            • List
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive('orderedList')}>
-            1. List
-          </ToolbarButton>
-          <div className="mx-1 h-6 w-px bg-border" />
-          <ToolbarButton
-            onClick={() => {
-              const url = window.prompt('Enter URL:');
-              if (url) editor.chain().focus().setLink({ href: url }).run();
-            }}
-            active={editor.isActive('link')}
-          >
-            Link
-          </ToolbarButton>
-          <ToolbarButton onClick={() => editor.chain().focus().unsetLink().run()} active={!editor.isActive('link')}>
-            Unlink
-          </ToolbarButton>
+        <div className="border-b border-border bg-muted/35 px-2 py-2">
+          <div className="flex flex-wrap items-center gap-1">
+            <select
+              aria-label="Block style"
+              value={editorState.blockStyle}
+              onChange={(event) => applyBlockStyle(event.target.value as BlockStyle)}
+              className="h-8 rounded-md border border-input bg-background px-2 text-xs font-medium text-foreground outline-none transition-colors focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+            >
+              <option value="paragraph">Paragraph</option>
+              <option value="heading-1">Heading 1</option>
+              <option value="heading-2">Heading 2</option>
+              <option value="heading-3">Heading 3</option>
+            </select>
+            <ToolbarDivider />
+            <ToolbarButton label="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editorState.bold}>
+              <Bold className="size-4" />
+            </ToolbarButton>
+            <ToolbarButton label="Italic" onClick={() => editor.chain().focus().toggleItalic().run()} active={editorState.italic}>
+              <Italic className="size-4" />
+            </ToolbarButton>
+            <ToolbarButton label="Strikethrough" onClick={() => editor.chain().focus().toggleStrike().run()} active={editorState.strike}>
+              <Strikethrough className="size-4" />
+            </ToolbarButton>
+            <ToolbarDivider />
+            <ToolbarButton label="Bullet list" onClick={() => editor.chain().focus().toggleBulletList().run()} active={editorState.bulletList}>
+              <List className="size-4" />
+            </ToolbarButton>
+            <ToolbarButton label="Numbered list" onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editorState.orderedList}>
+              <ListOrdered className="size-4" />
+            </ToolbarButton>
+            <ToolbarDivider />
+            <ToolbarButton
+              label="Add link"
+              onClick={() => {
+                const url = window.prompt('Enter URL:');
+                if (url) editor.chain().focus().setLink({ href: url }).run();
+              }}
+              active={editorState.link}
+            >
+              <Link2 className="size-4" />
+            </ToolbarButton>
+            <ToolbarButton label="Remove link" onClick={() => editor.chain().focus().unsetLink().run()} disabled={!editorState.link}>
+              <Link2Off className="size-4" />
+            </ToolbarButton>
+          </div>
         </div>
       )}
       <EditorContent editor={editor} />

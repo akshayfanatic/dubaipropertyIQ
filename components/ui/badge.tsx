@@ -29,4 +29,7 @@ function Badge({ className, variant = 'default', asChild = false, ...props }: Re
   return <Comp data-slot="badge" data-variant={variant} className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
+type BadgeVariant = VariantProps<typeof badgeVariants>['variant'];
+
 export { Badge, badgeVariants };
+export type { BadgeVariant };

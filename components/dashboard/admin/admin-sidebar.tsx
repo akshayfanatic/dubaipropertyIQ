@@ -215,12 +215,12 @@ export function AdminSidebar() {
       </SidebarContent>
 
       {/* Footer with Logout */}
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/70 pt-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <form action={logout}>
-              <SidebarMenuButton tooltip="Logout" className="w-full cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
-                <LogOut className="transition-transform duration-200 group-hover/menu-button:-translate-x-0.5" />
+              <SidebarMenuButton tooltip="Logout" className="w-full cursor-pointer text-destructive transition-all duration-200 hover:scale-[1.02] hover:text-destructive active:scale-[0.98]">
+                <LogOut className="text-destructive transition-transform duration-200 group-hover/menu-button:-translate-x-0.5" />
                 <span>Logout</span>
               </SidebarMenuButton>
             </form>

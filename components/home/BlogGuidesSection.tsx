@@ -3,11 +3,13 @@ import { ArrowRight } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { cn } from '@/lib/utils';
 import type { Blog } from '@/types/blog';
 
 interface BlogGuidesSectionProps {
   blogs: Blog[];
   limit?: number;
+  gridClassName?: string;
 }
 
 function formatBlogDate(date?: string | null) {
@@ -80,12 +82,12 @@ function BlogGuideCard({ blog, index }: { blog: Blog; index: number }) {
   );
 }
 
-export function BlogGuidesSection({ blogs, limit }: BlogGuidesSectionProps) {
+export function BlogGuidesSection({ blogs, limit, gridClassName }: BlogGuidesSectionProps) {
   if (blogs.length === 0) return null;
   const visibleBlogs = typeof limit === 'number' ? blogs.slice(0, limit) : blogs;
 
   return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <div className={cn('grid grid-cols-1 gap-5 md:grid-cols-3', gridClassName)}>
       {visibleBlogs.map((blog, index) => (
         <BlogGuideCard key={blog.id} blog={blog} index={index} />
       ))}

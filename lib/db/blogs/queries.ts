@@ -16,6 +16,57 @@ const normalizeBlog = (data: { blogs_seo?: unknown } & Record<string, unknown>) 
   blogs_seo: Array.isArray(data.blogs_seo) ? (data.blogs_seo[0] ?? null) : (data.blogs_seo ?? null),
 });
 
+export type BlogStats = {
+  blogs: number;
+  categories: number;
+  tags: number;
+};
+
+/**
+ * Get blog library totals for the public blog listing header.
+ */
+export async function getBlogStats(): Promise<ApiResponse<BlogStats>> {
+  try {
+    const supabase = adminClient();
+
+    const [blogsResult, categoriesResult, tagsResult] = await Promise.all([
+      supabase.from('blogs').select('id', { count: 'exact', head: true }).eq('is_published', true),
+      supabase.from('blog_categories').select('id', { count: 'exact', head: true }).eq('is_active', true),
+      supabase.from('blog_tags').select('id', { count: 'exact', head: true }),
+    ]);
+
+    const error = blogsResult.error ?? categoriesResult.error ?? tagsResult.error;
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'BLOG_STATS_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Blog stats fetched successfully',
+      data: {
+        blogs: blogsResult.count ?? 0,
+        categories: categoriesResult.count ?? 0,
+        tags: tagsResult.count ?? 0,
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch blog stats';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
 /**
  * Get all blogs with optional search and pagination
  * - No pageSize -> returns all blogs (no pagination limit)
@@ -117,6 +168,76 @@ export async function getBlogsAdmin(filters?: BlogFilters): Promise<ApiResponse<
       status: HttpStatus.OK,
       message: 'Blogs fetched successfully',
       data: result,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch blogs';
+    return ApiResponse({
+      success: false,
+      status: HttpStatus.INTERNAL_ERROR,
+      message,
+      error: { code: 'INTERNAL_ERROR' },
+    });
+  }
+}
+
+/**
+ * Get published blogs with optional public filters.
+ */
+export async function getBlogs(filters?: BlogFilters): Promise<ApiResponse<Blog[]>> {
+  try {
+    const supabase = adminClient();
+    let query = supabase.from('blogs').select(BLOG_SELECT).eq('is_published', true);
+
+    if (filters?.search) {
+      query = query.or(`title.ilike.%${filters.search}%,slug.ilike.%${filters.search}%`);
+    }
+
+    if (filters?.category_id) {
+      query = query.eq('category_id', filters.category_id);
+    }
+
+    if (filters?.tag_ids?.length) {
+      const { data: taggedRows, error: tagError } = await supabase.from('blog_post_tags').select('blog_id').in('tag_id', filters.tag_ids);
+
+      if (tagError) {
+        return ApiResponse({
+          success: false,
+          status: HttpStatus.INTERNAL_ERROR,
+          message: tagError.message,
+          error: { code: tagError.code || 'TAG_FILTER_ERROR' },
+        });
+      }
+
+      const blogIds = Array.from(new Set((taggedRows ?? []).map((row) => row.blog_id)));
+
+      if (!blogIds.length) {
+        return ApiResponse({
+          success: true,
+          status: HttpStatus.OK,
+          message: 'Blogs fetched successfully',
+          data: [],
+        });
+      }
+
+      query = query.in('id', blogIds);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      return ApiResponse({
+        success: false,
+        status: HttpStatus.INTERNAL_ERROR,
+        message: error.message,
+        error: { code: error.code || 'QUERY_ERROR' },
+      });
+    }
+
+    return ApiResponse({
+      success: true,
+      status: HttpStatus.OK,
+      message: 'Blogs fetched successfully',
+      data: (data ?? []).map((blog) => normalizeBlog(blog)) as Blog[],
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch blogs';

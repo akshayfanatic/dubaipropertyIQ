@@ -92,9 +92,7 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
             value={field.value}
             onChange={(e) => {
               field.onChange(e);
-              if (!isEditMode) {
-                setValue('slug', generateSlug(e.target.value), { shouldDirty: true, shouldValidate: true });
-              }
+              setValue('slug', generateSlug(e.target.value), { shouldDirty: true, shouldValidate: true });
             }}
           />
         )}
@@ -106,8 +104,8 @@ export function BlogForm({ id = '', blog }: BlogFormProps) {
         control={control}
         render={({ field }) => (
           <div className="grid gap-2">
-            <TextInput id="slug" label="Slug" required placeholder="e.g., dubai-property-market-outlook" error={errors.slug?.message} {...field} disabled={isEditMode} />
-            <p className="text-xs text-muted-foreground">Auto-generated from title while creating a blog.</p>
+            <TextInput id="slug" label="Slug" required placeholder="e.g., dubai-property-market-outlook" error={errors.slug?.message} {...field} />
+            <p className="text-xs text-muted-foreground">Auto-generated from title and can be adjusted before saving.</p>
           </div>
         )}
       />

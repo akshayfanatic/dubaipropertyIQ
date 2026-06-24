@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { ToolsSection } from '@/components/home/ToolsSection';
 import { FeaturedCities } from '@/components/home/FeaturedCities';
 import { BlogGuidesSection } from '@/components/home/BlogGuidesSection';
-import { NewsletterSection } from '@/components/home/NewsletterSection';
+import { NewsletterContent } from '@/components/home/NewsletterSection';
 import { AnimateSection } from '@/components/shared/AnimateSection';
 import { PageBanner } from '@/components/shared/PageBanner';
 import HomeBanner from '@/components/home/HomeBanner';
@@ -152,7 +152,9 @@ export default async function Home() {
 
       {/* Newsletter: weekly Dubai property intelligence signup */}
       <AnimateSection>
-        <NewsletterSection />
+        <SectionCard className="bg-background" contentClassName="card-entrance overflow-hidden rounded-3xl border border-border bg-card shadow-lg shadow-foreground/8">
+          <NewsletterContent />
+        </SectionCard>
       </AnimateSection>
       <JsonLd
         id="home-page-structured-data"
